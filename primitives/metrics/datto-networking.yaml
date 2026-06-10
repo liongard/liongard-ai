@@ -1,0 +1,151 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+# Datto Networking (Inspector ID 79)
+# Eval sweep 2026-05-28 findings:
+# Parent/child inspector. Parent keys: Name, Users, Networks, Discovered
+# Child launchpoints hold per-network device-level data.
+# Validated against Demo Parent system (Inspector Failure status — last successful inspection data still valid).
+# No completed non-demo production systems available for cross-check.
+# GOTCHA: Networks[].down_gateway is INTEGER (0=no issue, non-zero=gateway down), NOT boolean.
+#   Existing filter `down_gateway > \`0\`` is correct. Do NOT use `down_gateway == \`true\``.
+# GOTCHA: Users[].api_only is BOOLEAN (false = human user, true = API-only service account).
+# GOTCHA: Networks[].is_legacy type not confirmed as boolean — treat as SCHEMA_CONFIRMED.
+# GOTCHA: Networks[].node_count is INTEGER.
+
+primitives:
+
+  - "@id": "metrics:datto-networking-inspector:network-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Datto Networking — Network Count"
+    description: "Total number of managed networks/sites in this Datto Networking account."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "datto-networking-inspector"
+      inspectorId: 79
+    jmesPath: "length(Networks)"
+    resultType: "integer"
+    fieldGotcha: "Networks[] fields include: id, name, is_fcc, role_id, latitude, is_legacy, longitude, new_nodes, account_id, network_id, node_count (integer), spare_nodes, down_gateway (integer — NOT boolean), down_repeater, networkgroup_id, networkgroup_name, latest_firmware_version, oldest_firmware_version, latest_firmware_version_full, oldest_firmware_version_full."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Demo Parent system (inspected 2025-12-02)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/datto-networking.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:datto-networking-inspector:total-node-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Datto Networking — Total Node Count"
+    description: "Total node count across all managed networks in this account."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "datto-networking-inspector"
+      inspectorId: 79
+    jmesPath: "sum(Networks[].node_count)"
+    resultType: "integer"
+    fieldGotcha: "Networks[].node_count is INTEGER. JMESPath sum() over the projection should work; not directly EVALUATE-tested. Confirmed node_count = 1 on Networks[0]."
+    status: "SCHEMA_CONFIRMED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Demo Parent system — node_count field confirmed as integer; sum() not directly tested"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/datto-networking.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:datto-networking-inspector:network-inventory"
+    "@type": "liongard:MetricPrimitive"
+    name: "Datto Networking — Network Inventory"
+    description: "Network/site inventory with node counts, firmware versions, down node counts, and legacy status."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "datto-networking-inspector"
+      inspectorId: 79
+    jmesPath: "Networks[].{name: name, networkgroup_name: networkgroup_name, is_legacy: is_legacy, node_count: node_count, new_nodes: new_nodes, down_gateway: down_gateway, down_repeater: down_repeater, latest_firmware_version: latest_firmware_version, latest_firmware_version_full: latest_firmware_version_full, oldest_firmware_version: oldest_firmware_version, spare_nodes: spare_nodes}"
+    resultType: "array"
+    fieldGotcha: "down_gateway is INTEGER (0=up, non-zero=down) — NOT boolean. All field names confirmed in structure."
+    status: "SCHEMA_CONFIRMED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Demo Parent system — all fields confirmed in GET_OVERVIEW structure; multi-field projection not directly EVALUATE-tested"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/datto-networking.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:datto-networking-inspector:networks-with-down-gateway-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Datto Networking — Networks With Down Gateway Count"
+    description: "Count of networks that have at least one gateway node currently down."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "datto-networking-inspector"
+      inspectorId: 79
+    jmesPath: "length(Networks[?down_gateway > `0`])"
+    resultType: "integer"
+    fieldGotcha: "CRITICAL: down_gateway is INTEGER (0=no issue, non-zero=down), NOT boolean. Use `> \\`0\\`` not `== \\`true\\``. Confirmed via EVALUATE: Networks[0].down_gateway = 0 (integer) and filter returned 0 on demo (all networks healthy)."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Demo Parent system (inspected 2025-12-02)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/datto-networking.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:datto-networking-inspector:user-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Datto Networking — User Count"
+    description: "Total number of users with Datto Networking account access."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "datto-networking-inspector"
+      inspectorId: 79
+    jmesPath: "length(Users)"
+    resultType: "integer"
+    fieldGotcha: "Users[] fields include: name, email, notes, alerts, created, role_id, user_id, api_only (boolean — false=human, true=service/API account), verified (boolean)."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Demo Parent system (inspected 2025-12-02)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/datto-networking.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:datto-networking-inspector:user-inventory"
+    "@type": "liongard:MetricPrimitive"
+    name: "Datto Networking — User Inventory"
+    description: "Full user list with name, email, role ID, verification status, and API-only flag."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "datto-networking-inspector"
+      inspectorId: 79
+    jmesPath: "Users[].{name: name, email: email, role_id: role_id, verified: verified, api_only: api_only}"
+    resultType: "array"
+    fieldGotcha: "api_only is BOOLEAN. verified is BOOLEAN. All field names confirmed in structure."
+    status: "SCHEMA_CONFIRMED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Demo Parent system — all fields confirmed in GET_OVERVIEW structure; multi-field projection not directly EVALUATE-tested"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/datto-networking.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:datto-networking-inspector:legacy-network-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Datto Networking — Legacy Network Count"
+    description: "Count of networks flagged as legacy platform."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "datto-networking-inspector"
+      inspectorId: 79
+    jmesPath: "length(Networks[?is_legacy == `true`])"
+    resultType: "integer"
+    fieldGotcha: "is_legacy field confirmed in Networks[] structure. Type assumed boolean based on naming convention but not explicitly EVALUATE-confirmed. If filter returns unexpected results, also try == 'true' (string) as a fallback."
+    status: "SCHEMA_CONFIRMED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Demo Parent system — is_legacy field confirmed in structure; type (boolean vs string) not directly verified via EVALUATE"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/datto-networking.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:datto-networking-inspector:api-only-user-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Datto Networking — API-Only User Count"
+    description: "Count of users that are service/API-only accounts."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "datto-networking-inspector"
+      inspectorId: 79
+    jmesPath: "length(Users[?api_only == `true`])"
+    resultType: "integer"
+    fieldGotcha: "Users[].api_only is BOOLEAN (confirmed: false on Users[0]). Use backtick-quoted boolean literal."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Demo Parent system (inspected 2025-12-02)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/datto-networking.md"
+    dateAdded: "2026-05-26"

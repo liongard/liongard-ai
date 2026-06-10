@@ -1,0 +1,186 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+# HaloPSA (Inspector ID 94)
+# Eval sweep 2026-05-28 findings:
+# Top-level keys: Agents, Customers, Sites, Teams, Contracts, SystemInfo, Tickets (Array(0)), Discovered, Name
+# CONFIRMED DATA GAPS: Tickets = Array(0) (no ticket data at MSP level), SLA metrics,
+#   billable utilization, contracts-expiring. All prior primitives used fabricated nested paths
+#   (halopsa.tickets.X, halopsa.agents.X etc.) — those paths do not exist.
+# GOTCHA: Agents[].isdisabled is BOOLEAN lowercase field name (not IsDisabled). false = active.
+# GOTCHA: Customers[].inactive is BOOLEAN. false = active.
+# GOTCHA: Sites[].inactive is BOOLEAN. false = active.
+# GOTCHA: Contracts[].active is BOOLEAN. true = active. Different from Contracts[].status (string).
+
+primitives:
+
+  - "@id": "metrics:halopsa-inspector:agents-total-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "HaloPSA — Total Agent (Technician) Count"
+    description: "Total number of HaloPSA agent/technician accounts."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "halopsa-inspector"
+      inspectorId: 94
+    jmesPath: "length(Agents)"
+    resultType: "integer"
+    fieldGotcha: "Agents[] is the technician list (not RMM agents). Fields include: id, name, team, isdisabled (boolean), is_agent (boolean), licence_type, firstname, surname, colour, jobtitle."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "System F (inspected 2026-05-28)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/halopsa.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:halopsa-inspector:agents-active-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "HaloPSA — Active Agent (Technician) Count"
+    description: "Number of HaloPSA technician accounts where isdisabled is false."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "halopsa-inspector"
+      inspectorId: 94
+    jmesPath: "length(Agents[?isdisabled == `false`])"
+    resultType: "integer"
+    fieldGotcha: "isdisabled is BOOLEAN, lowercase field name. Use backtick-quoted boolean literal. Field is 'isdisabled' not 'IsDisabled' or 'is_disabled'."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "System F (inspected 2026-05-28)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/halopsa.md"
+    dateAdded: "2026-05-28"
+
+  - "@id": "metrics:halopsa-inspector:customers-total-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "HaloPSA — Total Customer Count"
+    description: "Total number of customer companies/contacts in the HaloPSA tenant."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "halopsa-inspector"
+      inspectorId: 94
+    jmesPath: "length(Customers)"
+    resultType: "integer"
+    compliesWith:
+      - "CIS-Controls-v8:1.1"
+    fieldGotcha: "Customers[] fields include: id, name, toplevel_id, toplevel_name, inactive (boolean), colour, stopped, customertype, customer_relationship, itglue_id, pritech, sectech, accountmanagertech."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "System F (inspected 2026-05-28)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/halopsa.md"
+    dateAdded: "2026-05-28"
+
+  - "@id": "metrics:halopsa-inspector:customers-active-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "HaloPSA — Active Customer Count"
+    description: "Number of customer companies where inactive is false."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "halopsa-inspector"
+      inspectorId: 94
+    jmesPath: "length(Customers[?inactive == `false`])"
+    resultType: "integer"
+    fieldGotcha: "Customers[].inactive is BOOLEAN. Use backtick-quoted boolean literal."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "System F (inspected 2026-05-28)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/halopsa.md"
+    dateAdded: "2026-05-28"
+
+  - "@id": "metrics:halopsa-inspector:sites-total-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "HaloPSA — Total Site Count"
+    description: "Total number of customer sites in the HaloPSA tenant."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "halopsa-inspector"
+      inspectorId: 94
+    jmesPath: "length(Sites)"
+    resultType: "integer"
+    fieldGotcha: "Sites[] fields include: id, name, client_id, client_name, clientsite_name, inactive (boolean), sla_id, phonenumber, colour, timezone, stopped, isinvoicesite, maincontact_id."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "System F (inspected 2026-05-28)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/halopsa.md"
+    dateAdded: "2026-05-28"
+
+  - "@id": "metrics:halopsa-inspector:sites-active-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "HaloPSA — Active Site Count"
+    description: "Number of sites where inactive is false."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "halopsa-inspector"
+      inspectorId: 94
+    jmesPath: "length(Sites[?inactive == `false`])"
+    resultType: "integer"
+    fieldGotcha: "Sites[].inactive is BOOLEAN. Use backtick-quoted boolean literal."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "System F (inspected 2026-05-28)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/halopsa.md"
+    dateAdded: "2026-05-28"
+
+  - "@id": "metrics:halopsa-inspector:teams-total-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "HaloPSA — Total Team Count"
+    description: "Total number of teams defined in the HaloPSA tenant."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "halopsa-inspector"
+      inspectorId: 94
+    jmesPath: "length(Teams)"
+    resultType: "integer"
+    fieldGotcha: "Teams[] fields include: id, guid, name, sequence, forrequests, foropps, forprojects, ticket_count, department_id, department_name, inactive (boolean)."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "System F (inspected 2026-05-28)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/halopsa.md"
+    dateAdded: "2026-05-28"
+
+  - "@id": "metrics:halopsa-inspector:contracts-total-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "HaloPSA — Total Contract Count"
+    description: "Total number of contracts in the HaloPSA tenant."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "halopsa-inspector"
+      inspectorId: 94
+    jmesPath: "length(Contracts)"
+    resultType: "integer"
+    fieldGotcha: "Contracts[] fields include: id, client_id, client_name, ref, start_date, end_date, status (string), site_id, active (boolean — separate from status), contracttype, contracttype_name, cost_calculation, billingperiod, billingcategory."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "System F (inspected 2026-05-28)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/halopsa.md"
+    dateAdded: "2026-05-28"
+
+  - "@id": "metrics:halopsa-inspector:contracts-active-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "HaloPSA — Active Contract Count"
+    description: "Number of active contracts (active == true) in the HaloPSA tenant."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "halopsa-inspector"
+      inspectorId: 94
+    jmesPath: "length(Contracts[?active == `true`])"
+    resultType: "integer"
+    fieldGotcha: "Contracts[].active is BOOLEAN (use backtick-quoted literal). This is distinct from Contracts[].status which is a string. Both fields exist on every contract record."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "System F (inspected 2026-05-28)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/halopsa.md"
+    dateAdded: "2026-05-28"
+
+  - "@id": "metrics:halopsa-inspector:system-version"
+    "@type": "liongard:MetricPrimitive"
+    name: "HaloPSA — Application Version"
+    description: "Currently installed HaloPSA application version string."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "halopsa-inspector"
+      inspectorId: 94
+    jmesPath: "SystemInfo.app_version"
+    resultType: "string"
+    fieldGotcha: "SystemInfo is a scalar object (not an array). Fields include: id, app_version (string e.g. '2.236.44'), app_version_nopatch, database_version, appname, license_count (integer), concurrent_license_count."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "System F (inspected 2026-05-28)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/halopsa.md"
+    dateAdded: "2026-05-28"

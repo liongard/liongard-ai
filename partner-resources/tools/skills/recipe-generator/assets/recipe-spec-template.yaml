@@ -1,0 +1,121 @@
+# Liongard Prompt Library — Recipe Spec Template
+# Copy this file, rename to <inspector-slug>.yaml, and fill in.
+# See references/recipe-spec-format.md for full field documentation.
+
+# ============================================================================
+# REQUIRED — inspector identity (must match reference/inspector-aliases.md)
+# ============================================================================
+inspector:
+  slug:                              # e.g., cisco-meraki-inspector
+  id:                                # int — confirm in reference/inspector-name-system-id-mapping.xlsx
+  display_name:                      # e.g., Cisco Meraki
+  category:                          # "Apps & Services" | "Beta" | "Cloud" | "Endpoint" | "Network"
+  target_system_type:                # e.g., "Network Controller"
+  parent_child: false                # true | false
+  identifier_jmespath:               # JMESPath that resolves to system display name
+
+# ============================================================================
+# REQUIRED — recipe metadata
+# ============================================================================
+recipe:
+  family: single-system-analysis     # always this for the recipe-generator skill
+  scope_summary: |
+    # 1-2 sentences. Goes into the description frontmatter and drives auto-trigger.
+    # Start with "Use this skill when…"
+  trigger_phrases:                   # concrete user phrasings
+    - "<phrase 1>"
+    - "<phrase 2>"
+  personas:                          # from {noc, soc, vcio-account-manager,
+                                     # technical-alignment-manager, sales,
+                                     # executive, accounting-finance}
+    - <persona>
+  output_formats:                    # from {markdown, word, pptx, xlsx}
+    - markdown
+
+# ============================================================================
+# RECOMMENDED — aliases (also update reference/inspector-aliases.md)
+# ============================================================================
+aliases:
+  user_facing:                       # common shorthand
+    # - "<short>"
+  legacy:                            # legacy / renamed product names
+    # - "<old name>"
+
+# ============================================================================
+# RECOMMENDED — SLA thresholds the recipe applies
+# ============================================================================
+slas:
+  inspector_lastseen_days_max: 7
+  # Add vendor-specific SLAs here. Common ones:
+  # patch_age_days_max: 30
+  # warranty_warn_days: 90
+  # edr_coverage_pct_min: 95
+  # license_expiration_warn_days: 30
+
+# ============================================================================
+# REQUIRED if recipe uses per-metric calls — list every Liongard metric used
+# ============================================================================
+metrics:
+  - id:                              # int OR "[PROPOSED]" if metric doesn't exist yet
+    name:                            # exact metric name as in Liongard
+    jmes_path:                       # the JMESPath query
+    purpose:                         # 1-line description
+    result_shape:                    # optional — e.g. "<integer>", "<bool>"
+    compliant_when:                  # optional — e.g. "0", "true"
+
+# ============================================================================
+# OPTIONAL — for EDR-class recipes only — onboarding-QA coverage
+# ============================================================================
+# Uncomment this block for EDR recipes. Refer to reference/onboarding-qa-coverage.md
+# for the partner-validated matrix and copy this row's status from that file.
+#
+# onboarding_qa_coverage:
+#   total_endpoints:                 # ✅ | 🔍 | ⚠️ | ❌
+#   active_30d:
+#   inactive_60d:
+#   not_protected:
+#   servers_split:
+#   alerts:
+#   partner_validated_notes: |
+#     # Vendor-specific coverage notes from the partner audit
+
+# ============================================================================
+# OPTIONAL — proposed metrics this recipe references
+# ============================================================================
+proposed_metric_gaps:
+  # - field: "<field name>"
+  #   fallback: "<how the recipe works around it>"
+  #   jira_ticket: "CORE-XXXX"       # optional, if filed already
+
+# ============================================================================
+# OPTIONAL — asset-inventory cross-check pattern
+# ============================================================================
+cross_check:
+  asset_type:                        # "device" | "identity" | "domain"
+  filter_pattern:                    # e.g. 'inspectors contains "<slug>"'
+  coverage_question:                 # what coverage question this answers
+
+# ============================================================================
+# OPTIONAL — vendor specifics that inform generation but stay short
+# ============================================================================
+trigger_keyword:                     # `query=` keyword if different from slug-without-suffix
+
+dataprint_keys:                      # top-level keys on the dataprint
+  # - key: "<KeyName>"
+  #   description: "<what's there>"
+
+field_gotchas:                       # inline notes (not TODOs) for known-quirky fields
+  # - field: "<FieldName>"
+  #   note: "<gotcha description>"
+
+large_arrays:                        # arrays that warrant length()-only patterns
+  # - field: "<ArrayKey>"
+  #   typical_size: "<e.g. 8000+ entries>"
+
+time_series_supported: true          # whether EVALUATE_TIME_SERIES makes sense
+
+vendor_console_url_pattern:          # for "supplement from vendor portal" references
+
+related_recipes:                     # other recipes this one links to from the top
+  # - path: "recipes/system-type-assessment/all-edrs.md"
+  #   relationship: "rollup"

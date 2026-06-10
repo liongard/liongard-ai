@@ -1,0 +1,98 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+  - "@id": "metrics:storagecraft-spx-inspector:software-version"
+    "@type": "liongard:MetricPrimitive"
+    name: "StorageCraft SPX — Software Version"
+    description: "Installed StorageCraft SPX software version on the protected server"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "storagecraft-spx-inspector"
+      inspectorId: 46
+    liongardMetricName: "StorageCraft SPX: Software Version"
+    liongardMetricId: 208
+    liongardMetricUuid: "8d55042c-35e2-4889-9052-1107bdfbad88"
+    jmesPath: "SystemInfo.Version"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/storagecraft-spx.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:storagecraft-spx-inspector:days-until-license-expiration"
+    "@type": "liongard:MetricPrimitive"
+    name: "StorageCraft SPX — Days Until License Expiration"
+    description: "Number of days remaining before the SPX activation/license expires"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "storagecraft-spx-inspector"
+      inspectorId: 46
+    liongardMetricName: "StorageCraft SPX: Days Until License Expiration"
+    liongardMetricId: 207
+    liongardMetricUuid: "0ba929ac-1aa9-43d5-a9ea-5663d046709b"
+    jmesPath: "Activation.days_left"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/storagecraft-spx.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:storagecraft-spx-inspector:last-backup-attempt-failed-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "StorageCraft SPX — Last Backup Attempt Failed List"
+    description: "List of backup jobs where the last attempt failed (result != 0), with job name and timestamp"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "storagecraft-spx-inspector"
+      inspectorId: 46
+    liongardMetricName: "StorageCraft SPX: Last Backup Attempt Failed List"
+    liongardMetricId: 1143
+    liongardMetricUuid: "6f4894ca-a92c-4567-9631-3c9eac46bb32"
+    jmesPath: "Backups[?last_event.result!=`0`].join(` `,[`Name: `, name, `, Time: `,last_event.t])"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/storagecraft-spx.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:storagecraft-spx-inspector:last-backup-attempt-failed-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "StorageCraft SPX — Last Backup Attempt Failed Count"
+    description: "Count of backup jobs where the last attempt failed (result != 0)"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "storagecraft-spx-inspector"
+      inspectorId: 46
+    liongardMetricName: "StorageCraft SPX: Last Backup Attempt Failed Count"
+    liongardMetricId: 1144
+    liongardMetricUuid: "e455f644-339d-411a-99ac-4ac795d164cf"
+    jmesPath: "Backups[?last_event.result!=`0`].join(` `,[`Name: `, name, `, Time: `,last_event.t]) | length(@)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/storagecraft-spx.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:storagecraft-spx-inspector:last-successful-backup"
+    "@type": "liongard:MetricPrimitive"
+    name: "StorageCraft SPX — Last Successful Backup"
+    description: "List of backup jobs with their last successful backup name and timestamp (result == 0)"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "storagecraft-spx-inspector"
+      inspectorId: 46
+    liongardMetricName: "StorageCraft SPX: Last Successful Backup"
+    liongardMetricId: 2081
+    liongardMetricUuid: "cecf513a-24da-438b-aca5-567bfaa80f76"
+    jmesPath: "Backups[?last_event.result == `0`].join(` `,[`Name: `, name, `, Last Successful Backup Time: `,last_event.t])"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/storagecraft-spx.md"
+    dateAdded: "2026-05-26"

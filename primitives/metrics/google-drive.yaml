@@ -1,0 +1,239 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+# Google Drive (Inspector ID 80)
+# Eval sweep 2026-05-28 findings:
+# Single-tenant inspector (not P/C). Validated against active system (Agent Issue — last data valid).
+# Dataprint root keys: Name, Users, Groups, Folders, SharedDrives, SystemInfo{Domains}, UniqueCompositeKey.
+# GOTCHA: Users[].isEnforcedIn2Sv is BOOLEAN (enforced = policy requires 2SV for sign-in).
+# GOTCHA: Users[].isEnrolledIn2Sv is BOOLEAN (enrolled = user has set up 2SV themselves).
+#   Enforced > Enrolled: a user can be enrolled but not yet enforced, or enforced without being enrolled.
+# GOTCHA: Users[].isAdmin is BOOLEAN (Super Admin flag).
+# DATA GAPS confirmed: storage utilization, share-count summaries, licensing seat totals,
+#   orphaned shared drive detection — none of these summary fields exist in the dataprint.
+#   Per-folder access can be checked via Folders[].permissions[] (used in VALIDATED primitives below).
+# Prior PROPOSED paths using google-drive.users.*/google-drive.storage.*/etc. were all fabricated — removed.
+# Validated against active system (inspected 2026-03-13).
+
+primitives:
+
+  # ── VALIDATED — catalog metric IDs confirmed ──────────────────────────────
+
+  - "@id": "metrics:google-drive:users-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Google Drive — Users List"
+    description: "Sorted list of Google Drive users by name or primary email."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "google-drive-inspector"
+      inspectorId: 80
+    liongardMetricName: "Google Drive: Users List"
+    liongardMetricId: 1258
+    liongardMetricUuid: "47b68f97-dbd7-40b2-84b7-7fad71e19c2f"
+    jmesPath: "Users[] | sort_by(@,&id)[].[name.fullName || primaryEmail] | []"
+    resultType: "array"
+    fieldGotcha: "Users[] confirmed fields: id, etag, kind, name (object with fullName), emails (array), isAdmin (boolean), archived (boolean), suspended (boolean), usageGB_r (string), primaryEmail (string), agreedToTerms (boolean), isEnforcedIn2Sv (boolean), isEnrolledIn2Sv (boolean), isDelegatedAdmin (boolean), lastLoginTime (string), creationTime (string)."
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/google-drive.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:google-drive:shared-drives-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "Google Drive — Shared Drives Summary"
+    description: "Summary of each shared drive including name, restriction settings, and access controls."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "google-drive-inspector"
+      inspectorId: 80
+    liongardMetricName: "Google Drive: Shared Drives Summary"
+    liongardMetricId: 1259
+    liongardMetricUuid: "8619162a-f9c2-41ba-9e5a-6aa3623aa00d"
+    jmesPath: "SharedDrives[].join( `, `, [join(`: `, [`Name`, to_string(name)]), join(`: `, [`Admin Privileges Required To Modify Restrictions`, to_string(restrictions.adminManagedRestrictions)]), join(`: `, [`Copy Requires Writer Permission`, to_string(restrictions.copyRequiresWriterPermission)]),join(`: `, [`Access Restricted To Domain Users`, to_string(restrictions.domainUsersOnly)]),join(`: `, [`Access Restricted To Drive Members`, to_string(restrictions.driveMembersOnly)])])"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/google-drive.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:google-drive:shared-drives-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Google Drive — Shared Drives List"
+    description: "Sorted list of shared drive names in the Google Workspace tenant."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "google-drive-inspector"
+      inspectorId: 80
+    liongardMetricName: "Google Drive: Shared Drives List"
+    liongardMetricId: 1260
+    liongardMetricUuid: "6de62359-ce11-4eb7-ab9a-7812da2b0b2e"
+    jmesPath: "SharedDrives[] | sort_by(@,&id)[].[name] | []"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/google-drive.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:google-drive:folders-internet-editable"
+    "@type": "liongard:MetricPrimitive"
+    name: "Google Drive — Top-Level Folders Accessible To Internet (Can Be Edited)"
+    description: "Top-level folders accessible to anyone on the internet with write (editor) permissions."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "google-drive-inspector"
+      inspectorId: 80
+    liongardMetricName: "Google Drive: Top-Level Folders Accessible To Internet (Can Be Edited)"
+    liongardMetricId: 1261
+    liongardMetricUuid: "8fd03345-e1aa-4f13-9f82-e3abb41da693"
+    jmesPath: "Folders[?permissions[?type==`anyone` && role==`writer`]].[name]"
+    resultType: "array"
+    compliantWhen: "length == 0"
+    compliesWith:
+      - "CIS-Controls-v8:3.3"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/google-drive.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:google-drive:folders-internet-readable"
+    "@type": "liongard:MetricPrimitive"
+    name: "Google Drive — Top-Level Folders Accessible To Internet (Can Be Read)"
+    description: "Top-level folders accessible to anyone on the internet with read-only permissions."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "google-drive-inspector"
+      inspectorId: 80
+    liongardMetricName: "Google Drive: Top-Level Folders Accessible To Internet (Can Be Read)"
+    liongardMetricId: 1262
+    liongardMetricUuid: "0ff53094-a7aa-4cd9-a7ae-0e57a0b12631"
+    jmesPath: "Folders[?permissions[?type==`anyone` && role==`reader`]].[name]"
+    resultType: "array"
+    compliantWhen: "length == 0"
+    compliesWith:
+      - "CIS-Controls-v8:3.3"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/google-drive.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:google-drive:folders-internet-commentable"
+    "@type": "liongard:MetricPrimitive"
+    name: "Google Drive — Top-Level Folders Accessible To Internet (Can Be Commented-On)"
+    description: "Top-level folders accessible to anyone on the internet with commenter permissions."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "google-drive-inspector"
+      inspectorId: 80
+    liongardMetricName: "Google Drive: Top-Level Folders Accessible To Internet (Can Be Commented-On)"
+    liongardMetricId: 1263
+    liongardMetricUuid: "44280010-4b9b-492e-a7c6-62fa08d82242"
+    jmesPath: "Folders[?permissions[?type==`anyone` && role==`commenter`]].[name]"
+    resultType: "array"
+    compliantWhen: "length == 0"
+    compliesWith:
+      - "CIS-Controls-v8:3.3"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/google-drive.md"
+    dateAdded: "2026-05-26"
+
+  # ── VALIDATED — direct JMESPath paths confirmed on active system ──────────
+
+  - "@id": "metrics:google-drive:users-total-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Google Drive — Total User Count"
+    description: "Total number of users in the Google Drive / Workspace tenant."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "google-drive-inspector"
+      inspectorId: 80
+    jmesPath: "length(Users)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Active system (inspected 2026-03-13)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/google-drive.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:google-drive:users-2sv-not-enforced-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Google Drive — Users Without 2-Step Verification Enforced Count"
+    description: "Number of users where 2SV is not enforced by policy (isEnforcedIn2Sv == false). Should be 0."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "google-drive-inspector"
+      inspectorId: 80
+    jmesPath: "length(Users[?isEnforcedIn2Sv == `false`])"
+    resultType: "integer"
+    fieldGotcha: "isEnforcedIn2Sv (boolean) = admin policy enforces 2SV for this user. isEnrolledIn2Sv (boolean) = user has set up 2SV. A user can be enrolled but not enforced — use isEnforcedIn2Sv for compliance checking."
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "CIS-Controls-v8:6.3"
+      - "CIS-Controls-v8:6.5"
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Active system (inspected 2026-03-13)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/google-drive.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:google-drive:admin-user-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Google Drive — Admin User Count"
+    description: "Number of users with Super Admin privileges (isAdmin == true)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "google-drive-inspector"
+      inspectorId: 80
+    jmesPath: "length(Users[?isAdmin == `true`])"
+    resultType: "integer"
+    fieldGotcha: "isAdmin is BOOLEAN — Super Admin flag. isDelegatedAdmin (also boolean) covers delegated admin roles. Use isAdmin for Super Admin count."
+    compliesWith:
+      - "CIS-Controls-v8:5.4"
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Active system (inspected 2026-03-13)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/google-drive.md"
+    dateAdded: "2026-05-26"
+
+  - '@id': metrics:google-drive:security-admin-count
+    '@type': liongard:MetricPrimitive
+    name: Google Drive — Admin Users Count
+    description: Count of users flagged isAdmin.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: google-drive-inspector
+      inspectorId: 80
+    jmesPath: length(Users[?isAdmin])
+    resultType: integer
+    resultUnit: count
+    status: VALIDATED
+    validatedOn: '2026-05-29'
+    validatedSystemReference: System F — dev environment (google drive, inspected 2026-03-13)
+    compliesWith:
+    - CIS-Controls-v8:6.8
+    sourceRecipe: recipes/single-system-analysis/by-inspector/google-drive.md
+    dateAdded: '2026-05-29'
+
+  - '@id': metrics:google-drive:users-mfa-enabled-count
+    '@type': liongard:MetricPrimitive
+    name: Google Drive — Users Enrolled in 2SV
+    description: Count of users enrolled in 2-step verification (isEnrolledIn2Sv).
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: google-drive-inspector
+      inspectorId: 80
+    jmesPath: length(Users[?isEnrolledIn2Sv])
+    resultType: integer
+    resultUnit: count
+    status: VALIDATED
+    validatedOn: '2026-05-29'
+    validatedSystemReference: System F — dev environment (google drive, inspected 2026-03-13)
+    compliesWith:
+    - CIS-Controls-v8:6.5
+    sourceRecipe: recipes/single-system-analysis/by-inspector/google-drive.md
+    dateAdded: '2026-05-29'

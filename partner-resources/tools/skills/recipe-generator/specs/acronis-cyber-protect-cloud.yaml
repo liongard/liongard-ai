@@ -1,0 +1,168 @@
+inspector:
+  slug: acronis-cyber-protect-cloud-inspector
+  id: 93
+  display_name: Acronis Cyber Protect Cloud
+  category: Cloud
+  target_system_type: Backup / DR
+  parent_child: true
+  identifier_jmespath: Account.name
+
+recipe:
+  family: single-system-analysis
+  scope_summary: >
+    Use this skill when the user wants a single-tenant analysis of an
+    Acronis Cyber Protect Cloud account — per-resource backup state,
+    backup plan compliance, last-run status per resource, child-tenant
+    inventory. Acronis Cyber Protect Cloud combines backup, EDR, and
+    DLP — this recipe covers the backup portion. Trigger phrases:
+    "Acronis backup review", "Acronis Cyber Protect PBR", "pull Acronis
+    backup data", "Acronis tenant audit".
+  trigger_phrases:
+    - "Acronis backup review"
+    - "Acronis Cyber Protect PBR"
+    - "pull Acronis backup data"
+    - "Acronis tenant audit"
+    - "Acronis Cyber Protect Cloud report"
+  personas:
+    - noc
+    - vcio-account-manager
+    - technical-alignment-manager
+  output_formats:
+    - markdown
+    - word
+    - xlsx
+
+aliases:
+  user_facing:
+    - Acronis
+    - ACP
+    - "Acronis Cyber Protect"
+    - "Acronis Cyber Cloud"
+  legacy:
+    - "Acronis Backup"
+
+slas:
+  inspector_lastseen_days_max: 1
+  failed_backups_max: 0
+  hours_since_last_successful_max: 24
+
+metrics:
+  - id: "[PROPOSED]"
+    name: "Acronis: Child Tenant Inventory (parent)"
+    jmes_path: ChildTenants[*].name
+    purpose: Parent system — enumerate customer tenants under the partner account
+
+  - id: "1672"
+    name: "Acronis Cyber Cloud: Count of Machines"
+    jmes_path: >-
+      Resources[?type == `resource.machine`] | length(@)
+    purpose: Count machine resources in the child tenant
+
+  - id: "1673"
+    name: "Acronis Cyber Cloud: Count of Machines with Backup Enabled"
+    jmes_path: >-
+      Resources[?type == `resource.machine` && policies[?type == `policy.backup.machine`]] | length(@)
+    purpose: Count machine resources with an attached machine backup policy
+    compliant_when: "= machine count"
+
+  - id: "1674"
+    name: "Acronis Cyber Cloud: List of Machines with Backup Enabled"
+    jmes_path: >-
+      Resources[?type == `resource.machine` && policies[?type == `policy.backup.machine`]].name || `-`
+    purpose: List machine resources with an attached machine backup policy
+
+  - id: "1675"
+    name: "Acronis Cyber Cloud: List of Machines without Backup Enabled"
+    jmes_path: >-
+      Resources[?type == `resource.machine` && (!policies || !contains(policies[].type, `policy.backup.machine`))].name || `-`
+    purpose: List machine resources without an attached machine backup policy
+    compliant_when: "empty / '-'"
+
+  - id: "1685"
+    name: "Acronis: Per-Resource Backup State"
+    jmes_path: >-
+      Resources[*].{name: name, type: type, backup_policy: policies[?type == `policy.backup.machine`].type | [0], last_run: policies[?type == `policy.backup.machine`].last_run | [0], last_success_run: policies[?type == `policy.backup.machine`].last_success_run | [0], next_run: policies[?type == `policy.backup.machine`].next_run | [0]}
+    purpose: Per-resource backup state from policy fields — feeds the all-backups.md hostname join
+
+  - id: "1686"
+    name: "Acronis Cyber Cloud: Count of Machines Not Successfully Backed Up In Last 24 Hours"
+    jmes_path: >-
+      Resources[?type == `resource.machine` && policies[?type == `policy.backup.machine`] && policies[?type == `policy.backup.machine`].last_success_run && (time_since(policies[?type == `policy.backup.machine`].last_success_run | [0], 'hours') > `24`)] | length(@)
+    purpose: Count machine resources whose last successful backup is older than 24 hours
+    compliant_when: "0"
+
+  - id: "1687"
+    name: "Acronis Cyber Cloud: List of Machines Not Successfully Backed Up In Last 24 Hours"
+    jmes_path: >-
+      Resources[?type == `resource.machine` && policies[?type == `policy.backup.machine`] && policies[?type == `policy.backup.machine`].last_success_run && (time_since(policies[?type == `policy.backup.machine`].last_success_run | [0], 'hours') > `24`)].name || `-`
+    purpose: List machine resources whose last successful backup is older than 24 hours
+    compliant_when: "empty / '-'"
+
+  - id: "2084"
+    name: "Acronis Cyber Cloud: List of Machines Successfully Backed Up In Last 30 days"
+    jmes_path: >-
+      Resources[?type == `resource.machine` && policies[?type == `policy.backup.machine`] && policies[?type == `policy.backup.machine`].last_success_run && (time_since(policies[?type == `policy.backup.machine`].last_success_run | [0], 'hours') < `720`)].name || `-`
+    purpose: List machine resources with a successful backup in the last 30 days
+
+  - id: "2165"
+    name: "Acronis Cyber Cloud: List of Machines NOT Successfully Backed Up In Last 30 days"
+    jmes_path: >-
+      Resources[?type == `resource.machine` && policies[?type == `policy.backup.machine`] && policies[?type == `policy.backup.machine`].last_success_run && (time_since(policies[?type == `policy.backup.machine`].last_success_run | [0], 'hours') > `720`)].name || `-`
+    purpose: List machine resources without a successful backup in the last 30 days
+
+  - id: "1671"
+    name: "Acronis: Storage Used by Tenant"
+    jmes_path: >-
+      Usages[].usages[?usage_name == `local_storage`].value
+    purpose: Tenant-level storage utilization for capacity planning
+
+  - id: "[PROPOSED]"
+    name: "Acronis: Backup Plan Inventory"
+    jmes_path: >-
+      BackupPlans[*].{name: name, schedule: schedule, retention: retention}
+    purpose: Backup plan definitions (schedule + retention compliance); not present in sampled MCP dataprints
+
+cross_check:
+  asset_type: device
+  filter_pattern: 'class == "server"'
+  coverage_question: >
+    Servers in the device inventory not present in Resources[*].name —
+    unprotected candidates.
+
+proposed_metric_gaps:
+  - field: "Child tenant enumeration (parent)"
+    fallback: "Client-side parse of ChildTenants[*]"
+    jira_ticket:
+  - field: "Backup plan inventory + retention"
+    fallback: "Manual confirm in Acronis Management Portal; BackupPlans[*] was not present in sampled MCP dataprints"
+    jira_ticket:
+
+trigger_keyword: acronis
+
+dataprint_keys:
+  - key: Account
+    description: Tenant identity — Account.name (partner or customer name within Acronis)
+  - key: ChildTenants
+    description: Parent — array of customer tenants the partner manages
+  - key: Resources
+    description: Child — array of protected resources (machines, M365 mailboxes, etc.) with backup state
+  - key: BackupPlans
+    description: Plan definitions (schedule, retention, scope)
+
+field_gotchas:
+  - field: "Parent vs. child distinction"
+    note: "Acronis Cyber Protect Cloud uses parent/child. Parent has ChildTenants[*] (customer tenants enumerated). Child has Resources[*] for the protected machines + M365 resources in one customer tenant. Both use Account.name as the identifier — disambiguate via the dataprint shape."
+  - field: "Resources[*].type"
+    note: "Acronis protects multiple resource types — machines (workstation/server), M365 user mailboxes, M365 SharePoint, Google Workspace, websites. The all-backups.md join only cares about machine-type resources; filter Resources[?type == `resource.machine`]. Backup state lives under Resources[*].policies[], especially policy.backup.machine, not top-level lastRunStatus / lastRunTime / planName fields."
+
+large_arrays: []
+
+time_series_supported: true
+
+vendor_console_url_pattern: https://cloud.acronis.com
+
+related_recipes:
+  - path: recipes/system-type-assessment/all-backups.md
+    relationship: rollup
+  - path: recipes/compliance/cyber-insurance/domains/backup.md
+    relationship: compliance

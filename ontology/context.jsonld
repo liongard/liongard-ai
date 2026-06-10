@@ -1,0 +1,296 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@vocab": "https://schema.liongard.com/recipe-library/v1/",
+
+    "liongard": "https://schema.liongard.com/recipe-library/v1/",
+    "schema": "https://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+
+    "id": "@id",
+    "type": "@type",
+
+    "name": "schema:name",
+    "description": "schema:description",
+    "version": "schema:version",
+    "dateCreated": { "@id": "schema:dateCreated", "@type": "xsd:date" },
+    "dateModified": { "@id": "schema:dateModified", "@type": "xsd:date" },
+
+    "MetricPrimitive": "liongard:MetricPrimitive",
+    "Inspector": "liongard:Inspector",
+    "Recipe": "liongard:Recipe",
+    "SystemAssessmentRecipe": "liongard:SystemAssessmentRecipe",
+    "SystemTypeAssessmentRecipe": "liongard:SystemTypeAssessmentRecipe",
+    "DomainAssessmentRecipe": "liongard:DomainAssessmentRecipe",
+    "ComplianceRecipe": "liongard:ComplianceRecipe",
+    "CyberInsuranceQuestion": "liongard:CyberInsuranceQuestion",
+    "QBRRecipe": "liongard:QBRRecipe",
+    "OnboardingRecipe": "liongard:OnboardingRecipe",
+    "SalesRecipe": "liongard:SalesRecipe",
+    "RoadmapRecipe": "liongard:RoadmapRecipe",
+    "RecipeTier": "liongard:RecipeTier",
+    "Persona": "liongard:Persona",
+
+    "evaluates": {
+      "@id": "liongard:evaluates",
+      "@type": "@id",
+      "comment": "Links a primitive or recipe to the Liongard Inspector (system type) it evaluates against — e.g., microsoft-365-inspector, sentinelone-inspector."
+    },
+
+    "isBasedOn": {
+      "@id": "schema:isBasedOn",
+      "@type": "@id",
+      "comment": "A recipe is based on a primitive when it consumes that primitive's output as evidence. Many-to-many: one recipe can be based on many primitives; one primitive can underpin many recipes."
+    },
+
+    "isPartOf": {
+      "@id": "schema:isPartOf",
+      "@type": "@id",
+      "comment": "A primitive or sub-recipe is part of a larger recipe (e.g., a single-system assessment is part of a QBR). Forms the dependency tree the governance layer walks."
+    },
+
+    "dependsOn": {
+      "@id": "liongard:dependsOn",
+      "@type": "@id",
+      "comment": "A recipe depends on another recipe when the second recipe must run first and supply input. Stronger than isPartOf — implies execution order, not just composition."
+    },
+
+    "answersQuestion": {
+      "@id": "liongard:answersQuestion",
+      "@type": "@id",
+      "comment": "Links a primitive or recipe to a cyber-insurance question, CIS control, or onboarding-QA question it provides evidence for."
+    },
+
+    "supersedes": {
+      "@id": "liongard:supersedes",
+      "@type": "@id",
+      "comment": "This primitive replaces an earlier primitive (e.g., a stored Liongard metric supersedes an inline JMESPath workaround once it ships)."
+    },
+
+    "supportedByPersona": {
+      "@id": "liongard:supportedByPersona",
+      "@type": "@id",
+      "@container": "@set",
+      "comment": "Personas the recipe is designed for: noc, soc, vcio-account-manager, technical-alignment-manager, sales, executive, accounting-finance."
+    },
+
+    "outputFormat": {
+      "@id": "liongard:outputFormat",
+      "@container": "@set",
+      "comment": "Deliverable formats the recipe produces: markdown, word, pptx, xlsx, pdf."
+    },
+
+    "jmesPath": {
+      "@id": "liongard:jmesPath",
+      "@type": "xsd:string",
+      "comment": "The JMESPath expression evaluated against the inspector's dataprint. Either jmesPath OR liongardMetricId is required on every MetricPrimitive."
+    },
+
+    "liongardMetricUuid": {
+      "@id": "liongard:liongardMetricUuid",
+      "@type": "xsd:string",
+      "comment": "Stable cross-instance UUID of the stored Liongard global-catalog metric. PREFERRED canonical reference once exposed by the metric endpoint. UUID is consistent across every Liongard deployment (production, partner instances, dev) — pin to this, not to numeric id."
+    },
+
+    "liongardMetricName": {
+      "@id": "liongard:liongardMetricName",
+      "@type": "xsd:string",
+      "comment": "Human-readable name of the stored Liongard Global metric. Stable across instances for User='Global' metrics. Acceptable canonical reference until UUID is exposed everywhere. Names should match the live liongard_metric LIST output exactly — not the snapshot in internal/Liongard-Metrics.xlsx (which may be stale)."
+    },
+
+    "liongardMetricId": {
+      "@id": "liongard:liongardMetricId",
+      "@type": "xsd:integer",
+      "comment": "Local numeric ID for a stored Liongard metric. NOT stable across instances — differs between every Liongard deployment. Use only as a per-instance optimization hint, never as the canonical reference. Prefer liongardMetricUuid (once exposed) or liongardMetricName."
+    },
+
+    "resultType": {
+      "@id": "liongard:resultType",
+      "comment": "Shape of the EVALUATE result: integer, array, object, string, boolean, null."
+    },
+
+    "status": {
+      "@id": "liongard:status",
+      "comment": "Validation status: VALIDATED (confirmed non-null on a live dataprint), SCHEMA_CONFIRMED (field exists but array empty on test system), PROPOSED (not yet confirmed — requires a Liongard metric request)."
+    },
+
+    "inspectorSlug": {
+      "@id": "liongard:inspectorSlug",
+      "@type": "xsd:string",
+      "comment": "Kebab-case inspector identifier — e.g., microsoft-365-inspector, sentinelone-inspector. Authoritative list in reference/inspector-aliases.md."
+    },
+
+    "inspectorId": {
+      "@id": "liongard:inspectorId",
+      "@type": "xsd:integer",
+      "comment": "Numeric inspector ID matching internal/inspector-name-system-id-mapping.xlsx."
+    },
+
+    "compliesWith": {
+      "@id": "liongard:compliesWith",
+      "@type": "@id",
+      "@container": "@set",
+      "comment": "Compliance frameworks the primitive or recipe maps to: CIS-Controls-v8, CMMC-L1, CMMC-L2, HIPAA, FTC-Safeguards, cyber-insurance-domain-{auth,endpoint,backup,network,governance,regulatory,vendor}."
+    },
+
+    "primitives": {
+      "@id": "liongard:primitives",
+      "@type": "@id",
+      "@container": "@set",
+      "comment": "On a recipe, the set of MetricPrimitive @ids the recipe references in its workflow."
+    },
+
+    "sourceRecipe": {
+      "@id": "liongard:sourceRecipe",
+      "@type": "@id",
+      "comment": "Path or @id of the recipe a primitive was first extracted from. Provenance, not authoritative usage — see liongard:isPartOf for full reverse index."
+    },
+
+    "compositionTier": {
+      "@id": "liongard:compositionTier",
+      "@type": "@id",
+      "comment": "The tier of this artifact in the three-tier composition hierarchy: tier/atom (MetricPrimitive), tier/molecule (SystemAssessmentRecipe), tier/organism (cross-system / use-case recipe). Inspired by Storybook's atomic design convention: atom → molecule → organism."
+    },
+
+    "composes": {
+      "@id": "liongard:composes",
+      "@type": "@id",
+      "@container": "@set",
+      "comment": "The set of recipes or primitives this recipe composes. Organism recipes list the molecule recipes they invoke; molecule recipes list the atom primitives they call. This is the parent-to-child direction of the composition graph — the inverse of isPartOf. Aligns with the composes[] array in primitives/registry.yaml."
+    }
+  },
+
+  "@graph": [
+    {
+      "@id": "liongard:RecipeTier",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Recipe Tier",
+      "rdfs:comment": "The level of an artifact in the three-tier composition hierarchy, borrowed from Storybook's atomic design convention: atom (metric primitive) → molecule (single-system recipe) → organism (cross-system / use-case recipe). Tier governs what an artifact may compose and what may compose it."
+    },
+    {
+      "@id": "liongard:tier/atom",
+      "@type": "liongard:RecipeTier",
+      "name": "Atom",
+      "rdfs:comment": "Tier 1 — MetricPrimitive. A single JMESPath query or stored Liongard metric. The indivisible unit of composition. Atoms are composed into molecules; molecules and organisms may also reference atoms directly."
+    },
+    {
+      "@id": "liongard:tier/molecule",
+      "@type": "liongard:RecipeTier",
+      "name": "Molecule",
+      "rdfs:comment": "Tier 2 — SystemAssessmentRecipe. A per-inspector, single-system recipe that composes metric primitives (atoms) into a vendor-specific assessment deliverable."
+    },
+    {
+      "@id": "liongard:tier/organism",
+      "@type": "liongard:RecipeTier",
+      "name": "Organism",
+      "rdfs:comment": "Tier 3 — Cross-system and use-case recipes (SystemTypeAssessmentRecipe, DomainAssessmentRecipe, ComplianceRecipe, QBRRecipe, OnboardingRecipe, SalesRecipe, RoadmapRecipe). Organisms compose molecules (single-system recipes) and may reference atoms (metrics) directly. They produce environment-level or compliance-level artifacts."
+    },
+
+    {
+      "@id": "liongard:MetricPrimitive",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Metric Primitive",
+      "rdfs:comment": "Tier 1 (atom). A single atomic, reusable evaluation against Liongard data — either a JMESPath query against an inspector dataprint or a reference to a stored Liongard global-catalog metric. The unit of composition for recipes. Identified by a stable namespaced id (metrics:{inspector-slug}:{condition}) so multiple recipes reference the same primitive and stay in sync when it's revised.",
+      "liongard:compositionTier": { "@id": "liongard:tier/atom" }
+    },
+    {
+      "@id": "liongard:Recipe",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Recipe",
+      "rdfs:comment": "An agent playbook that turns live Liongard data into a customer-facing artifact. Composed of MetricPrimitive references plus workflow steps, customization knobs, QA pass, and output rendering. Subclassed into molecules (single-system) and organisms (cross-system / use-case)."
+    },
+    {
+      "@id": "liongard:SystemAssessmentRecipe",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": "liongard:Recipe",
+      "rdfs:label": "Single-System Assessment Recipe",
+      "rdfs:comment": "Tier 2 (molecule). Per-system assessment scoped to one inspector instance (e.g., a single Synology NAS, one Microsoft 365 tenant). Composes metric primitives (atoms); is composed by organism recipes.",
+      "liongard:compositionTier": { "@id": "liongard:tier/molecule" }
+    },
+    {
+      "@id": "liongard:SystemTypeAssessmentRecipe",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": "liongard:Recipe",
+      "rdfs:label": "System-Type Assessment Recipe",
+      "rdfs:comment": "Tier 3 (organism). Rollup across all inspector instances of a given category (e.g., all firewalls, all EDR platforms). Composes molecule recipes for each inspector variant in the category.",
+      "liongard:compositionTier": { "@id": "liongard:tier/organism" }
+    },
+    {
+      "@id": "liongard:DomainAssessmentRecipe",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": "liongard:Recipe",
+      "rdfs:label": "Domain Assessment Recipe",
+      "rdfs:comment": "Tier 3 (organism). Cross-inspector domain-level assessment (identity, endpoint, network, backup, etc.) that composes molecule recipes from many inspectors to produce a single domain-level view.",
+      "liongard:compositionTier": { "@id": "liongard:tier/organism" }
+    },
+    {
+      "@id": "liongard:ComplianceRecipe",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": "liongard:Recipe",
+      "rdfs:label": "Compliance Recipe",
+      "rdfs:comment": "Tier 3 (organism). Recipe that produces evidence packs for a framework (CMMC, HIPAA, FTC Safeguards, cyber insurance). Composes molecule and other organism recipes as evidence sources.",
+      "liongard:compositionTier": { "@id": "liongard:tier/organism" }
+    },
+    {
+      "@id": "liongard:CyberInsuranceQuestion",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": "liongard:Recipe",
+      "rdfs:label": "Cyber Insurance Question",
+      "rdfs:comment": "Tier 3 (organism). Single question on a cyber-insurance application, paired with the primitive(s) or molecule recipe(s) that answer it.",
+      "liongard:compositionTier": { "@id": "liongard:tier/organism" }
+    },
+    {
+      "@id": "liongard:QBRRecipe",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": "liongard:Recipe",
+      "rdfs:label": "QBR Recipe",
+      "rdfs:comment": "Tier 3 (organism). Quarterly business review — composes domain assessments and system-type rollups (both organisms) plus single-system molecules into a time-bounded narrative.",
+      "liongard:compositionTier": { "@id": "liongard:tier/organism" }
+    },
+    {
+      "@id": "liongard:OnboardingRecipe",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": "liongard:Recipe",
+      "rdfs:label": "Onboarding Recipe",
+      "rdfs:comment": "Tier 3 (organism). Intake assessment producing a baseline workbook + remediation roadmap for a new customer. Composes molecule recipes across the customer's full inspector coverage.",
+      "liongard:compositionTier": { "@id": "liongard:tier/organism" }
+    },
+    {
+      "@id": "liongard:SalesRecipe",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": "liongard:Recipe",
+      "rdfs:label": "Sales Recipe",
+      "rdfs:comment": "Tier 3 (organism). Pre-sales discovery / pitch deck recipe, often based on non-credentialed external-attack-surface inspectors. Composes molecule recipes (or atom metrics directly) to produce a prospect-facing risk summary.",
+      "liongard:compositionTier": { "@id": "liongard:tier/organism" }
+    },
+    {
+      "@id": "liongard:RoadmapRecipe",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": "liongard:Recipe",
+      "rdfs:label": "Roadmap Recipe",
+      "rdfs:comment": "Tier 3 (organism). Forecast/refresh plan — hardware EOL, license renewals, OS upgrades. Composes molecule recipes to surface lifecycle signals across a customer's environment.",
+      "liongard:compositionTier": { "@id": "liongard:tier/organism" }
+    },
+    {
+      "@id": "liongard:Inspector",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Liongard Inspector",
+      "rdfs:comment": "A Liongard system type (e.g., microsoft-365-inspector). Primitives evaluate against inspectors; recipes filter their scope by inspector slug."
+    },
+    {
+      "@id": "liongard:Persona",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Persona",
+      "rdfs:comment": "MSP role a recipe is designed for: noc, soc, vcio-account-manager, technical-alignment-manager, sales, executive, accounting-finance."
+    },
+
+    { "@id": "liongard:persona/noc",                        "@type": "liongard:Persona", "name": "NOC" },
+    { "@id": "liongard:persona/soc",                        "@type": "liongard:Persona", "name": "SOC" },
+    { "@id": "liongard:persona/vcio-account-manager",       "@type": "liongard:Persona", "name": "vCIO / Account Manager" },
+    { "@id": "liongard:persona/technical-alignment-manager","@type": "liongard:Persona", "name": "Technical Alignment Manager" },
+    { "@id": "liongard:persona/sales",                      "@type": "liongard:Persona", "name": "Sales" },
+    { "@id": "liongard:persona/executive",                  "@type": "liongard:Persona", "name": "Executive" },
+    { "@id": "liongard:persona/accounting-finance",         "@type": "liongard:Persona", "name": "Accounting / Finance" }
+  ]
+}

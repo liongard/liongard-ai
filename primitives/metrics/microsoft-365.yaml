@@ -1,0 +1,449 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+# ── Tenant / Domains ──────────────────────────────────────────────────────────
+
+  - "@id": "metrics:microsoft-365:associated-domains"
+    "@type": "liongard:MetricPrimitive"
+    name: "Microsoft 365 — Associated Domains"
+    description: "Domain names associated with this Microsoft 365 tenant (joined comma-separated string)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "microsoft-365-inspector"
+      inspectorId: 8
+    liongardMetricName: "Office 365: Associated Domains"
+    liongardMetricId: 6
+    liongardMetricUuid: "b63da025-218e-43b1-9b9c-871ef445eabf"
+    jmesPath: "Domains[*].id | join(`, `, @)"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "System A — dev environment"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/microsoft-365.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:microsoft-365:directory-sync-enabled"
+    "@type": "liongard:MetricPrimitive"
+    name: "Microsoft 365 — Directory Sync Enabled"
+    description: "Boolean indicating whether Entra ID / Azure AD Connect directory sync is enabled for this tenant."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "microsoft-365-inspector"
+      inspectorId: 8
+    liongardMetricName: "Office 365: Directory Sync Enabled"
+    liongardMetricId: 529
+    liongardMetricUuid: "914da63e-07b7-47f2-878c-6ab4c0027a12"
+    jmesPath: "SystemInfo.DirectorySync[].DirectorySyncEnabled | [0]"
+    resultType: "boolean"
+    compliantWhen: "result == true when hybrid environment expected; result == false for cloud-only tenants"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "System B — dev environment"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/microsoft-365.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:microsoft-365:directory-sync-stale-hours-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Microsoft 365 — Directory Sync Stale (>=24h) Count"
+    description: "Count of orgs where directory sync is enabled but HoursSinceLastSync_r >= 24. Should be 0 in a healthy hybrid tenant."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "microsoft-365-inspector"
+      inspectorId: 8
+    liongardMetricName: "Microsoft 365: Hours Since Last Directory Sync >=24"
+    liongardMetricId: 1790
+    liongardMetricUuid: "9dd1e31c-4513-4aa3-8bec-f1d1ce79bce3"
+    jmesPath: "SystemInfo.DirectorySync[?DirectorySyncEnabled == `true` && HoursSinceLastSync_r >= `24`] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "System B — dev environment"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/microsoft-365.md"
+    dateAdded: "2026-05-26"
+
+# ── User Counts ───────────────────────────────────────────────────────────────
+
+  - "@id": "metrics:microsoft-365:active-users-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Microsoft 365 — Active Users Count"
+    description: "Count of users with accountEnabled == true."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "microsoft-365-inspector"
+      inspectorId: 8
+    liongardMetricName: "Office 365: Enabled Accounts Count"
+    liongardMetricId: 1786
+    liongardMetricUuid: "29ecfd36-6b42-41c0-8377-a14247d09542"
+    jmesPath: "length(Users[?accountEnabled == `true`])"
+    resultType: "integer"
+    resultUnit: "count"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "System A — dev environment"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/microsoft-365.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:microsoft-365:disabled-users-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Microsoft 365 — Disabled Users Count"
+    description: "Count of users with accountEnabled == false."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "microsoft-365-inspector"
+      inspectorId: 8
+    liongardMetricName: "Office 365: Disabled User Count"
+    liongardMetricId: 64
+    liongardMetricUuid: "0fc59884-6f3d-4a1e-a181-7a2a7d932531"
+    jmesPath: "Users[?accountEnabled == `false`]|length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "System A — dev environment"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/microsoft-365.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:microsoft-365:licensed-users-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Microsoft 365 — Licensed Users Count"
+    description: "Count of users with at least one assigned product license (Assigned_Products != empty string)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "microsoft-365-inspector"
+      inspectorId: 8
+    liongardMetricName: "Office 365: Licensed User Count"
+    liongardMetricId: 41
+    liongardMetricUuid: "5e544b81-36c4-497e-af78-2c245160ac6f"
+    jmesPath: "Users[?Assigned_Products != ``] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "System A — dev environment"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/microsoft-365.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:microsoft-365:unlicensed-users-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Microsoft 365 — Unlicensed Users Count"
+    description: "Count of users with no assigned product license (Assigned_Products == empty string)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "microsoft-365-inspector"
+      inspectorId: 8
+    liongardMetricName: "Office 365: Unlicensed User Count"
+    liongardMetricId: 40
+    liongardMetricUuid: "6725435b-1569-4265-8269-da11ce20bc78"
+    jmesPath: "Users[?Assigned_Products == ``] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "System A — dev environment"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/microsoft-365.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:microsoft-365:disabled-users-with-licenses-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Microsoft 365 — Disabled Users with Licenses Count"
+    description: "Count of disabled accounts (accountEnabled == false) that still have at least one assigned license. True-up savings opportunity."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "microsoft-365-inspector"
+      inspectorId: 8
+    liongardMetricName: "Office 365: Disabled Users with Licenses Count"
+    liongardMetricId: 879
+    liongardMetricUuid: "40800f5f-5b94-47cc-9ff4-b0e460ea35ab"
+    jmesPath: "Users[?accountEnabled == `false` && assignedLicenses.length(@) > `0`] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "CIS-Controls-v8:5.3"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "System A — dev environment"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/microsoft-365.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:microsoft-365:stale-licensed-users-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Microsoft 365 — Stale Licensed Users Count"
+    description: "Count of active users inactive in the last 30 days (activeLast30Days == false AND accountEnabled == true). Candidate accounts for license reclamation."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "microsoft-365-inspector"
+      inspectorId: 8
+    liongardMetricName: "Office 365: Stale or Disused User Accounts Count"
+    liongardMetricId: 767
+    liongardMetricUuid: "caf567e8-0705-4b0c-9746-74bd84fce054"
+    jmesPath: "length(Users[?activeLast30Days==`false` && accountEnabled == `true` ])"
+    resultType: "integer"
+    resultUnit: "count"
+    compliesWith:
+      - "CIS-Controls-v8:5.3"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "System A — dev environment"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/microsoft-365.md"
+    dateAdded: "2026-05-26"
+
+# ── Privileged Users ──────────────────────────────────────────────────────────
+
+  - "@id": "metrics:microsoft-365:privileged-users-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Microsoft 365 — Privileged Users Count"
+    description: "Count of M365 users flagged as privileged (Privileged == 'Yes'). Pair with metrics:microsoft-365:admin-users-mfa-disabled-count for risk surfacing."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "microsoft-365-inspector"
+      inspectorId: 8
+    liongardMetricName: "Office 365: Privileged Users Count"
+    liongardMetricId: 20
+    liongardMetricUuid: "a2d664f3-7c88-44af-97c2-afbda125296e"
+    jmesPath: "Users[?Privileged == `Yes`] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "System A — dev environment"
+    compliesWith:
+      - "CIS-Controls-v8:6.8"
+      - "cyber-insurance-domain-auth"
+    answersQuestion:
+      - "cyber-insurance:privileged-account-inventory"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/microsoft-365.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:microsoft-365:privileged-users-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Microsoft 365 — Privileged Users List"
+    description: "Display names of users flagged as privileged, sorted by id."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "microsoft-365-inspector"
+      inspectorId: 8
+    liongardMetricName: "Office 365: Privileged Users List"
+    liongardMetricId: 450
+    liongardMetricUuid: "d1869d23-f02b-4b69-a161-deade46b6352"
+    jmesPath: "Users[?Privileged==`Yes`] | sort_by(@,&id)[].[displayName || userPrincipalName] | []"
+    resultType: "array"
+    compliesWith:
+      - "CIS-Controls-v8:6.8"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "System B — dev environment"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/microsoft-365.md"
+    dateAdded: "2026-05-26"
+
+# ── MFA Coverage ──────────────────────────────────────────────────────────────
+
+  - "@id": "metrics:microsoft-365:admin-users-mfa-disabled-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Microsoft 365 — Admin Users with MFA Disabled Count"
+    description: "Count of privileged users where MFA is not effectively enforced. Evaluates Security Defaults, CA policy coverage, exclusions, and per-user MFA state. Changes take 24–48h to propagate."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "microsoft-365-inspector"
+      inspectorId: 8
+    liongardMetricName: "Office 365: Admin Users with MFA Disabled Count"
+    liongardMetricId: 683
+    liongardMetricUuid: "2ff8cf28-d363-401d-b5d8-bc5c38aac4cb"
+    jmesPath: "subtract(length(Users[?Privileged == `Yes`]), length(Users[?Privileged == `Yes` && mfaDetails.enforced == `true`]))"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "CIS-Controls-v8:6.3"
+      - "cyber-insurance-domain-auth"
+    answersQuestion:
+      - "cyber-insurance:mfa-admin-coverage"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "System B — dev environment"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/microsoft-365.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:microsoft-365:non-admin-users-mfa-disabled-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Microsoft 365 — Non-Admin Users with MFA Disabled Count"
+    description: "Count of non-privileged users where MFA is not effectively enforced. Same evaluation method as admin-users-mfa-disabled-count."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "microsoft-365-inspector"
+      inspectorId: 8
+    liongardMetricName: "Office 365: Non-Admin Users with MFA Disabled Count"
+    liongardMetricId: 763
+    liongardMetricUuid: "61316daa-1146-4eb4-bb90-36f360a01a54"
+    jmesPath: "subtract(length(Users[?Privileged != `Yes`]), length(Users[?Privileged != `Yes` && mfaDetails.enforced == `true`]))"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "CIS-Controls-v8:6.3"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "System B — dev environment"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/microsoft-365.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:microsoft-365:users-not-mfa-registered-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Microsoft 365 — Users Not Registered for MFA Count"
+    description: "Count of enabled users where isMfaRegistered_r != 'Enabled'."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "microsoft-365-inspector"
+      inspectorId: 8
+    liongardMetricName: "Azure Active Directory: Users not registered for MFA Count"
+    liongardMetricId: 994
+    liongardMetricUuid: "629282ed-8dc0-4448-9c71-a2a31acc05e2"
+    jmesPath: "Users[?isMfaRegistered_r != `Enabled` && accountEnabled == `true`] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "CIS-Controls-v8:6.3"
+      - "cyber-insurance-domain-auth"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "System B — dev environment"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/microsoft-365.md"
+    dateAdded: "2026-05-26"
+
+# ── Security Posture ──────────────────────────────────────────────────────────
+
+  - "@id": "metrics:microsoft-365:security-defaults-enabled"
+    "@type": "liongard:MetricPrimitive"
+    name: "Microsoft 365 — Security Defaults Enabled"
+    description: "Boolean: whether Microsoft Security Defaults are enabled for the tenant. When true, basic MFA and legacy auth-block policies are auto-enforced."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "microsoft-365-inspector"
+      inspectorId: 8
+    liongardMetricName: "Azure Active Directory: Security Defaults Enabled Status"
+    liongardMetricId: 987
+    liongardMetricUuid: "62496d5d-f1ad-487f-8ae9-2b87e577943e"
+    jmesPath: "SystemInfo.Overview.securityDefaults.isEnabled"
+    resultType: "boolean"
+    compliantWhen: "result == true when Conditional Access is not in use (Basic or Business tenants)"
+    compliesWith:
+      - "CIS-Controls-v8:6.3"
+      - "cyber-insurance-domain-auth"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "System B — dev environment"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/microsoft-365.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:microsoft-365:conditional-access-policies-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Microsoft 365 — Conditional Access Policies (Enabled List)"
+    description: "Display names of Conditional Access policies where state == 'enabled'. Used as cyber-insurance evidence of CA enforcement."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "microsoft-365-inspector"
+      inspectorId: 8
+    liongardMetricName: "Azure Active Directory: Conditional Access Policies List"
+    liongardMetricId: 979
+    liongardMetricUuid: "36d8e11a-7f6c-469d-8599-60efe1317aa7"
+    jmesPath: "Policies.ConditionalAccess[?state == `enabled`].displayName"
+    resultType: "array"
+    compliesWith:
+      - "CIS-Controls-v8:6.3"
+      - "cyber-insurance-domain-auth"
+    answersQuestion:
+      - "cyber-insurance:conditional-access-evidence"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "System B — dev environment"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/microsoft-365.md"
+    dateAdded: "2026-05-26"
+
+# ── Licensing ─────────────────────────────────────────────────────────────────
+
+  - "@id": "metrics:microsoft-365:enterprise-e3-licenses-consumed"
+    "@type": "liongard:MetricPrimitive"
+    name: "Microsoft 365 — Enterprise E3 Licenses Consumed"
+    description: "Count of consumed Enterprise E3 license seats (skuPartNumber ENTERPRISEPACK)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "microsoft-365-inspector"
+      inspectorId: 8
+    liongardMetricName: "Office 365: Licenses Consumed Count - Enterprise E3"
+    liongardMetricId: 37
+    liongardMetricUuid: "d3912451-5409-4d0b-936c-f9f3e28c346a"
+    jmesPath: "Licensing[?skuPartNumber == `ENTERPRISEPACK`].consumedUnits | [0]"
+    resultType: "integer"
+    resultUnit: "count"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "System A — dev environment"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/microsoft-365.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:microsoft-365:enterprise-e5-licenses-consumed"
+    "@type": "liongard:MetricPrimitive"
+    name: "Microsoft 365 — Enterprise E5 Licenses Consumed"
+    description: "Count of consumed Enterprise E5 license seats (skuPartNumber ENTERPRISEPREMIUM)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "microsoft-365-inspector"
+      inspectorId: 8
+    liongardMetricName: "Office 365: Licenses Consumed Count - Enterprise E5"
+    liongardMetricId: 38
+    liongardMetricUuid: "5c31424a-feef-4882-bc19-beeeddd6cddb"
+    jmesPath: "Licensing[?skuPartNumber == `ENTERPRISEPREMIUM`].consumedUnits | [0]"
+    resultType: "integer"
+    resultUnit: "count"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "System A — dev environment"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/microsoft-365.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:microsoft-365:licenses-total-assigned-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Microsoft 365 — Total Licenses Assigned Count"
+    description: "Sum of consumedUnits across all license SKUs. Overall license footprint count."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "microsoft-365-inspector"
+      inspectorId: 8
+    liongardMetricName: "Office 365: Assigned License Count"
+    liongardMetricId: 63
+    liongardMetricUuid: "921b72a4-9cb5-484a-87e0-f70dc1d6acd9"
+    jmesPath: "Licensing[].consumedUnits | sum(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "System A — dev environment"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/microsoft-365.md"
+    dateAdded: "2026-05-26"
+
+# ── SharePoint / Collaboration ────────────────────────────────────────────────
+
+  - "@id": "metrics:microsoft-365:sharepoint-sites-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Microsoft 365 — SharePoint Sites Count"
+    description: "Total count of SharePoint sites. Case-sensitive key: lowercase 'sites', NOT 'Sites'."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "microsoft-365-inspector"
+      inspectorId: 8
+    liongardMetricName: "Microsoft SharePoint: Total Sites Count"
+    liongardMetricId: 1234
+    liongardMetricUuid: "9a4b9a00-d026-4906-9c9d-21c1e4696aeb"
+    jmesPath: "sites[] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    fieldGotcha: "SharePoint sites key is lowercase 'sites' — JMESPath is case-sensitive. 'Sites' (capital S) returns null. VALIDATED: System B (2026-05-22, inspectorID=8) returned 18 sites."
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "System B — dev environment"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/microsoft-365.md"
+    dateAdded: "2026-05-26"

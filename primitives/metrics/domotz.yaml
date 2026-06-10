@@ -1,0 +1,154 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+# Domotz (Inspector ID 88)
+# Eval sweep 2026-05-28 findings:
+# Parent/child inspector. Child keys: API, Name, Agent, Devices, AgentEyesTCP, AgentEyesSNMP,
+#   AgentRTDStats, AgentSpeedTest, AgentVPNSession, AgentAlertProfile, AgentStatusHistory,
+#   DeviceAlertProfile, AgentConnectionConsumption
+# Validated against Demo Child system (Setup Issue — last inspection data still valid).
+# CONFIRMED DATA GAPS: Agent.wan_info does NOT exist (no wan_ip/wan_hostname field).
+#   Agent.licence.expiration_time does NOT exist — Agent.licence fields are: id, code, type,
+#   activation_time, bound_mac_address. All prior WAN IP and licence expiry primitives were fabricated.
+# GOTCHA: Devices[].status is ALL-CAPS STRING ("ONLINE", "OFFLINE"). Do NOT use lowercase.
+# GOTCHA: Agent.status.value is ALL-CAPS STRING ("ONLINE", "OFFLINE").
+# GOTCHA: Devices[].importance is ALL-CAPS STRING ("VITAL", "HIGH", etc.).
+# GOTCHA: AgentRTDStats[] has device_id (integer) NOT device_name — prior device_name field was fabricated.
+# GOTCHA: AgentConnectionConsumption.limit is bytes (integer, e.g. 10240000000 = ~10GB).
+
+primitives:
+
+  - "@id": "metrics:domotz-inspector:agent-status"
+    "@type": "liongard:MetricPrimitive"
+    name: "Domotz — Agent Status"
+    description: "Current agent status string: ONLINE or OFFLINE."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "domotz-inspector"
+      inspectorId: 88
+    jmesPath: "Agent.status.value"
+    resultType: "string"
+    fieldGotcha: "Agent.status is an OBJECT with a 'value' key. status.value is ALL-CAPS STRING ('ONLINE', 'OFFLINE'). Do not use lowercase."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Demo Child system (inspected 2025-12-02)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/domotz.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:domotz-inspector:device-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Domotz — Device Count"
+    description: "Total number of devices discovered by this Domotz probe on the local network."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "domotz-inspector"
+      inspectorId: 88
+    jmesPath: "length(Devices)"
+    resultType: "integer"
+    fieldGotcha: "Devices[] fields include: id, type, model, names, status (ALL-CAPS string), vendor, details, protocol, is_jammed, hw_address, importance (ALL-CAPS string), DeviceUptime, display_name, grace_period, ip_addresses, first_seen_on, agent_reachable, last_status_change, DeviceStatusHistory."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Demo Child system (inspected 2025-12-02)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/domotz.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:domotz-inspector:devices-online-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Domotz — Devices Online Count"
+    description: "Number of devices with status ONLINE."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "domotz-inspector"
+      inspectorId: 88
+    jmesPath: "length(Devices[?status == 'ONLINE'])"
+    resultType: "integer"
+    fieldGotcha: "Devices[].status is ALL-CAPS STRING. Must use 'ONLINE' not 'Online' or 'online'."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Demo Child system (inspected 2025-12-02)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/domotz.md"
+    dateAdded: "2026-05-28"
+
+  - "@id": "metrics:domotz-inspector:devices-offline-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Domotz — Devices Offline Count"
+    description: "Number of devices with status OFFLINE."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "domotz-inspector"
+      inspectorId: 88
+    jmesPath: "length(Devices[?status == 'OFFLINE'])"
+    resultType: "integer"
+    fieldGotcha: "Devices[].status is ALL-CAPS STRING. Must use 'OFFLINE' not 'Offline' or 'offline'."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Demo Child system (inspected 2025-12-02)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/domotz.md"
+    dateAdded: "2026-05-28"
+
+  - "@id": "metrics:domotz-inspector:device-inventory"
+    "@type": "liongard:MetricPrimitive"
+    name: "Domotz — Device Inventory"
+    description: "Full device list with display name, status, IP addresses, MAC address, vendor, model, and importance."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "domotz-inspector"
+      inspectorId: 88
+    jmesPath: "Devices[].{display_name: display_name, status: status, importance: importance, ip_addresses: ip_addresses, hw_address: hw_address, vendor: vendor, model: model}"
+    resultType: "array"
+    fieldGotcha: "status and importance are ALL-CAPS strings. display_name, vendor, model are strings. ip_addresses is an array. hw_address is MAC address string."
+    status: "SCHEMA_CONFIRMED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Demo Child system — all fields confirmed in GET_OVERVIEW; multi-field projection not directly EVALUATE-tested"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/domotz.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:domotz-inspector:rtd-stats"
+    "@type": "liongard:MetricPrimitive"
+    name: "Domotz — RTD Statistics"
+    description: "Round-trip delay statistics per actively polled device: device ID, median RTD, lost and sent packet counts."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "domotz-inspector"
+      inspectorId: 88
+    jmesPath: "AgentRTDStats[].{device_id: device_id, avg_median: avg_median, latest_lost_packet_count: latest_lost_packet_count, latest_sent_packet_count: latest_sent_packet_count}"
+    resultType: "array"
+    fieldGotcha: "CRITICAL: AgentRTDStats[].device_id is an INTEGER — NOT device_name (which does not exist in this array). Fields confirmed: avg_max, avg_min, device_id (int), timestamp, avg_median, latest_median, latest_lost_packet_count, latest_sent_packet_count."
+    status: "SCHEMA_CONFIRMED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Demo Child system — Array(26) confirmed in GET_OVERVIEW; field names confirmed, projection not directly EVALUATE-tested"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/domotz.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:domotz-inspector:api-usage"
+    "@type": "liongard:MetricPrimitive"
+    name: "Domotz — API Daily Usage"
+    description: "Domotz API daily usage vs. daily limit for this agent."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "domotz-inspector"
+      inspectorId: 88
+    jmesPath: "API.{daily_limit: daily_limit, daily_usage: daily_usage}"
+    resultType: "object"
+    fieldGotcha: "API object fields: by_ip, by_key, by_resource, daily_limit (number), daily_usage (number), concurrent_allowed (number)."
+    status: "SCHEMA_CONFIRMED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Demo Child system — API object confirmed in GET_OVERVIEW; field projection not directly EVALUATE-tested"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/domotz.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:domotz-inspector:agent-connection-consumption"
+    "@type": "liongard:MetricPrimitive"
+    name: "Domotz — Agent Connection Consumption"
+    description: "Concurrent connection consumption vs. limit for this Domotz agent."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "domotz-inspector"
+      inspectorId: 88
+    jmesPath: "AgentConnectionConsumption.{limit: limit, current: current}"
+    resultType: "object"
+    fieldGotcha: "AgentConnectionConsumption.limit is in BYTES (integer, e.g. 10240000000 = ~10GB). AgentConnectionConsumption.current is also bytes."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Demo Child system (inspected 2025-12-02)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/domotz.md"
+    dateAdded: "2026-05-26"

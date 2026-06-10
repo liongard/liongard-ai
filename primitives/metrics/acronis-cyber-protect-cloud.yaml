@@ -1,0 +1,205 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+  - "@id": "metrics:acronis-cyber-protect-cloud:count-of-machines"
+    "@type": "liongard:MetricPrimitive"
+    name: "Acronis Cyber Cloud — Count of Machines"
+    description: "Count of machine-type resources registered in this Acronis tenant. JMESPath: Resources[?type==`resource.machine`] | length(@)"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "acronis-cyber-protect-cloud-inspector"
+      inspectorId: 93
+    liongardMetricName: "Acronis Cyber Cloud: Count of Machines"
+    liongardMetricId: 1672
+    liongardMetricUuid: "9da11d3c-29a8-4f9e-bb5b-b0874df684cb"
+    jmesPath: "Resources[?type==`resource.machine`] | length(@)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/acronis-cyber-protect-cloud.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:acronis-cyber-protect-cloud:count-of-machines-with-backup-enabled"
+    "@type": "liongard:MetricPrimitive"
+    name: "Acronis Cyber Cloud — Count of Machines with Backup Enabled"
+    description: "Count of machine resources that have a machine backup policy attached. JMESPath: Resources[?type == `resource.machine` && policies[?type == `policy.backup.machine`]] | length(@)"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "acronis-cyber-protect-cloud-inspector"
+      inspectorId: 93
+    liongardMetricName: "Acronis Cyber Cloud: Count of Machines with Backup Enabled"
+    liongardMetricId: 1673
+    liongardMetricUuid: "c6dbbbd7-0433-4a80-b0ea-494888bf8580"
+    jmesPath: "Resources[?type == `resource.machine` && policies[?type == `policy.backup.machine`]] | length(@)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/acronis-cyber-protect-cloud.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:acronis-cyber-protect-cloud:list-of-machines-with-backup-enabled"
+    "@type": "liongard:MetricPrimitive"
+    name: "Acronis Cyber Cloud — List of Machines with Backup Enabled"
+    description: "Names of machine resources that have a machine backup policy attached. JMESPath: Resources[?type == `resource.machine` && policies[?type == `policy.backup.machine`]].name"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "acronis-cyber-protect-cloud-inspector"
+      inspectorId: 93
+    liongardMetricName: "Acronis Cyber Cloud: List of Machines with Backup Enabled"
+    liongardMetricId: 1674
+    liongardMetricUuid: "34ad5a63-2d4d-433f-b4fb-9d3857d3cbd7"
+    jmesPath: "Resources[?type == `resource.machine` && policies[?type == `policy.backup.machine`]].name || `-`"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/acronis-cyber-protect-cloud.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:acronis-cyber-protect-cloud:list-of-machines-without-backup-enabled"
+    "@type": "liongard:MetricPrimitive"
+    name: "Acronis Cyber Cloud — List of Machines without Backup Enabled"
+    description: "Names of machine resources that do NOT have a machine backup policy attached — coverage gap. JMESPath: Resources[?type == `resource.machine` && (!policies || !contains(policies[].type, `policy.backup.machine`))].name"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "acronis-cyber-protect-cloud-inspector"
+      inspectorId: 93
+    liongardMetricName: "Acronis Cyber Cloud: List of Machines without Backup Enabled"
+    liongardMetricId: 1675
+    liongardMetricUuid: "593939fa-619c-4e47-aa94-d8a0be2d7919"
+    jmesPath: "Resources[?type == `resource.machine` && (!policies || !contains(policies[].type, `policy.backup.machine`))].name || `-`"
+    resultType: "array"
+    compliantWhen: "result == null || length(result) == 0"
+    compliesWith:
+      - "CIS-Controls-v8:11.2"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/acronis-cyber-protect-cloud.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:acronis-cyber-protect-cloud:machine-backup-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "Acronis Cyber Cloud — Machine Backup Summary"
+    description: "Per-machine backup policy summary including last_run, last_success_run, and next_run timestamps for machines with a backup policy attached."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "acronis-cyber-protect-cloud-inspector"
+      inspectorId: 93
+    liongardMetricName: "Acronis Cyber Cloud: Machine Backup Summary"
+    liongardMetricId: 1685
+    liongardMetricUuid: "b1225afb-8b22-4ee1-9c9e-24381449cec0"
+    jmesPath: "Resources[?type == `resource.machine` && policies[?type == `policy.backup.machine`]].join('', ['Name: ', name, ', Last Run: ', policies[?type == `policy.backup.machine`].last_run | [0], ', Last Successful Run: ', policies[?type == `policy.backup.machine`].last_success_run | [0], ', Next Run: ', policies[?type == `policy.backup.machine`].next_run | [0]]) | join(` | `, @)"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/acronis-cyber-protect-cloud.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:acronis-cyber-protect-cloud:count-of-machines-not-backed-up-24h"
+    "@type": "liongard:MetricPrimitive"
+    name: "Acronis Cyber Cloud — Count of Machines Not Successfully Backed Up In Last 24 Hours"
+    description: "Count of machines with backup enabled whose last_success_run is more than 24 hours ago — stale backup finding."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "acronis-cyber-protect-cloud-inspector"
+      inspectorId: 93
+    liongardMetricName: "Acronis Cyber Cloud: Count of Machines Not Successfully Backed Up In Last 24 Hours"
+    liongardMetricId: 1686
+    liongardMetricUuid: "95237b12-33d3-4e44-991e-5c5d530f5d25"
+    jmesPath: "Resources[?type == `resource.machine` && policies[?type == `policy.backup.machine`] && policies[?type == `policy.backup.machine`].last_success_run && (time_since(policies[?type == `policy.backup.machine`].last_success_run | [0], 'hours') > `24`)] | length(@)"
+    resultType: "integer"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "CIS-Controls-v8:11.2"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/acronis-cyber-protect-cloud.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:acronis-cyber-protect-cloud:list-of-machines-not-backed-up-24h"
+    "@type": "liongard:MetricPrimitive"
+    name: "Acronis Cyber Cloud — List of Machines Not Successfully Backed Up In Last 24 Hours"
+    description: "Names of machines with backup enabled whose last_success_run is more than 24 hours ago."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "acronis-cyber-protect-cloud-inspector"
+      inspectorId: 93
+    liongardMetricName: "Acronis Cyber Cloud: List of Machines Not Successfully Backed Up In Last 24 Hours"
+    liongardMetricId: 1687
+    liongardMetricUuid: "9adab24f-43e7-4afa-bad1-3677a0035271"
+    jmesPath: "Resources[?type == `resource.machine` && policies[?type == `policy.backup.machine`] && policies[?type == `policy.backup.machine`].last_success_run && (time_since(policies[?type == `policy.backup.machine`].last_success_run | [0], 'hours') > `24`)].name || `-`"
+    resultType: "array"
+    compliantWhen: "result == null || length(result) == 0"
+    compliesWith:
+      - "CIS-Controls-v8:11.2"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/acronis-cyber-protect-cloud.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:acronis-cyber-protect-cloud:list-of-machines-backed-up-30d"
+    "@type": "liongard:MetricPrimitive"
+    name: "Acronis Cyber Cloud — List of Machines Successfully Backed Up In Last 30 Days"
+    description: "Names of machines with backup enabled whose last_success_run is within the last 30 days (720 hours)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "acronis-cyber-protect-cloud-inspector"
+      inspectorId: 93
+    liongardMetricName: "Acronis Cyber Cloud: List of Machines Successfully Backed Up In Last 30 days"
+    liongardMetricId: 2084
+    liongardMetricUuid: "9cf0dd2e-cbe4-4846-b811-13a7f8ed0390"
+    jmesPath: "Resources[?type == `resource.machine` && policies[?type == `policy.backup.machine`] && policies[?type == `policy.backup.machine`].last_success_run && (time_since(policies[?type == `policy.backup.machine`].last_success_run | [0], 'hours') < `720`)].name || `-`"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/acronis-cyber-protect-cloud.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:acronis-cyber-protect-cloud:list-of-machines-not-backed-up-30d"
+    "@type": "liongard:MetricPrimitive"
+    name: "Acronis Cyber Cloud — List of Machines NOT Successfully Backed Up In Last 30 Days"
+    description: "Names of machines with backup enabled whose last_success_run is older than 30 days (720 hours)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "acronis-cyber-protect-cloud-inspector"
+      inspectorId: 93
+    liongardMetricName: "Acronis Cyber Cloud: List of Machines NOT Successfully Backed Up In Last 30 days"
+    liongardMetricId: 2165
+    liongardMetricUuid: "7cdef692-951d-11ee-b9d1-0242ac120002"
+    jmesPath: "Resources[?type == `resource.machine` && policies[?type == `policy.backup.machine`] && policies[?type == `policy.backup.machine`].last_success_run && (time_since(policies[?type == `policy.backup.machine`].last_success_run | [0], 'hours') > `720`)].name || `-`"
+    resultType: "array"
+    compliantWhen: "result == null || length(result) == 0"
+    compliesWith:
+      - "CIS-Controls-v8:11.2"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/acronis-cyber-protect-cloud.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:acronis-cyber-protect-cloud:local-storage-used-bytes"
+    "@type": "liongard:MetricPrimitive"
+    name: "Acronis Cyber Cloud — Local Storage Used (Bytes)"
+    description: "Local storage consumed by this Acronis tenant in bytes. JMESPath: Usages[].usages[?usage_name == `local_storage`].value"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "acronis-cyber-protect-cloud-inspector"
+      inspectorId: 93
+    liongardMetricName: "Acronis Cyber Cloud: Local Storage Used (Bytes)"
+    liongardMetricId: 1671
+    liongardMetricUuid: "2e4ca9e5-fff8-4e0d-8c70-089b25df6751"
+    jmesPath: "Usages[].usages[?usage_name == `local_storage`].value"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/acronis-cyber-protect-cloud.md"
+    dateAdded: "2026-05-26"

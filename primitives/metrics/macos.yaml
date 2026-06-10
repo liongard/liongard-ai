@@ -1,0 +1,279 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+- '@id': metrics:mac-inspector:os-version
+  '@type': liongard:MetricPrimitive
+  name: macOS — OS Version
+  description: macOS operating system version string (e.g., 'macOS Sonoma 14.0').
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: mac-inspector
+    inspectorId: 96
+  liongardMetricName: 'macOS: Operating System'
+  liongardMetricId: 2102
+  liongardMetricUuid: "9c40cff7-422c-4f55-a4d1-6908d7f9d8dd"
+  jmesPath: Overview.OsVersion
+  resultType: string
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System Q (inspected 2026-04-21) — 'macOS Sonoma 14.0'
+  sourceRecipe: recipes/single-system-analysis/by-inspector/macos.md
+  dateAdded: '2026-05-28'
+
+- '@id': metrics:mac-inspector:serial-number
+  '@type': liongard:MetricPrimitive
+  name: macOS — Serial Number
+  description: Hardware serial number of the Mac.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: mac-inspector
+    inspectorId: 96
+  liongardMetricName: 'macOS: Serial Number'
+  liongardMetricId: 2107
+  liongardMetricUuid: "34189ad7-c016-47b5-b04a-84c43a0101a3"
+  jmesPath: Overview.SerialNumber
+  resultType: string
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System Q (inspected 2026-04-21)
+  sourceRecipe: recipes/single-system-analysis/by-inspector/macos.md
+  dateAdded: '2026-05-28'
+
+- '@id': metrics:mac-inspector:machine-model
+  '@type': liongard:MetricPrimitive
+  name: macOS — Machine Model
+  description: Apple hardware model identifier (e.g., 'MacBookPro16,2').
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: mac-inspector
+    inspectorId: 96
+  liongardMetricName: 'macOS: Model'
+  liongardMetricId: 2105
+  liongardMetricUuid: "268d7f04-32f7-4d1a-97d2-7d4f1d3baeaa"
+  jmesPath: Overview.MachineModel
+  resultType: string
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System Q (inspected 2026-04-21) — 'MacBookPro16,2'
+  sourceRecipe: recipes/single-system-analysis/by-inspector/macos.md
+  dateAdded: '2026-05-28'
+
+- '@id': metrics:mac-inspector:system-integrity-status
+  '@type': liongard:MetricPrimitive
+  name: macOS — System Integrity Protection Status
+  description: 'SIP status string. Compliant value: ''integrity_enabled''.'
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: mac-inspector
+    inspectorId: 96
+  liongardMetricName: 'macOS: System Integrity Status'
+  liongardMetricId: 2112
+  liongardMetricUuid: "1c5797dd-426c-46c0-9509-07a6ae106159"
+  jmesPath: Overview.SystemIntegrity
+  resultType: string
+  fieldGotcha: Overview.SystemIntegrity is a STRING 'integrity_enabled' (lowercase
+    with underscore) — NOT a boolean and NOT 'Enabled'.
+  compliantWhen: result == 'integrity_enabled'
+  compliesWith:
+  - CIS-Controls-v8:10.5
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System Q (inspected 2026-04-21) — 'integrity_enabled'
+  sourceRecipe: recipes/single-system-analysis/by-inspector/macos.md
+  dateAdded: '2026-05-28'
+
+- '@id': metrics:mac-inspector:gatekeeper-status
+  '@type': liongard:MetricPrimitive
+  name: macOS — Gatekeeper Status
+  description: 'Gatekeeper application verification status. Compliant value: ''Enabled''.'
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: mac-inspector
+    inspectorId: 96
+  liongardMetricName: 'macOS: Gatekeeper Status'
+  liongardMetricId: 2116
+  liongardMetricUuid: "1adaa3a8-4874-4340-ad4c-3f797bc95280"
+  jmesPath: Overview.GateKeeper
+  resultType: string
+  fieldGotcha: Overview.GateKeeper is a STRING 'Enabled'/'Disabled' (Title Case) —
+    NOT a boolean.
+  compliantWhen: result == 'Enabled'
+  compliesWith:
+  - CIS-Controls-v8:10.5
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System Q (inspected 2026-04-21) — 'Enabled'
+  sourceRecipe: recipes/single-system-analysis/by-inspector/macos.md
+  dateAdded: '2026-05-28'
+
+- '@id': metrics:mac-inspector:filevault-status
+  '@type': liongard:MetricPrimitive
+  name: macOS — FileVault Encryption Status
+  description: 'Full disk encryption status from Overview. Compliant value: ''On''.'
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: mac-inspector
+    inspectorId: 96
+  liongardMetricName: 'macOS: File Vault Encryption Status'
+  liongardMetricId: 2119
+  liongardMetricUuid: "50e01766-a578-4174-b4ca-b54d75c44ce2"
+  jmesPath: Overview.FileVaultEncryption
+  resultType: string
+  fieldGotcha: 'Two separate FileVault fields exist: (1) Overview.FileVaultEncryption
+    = simple ''On''/''Off'' policy setting; (2) DriveEncryptionStatus[0].FileVault
+    = detailed per-volume string like ''Yes (Unlocked)''. Use Overview.FileVaultEncryption
+    for the policy check.'
+  compliantWhen: result == 'On'
+  compliesWith:
+  - CIS-Controls-v8:3.6
+  - cyber-insurance-domain-endpoint
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System Q (inspected 2026-04-21) — 'Off'
+  sourceRecipe: recipes/single-system-analysis/by-inspector/macos.md
+  dateAdded: '2026-05-28'
+
+- '@id': metrics:mac-inspector:activation-lock-status
+  '@type': liongard:MetricPrimitive
+  name: macOS — Activation Lock Status
+  description: Activation lock status string. Value 'disabled' means device is not
+    activation-locked.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: mac-inspector
+    inspectorId: 96
+  liongardMetricName: 'macOS: Activation Lock Status'
+  liongardMetricId: 2118
+  liongardMetricUuid: "56721d3f-9f37-4718-bac2-bed97adb805b"
+  jmesPath: Overview.ActivationLockStatus
+  resultType: string
+  fieldGotcha: Overview.ActivationLockStatus is LOWERCASE string 'disabled'/'enabled'
+    — not Title Case.
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System Q (inspected 2026-04-21) — 'disabled'
+  sourceRecipe: recipes/single-system-analysis/by-inspector/macos.md
+  dateAdded: '2026-05-28'
+
+- '@id': metrics:mac-inspector:internal-ip
+  '@type': liongard:MetricPrimitive
+  name: macOS — Internal IP Address
+  description: Private (LAN) IP address of the Mac.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: mac-inspector
+    inspectorId: 96
+  liongardMetricName: 'macOS: Internal IP'
+  liongardMetricId: 2120
+  liongardMetricUuid: "653cc1b5-aa70-4b8f-87cc-b1fe8decb7c4"
+  jmesPath: Network.InternalIp
+  resultType: string
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System Q (inspected 2026-04-21)
+  sourceRecipe: recipes/single-system-analysis/by-inspector/macos.md
+  dateAdded: '2026-05-28'
+
+- '@id': metrics:mac-inspector:updates-available-count
+  '@type': liongard:MetricPrimitive
+  name: macOS — Available Updates Count
+  description: Number of pending macOS system updates.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: mac-inspector
+    inspectorId: 96
+  liongardMetricName: 'macOS: List of Available Updates'
+  liongardMetricId: 2126
+  liongardMetricUuid: "1e048e2b-5297-41f0-97f1-fe5695f53afb"
+  jmesPath: length(AvailableUpdates)
+  resultType: integer
+  resultUnit: count
+  compliantWhen: result == 0
+  compliesWith:
+  - CIS-Controls-v8:7.3
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System Q (inspected 2026-04-21) — 1 update pending
+  sourceRecipe: recipes/single-system-analysis/by-inspector/macos.md
+  dateAdded: '2026-05-28'
+
+- '@id': metrics:mac-inspector:user-count
+  '@type': liongard:MetricPrimitive
+  name: macOS — Local User Count
+  description: Number of local user accounts on the Mac.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: mac-inspector
+    inspectorId: 96
+  liongardMetricName: 'macOS: List of Users'
+  liongardMetricId: 2125
+  liongardMetricUuid: "25bab6dc-a8ab-4603-9b07-667cdfc64c88"
+  jmesPath: length(Users)
+  resultType: integer
+  resultUnit: count
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System Q (inspected 2026-04-21) — 4 users
+  sourceRecipe: recipes/single-system-analysis/by-inspector/macos.md
+  dateAdded: '2026-05-28'
+
+- '@id': metrics:mac-inspector:guest-user-enabled
+  '@type': liongard:MetricPrimitive
+  name: macOS — Guest User Enabled
+  description: 'Whether the guest user account is enabled. Compliant value: false.'
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: mac-inspector
+    inspectorId: 96
+  jmesPath: UserSettings.GuestEnabled
+  resultType: boolean
+  compliantWhen: result == false
+  compliesWith:
+  - CIS-Controls-v8:5.4
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System Q (inspected 2026-04-21) — false
+  sourceRecipe: recipes/single-system-analysis/by-inspector/macos.md
+  dateAdded: '2026-05-28'
+
+- '@id': metrics:mac-inspector:firewall-state
+  '@type': liongard:MetricPrimitive
+  name: macOS — Application Firewall State
+  description: 'macOS application-layer firewall state. Compliant value: ''Enabled''
+    (not ''Disabled'').'
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: mac-inspector
+    inspectorId: 96
+  jmesPath: Firewall.globalState
+  resultType: string
+  fieldGotcha: Firewall.globalState is a STRING 'Enabled'/'Disabled' (Title Case)
+    — NOT a boolean. Firewall.loggingEnabled is a BOOLEAN. Firewall.stealthEnabled
+    is a STRING 'Enabled'/'Disabled' (inconsistency — same object, mixed types).
+  compliantWhen: result == 'Enabled'
+  compliesWith:
+  - CIS-Controls-v8:12.1
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System Q (inspected 2026-04-21) — 'Disabled'
+  sourceRecipe: recipes/single-system-analysis/by-inspector/macos.md
+  dateAdded: '2026-05-28'
+
+- '@id': metrics:mac-inspector:drive-percent-free
+  '@type': liongard:MetricPrimitive
+  name: macOS — Primary Drive Percent Free
+  description: Percentage of free space on the primary drive (Drives[0]). Alert when
+    below 10%.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: mac-inspector
+    inspectorId: 96
+  jmesPath: Drives[0].PercentFreeSpace
+  resultType: integer
+  resultUnit: percent
+  compliantWhen: result >= 10
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System Q (inspected 2026-04-21) — 89%
+  sourceRecipe: recipes/single-system-analysis/by-inspector/macos.md
+  dateAdded: '2026-05-28'

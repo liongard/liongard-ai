@@ -1,0 +1,131 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+  - '@id': metrics:autotask-inspector:accounts-total-count
+    '@type': liongard:MetricPrimitive
+    dateAdded: '2026-05-26'
+    description: Total number of company/account records in the Autotask tenant.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorId: 45
+      inspectorSlug: autotask-inspector
+    jmesPath: length(Accounts)
+    name: Autotask — Total Account Count
+    notes: Accounts.Active is boolean (true/false) for Accounts. length(Accounts) =
+      3020.
+    resultType: integer
+    sourceRecipe: recipes/single-system-analysis/by-inspector/autotask.md
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: 'System A (dev environment, inspected 2026-05-28) — returned
+      3020'
+
+  - '@id': metrics:autotask-inspector:accounts-active-count
+    '@type': liongard:MetricPrimitive
+    dateAdded: '2026-05-26'
+    description: Number of active company/account records in the Autotask tenant.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorId: 45
+      inspectorSlug: autotask-inspector
+    jmesPath: length(Accounts[?Active == `true`])
+    name: Autotask — Active Account Count
+    notes: Accounts.Active is boolean. Use backtick-quoted `true`.
+    resultType: integer
+    sourceRecipe: recipes/single-system-analysis/by-inspector/autotask.md
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: 'System A (dev environment, inspected 2026-05-28) — returned
+      3020'
+
+  - '@id': metrics:autotask-inspector:accounts-inactive-count
+    '@type': liongard:MetricPrimitive
+    dateAdded: '2026-05-26'
+    description: Number of inactive company/account records in the Autotask tenant.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorId: 45
+      inspectorSlug: autotask-inspector
+    jmesPath: length(Accounts[?Active == `false`])
+    name: Autotask — Inactive Account Count
+    resultType: integer
+    sourceRecipe: recipes/single-system-analysis/by-inspector/autotask.md
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: 'System A (dev environment, inspected 2026-05-28) — returned
+      0'
+
+  - '@id': metrics:autotask-inspector:contacts-total-count
+    '@type': liongard:MetricPrimitive
+    dateAdded: '2026-05-26'
+    description: Total number of contact records in the Autotask tenant.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorId: 45
+      inspectorSlug: autotask-inspector
+    jmesPath: length(Contacts)
+    name: Autotask — Total Contact Count
+    resultType: integer
+    sourceRecipe: recipes/single-system-analysis/by-inspector/autotask.md
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: 'System A (dev environment, inspected 2026-05-28) — returned
+      55'
+
+  - '@id': metrics:autotask-inspector:contacts-active-count
+    '@type': liongard:MetricPrimitive
+    dateAdded: '2026-05-26'
+    description: Number of active (Active == 1) contact records in the Autotask tenant.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorId: 45
+      inspectorSlug: autotask-inspector
+    jmesPath: length(Contacts[?Active == `1`])
+    name: Autotask — Active Contact Count
+    notes: 'GOTCHA: Contacts.Active is an INTEGER (1=active, 0=inactive), NOT boolean.
+      Use backtick-quoted integer `1`. Do NOT use ''true'' or == `true`. Distinct from
+      Accounts.Active which IS boolean.'
+    resultType: integer
+    sourceRecipe: recipes/single-system-analysis/by-inspector/autotask.md
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: 'System A (dev environment, inspected 2026-05-28) — returned
+      55'
+
+  - '@id': metrics:autotask-inspector:contacts-primary-count
+    '@type': liongard:MetricPrimitive
+    dateAdded: '2026-05-26'
+    description: Number of contacts flagged as PrimaryContact in the Autotask tenant.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorId: 45
+      inspectorSlug: autotask-inspector
+    jmesPath: length(Contacts[?PrimaryContact == `true`])
+    name: Autotask — Primary Contact Count
+    notes: PrimaryContact is boolean (true/false). Use backtick-quoted `true`.
+    resultType: integer
+    sourceRecipe: recipes/single-system-analysis/by-inspector/autotask.md
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: 'System A (dev environment, inspected 2026-05-28) — returned
+      3'
+
+  - '@id': metrics:autotask-inspector:unique-composite-key
+    '@type': liongard:MetricPrimitive
+    dateAdded: '2026-05-26'
+    description: Tenant identity key confirming which Autotask tenant the dataprint
+      belongs to.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorId: 45
+      inspectorSlug: autotask-inspector
+    jmesPath: UniqueCompositeKey
+    name: Autotask — Unique Composite Key
+    resultType: string
+    sourceRecipe: recipes/single-system-analysis/by-inspector/autotask.md
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: 'System A (dev environment, inspected 2026-05-28) — returned
+      string (tenant identity key)'
+

@@ -1,0 +1,500 @@
+$schema: ../../schemas/primitive.schema.json
+primitives:
+
+# ── System Identity ────────────────────────────────────────────────────────────
+
+- '@id': metrics:synology-nas:firmware-version
+  '@type': liongard:MetricPrimitive
+  name: "Synology NAS — Firmware Version"
+  description: DSM firmware version string reported by the NAS (e.g., "DSM 7.2.2-72806 Update 3").
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: synology-nas-inspector
+    inspectorId: 64
+  liongardMetricName: "Synology NAS: Firmware Version"
+  liongardMetricId: 393
+  liongardMetricUuid: "5b2b65ab-aefc-43ff-a1a7-93b26e86b606"
+  jmesPath: SystemInfo.firmware_ver
+  resultType: string
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: "System A — dev environment"
+  sourceRecipe: recipes/single-system-analysis/by-inspector/synology-nas.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:synology-nas:model
+  '@type': liongard:MetricPrimitive
+  name: "Synology NAS — Model"
+  description: Hardware model identifier (e.g., "DS420+").
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: synology-nas-inspector
+    inspectorId: 64
+  liongardMetricName: "Synology NAS: Model"
+  liongardMetricId: 394
+  liongardMetricUuid: "364e5b2c-3fee-4dcc-9daa-f49a1a358ef1"
+  jmesPath: SystemInfo.model
+  resultType: string
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: "System A — dev environment"
+  sourceRecipe: recipes/single-system-analysis/by-inspector/synology-nas.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:synology-nas:serial
+  '@type': liongard:MetricPrimitive
+  name: "Synology NAS — Serial Number"
+  description: Hardware serial number string.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: synology-nas-inspector
+    inspectorId: 64
+  liongardMetricName: "Synology NAS: Serial"
+  liongardMetricId: 395
+  liongardMetricUuid: "0a9a4482-e0f6-4672-918d-99d5c1f9a2d1"
+  jmesPath: SystemInfo.serial
+  resultType: string
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: "System A — dev environment"
+  sourceRecipe: recipes/single-system-analysis/by-inspector/synology-nas.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:synology-nas:system-temperature-celsius
+  '@type': liongard:MetricPrimitive
+  name: "Synology NAS — System Temperature (Celsius)"
+  description: System enclosure temperature in degrees Celsius (integer). Also check SystemInfo.sys_tempwarn (boolean) for the hardware warning threshold.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: synology-nas-inspector
+    inspectorId: 64
+  liongardMetricName: "Synology NAS: System Temperature (Celsius)"
+  liongardMetricId: 396
+  liongardMetricUuid: "e2a7b34e-f3e6-44ee-bffe-8eac955b2fe5"
+  jmesPath: SystemInfo.sys_temp
+  resultType: integer
+  resultUnit: celsius
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: "System A — dev environment"
+  sourceRecipe: recipes/single-system-analysis/by-inspector/synology-nas.md
+  dateAdded: '2026-05-26'
+
+# ── Users ─────────────────────────────────────────────────────────────────────
+
+- '@id': metrics:synology-nas:admin-users-list
+  '@type': liongard:MetricPrimitive
+  name: "Synology NAS — Admin Users List"
+  description: Array of usernames that are members of the administrators group.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: synology-nas-inspector
+    inspectorId: 64
+  liongardMetricName: "Synology NAS: Admin Users Count List"
+  liongardMetricId: 397
+  liongardMetricUuid: "d44df314-d3f6-40b6-8ebd-ef20354fd71e"
+  jmesPath: "Users[?GroupMembership[?name == `administrators`]].name"
+  resultType: array
+  compliantWhen: result contains only expected admin accounts
+  compliesWith:
+  - CIS-Controls-v8:5.4
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: "System A — dev environment"
+  sourceRecipe: recipes/single-system-analysis/by-inspector/synology-nas.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:synology-nas:admin-users-count
+  '@type': liongard:MetricPrimitive
+  name: "Synology NAS — Admin Users Count"
+  description: Count of users that are members of the administrators group.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: synology-nas-inspector
+    inspectorId: 64
+  liongardMetricName: "Synology NAS: Admin Users Count"
+  liongardMetricId: 398
+  liongardMetricUuid: "48e8870a-4be9-45bd-b957-fa33e64b355a"
+  jmesPath: "Users[?GroupMembership[?name == `administrators`]] | length(@)"
+  resultType: integer
+  resultUnit: count
+  compliesWith:
+  - CIS-Controls-v8:5.4
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: "System A — dev environment"
+  sourceRecipe: recipes/single-system-analysis/by-inspector/synology-nas.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:synology-nas:active-users-count
+  '@type': liongard:MetricPrimitive
+  name: "Synology NAS — Active Users Count"
+  description: Count of users whose account status is "normal" (not expired).
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: synology-nas-inspector
+    inspectorId: 64
+  liongardMetricName: "Synology NAS: Total Active Users Count"
+  liongardMetricId: 399
+  liongardMetricUuid: "84b85e91-c810-4d82-8a8c-f0d167bde3fc"
+  jmesPath: "Users[?expired == `normal`] | length(@)"
+  resultType: integer
+  resultUnit: count
+  fieldGotcha: "Users[].expired is a STRING — \"normal\" means active, \"now\" means currently
+    expired. Filter with == `normal` (backtick literal). Don't compare against true/false."
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: "System A — dev environment"
+  sourceRecipe: recipes/single-system-analysis/by-inspector/synology-nas.md
+  dateAdded: '2026-05-26'
+
+# ── Disk Health ───────────────────────────────────────────────────────────────
+
+- '@id': metrics:synology-nas:drives-not-normal-list
+  '@type': liongard:MetricPrimitive
+  name: "Synology NAS — Drives Not in Normal State (List)"
+  description: Names of disks whose drive_status_category is "health" and drive_status_key is not "normal".
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: synology-nas-inspector
+    inspectorId: 64
+  liongardMetricName: "Synology NAS: Drives Not In Normal State List"
+  liongardMetricId: 914
+  liongardMetricUuid: "64ea3f2a-47a9-4272-8055-531920d59119"
+  jmesPath: "Disks[?drive_status_category && (drive_status_category == `health` && drive_status_key != `normal`)].name"
+  resultType: array
+  compliantWhen: result == []
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: "System A — dev environment"
+  sourceRecipe: recipes/single-system-analysis/by-inspector/synology-nas.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:synology-nas:drives-not-normal-count
+  '@type': liongard:MetricPrimitive
+  name: "Synology NAS — Drives Not in Normal State (Count)"
+  description: Count of disks whose drive_status_category is "health" and drive_status_key is not "normal".
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: synology-nas-inspector
+    inspectorId: 64
+  liongardMetricName: "Synology NAS: Drives Not In Normal State Count"
+  liongardMetricId: 915
+  liongardMetricUuid: "f15fcd01-3efe-4df8-9888-74921c12e35c"
+  jmesPath: "Disks[?drive_status_category && (drive_status_category == `health` && drive_status_key != `normal`)] | length(@)"
+  resultType: integer
+  resultUnit: count
+  compliantWhen: result == 0
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: "System A — dev environment"
+  sourceRecipe: recipes/single-system-analysis/by-inspector/synology-nas.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:synology-nas:disks-normal-count
+  '@type': liongard:MetricPrimitive
+  name: "Synology NAS — Disks in Normal State (Count)"
+  description: Count of disks where drive_status_key is "normal". Complement of drives-not-normal-count.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: synology-nas-inspector
+    inspectorId: 64
+  jmesPath: "length(Disks[?drive_status_key == 'normal'])"
+  resultType: integer
+  resultUnit: count
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: "System A — dev environment"
+  sourceRecipe: recipes/single-system-analysis/by-inspector/synology-nas.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:synology-nas:disks-ssd-count
+  '@type': liongard:MetricPrimitive
+  name: "Synology NAS — SSD Disk Count"
+  description: Count of disks where isSsd is true (boolean). Drives with isSsd == false are HDDs or other rotational media.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: synology-nas-inspector
+    inspectorId: 64
+  jmesPath: "length(Disks[?isSsd == `true`])"
+  resultType: integer
+  resultUnit: count
+  fieldGotcha: "Disks[].isSsd is a BOOLEAN (true/false), not a string. Filter with == `true`
+    (backtick literal). remain_life is an OBJECT {trustable: bool, value: int}, not a scalar
+    — use remain_life.value for the percentage integer."
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: "System A — dev environment"
+  sourceRecipe: recipes/single-system-analysis/by-inspector/synology-nas.md
+  dateAdded: '2026-05-26'
+
+# ── Volumes ───────────────────────────────────────────────────────────────────
+
+- '@id': metrics:synology-nas:volumes-below-20pct-free-list
+  '@type': liongard:MetricPrimitive
+  name: "Synology NAS — Volumes Below 20% Free Space (List)"
+  description: IDs of volumes where volume_percentage_free_r is below 20 percent.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: synology-nas-inspector
+    inspectorId: 64
+  liongardMetricName: "Synology NAS: Volumes with Below 20 Percent Free Space List"
+  liongardMetricId: 916
+  liongardMetricUuid: "9f8619c4-6d49-4e69-a44d-1ca6c2e06f69"
+  jmesPath: "Volumes[?volume_percentage_free_r < `20`].id"
+  resultType: array
+  compliantWhen: result == []
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: "System A — dev environment"
+  sourceRecipe: recipes/single-system-analysis/by-inspector/synology-nas.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:synology-nas:volumes-below-20pct-free-count
+  '@type': liongard:MetricPrimitive
+  name: "Synology NAS — Volumes Below 20% Free Space (Count)"
+  description: Count of volumes where volume_percentage_free_r is below 20 percent.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: synology-nas-inspector
+    inspectorId: 64
+  liongardMetricName: "Synology NAS: Volumes with Below 20 Percent Free Space Count"
+  liongardMetricId: 917
+  liongardMetricUuid: "1fd5e1f2-713e-4ca7-a694-081e2ea1c1e5"
+  jmesPath: "Volumes[?volume_percentage_free_r < `20`] | length(@)"
+  resultType: integer
+  resultUnit: count
+  compliantWhen: result == 0
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: "System A — dev environment"
+  sourceRecipe: recipes/single-system-analysis/by-inspector/synology-nas.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:synology-nas:volumes-not-normal-list
+  '@type': liongard:MetricPrimitive
+  name: "Synology NAS — Volumes Not in Normal State (List)"
+  description: IDs of volumes where status does not contain "normal" (e.g., degraded, crashed).
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: synology-nas-inspector
+    inspectorId: 64
+  liongardMetricName: "Synology NAS: Volumes Not In Normal State List"
+  liongardMetricId: 922
+  liongardMetricUuid: "9cffb58d-30d5-420e-80ff-d39b7e67c390"
+  jmesPath: "Volumes[?!contains(status,`normal`)].id"
+  resultType: array
+  compliantWhen: result == []
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: "System A — dev environment"
+  sourceRecipe: recipes/single-system-analysis/by-inspector/synology-nas.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:synology-nas:volumes-not-normal-count
+  '@type': liongard:MetricPrimitive
+  name: "Synology NAS — Volumes Not in Normal State (Count)"
+  description: Count of volumes where status does not contain "normal".
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: synology-nas-inspector
+    inspectorId: 64
+  liongardMetricName: "Synology NAS: Volumes Not In Normal State Count"
+  liongardMetricId: 923
+  liongardMetricUuid: "2c7104c0-19c5-425c-9fe1-21be677d2441"
+  jmesPath: "Volumes[?!contains(status,`normal`)] | length(@)"
+  resultType: integer
+  resultUnit: count
+  compliantWhen: result == 0
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: "System A — dev environment"
+  sourceRecipe: recipes/single-system-analysis/by-inspector/synology-nas.md
+  dateAdded: '2026-05-26'
+
+# ── Storage Pools ─────────────────────────────────────────────────────────────
+
+- '@id': metrics:synology-nas:storage-pools-not-normal-list
+  '@type': liongard:MetricPrimitive
+  name: "Synology NAS — Storage Pools Not in Normal State (List)"
+  description: IDs of storage pools where status is not "normal".
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: synology-nas-inspector
+    inspectorId: 64
+  liongardMetricName: "Synology NAS: Storage Pool Not In Normal State List"
+  liongardMetricId: 920
+  liongardMetricUuid: "9989f3fa-2477-4671-92a3-4e1f8a9e45d7"
+  jmesPath: "StoragePools[?status !=`normal`].id"
+  resultType: array
+  compliantWhen: result == []
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: "System A — dev environment"
+  sourceRecipe: recipes/single-system-analysis/by-inspector/synology-nas.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:synology-nas:storage-pools-not-normal-count
+  '@type': liongard:MetricPrimitive
+  name: "Synology NAS — Storage Pools Not in Normal State (Count)"
+  description: Count of storage pools where status is not "normal".
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: synology-nas-inspector
+    inspectorId: 64
+  liongardMetricName: "Synology NAS: Storage Pool Not In Normal State Count"
+  liongardMetricId: 921
+  liongardMetricUuid: "935b7781-ec5a-498e-8e55-67f7f9ce118d"
+  jmesPath: "StoragePools[?status !=`normal`] | length(@)"
+  resultType: integer
+  resultUnit: count
+  compliantWhen: result == 0
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: "System A — dev environment"
+  sourceRecipe: recipes/single-system-analysis/by-inspector/synology-nas.md
+  dateAdded: '2026-05-26'
+
+# ── iSCSI Targets ─────────────────────────────────────────────────────────────
+
+- '@id': metrics:synology-nas:iscsi-offline-list
+  '@type': liongard:MetricPrimitive
+  name: "Synology NAS — iSCSI Targets Offline (List)"
+  description: "Concatenated name:iqn strings for enabled iSCSI targets whose status is neither \"online\" nor \"connected\"."
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: synology-nas-inspector
+    inspectorId: 64
+  liongardMetricName: "Synology NAS: iSCSI Target Showing Offline List"
+  liongardMetricId: 918
+  liongardMetricUuid: "ff3f4b72-bf56-4b15-a5f1-ddcf737449b8"
+  jmesPath: "ISCSITargets[?enabled == `true` && status != `online`] | [?status != `connected`].join(`: `, [name, iqn])"
+  resultType: array
+  compliantWhen: result == []
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: "System A — dev environment"
+  sourceRecipe: recipes/single-system-analysis/by-inspector/synology-nas.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:synology-nas:iscsi-offline-count
+  '@type': liongard:MetricPrimitive
+  name: "Synology NAS — iSCSI Targets Offline (Count)"
+  description: "Count of enabled iSCSI targets whose status is neither \"online\" nor \"connected\"."
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: synology-nas-inspector
+    inspectorId: 64
+  liongardMetricName: "Synology NAS: iSCSI Target Showing Offline Count"
+  liongardMetricId: 919
+  liongardMetricUuid: "29e58d0b-5de8-4096-bddf-27a849095f91"
+  jmesPath: "ISCSITargets[?enabled == `true` && status != `online`] | [?status != `connected`] | length(@)"
+  resultType: integer
+  resultUnit: count
+  compliantWhen: result == 0
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: "System A — dev environment"
+  sourceRecipe: recipes/single-system-analysis/by-inspector/synology-nas.md
+  dateAdded: '2026-05-26'
+
+# ── Shared Folders ────────────────────────────────────────────────────────────
+
+- '@id': metrics:synology-nas:shares-unencrypted-count
+  '@type': liongard:MetricPrimitive
+  name: "Synology NAS — Unencrypted Shares Count"
+  description: Count of shared folders with encryption flag set to 0 (unencrypted).
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: synology-nas-inspector
+    inspectorId: 64
+  jmesPath: "length(Shares[?encryption == `0`])"
+  resultType: integer
+  resultUnit: count
+  compliantWhen: result == 0
+  fieldGotcha: "Shares[].encryption is an INTEGER (0 = not encrypted, 1 = encrypted), NOT
+    a boolean. Don't compare against `false`."
+  compliesWith:
+  - CIS-Controls-v8:3.11
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: "System A — dev environment"
+  sourceRecipe: recipes/single-system-analysis/by-inspector/synology-nas.md
+  dateAdded: '2026-05-26'
+
+# ── Services ──────────────────────────────────────────────────────────────────
+
+- '@id': metrics:synology-nas:risky-services-enabled
+  '@type': liongard:MetricPrimitive
+  name: "Synology NAS — Enabled Services (List)"
+  description: Names of all services with enable_status == "enabled". Use to identify risky services (Telnet, NFS, AFP) — flag any of these in the result list.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: synology-nas-inspector
+    inspectorId: 64
+  jmesPath: "Services[?enable_status == 'enabled'].name"
+  resultType: array
+  fieldGotcha: "Services[].enable_status is a STRING \"enabled\"/\"disabled\", NOT a boolean.
+    Filter with == 'enabled' (single-quoted string comparison). Do NOT use == `true`."
+  compliesWith:
+  - CIS-Controls-v8:4.8
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: "System A — dev environment"
+  sourceRecipe: recipes/single-system-analysis/by-inspector/synology-nas.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:synology-nas:services-total-count
+  '@type': liongard:MetricPrimitive
+  name: "Synology NAS — Total Services Count"
+  description: Total count of all services tracked by the NAS inspector.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: synology-nas-inspector
+    inspectorId: 64
+  jmesPath: length(Services)
+  resultType: integer
+  resultUnit: count
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: "System A — dev environment"
+  sourceRecipe: recipes/single-system-analysis/by-inspector/synology-nas.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:synology-nas:services-enabled-count
+  '@type': liongard:MetricPrimitive
+  name: "Synology NAS — Enabled Services Count"
+  description: Count of services with enable_status == "enabled".
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: synology-nas-inspector
+    inspectorId: 64
+  jmesPath: "length(Services[?enable_status == 'enabled'])"
+  resultType: integer
+  resultUnit: count
+  fieldGotcha: "Services[].enable_status is a STRING. Filter with == 'enabled', not == `true`."
+  compliesWith:
+  - CIS-Controls-v8:4.8
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: "System A — dev environment"
+  sourceRecipe: recipes/single-system-analysis/by-inspector/synology-nas.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:synology-nas:services-disabled-count
+  '@type': liongard:MetricPrimitive
+  name: "Synology NAS — Disabled Services Count"
+  description: Count of services with enable_status == "disabled".
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: synology-nas-inspector
+    inspectorId: 64
+  jmesPath: "length(Services[?enable_status == 'disabled'])"
+  resultType: integer
+  resultUnit: count
+  fieldGotcha: "Services[].enable_status is a STRING. Filter with == 'disabled', not == `false`."
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: "System A — dev environment"
+  sourceRecipe: recipes/single-system-analysis/by-inspector/synology-nas.md
+  dateAdded: '2026-05-26'

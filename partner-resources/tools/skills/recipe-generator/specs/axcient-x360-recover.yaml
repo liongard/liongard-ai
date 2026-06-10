@@ -1,0 +1,193 @@
+inspector:
+  slug: axcient-x360-recover-inspector
+  id: 100
+  display_name: Axcient x360 Recover
+  category: Beta
+  target_system_type: Backup / DR
+  parent_child: true
+  identifier_jmespath: Organization.name
+
+recipe:
+  family: single-system-analysis
+  scope_summary: >
+    Use this skill when the user wants a single-tenant analysis of an
+    Axcient x360 Recover account — appliance health, per-device backup
+    job status, vault inventory, client coverage. Axcient is an
+    appliance-based backup product (formerly Replibit before the x360
+    rebrand). Beta inspector — some fields may be sparse. Trigger
+    phrases: "Axcient PBR", "x360 Recover review", "Axcient appliance
+    health", "Axcient backup job status", "Replibit review".
+  trigger_phrases:
+    - "Axcient PBR"
+    - "x360 Recover review"
+    - "Axcient appliance health"
+    - "Axcient backup job status"
+    - "Axcient client coverage"
+  personas:
+    - noc
+    - vcio-account-manager
+    - technical-alignment-manager
+  output_formats:
+    - markdown
+    - word
+    - xlsx
+
+aliases:
+  user_facing:
+    - Axcient
+    - x360
+    - "x360 Recover"
+  legacy:
+    - Replibit
+
+slas:
+  inspector_lastseen_days_max: 1
+  appliance_health_required: healthy
+  device_job_health_required: healthy
+  failed_jobs_max: 0
+
+metrics:
+  - id: 78637
+    name: "Axcient: Server Count"
+    jmes_path: Organization.server_count
+    scope: parent_scoping_only
+    purpose: Organization-level protected server count; do not use as per-customer child evidence
+
+  - id: 78638
+    name: "Axcient: Workstation Count"
+    jmes_path: Organization.workstation_count
+    scope: parent_scoping_only
+    purpose: Organization-level protected workstation count; do not use as per-customer child evidence
+
+  - id: 78647
+    name: "Axcient: Vault Health Status"
+    jmes_path: Vaults[].health_status
+    scope: child_dataprint
+    purpose: Per-vault health status
+    result_shape: <array<string>>
+    compliant_when: "every entry == 'healthy'"
+
+  - id: 78701
+    name: "Axcient: Appliance Health Status"
+    jmes_path: Appliances[].health_status
+    scope: child_dataprint
+    purpose: Per-appliance health (each Axcient vault appliance reports its own state)
+    result_shape: <array<string>>
+    compliant_when: "every entry == 'healthy'"
+
+  - id: 78656
+    name: "Axcient: Device Job Health Status"
+    jmes_path: Devices[].jobs[].health_status
+    scope: child_dataprint
+    purpose: Per-device per-job backup health
+    result_shape: <array<string>>
+    compliant_when: "every entry == 'healthy'"
+
+  - id: 78676
+    name: "Axcient: Job Health Status"
+    jmes_path: Jobs[].health_status
+    scope: child_dataprint
+    purpose: Top-level job health status
+    result_shape: <array<string>>
+    compliant_when: "every entry == 'healthy'"
+
+  - id: 78655
+    name: "Axcient: Device Job Latest Restore Point"
+    jmes_path: Devices[].jobs[].latest_rp
+    scope: child_dataprint
+    purpose: Latest restore point per device job
+
+  - id: 78667
+    name: "Axcient: Device Latest Local Restore Point"
+    jmes_path: Devices[].latest_local_rp
+    scope: child_dataprint
+    purpose: Latest local restore point per protected device
+
+  - id: 78668
+    name: "Axcient: Device Latest Cloud Restore Point"
+    jmes_path: Devices[].latest_cloud_rp
+    scope: child_dataprint
+    purpose: Latest cloud restore point per protected device
+
+  - id: "[CLIENT_SIDE]"
+    name: "Axcient: Per-Device Last Backup Time"
+    scope: child_dataprint
+    jmes_path: >-
+      Devices[*].{name: name, latestRestorePoint: jobs[*].latest_rp, lastBackup: jobs[*].lastRunTime, status: jobs[*].health_status}
+    purpose: Per-device most-recent-backup snapshot for the all-backups.md hostname join; fields are present in sampled MCP dataprints, but the composite itself is client-side
+
+  - id: 78644
+    name: "Axcient: Vault Drive Storage details - Used Size"
+    jmes_path: Vaults[].storage_details.used_size
+    scope: child_dataprint
+    purpose: Per-vault used storage value
+
+  - id: 78643
+    name: "Axcient: Vault Drive Storage Details - Drive Size"
+    jmes_path: Vaults[].storage_details.drive_size
+    scope: child_dataprint
+    purpose: Per-vault total drive size; may be null in sampled MCP dataprints
+
+  - id: 78709
+    name: "Axcient: Appliance Drive Usage Percent"
+    jmes_path: map(&percent_of(storage_details.used_size, storage_details.drive_size), Appliances)
+    scope: child_dataprint
+    purpose: Appliance drive usage percentage when appliance storage details are populated
+
+  - id: "[CLIENT_SIDE]"
+    name: "Axcient: Client Count"
+    jmes_path: length(Clients)
+    scope: parent_scoping_only
+    purpose: Customer / client count covered by the parent account; use only to select a child dataprint
+
+  - id: 78693
+    name: "Axcient: Client Name"
+    jmes_path: Clients[].name
+    scope: parent_scoping_only
+    purpose: Customer / client names covered by the parent account; use only to select a child dataprint
+
+cross_check:
+  asset_type: device
+  filter_pattern: 'class == "server"'
+  coverage_question: >
+    Servers in the device inventory that don't appear in Axcient's
+    Devices[*] array — candidates for unprotected status (or naming
+    mismatch).
+
+proposed_metric_gaps:
+  - field: "Vault capacity utilization per vault"
+    fallback: "Use metrics 78644/78643 when populated; manual confirm in Axcient portal when drive_size is null"
+    jira_ticket:
+  - field: "Client count rollup"
+    fallback: "Client-side length(Clients)"
+    jira_ticket:
+
+trigger_keyword: axcient
+
+dataprint_keys:
+  - key: Organization
+    description: Axcient organization / MSP-level identity (Organization.name)
+  - key: Clients
+    description: Array of client / customer companies managed by this account (parent)
+  - key: Vaults
+    description: Backup vault inventory (appliances providing storage)
+  - key: Appliances
+    description: Health-reporting appliances — each with its own health_status
+  - key: Devices
+    description: Per-protected-device array; each device has jobs[*] with status
+
+field_gotchas:
+  - field: "Parent/child model"
+    note: "Axcient uses a parent (org) / child (per-client) model. The parent enumerates Clients[*] and should be used only for scoping / child discovery. Per-customer evidence metrics must be evaluated against the child dataprint systemId. Some Dev parent dataprints also expose Devices[*] / Vaults[*], but do not use parent rollup values as customer backup-health evidence."
+  - field: "Beta status"
+    note: "Inspector is flagged Beta in Liongard. Some fields are partial or unstable; surface this in the manual-verification appendix when reporting to a customer."
+
+large_arrays: []
+
+time_series_supported: true
+
+vendor_console_url_pattern: https://my.axcient.com
+
+related_recipes:
+  - path: recipes/system-type-assessment/all-backups.md
+    relationship: rollup

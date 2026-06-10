@@ -1,0 +1,185 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schema.liongard.com/recipe-library/v1/recipe.schema.json",
+  "title": "Liongard Recipe",
+  "description": "Schema validating the YAML frontmatter of every recipe in recipes/. Body content (markdown) is validated by the companion validator script — JSON Schema only covers the frontmatter and the primitives[] reference array.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name", "description", "compatibility", "personas", "output_formats", "recipeType"],
+  "properties": {
+    "@id": {
+      "type": "string",
+      "description": "Stable namespaced identifier the rest of the graph references this recipe by. Format: recipe:{category}:{kebab-case-slug}. Required once the recipe is in the governance layer (migration: warning during the transition window, hard requirement after).",
+      "pattern": "^recipe:[a-z0-9]+(-[a-z0-9]+)*:[a-z0-9]+(-[a-z0-9]+)*$",
+      "examples": [
+        "recipe:single-system:microsoft-365",
+        "recipe:single-system:synology-nas",
+        "recipe:system-type:all-firewalls",
+        "recipe:domain:identity-posture",
+        "recipe:qbr:quarterly-business-review",
+        "recipe:compliance:cyber-insurance-spectra-l1",
+        "recipe:onboarding:new-customer"
+      ]
+    },
+    "@type": {
+      "description": "Maps to a class in ontology/context.jsonld. Mirrors recipeType but written in JSON-LD form for SPARQL traversal.",
+      "type": "string",
+      "pattern": "^liongard:[A-Z][A-Za-z]+Recipe$|^liongard:CyberInsuranceQuestion$"
+    },
+    "name": {
+      "type": "string",
+      "description": "Kebab-case slug. Matches the filename stem and the skill name an MCP client would invoke.",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "minLength": 3,
+      "maxLength": 80
+    },
+    "description": {
+      "type": "string",
+      "description": "Trigger phrases + what the recipe produces + which MCP tools it calls. The recipe-picker skill matches user intent against this. Lead with 'Use this skill when...'.",
+      "minLength": 40
+    },
+    "compatibility": {
+      "type": "string",
+      "description": "MCP-tool requirement statement, e.g., 'Requires Liongard MCP: liongard_environment, liongard_system, liongard_metric, liongard_asset'.",
+      "pattern": "^Requires Liongard MCP:"
+    },
+    "personas": {
+      "type": "array",
+      "description": "MSP roles this recipe is designed for. Empty array allowed for cross-persona recipes.",
+      "items": {
+        "type": "string",
+        "enum": [
+          "noc",
+          "soc",
+          "vcio-account-manager",
+          "technical-alignment-manager",
+          "sales",
+          "executive",
+          "accounting-finance"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "output_formats": {
+      "type": "array",
+      "description": "Deliverable formats this recipe knows how to produce. markdown is always supported by default.",
+      "items": {
+        "type": "string",
+        "enum": ["markdown", "word", "pptx", "xlsx", "pdf"]
+      },
+      "minItems": 1,
+      "uniqueItems": true,
+      "contains": { "const": "markdown" }
+    },
+
+    "recipeType": {
+      "type": "string",
+      "description": "Which JSON-LD class this recipe instantiates. Drives the dependency-graph traversal in the governance layer.",
+      "enum": [
+        "SystemAssessmentRecipe",
+        "SystemTypeAssessmentRecipe",
+        "DomainAssessmentRecipe",
+        "ComplianceRecipe",
+        "CyberInsuranceQuestion",
+        "QBRRecipe",
+        "OnboardingRecipe",
+        "SalesRecipe",
+        "RoadmapRecipe"
+      ]
+    },
+
+    "evaluates": {
+      "type": "object",
+      "description": "Required for SystemAssessmentRecipe (the single inspector this recipe targets). Optional for cross-inspector recipes.",
+      "additionalProperties": false,
+      "required": ["inspectorSlug"],
+      "properties": {
+        "inspectorSlug": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*-inspector$"
+        },
+        "inspectorId": { "type": "integer", "minimum": 1 }
+      }
+    },
+
+    "primitives": {
+      "type": "array",
+      "description": "ATOMS LAYER. Explicit list of MetricPrimitive @ids this recipe references. Used by the validator to verify every reference resolves to a registry entry. The body of the recipe may inline additional JMESPath that hasn't been promoted to a primitive yet — those stay recipe-local. A metric earns a registry entry when ≥ 2 recipes reference it OR it's used in a compliance/QBR organism.",
+      "items": {
+        "type": "string",
+        "pattern": "^metrics:[a-z0-9]+(-[a-z0-9]+)*:[a-z0-9]+(-[a-z0-9]+)*$"
+      },
+      "uniqueItems": true
+    },
+
+    "composes": {
+      "type": "array",
+      "description": "MOLECULES → ORGANISMS (downward). Recipe @ids this recipe composes — children it stitches together. Declared by the parent. Example: a QBR composes [recipe:domain:identity-posture, recipe:domain:endpoint-posture, ...]. Validator verifies every entry resolves to a real recipe file.",
+      "items": {
+        "type": "string",
+        "pattern": "^recipe:[a-z0-9]+(-[a-z0-9]+)*:[a-z0-9]+(-[a-z0-9]+)*$"
+      },
+      "uniqueItems": true
+    },
+    "isPartOf": {
+      "type": "array",
+      "description": "MOLECULES → ORGANISMS (upward). Recipe @ids this recipe is composed BY — parents that stitch it in. Inverse of `composes`. Declared by the child. Optional: the validator builds the reverse index from `composes` declarations anyway, but explicit `isPartOf` is fine when authoring bottom-up.",
+      "items": {
+        "type": "string",
+        "pattern": "^recipe:[a-z0-9]+(-[a-z0-9]+)*:[a-z0-9]+(-[a-z0-9]+)*$"
+      },
+      "uniqueItems": true
+    },
+    "dependsOn": {
+      "type": "array",
+      "description": "Recipe @ids that must run BEFORE this one (execution-order dependency, not just composition). Validator detects cycles in this graph and fails on any cycle.",
+      "items": {
+        "type": "string",
+        "pattern": "^recipe:[a-z0-9]+(-[a-z0-9]+)*:[a-z0-9]+(-[a-z0-9]+)*$"
+      },
+      "uniqueItems": true
+    },
+    "isBasedOn": {
+      "type": "array",
+      "description": "@ids of metrics, recipes, OR external sources this recipe is conceptually based on. Mixed-target — accepts metrics:* (metric primitive), recipe:* (molecule/organism), framework:* (e.g., framework:cis-controls-v8:5.1), or doc:* (e.g., doc:partner-qa-matrix).",
+      "items": {
+        "type": "string",
+        "pattern": "^(metrics|recipe|framework|doc):"
+      },
+      "uniqueItems": true
+    },
+    "answersQuestion": {
+      "type": "array",
+      "description": "Cyber-insurance / CIS / onboarding questions this recipe answers. The MSP recipe-picker uses these to route 'help me answer X' prompts.",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    },
+    "compliesWith": {
+      "type": "array",
+      "description": "Compliance frameworks the recipe maps to.",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    },
+
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "SemVer. Bump major when a primitive reference changes incompatibly; minor when adding sections; patch for fixes."
+    },
+    "dateCreated": { "type": "string", "format": "date" },
+    "dateModified": { "type": "string", "format": "date" }
+  },
+
+  "allOf": [
+    {
+      "if": {
+        "properties": { "recipeType": { "const": "SystemAssessmentRecipe" } },
+        "required": ["recipeType"]
+      },
+      "then": {
+        "required": ["evaluates"],
+        "description": "Single-system recipes must declare the inspector they evaluate against."
+      }
+    }
+  ]
+}

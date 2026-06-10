@@ -1,0 +1,597 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+# ── Device Identity ───────────────────────────────────────────────────────────
+
+  - "@id": "metrics:watchguard:hostname"
+    "@type": "liongard:MetricPrimitive"
+    name: "WatchGuard — Hostname (System Name)"
+    description: "Firewall system name from SystemInfo.SystemName. Used for asset identification and report headers."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "watchguard-inspector"
+      inspectorId: 29
+    liongardMetricName: "Watchguard: Hostname"
+    liongardMetricId: 1999
+    liongardMetricUuid: "ab839c00-30aa-11ee-be56-0242ac120002"
+    jmesPath: "SystemInfo.SystemName"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/watchguard.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:watchguard:model"
+    "@type": "liongard:MetricPrimitive"
+    name: "WatchGuard — Hardware Model"
+    description: "Appliance model identifier from SystemInfo.Model. Used for lifecycle and EOL tracking across Firebox T, M, and virtual product lines."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "watchguard-inspector"
+      inspectorId: 29
+    liongardMetricName: "Watchguard: Model"
+    liongardMetricId: 2000
+    liongardMetricUuid: "ab839e80-30aa-11ee-be56-0242ac120002"
+    jmesPath: "SystemInfo.Model"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/watchguard.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:watchguard:serial-number"
+    "@type": "liongard:MetricPrimitive"
+    name: "WatchGuard — Serial Number"
+    description: "Hardware serial number from SystemInfo.SerialNumber. Ties the appliance to a WatchGuard support contract."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "watchguard-inspector"
+      inspectorId: 29
+    liongardMetricName: "Watchguard: Serial Number"
+    liongardMetricId: 2001
+    liongardMetricUuid: "ab839fd4-30aa-11ee-be56-0242ac120002"
+    jmesPath: "SystemInfo.SerialNumber"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/watchguard.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:watchguard:firmware-version"
+    "@type": "liongard:MetricPrimitive"
+    name: "WatchGuard — Firmware Version (Fireware OS)"
+    description: "Running Fireware OS version string from SystemInfo.Version. Cross-reference against WatchGuard release notes for CVEs and EOL status."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "watchguard-inspector"
+      inspectorId: 29
+    liongardMetricName: "WatchGuard: Firmware Version"
+    liongardMetricId: 318
+    liongardMetricUuid: "1282de1c-bfc8-4687-8c2c-ad884f8d52ec"
+    jmesPath: "SystemInfo.Version"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/watchguard.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:watchguard:management-ip"
+    "@type": "liongard:MetricPrimitive"
+    name: "WatchGuard — Management IP Address"
+    description: "Management IP address of the appliance from SystemInfo.ManagementIP. Used to confirm whether management is reachable from WAN."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "watchguard-inspector"
+      inspectorId: 29
+    liongardMetricName: "WatchGuard: Management IP"
+    liongardMetricId: 606
+    liongardMetricUuid: "e422f773-48bc-4707-8dad-21b97f487c2f"
+    jmesPath: "SystemInfo.ManagementIP"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/watchguard.md"
+    dateAdded: "2026-05-26"
+
+# ── Interface Inventory ───────────────────────────────────────────────────────
+
+  - "@id": "metrics:watchguard:licensed-interface-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "WatchGuard — Licensed Interface Count"
+    description: "Number of interfaces licensed for this appliance from SystemInfo.LicensedInterface. Helps size the appliance against actual port usage."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "watchguard-inspector"
+      inspectorId: 29
+    liongardMetricName: "WatchGuard: Licensed Interface Count"
+    liongardMetricId: 319
+    liongardMetricUuid: "55787acd-063a-4a7f-8da9-7037a762bae1"
+    jmesPath: "SystemInfo.LicensedInterface"
+    resultType: "integer"
+    resultUnit: "count"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/watchguard.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:watchguard:physical-interface-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "WatchGuard — Physical Interface Count"
+    description: "Number of physical interfaces on the appliance from SystemInfo.PhysicalInterface."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "watchguard-inspector"
+      inspectorId: 29
+    liongardMetricName: "WatchGuard: Physical Interface Count"
+    liongardMetricId: 320
+    liongardMetricUuid: "aee8de4d-a0de-4042-9e62-bd99e0e86379"
+    jmesPath: "SystemInfo.PhysicalInterface"
+    resultType: "integer"
+    resultUnit: "count"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/watchguard.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:watchguard:down-interfaces-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "WatchGuard — Down Interfaces Count"
+    description: "Count of enabled interfaces where status is not 'Up'. A non-zero count warrants investigation for connectivity or configuration problems."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "watchguard-inspector"
+      inspectorId: 29
+    liongardMetricName: "WatchGuard: Down Interfaces Count"
+    liongardMetricId: 883
+    liongardMetricUuid: "f287894a-7d50-4f96-9bdb-c7fca5b409b8"
+    jmesPath: "Interfaces[?Enabled == 'yes' && Status != 'Up'] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "CIS-Controls-v8:12.1"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/watchguard.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:watchguard:down-interfaces-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "WatchGuard — Down Interfaces List"
+    description: "Names and statuses of enabled interfaces that are not in 'Up' state. Companion list to the down-interfaces count metric."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "watchguard-inspector"
+      inspectorId: 29
+    liongardMetricName: "WatchGuard: Down Interfaces List"
+    liongardMetricId: 882
+    liongardMetricUuid: "5f401c27-7b62-4389-972c-78771f7fc254"
+    jmesPath: "Interfaces[?Enabled == 'yes' && Status != 'Up'].[Name, Status]"
+    resultType: "array"
+    compliantWhen: "result == []"
+    compliesWith:
+      - "CIS-Controls-v8:12.1"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/watchguard.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:watchguard:interface-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "WatchGuard — Interface Summary"
+    description: "Formatted summary of all interfaces including name, enabled state, type, address, IP type, and IP assignment."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "watchguard-inspector"
+      inspectorId: 29
+    liongardMetricName: "WatchGuard: Interface Summary"
+    liongardMetricId: 598
+    liongardMetricUuid: "9afaca99-3520-4876-b2cf-e7c3e0e462e8"
+    jmesPath: "Interfaces[].join( `, `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`Enabled`, to_string(Enabled)]), join(`: `, [`Type`, to_string(Type)]), join(`: `, [`Address`, to_string(Address)]), join(`: `, [`IP Type`, to_string(IPNodeType)]), join(`: `, [`IP Assignment`, to_string(IPAssignment)])]) | sort(@)"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/watchguard.md"
+    dateAdded: "2026-05-26"
+
+# ── Licensing & Subscriptions ─────────────────────────────────────────────────
+
+  - "@id": "metrics:watchguard:features-expiring-30d-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "WatchGuard — Features Expiring Within 30 Days Count"
+    description: "Count of licensed features (TSS, GAV, IPS, WebBlocker, etc.) with DaysUntilExpiration_r <= 30. Non-zero triggers an immediate renewal action."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "watchguard-inspector"
+      inspectorId: 29
+    liongardMetricName: "WatchGuard: Features within 30 Days of License Expiration Count"
+    liongardMetricId: 889
+    liongardMetricUuid: "8cb8c636-d56c-4d8a-90a7-4702057b3eb3"
+    jmesPath: "Features[?DaysUntilExpiration_r <= '30'] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "CIS-Controls-v8:12.2"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    fieldGotcha: "DaysUntilExpiration_r is a resolved/computed string field — filter uses string comparison '<= 30' not numeric. Confirm behavior when value is exactly 30."
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/watchguard.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:watchguard:features-expiring-30d-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "WatchGuard — Features Expiring Within 30 Days List"
+    description: "Feature names and expiration dates for licensed features expiring within 30 days. Companion list for the expiration count metric."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "watchguard-inspector"
+      inspectorId: 29
+    liongardMetricName: "WatchGuard: Features within 30 Days of License Expiration List"
+    liongardMetricId: 888
+    liongardMetricUuid: "941ffaf6-dda2-4770-a712-a4a091fbbc3f"
+    jmesPath: "Features[?DaysUntilExpiration_r <= '30'].[Feature,Expiration]"
+    resultType: "array"
+    compliantWhen: "result == []"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/watchguard.md"
+    dateAdded: "2026-05-26"
+
+# ── Account & Admin Security ──────────────────────────────────────────────────
+
+  - "@id": "metrics:watchguard:account-lockout-disabled-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "WatchGuard — Account Lockout Disabled Count"
+    description: "Count of account lockout settings where status is not 'Enabled'. Non-zero means lockout is not enforced, leaving admin accounts open to brute-force."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "watchguard-inspector"
+      inspectorId: 29
+    liongardMetricName: "WatchGuard: Account Lockout Disabled Count"
+    liongardMetricId: 885
+    liongardMetricUuid: "465e834e-7cd2-43de-9c7d-f44f1a7ecfae"
+    jmesPath: "SystemInfo.AccountLockoutSettings[?Status != 'Enabled'] |length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "CIS-Controls-v8:5.2"
+      - "cyber-insurance-domain-auth"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/watchguard.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:watchguard:account-lockout-enabled-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "WatchGuard — Account Lockout Enabled Status List"
+    description: "List of account lockout settings where status is 'Enabled'. Confirms lockout configuration is active."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "watchguard-inspector"
+      inspectorId: 29
+    liongardMetricName: "WatchGuard: Account Lockout Not Enabled Status List"
+    liongardMetricId: 884
+    liongardMetricUuid: "b3254b6b-3e79-42ed-a935-b601b67307f6"
+    jmesPath: "SystemInfo.AccountLockoutSettings[?Status == 'Enabled'].[Status][]"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/watchguard.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:watchguard:mgmt-users-locked-out-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "WatchGuard — Management Users Locked Out Count"
+    description: "Count of device management users currently in a locked-out state. Non-zero may indicate a brute-force event or stale locked account."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "watchguard-inspector"
+      inspectorId: 29
+    liongardMetricName: "WatchGuard: Management Users Locked Out Count"
+    liongardMetricId: 887
+    liongardMetricUuid: "d137f23e-b10e-4bb9-ad46-5df0a35eb4e6"
+    jmesPath: "DeviceMgmtUsers[?LockedOutStatus !='No lockout'] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "CIS-Controls-v8:5.2"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/watchguard.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:watchguard:mgmt-users-locked-out-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "WatchGuard — Management Users Locked Out List"
+    description: "Usernames of device management users currently locked out. Companion list for the locked-out count metric."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "watchguard-inspector"
+      inspectorId: 29
+    liongardMetricName: "WatchGuard: Management Users Locked Out List"
+    liongardMetricId: 886
+    liongardMetricUuid: "c1278754-ffdf-4c1e-8d98-0ee6efc6aaa2"
+    jmesPath: "DeviceMgmtUsers[?LockedOutStatus !='No lockout'].[Username]"
+    resultType: "array"
+    compliantWhen: "result == []"
+    compliesWith:
+      - "CIS-Controls-v8:5.2"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/watchguard.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:watchguard:mgmt-user-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "WatchGuard — Management User Summary"
+    description: "Formatted summary of all device management users including username, role, and authentication server."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "watchguard-inspector"
+      inspectorId: 29
+    liongardMetricName: "WatchGuard: Management User Summary"
+    liongardMetricId: 602
+    liongardMetricUuid: "4d23f503-43ff-4a47-bfb8-245eb2ac5764"
+    jmesPath: "DeviceMgmtUsers[].join( `, `, [join(`: `, [`Username`, to_string(Username)]), join(`: `, [`Role`, to_string(Role)]), join(`: `, [`AuthServer`, to_string(AuthServer)])]) | sort(@)"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/watchguard.md"
+    dateAdded: "2026-05-26"
+
+# ── Access Rules & NAT ────────────────────────────────────────────────────────
+
+  - "@id": "metrics:watchguard:access-rule-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "WatchGuard — Access Rule Summary"
+    description: "Formatted summary of all access rules including name, enabled state, action, service, from/to aliases, and NAT settings."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "watchguard-inspector"
+      inspectorId: 29
+    liongardMetricName: "WatchGuard: Access Rule Summary"
+    liongardMetricId: 601
+    liongardMetricUuid: "c838e319-444b-438f-b3d6-1d6dba36f54b"
+    jmesPath: "AccessRules[].join( `, `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`Enabled`, to_string(Enabled)]), join(`: `, [`Action`, to_string(ConnectionsAre)]), join(`: `, [`Service`, to_string(Service)]), join(`: `, [`From`, to_string(FromAliasList)]), join(`: `, [`To`, to_string(ToAliasList)]), join(`: `, [`Static NAT`, to_string(StaticNat)]), join(`: `, [`Global NAT`, to_string(GlobalDnat)]) , join(`: `, [`Global 1:1 Nat`, to_string(Global_1to1Nat)])]) | sort(@)"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/watchguard.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:watchguard:dynamic-nat-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "WatchGuard — Dynamic NAT Summary"
+    description: "Formatted summary of dynamic NAT rules including to, from, and source IP fields."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "watchguard-inspector"
+      inspectorId: 29
+    liongardMetricName: "WatchGuard: Dynamic NAT Summary"
+    liongardMetricId: 596
+    liongardMetricUuid: "bd76eb82-9bf2-4f35-a9dc-7bec5d489936"
+    jmesPath: "NAT.dynamicNAT[].join( `, `, [join(`: `, [`To`, to_string(To)]), join(`: `, [`From`, to_string(From)]), join(`: `, [`Source IP`, to_string(SourceIP)])]) | sort(@)"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/watchguard.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:watchguard:one-to-one-nat-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "WatchGuard — 1:1 NAT Summary"
+    description: "Formatted summary of 1:1 NAT entries including interface, NAT address, and real address."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "watchguard-inspector"
+      inspectorId: 29
+    liongardMetricName: "WatchGuard: 1:! NAT Summary"
+    liongardMetricId: 597
+    liongardMetricUuid: "694c4a94-4809-4399-a37f-ca03faa77284"
+    jmesPath: "NAT.oneToOneNAT[].join( `, `, [join(`: `, [`Interface`, to_string(Interface)]), join(`: `, [`NAT Address`, to_string(NATAddress)]), join(`: `, [`Real Address`, to_string(RealAddress)])]) | sort(@)"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/watchguard.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:watchguard:alias-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "WatchGuard — Alias Summary"
+    description: "Formatted summary of all firewall aliases including alias name, description, and member list."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "watchguard-inspector"
+      inspectorId: 29
+    liongardMetricName: "WatchGuard: Alias Summary"
+    liongardMetricId: 603
+    liongardMetricUuid: "c4c036c6-ee18-47d8-bd34-d21596380fb7"
+    jmesPath: "Aliases[].join( `, `, [join(`: `, [`Name`, to_string(\"Alias Name\")]), join(`: `, [`Description`, to_string(Description)]), join(`: `, [`Members`, to_string(AliasMembersList_r)])]) | sort(@)"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/watchguard.md"
+    dateAdded: "2026-05-26"
+
+# ── VPN ───────────────────────────────────────────────────────────────────────
+
+  - "@id": "metrics:watchguard:site-to-site-phase1-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "WatchGuard — Site-to-Site Phase 1 Policy Summary"
+    description: "Formatted summary of BOVPN Phase 1 (IKE) policies including policy name, status, version, peer name, action, exchange mode, and local interface."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "watchguard-inspector"
+      inspectorId: 29
+    liongardMetricName: "WatchGuard: Site-to-Site Phase 1 Policy Summary"
+    liongardMetricId: 607
+    liongardMetricUuid: "1bbd241b-0fc5-4560-886f-b1c5453c13b4"
+    jmesPath: "SiteToSiteVPN.Phase1[].join( `, `, [join(`: `, [`Policy Name`, to_string(PolicyName)]), join(`: `, [`Status`, to_string(Status)]), join(`: `, [`Version`, to_string(Version)]), join(`: `, [`Peer Name`, to_string(PeerName)]), join(`: `, [`Action Name`, to_string(ActionName)]), join(`: `, [`Xchng Mode`, to_string(XchngMode)]), join(`: `, [`Local Interface`, to_string(LocalInterface)]), join(`: `, [`VIF`, to_string(VIF)]), join(`: `, [`VIF Protocol`, to_string(VIFProto)])]) | sort(@)"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/watchguard.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:watchguard:site-to-site-phase2-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "WatchGuard — Site-to-Site Phase 2 Policy Summary"
+    description: "Formatted summary of BOVPN Phase 2 (IPSec) policies including policy name, status, IKE version, mode, key mode, VPN type, and IKE policy."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "watchguard-inspector"
+      inspectorId: 29
+    liongardMetricName: "WatchGuard: Site-to-Site Phase 2 Policy Summary"
+    liongardMetricId: 608
+    liongardMetricUuid: "89263756-8579-45b3-99b2-3de75c4df04a"
+    jmesPath: "SiteToSiteVPN.Phase2[].join( `, `, [join(`: `, [`Policy Name`, to_string(PolicyName)]), join(`: `, [`Status`, to_string(Status)]), join(`: `, [`IKE Version`, to_string(IKEVersion)]), join(`: `, [`Mode`, to_string(Mode)]), join(`: `, [`Key Mode`, to_string(KeyMode)]), join(`: `, [`VPN Type`, to_string(VPNType)]), join(`: `, [`IKE Policy`, to_string(IKEPolicyName)])]) | sort(@)"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/watchguard.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:watchguard:mobile-ipsec-policies"
+    "@type": "liongard:MetricPrimitive"
+    name: "WatchGuard — Mobile IPSec Client VPN Policies"
+    description: "Formatted summary of Mobile IPSec client VPN policies including name, auth server, allowed access, virtual IP pool, and settings."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "watchguard-inspector"
+      inspectorId: 29
+    liongardMetricName: "Watchguard Inspector: Mobile IPSec Policies"
+    liongardMetricId: 609
+    liongardMetricUuid: "412c590a-b5e6-4f5b-9e5f-e6ec6cb2b85e"
+    jmesPath: "VPN.ClientVPN.MobileIPSec[].join( `, `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`AuthServer`, to_string(AuthServer)]), join(`: `, [`Allowed Access`, to_string(AllowedAccessStr_r)]), join(`: `, [`Virtual IP Address Pool`, to_string(VirtualIPAddressPool)]), join(`: `, [`Settings`, to_string(IPSecSettings)])]) | sort(@)"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/watchguard.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:watchguard:mobile-ssl-vpn-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "WatchGuard — Mobile SSL VPN Settings Summary"
+    description: "Formatted summary of Mobile SSL VPN settings including SSL server, DNS servers, domain name, encryption, VPN traffic mode, data channel, IP pool, authentication, and resources."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "watchguard-inspector"
+      inspectorId: 29
+    liongardMetricName: "WatchGuard: Mobile SSL VPN Settings Summary"
+    liongardMetricId: 610
+    liongardMetricUuid: "62ab6830-a05d-4d6e-9512-041bb6eb83a3"
+    jmesPath: "VPN.ClientVPN.MobileSSL.join( `, `, [join(`: `, [`SSL Server`, to_string(SslServer)]), join(`: `, [`DNS Servers`, to_string(DnsServers)]), join(`: `, [`Domain Name`, to_string(DomainName)]), join(`: `, [`Encryption`, to_string(Encryption)]), join(`: `, [`VPN Traffic`, to_string(VpnTraffic)]), join(`: `, [`DataChannel`, to_string(DataChannel)]), join(`: `, [`IP Address Pool`, to_string(IpAddressPool)]), join(`: `, [`Authentication`, to_string(Authentication)]), join(`: `, [`Allowed Resources`, to_string(AllowedResources)]), join(`: `, [`Auth Users`, to_string(AuthenticationUsers)])])"
+    resultType: "object"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/watchguard.md"
+    dateAdded: "2026-05-26"
+
+# ── Users & Groups ────────────────────────────────────────────────────────────
+
+  - "@id": "metrics:watchguard:user-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "WatchGuard — Single-User Account Summary"
+    description: "Formatted summary of individual user accounts (type = Single-User) including name, auth server, and description."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "watchguard-inspector"
+      inspectorId: 29
+    liongardMetricName: "WatchGuard: User Summary"
+    liongardMetricId: 604
+    liongardMetricUuid: "19f93f81-40f6-4e7c-936b-d58e43031be6"
+    jmesPath: "Users[?Type == 'Single-User'].join( `, `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`AuthServer`, to_string(AuthServer)]), join(`: `, [`Description`, to_string(Description)])]) | sort(@)"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/watchguard.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:watchguard:group-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "WatchGuard — Group Account Summary"
+    description: "Formatted summary of group accounts including name, auth server, and description."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "watchguard-inspector"
+      inspectorId: 29
+    liongardMetricName: "WatchGuard: Group Summary"
+    liongardMetricId: 605
+    liongardMetricUuid: "88c8b3ba-a0fc-4673-8e93-5d43e1ce53eb"
+    jmesPath: "Users[?Type == 'Group'].join( `, `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`AuthServer`, to_string(AuthServer)]), join(`: `, [`Description`, to_string(Description)])]) | sort(@)"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/watchguard.md"
+    dateAdded: "2026-05-26"
+
+# ── Quota & Bandwidth ─────────────────────────────────────────────────────────
+
+  - "@id": "metrics:watchguard:quota-rule-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "WatchGuard — Quota Rule Summary"
+    description: "Formatted summary of quota rules including name, action, and status."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "watchguard-inspector"
+      inspectorId: 29
+    liongardMetricName: "WatchGuard: Quota Rule Summary"
+    liongardMetricId: 599
+    liongardMetricUuid: "9d5549f8-be54-4753-8b67-192ce4dde403"
+    jmesPath: "QuotaRules[].join( `, `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`Action`, to_string(Action)]), join(`: `, [`Status`, to_string(Status)])]) | sort(@)"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/watchguard.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:watchguard:quota-action-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "WatchGuard — Quota Action Summary"
+    description: "Formatted summary of quota actions including name, time per day (min), and bandwidth per day (MB)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "watchguard-inspector"
+      inspectorId: 29
+    liongardMetricName: "WatchGuard: Quota Action Summary"
+    liongardMetricId: 600
+    liongardMetricUuid: "c1eec04c-8907-4a71-9d4d-a6cce8d44794"
+    jmesPath: "QuotaAction[].join( `, `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`Time(Min/Day)`, to_string(TimeInMinPerDay)]), join(`: `, [`Bandwidth(MB/Day)`, to_string(BandwidthInMBPerDay)])]) | sort(@)"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/watchguard.md"
+    dateAdded: "2026-05-26"

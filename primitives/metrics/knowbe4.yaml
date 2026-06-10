@@ -1,0 +1,177 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+- '@id': metrics:knowbe4-inspector:users-count
+  '@type': liongard:MetricPrimitive
+  name: KnowBe4 — User Count
+  description: Total number of users in the KnowBe4 account.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: knowbe4-inspector
+    inspectorId: 81
+  liongardMetricName: 'KnowBe4: Users Count'
+  liongardMetricId: 1761
+  liongardMetricUuid: "ffd3a95e-d22f-4080-9487-bbb8f54ab344"
+  jmesPath: length(Users)
+  resultType: integer
+  resultUnit: count
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System O (inspected 2026-05-14)
+  sourceRecipe: recipes/single-system-analysis/by-inspector/knowbe4.md
+  dateAdded: '2026-05-28'
+
+- '@id': metrics:knowbe4-inspector:seats-total
+  '@type': liongard:MetricPrimitive
+  name: KnowBe4 — Licensed Seat Count
+  description: Total number of licensed seats purchased for the KnowBe4 account.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: knowbe4-inspector
+    inspectorId: 81
+  liongardMetricName: 'KnowBe4: Total Number of Seats'
+  liongardMetricId: 1308
+  liongardMetricUuid: "08d25e1a-5526-43d1-a6ad-b4eabfaa3297"
+  jmesPath: AccountInfo.number_of_seats
+  resultType: integer
+  resultUnit: count
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System O (inspected 2026-05-14) — 101 seats
+  sourceRecipe: recipes/single-system-analysis/by-inspector/knowbe4.md
+  dateAdded: '2026-05-28'
+
+- '@id': metrics:knowbe4-inspector:current-risk-score
+  '@type': liongard:MetricPrimitive
+  name: KnowBe4 — Organization Risk Score
+  description: Current account-level phishing risk score (0–100). Lower is better.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: knowbe4-inspector
+    inspectorId: 81
+  liongardMetricName: 'KnowBe4: Current Risk Score'
+  liongardMetricId: 1309
+  liongardMetricUuid: "3252533d-6085-4026-a7a8-b307bddd2976"
+  jmesPath: AccountInfo.current_risk_score
+  resultType: float
+  compliantWhen: result < 10 (industry benchmark for well-trained orgs)
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System O (inspected 2026-05-14) — 30.44
+  sourceRecipe: recipes/single-system-analysis/by-inspector/knowbe4.md
+  dateAdded: '2026-05-28'
+
+- '@id': metrics:knowbe4-inspector:subscription-level
+  '@type': liongard:MetricPrimitive
+  name: KnowBe4 — Subscription Level
+  description: KnowBe4 subscription tier (e.g., 'Silver', 'Gold', 'Platinum', 'Diamond').
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: knowbe4-inspector
+    inspectorId: 81
+  jmesPath: AccountInfo.subscription_level
+  resultType: string
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System O (inspected 2026-05-14) — 'Diamond'
+  sourceRecipe: recipes/single-system-analysis/by-inspector/knowbe4.md
+  dateAdded: '2026-05-28'
+
+- '@id': metrics:knowbe4-inspector:campaigns-count
+  '@type': liongard:MetricPrimitive
+  name: KnowBe4 — Total Campaigns Count
+  description: Total number of phishing simulation campaigns (all statuses).
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: knowbe4-inspector
+    inspectorId: 81
+  liongardMetricName: 'KnowBe4: Campaigns Count'
+  liongardMetricId: 1306
+  liongardMetricUuid: "35dc18a5-6ba4-453b-bc38-b319582b097b"
+  jmesPath: length(Campaigns)
+  resultType: integer
+  resultUnit: count
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System O (inspected 2026-05-14) — 4 total campaigns
+  sourceRecipe: recipes/single-system-analysis/by-inspector/knowbe4.md
+  dateAdded: '2026-05-28'
+
+- '@id': metrics:knowbe4-inspector:campaigns-active-count
+  '@type': liongard:MetricPrimitive
+  name: KnowBe4 — Active Campaigns Count
+  description: Number of phishing simulation campaigns currently active.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: knowbe4-inspector
+    inspectorId: 81
+  jmesPath: length(Campaigns[?status == `Active`])
+  resultType: integer
+  resultUnit: count
+  fieldGotcha: 'Campaigns[].status is Title Case ''Active'' (capital A) — NOT lowercase
+    ''active''. Filter: status == `Active`.'
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System O (inspected 2026-05-14) — 1 active (lowercase
+    filter returned 0)
+  sourceRecipe: recipes/single-system-analysis/by-inspector/knowbe4.md
+  dateAdded: '2026-05-28'
+
+- '@id': metrics:knowbe4-inspector:groups-count
+  '@type': liongard:MetricPrimitive
+  name: KnowBe4 — Group Count
+  description: Total number of user groups in the KnowBe4 account.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: knowbe4-inspector
+    inspectorId: 81
+  jmesPath: length(Groups)
+  resultType: integer
+  resultUnit: count
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System O (inspected 2026-05-14) — 6 groups
+  sourceRecipe: recipes/single-system-analysis/by-inspector/knowbe4.md
+  dateAdded: '2026-05-28'
+
+- '@id': metrics:knowbe4-inspector:training-enrollments-total
+  '@type': liongard:MetricPrimitive
+  name: KnowBe4 — Training Enrollment Count
+  description: Total number of training module enrollments across all users.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: knowbe4-inspector
+    inspectorId: 81
+  jmesPath: length(TrainingEnrollments)
+  resultType: integer
+  resultUnit: count
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System O (inspected 2026-05-14) — 34 enrollments
+  sourceRecipe: recipes/single-system-analysis/by-inspector/knowbe4.md
+  dateAdded: '2026-05-28'
+
+- '@id': metrics:knowbe4-inspector:training-past-due-count
+  '@type': liongard:MetricPrimitive
+  name: KnowBe4 — Past Due Training Enrollment Count
+  description: Number of training enrollments with 'Past Due' status — users who have
+    not completed assigned training.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: knowbe4-inspector
+    inspectorId: 81
+  liongardMetricName: 'KnowBe4: Past Due Training Enrollments Count'
+  liongardMetricId: 1315
+  liongardMetricUuid: "b2d29f87-f9ae-4a0c-ae4f-48b0c0b41fce"
+  jmesPath: length(TrainingEnrollments[?status == `Past Due`])
+  resultType: integer
+  resultUnit: count
+  compliantWhen: result == 0
+  fieldGotcha: 'status values confirmed: ''Past Due'' (2 words, space-separated).
+    Other observed statuses: ''Completed'', ''In Progress''. Filter is exact string
+    match.'
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System O (inspected 2026-05-14) — 5 past due
+  sourceRecipe: recipes/single-system-analysis/by-inspector/knowbe4.md
+  dateAdded: '2026-05-28'

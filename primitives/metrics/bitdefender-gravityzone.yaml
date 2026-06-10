@@ -1,0 +1,62 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+  - '@id': metrics:bitdefender-gravityzone:total-endpoints
+    '@type': liongard:MetricPrimitive
+    name: Bitdefender GravityZone — Total Endpoints
+    description: 'Total number of enrolled endpoints in the GravityZone console. JMESPath:
+      length(Endpoints)'
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: bitdefender-gravityzone-inspector
+      inspectorId: 57
+    jmesPath: length(Endpoints)
+    resultType: integer
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: System M — Completed 2026-03-13
+    sourceRecipe: recipes/single-system-analysis/by-inspector/bitdefender-gravityzone.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:bitdefender-gravityzone:online-endpoints
+    '@type': liongard:MetricPrimitive
+    name: Bitdefender GravityZone — Online Endpoints
+    description: 'Number of endpoints currently in ''online'' state. JMESPath: length(Endpoints[?details.stateName
+      == ''online''])'
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: bitdefender-gravityzone-inspector
+      inspectorId: 57
+    jmesPath: length(Endpoints[?details.stateName == 'online'])
+    resultType: integer
+    compliantWhen: '>= slas.online_pct_min% of total'
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: System M — Completed 2026-03-13
+    sourceRecipe: recipes/single-system-analysis/by-inspector/bitdefender-gravityzone.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:bitdefender-gravityzone:endpoint-detail
+    '@type': liongard:MetricPrimitive
+    name: Bitdefender GravityZone — Endpoint Detail
+    description: 'Per-endpoint projection: name, state, OS, machine type, assigned policy,
+      last seen, malware status. JMESPath: Endpoints[*].{name: name, state: details.stateName,
+      os: details.operatingSystem, machineType: details.machineType, policy: assignedPolicyName,
+      lastSeen: details.lastSeen, malware: details.malware}. machineType is an integer:
+      1=workstation, 2=server. Do NOT use string filter == ''server''. Use backtick-quoted
+      integer: details.machineType == `2`'
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: bitdefender-gravityzone-inspector
+      inspectorId: 57
+    jmesPath: 'Endpoints[*].{name: name, state: details.stateName, os: details.operatingSystem,
+      machineType: details.machineType, policy: assignedPolicyName, lastSeen: details.lastSeen,
+      malware: details.malware}'
+    resultType: array
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: System M — Completed 2026-03-13
+    sourceRecipe: recipes/single-system-analysis/by-inspector/bitdefender-gravityzone.md
+    dateAdded: '2026-05-26'
+

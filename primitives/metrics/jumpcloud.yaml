@@ -1,0 +1,303 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+  - '@id': metrics:jumpcloud:systems-with-failed-policies-list
+    '@type': liongard:MetricPrimitive
+    name: JumpCloud — Systems With Failed Policies List
+    description: Names of systems where one or more JumpCloud policies are in a non-success
+      state.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: jumpcloud-inspector
+      inspectorId: 68
+    liongardMetricName: 'JumpCloud: Systems with Failed Policies List'
+    liongardMetricId: 1017
+    liongardMetricUuid: "15930a5e-6c55-4c93-a511-76e4236477b3"
+    jmesPath: Policies.PolicyResults[?state  != `success`].systemName_r | join(`, `,
+      @)
+    resultType: string
+    compliantWhen: length == 0
+    status: VALIDATED
+    validatedOn: '2026-05-26'
+    validatedSystemReference: Liongard Global metric catalog
+    sourceRecipe: recipes/single-system-analysis/by-inspector/jumpcloud.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:jumpcloud:systems-with-failed-commands-list
+    '@type': liongard:MetricPrimitive
+    name: JumpCloud — Systems With Failed Commands List
+    description: Names of systems where one or more JumpCloud commands exited with a
+      non-zero code.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: jumpcloud-inspector
+      inspectorId: 68
+    liongardMetricName: 'JumpCloud: Systems with Failed Commands List'
+    liongardMetricId: 1018
+    liongardMetricUuid: "4fa94ee0-a782-4e92-9e5a-1f78bf361390"
+    jmesPath: Commands.CommandResults[?exitCode != `0`].system | join(`, `,@)
+    resultType: string
+    compliantWhen: length == 0
+    status: VALIDATED
+    validatedOn: '2026-05-26'
+    validatedSystemReference: Liongard Global metric catalog
+    sourceRecipe: recipes/single-system-analysis/by-inspector/jumpcloud.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:jumpcloud:systems-with-failed-policies-count
+    '@type': liongard:MetricPrimitive
+    name: JumpCloud — Systems With Failed Policies Count
+    description: Count of systems where one or more JumpCloud policies are in a non-success
+      state.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: jumpcloud-inspector
+      inspectorId: 68
+    liongardMetricName: 'JumpCloud: Systems with Failed Policies Count'
+    liongardMetricId: 1019
+    liongardMetricUuid: "b9bd920e-fce3-45ea-9b21-8476054e032d"
+    jmesPath: Policies.PolicyResults[?state != `success`].[systemName_r] | length(@)
+    resultType: integer
+    compliantWhen: == 0
+    status: VALIDATED
+    validatedOn: '2026-05-26'
+    validatedSystemReference: Liongard Global metric catalog
+    sourceRecipe: recipes/single-system-analysis/by-inspector/jumpcloud.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:jumpcloud:systems-with-failed-commands-count
+    '@type': liongard:MetricPrimitive
+    name: JumpCloud — Systems With Failed Commands Count
+    description: Count of systems where one or more JumpCloud commands exited with a
+      non-zero code.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: jumpcloud-inspector
+      inspectorId: 68
+    liongardMetricName: 'JumpCloud: Systems with Failed Commands Count'
+    liongardMetricId: 1020
+    liongardMetricUuid: "f707ffd6-f45a-4ee7-9954-7f508bdc91f1"
+    jmesPath: Commands.CommandResults[?exitCode != `0`].[exitCode] | length(@)
+    resultType: integer
+    compliantWhen: == 0
+    status: VALIDATED
+    validatedOn: '2026-05-26'
+    validatedSystemReference: Liongard Global metric catalog
+    sourceRecipe: recipes/single-system-analysis/by-inspector/jumpcloud.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:jumpcloud:locked-user-accounts-count
+    '@type': liongard:MetricPrimitive
+    name: JumpCloud — Locked User Accounts Count
+    description: Number of JumpCloud user accounts currently in a locked state.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: jumpcloud-inspector
+      inspectorId: 68
+    liongardMetricName: 'JumpCloud: Locked User Accounts Count'
+    liongardMetricId: 1021
+    liongardMetricUuid: "f4c39a88-4370-4065-8a60-24dd27292be2"
+    jmesPath: Users[?account_locked == `true`].[username] | length(@)
+    resultType: integer
+    compliantWhen: == 0
+    status: VALIDATED
+    validatedOn: '2026-05-26'
+    validatedSystemReference: Liongard Global metric catalog
+    sourceRecipe: recipes/single-system-analysis/by-inspector/jumpcloud.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:jumpcloud:no-password-expiration-count
+    '@type': liongard:MetricPrimitive
+    name: JumpCloud — User Accounts With No Password Expiration Count
+    description: Number of JumpCloud user accounts with password_never_expires set to
+      true.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: jumpcloud-inspector
+      inspectorId: 68
+    liongardMetricName: 'JumpCloud: User Accounts with No Password Expiration Count'
+    liongardMetricId: 1022
+    liongardMetricUuid: "ba9e397a-0216-4eae-95f9-2e436f2ea8aa"
+    jmesPath: Users[?password_never_expires == `true`].[username] | length(@)
+    resultType: integer
+    compliantWhen: == 0
+    compliesWith:
+    - CIS-Controls-v8:5.2
+    status: VALIDATED
+    validatedOn: '2026-05-26'
+    validatedSystemReference: Liongard Global metric catalog
+    sourceRecipe: recipes/single-system-analysis/by-inspector/jumpcloud.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:jumpcloud:locked-user-accounts-list
+    '@type': liongard:MetricPrimitive
+    name: JumpCloud — Locked User Accounts List
+    description: Comma-separated list of usernames for JumpCloud accounts currently
+      in a locked state.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: jumpcloud-inspector
+      inspectorId: 68
+    liongardMetricName: 'JumpCloud: Locked User Accounts List'
+    liongardMetricId: 1023
+    liongardMetricUuid: "0d60b3bc-e0f3-4828-aedd-ef7a64811af1"
+    jmesPath: Users[?account_locked == `true`].[username] [] | join(`, `,@)
+    resultType: string
+    compliantWhen: length == 0
+    status: VALIDATED
+    validatedOn: '2026-05-26'
+    validatedSystemReference: Liongard Global metric catalog
+    sourceRecipe: recipes/single-system-analysis/by-inspector/jumpcloud.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:jumpcloud:users-total-count
+    '@type': liongard:MetricPrimitive
+    name: JumpCloud — Total User Count
+    description: Total number of user accounts in the JumpCloud organization. Pseudo-metric
+      path 'jumpcloud.users.totalCount' replaced with validated JMESPath. Excludes null
+      ghost entries.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: jumpcloud-inspector
+      inspectorId: 68
+    jmesPath: length(Users[?status != null])
+    resultType: integer
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: System O (child) — Completed 2026-03-13
+    sourceRecipe: recipes/single-system-analysis/by-inspector/jumpcloud.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:jumpcloud:users-enabled-count
+    '@type': liongard:MetricPrimitive
+    name: JumpCloud — Enabled User Count
+    description: 'Number of enabled user accounts in the JumpCloud organization. Active
+      user state: activated==true AND suspended!=true. Pseudo-metric path replaced.'
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: jumpcloud-inspector
+      inspectorId: 68
+    jmesPath: length(Users[?activated == `true` && suspended != `true`])
+    resultType: integer
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: System O (child) — Completed 2026-03-13
+    sourceRecipe: recipes/single-system-analysis/by-inspector/jumpcloud.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:jumpcloud:users-admin-count
+    '@type': liongard:MetricPrimitive
+    name: JumpCloud — Admin User Count
+    description: Number of admin accounts in the JumpCloud organization. Admin flag
+      is Users[].sudo (boolean). Pseudo-metric path replaced.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: jumpcloud-inspector
+      inspectorId: 68
+    jmesPath: length(Users[?sudo == `true`])
+    resultType: integer
+    compliesWith:
+    - CIS-Controls-v8:5.4
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: System O (child) — Completed 2026-03-13
+    sourceRecipe: recipes/single-system-analysis/by-inspector/jumpcloud.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:jumpcloud:users-mfa-enabled-count
+    '@type': liongard:MetricPrimitive
+    name: JumpCloud — MFA Enabled User Count
+    description: Number of JumpCloud users with MFA enrolled. Primary MFA field is enable_user_portal_multifactor
+      (boolean). Pseudo-metric path replaced.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: jumpcloud-inspector
+      inspectorId: 68
+    jmesPath: length(Users[?enable_user_portal_multifactor == `true`])
+    resultType: integer
+    compliantWhen: == enabled user count
+    compliesWith:
+    - CIS-Controls-v8:6.3
+    - CIS-Controls-v8:6.5
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: System O (child) — Completed 2026-03-13
+    sourceRecipe: recipes/single-system-analysis/by-inspector/jumpcloud.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:jumpcloud:devices-total-count
+    '@type': liongard:MetricPrimitive
+    name: JumpCloud — Device Count
+    description: Total number of devices enrolled in the JumpCloud organization. Devices
+      are in Systems[] array. Pseudo-metric path replaced.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: jumpcloud-inspector
+      inspectorId: 68
+    jmesPath: length(Systems)
+    resultType: integer
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: System O (child) — Completed 2026-03-13
+    sourceRecipe: recipes/single-system-analysis/by-inspector/jumpcloud.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:jumpcloud:sso-application-count
+    '@type': liongard:MetricPrimitive
+    name: JumpCloud — SSO Application Count
+    description: Total number of SSO applications configured in the JumpCloud tenant.
+      Applications is an object with Applications[] array inside. Pseudo-metric path
+      replaced.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: jumpcloud-inspector
+      inspectorId: 68
+    jmesPath: length(Applications.Applications)
+    resultType: integer
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: System O (child) — Completed 2026-03-13
+    sourceRecipe: recipes/single-system-analysis/by-inspector/jumpcloud.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:jumpcloud:sso-apps-no-users-count
+    '@type': liongard:MetricPrimitive
+    name: JumpCloud — SSO Apps With No Users Count
+    description: Number of SSO application integrations with no users assigned (orphaned
+      integrations). Applications.Applications[] array confirmed; UserCount field not
+      directly verified. Pseudo-metric path replaced.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: jumpcloud-inspector
+      inspectorId: 68
+    jmesPath: length(Applications.Applications[?UserCount == `0`])
+    resultType: integer
+    compliantWhen: == 0
+    status: SCHEMA_CONFIRMED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: System O (child) — Completed 2026-03-13
+    sourceRecipe: recipes/single-system-analysis/by-inspector/jumpcloud.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:jumpcloud:password-policy-min-length
+    '@type': liongard:MetricPrimitive
+    name: JumpCloud — Password Policy Minimum Length
+    description: Minimum password length configured in the JumpCloud organization password
+      policy. Password policy is at SystemInfo.settings.passwordPolicy (22-field object).
+      Pseudo-metric path replaced.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: jumpcloud-inspector
+      inspectorId: 68
+    jmesPath: SystemInfo.settings.passwordPolicy.minlength
+    resultType: integer
+    compliantWhen: '>= slas.password_policy_min_length'
+    compliesWith:
+    - CIS-Controls-v8:5.2
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: System O (child) — Completed 2026-03-13
+    sourceRecipe: recipes/single-system-analysis/by-inspector/jumpcloud.md
+    dateAdded: '2026-05-26'
+

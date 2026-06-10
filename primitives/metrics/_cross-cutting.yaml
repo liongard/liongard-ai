@@ -1,0 +1,4 @@
+"$schema": "../../schemas/primitive.schema.json"
+primitives: []
+# Metrics that span ≥2 inspectors, or are consumed directly by organisms (QBRs, compliance, etc.)
+# Put cross-cutting metrics here rather than in an inspector-specific file.

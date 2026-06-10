@@ -1,0 +1,288 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+  - "@id": "metrics:sophos-sg:utm-version"
+    "@type": "liongard:MetricPrimitive"
+    name: "Sophos SG — UTM Version"
+    description: "Returns the current UTM firmware version of the Sophos SG appliance"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sophos-sg-inspector"
+      inspectorId: 43
+    liongardMetricName: "Sophos SG: UTM Version"
+    liongardMetricId: 1156
+    liongardMetricUuid: "870c1856-4019-4f4a-bf67-766c16da22f5"
+    jmesPath: "SystemInfo.UTMVersion"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sophos-sg.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sophos-sg:ssh-enabled"
+    "@type": "liongard:MetricPrimitive"
+    name: "Sophos SG — SSH Enabled"
+    description: "Indicates whether SSH access is enabled on the Sophos SG appliance"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sophos-sg-inspector"
+      inspectorId: 43
+    liongardMetricName: "Sophos SG: SSH enabled"
+    liongardMetricId: 1157
+    liongardMetricUuid: "3840cd8a-08f1-4761-9b3f-90c1dc63109c"
+    jmesPath: "SystemInfo.SSHAccessEnabled"
+    resultType: "boolean"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sophos-sg.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sophos-sg:count-of-active-users"
+    "@type": "liongard:MetricPrimitive"
+    name: "Sophos SG — Count of Active Users"
+    description: "Total number of enabled (active) users configured on the Sophos SG appliance"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sophos-sg-inspector"
+      inspectorId: 43
+    liongardMetricName: "Sophos SG: Count of active users"
+    liongardMetricId: 1397
+    liongardMetricUuid: "37d6324e-4096-44d0-81b8-61eb472ef6eb"
+    jmesPath: "Users[?enabled == `true`] | length(@)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sophos-sg.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sophos-sg:list-of-active-users"
+    "@type": "liongard:MetricPrimitive"
+    name: "Sophos SG — List of Active Users"
+    description: "Returns the names of all enabled (active) users configured on the Sophos SG appliance"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sophos-sg-inspector"
+      inspectorId: 43
+    liongardMetricName: "Sophos SG: List of active users"
+    liongardMetricId: 1159
+    liongardMetricUuid: "385b9952-d2fd-4e38-8c28-17f11da4bba3"
+    jmesPath: "Users[?enabled == `true`].name"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sophos-sg.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sophos-sg:count-of-groups"
+    "@type": "liongard:MetricPrimitive"
+    name: "Sophos SG — Count of Groups"
+    description: "Total number of groups configured on the Sophos SG appliance"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sophos-sg-inspector"
+      inspectorId: 43
+    liongardMetricName: "Sophos SG: Count of Groups"
+    liongardMetricId: 1388
+    liongardMetricUuid: "436faa14-73f5-468f-a784-4fb411885949"
+    jmesPath: "Groups[] | length(@)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sophos-sg.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sophos-sg:list-of-groups"
+    "@type": "liongard:MetricPrimitive"
+    name: "Sophos SG — List of Groups"
+    description: "Returns name, dynamic flag, and network for all groups configured on the Sophos SG appliance"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sophos-sg-inspector"
+      inspectorId: 43
+    liongardMetricName: "Sophos SG: List of Groups"
+    liongardMetricId: 1161
+    liongardMetricUuid: "64457688-a9da-4c51-88ec-7585c05fb145"
+    jmesPath: "Groups[].[`Name:`,name,`| Dynamic:` dynamic, `| Network:` network]"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sophos-sg.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sophos-sg:interface-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "Sophos SG — Interface Summary"
+    description: "Returns name, type, IP address, link state, and MTU for all interfaces on the Sophos SG appliance"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sophos-sg-inspector"
+      inspectorId: 43
+    liongardMetricName: "Sophos SG: Interface Summary"
+    liongardMetricId: 1162
+    liongardMetricUuid: "5a3fec04-6aaa-4374-be80-6ee30449aa95"
+    jmesPath: "Interfaces[].[`Name:` name , `| Type:` InterfaceType_r ,`| Address:`primary_address `| Link:` link, `| MTU:` mtu]"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sophos-sg.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sophos-sg:packet-filter-rules-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "Sophos SG — Packet Filter Rules Summary"
+    description: "Returns name, action, direction, and status for all packet filter rules on the Sophos SG appliance"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sophos-sg-inspector"
+      inspectorId: 43
+    liongardMetricName: "Sophos SG: Packet Filter Rules Summary"
+    liongardMetricId: 1163
+    liongardMetricUuid: "8119fbad-0f7c-4cc1-a772-cab2fac5b5a1"
+    jmesPath: "PacketFilter[].[`Name:`name,`| Action:`action,`| Direction:`direction, `| Status:` status]"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sophos-sg.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sophos-sg:list-of-network-definitions"
+    "@type": "liongard:MetricPrimitive"
+    name: "Sophos SG — List of Network Definitions"
+    description: "Returns name and address for all network definition objects on the Sophos SG appliance"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sophos-sg-inspector"
+      inspectorId: 43
+    liongardMetricName: "Sophos SG: List of Network Definitions"
+    liongardMetricId: 1386
+    liongardMetricUuid: "7b0845b6-aacf-4613-9de7-6233e01c372c"
+    jmesPath: "NetworkDefinitions[].[`Name:`name, `| Address:`address]"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sophos-sg.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sophos-sg:site-to-site-vpn-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "Sophos SG — Site-to-Site VPN Connections Summary"
+    description: "Returns name, status, interface, and remote gateway for all site-to-site VPN connections on the Sophos SG appliance"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sophos-sg-inspector"
+      inspectorId: 43
+    liongardMetricName: "Sophos SG: Site to Site VPN Connections Summary"
+    liongardMetricId: 1164
+    liongardMetricUuid: "102957c8-bd0b-432c-9331-055225dc73f9"
+    jmesPath: "SiteToSiteVPN[].[`Name:`name, `| Status:`status, `| Interface:`interface, `| Remote Gateway:`remote_gateway]"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sophos-sg.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sophos-sg:remote-gateways-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "Sophos SG — Remote Gateways Summary"
+    description: "Returns name, authentication method, host, and Xauth flag for all IPsec remote gateways on the Sophos SG appliance"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sophos-sg-inspector"
+      inspectorId: 43
+    liongardMetricName: "Sophos SG: Remote Gateways Summary"
+    liongardMetricId: 1165
+    liongardMetricUuid: "9b3e13ac-075d-409b-80e2-eea7e0cbecad"
+    jmesPath: "IpsecRemoteGateway[].[`Name:`name, `| Auth:`authentication, `| Host:` host, `| Xauth:`xauth]"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sophos-sg.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sophos-sg:remote-access-profiles-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "Sophos SG — Remote Access Profiles Summary"
+    description: "Returns name, status, and assigned networks for all SSL remote access profiles on the Sophos SG appliance"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sophos-sg-inspector"
+      inspectorId: 43
+    liongardMetricName: "Sophos SG: Remote Access Profiles Summary"
+    liongardMetricId: 1167
+    liongardMetricUuid: "bb9d16f6-b752-424f-b015-fc109ddff87a"
+    jmesPath: "SSLRemoteAccessProfile[].[`Name:`name, `| Status:`status, `| Networks:` to_string(networks_r)]"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sophos-sg.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sophos-sg:licenses-expiring-30-days-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Sophos SG — Licenses Within 30 Days of Expiration Count"
+    description: "Total number of Sophos SG licenses expiring within the next 30 days"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sophos-sg-inspector"
+      inspectorId: 43
+    liongardMetricName: "Sophos SG: Licenses within 30 Days of Expiration Count"
+    liongardMetricId: 1387
+    liongardMetricUuid: "f911e323-b675-44d6-b4ed-35de669314c0"
+    jmesPath: "SystemInfo.Licensing[?DaysUntilExpiration_r < `30`] | length(@)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sophos-sg.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sophos-sg:licenses-expiring-30-days-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Sophos SG — Licenses Within 30 Days of Expiration List"
+    description: "Returns the names of Sophos SG licenses expiring within the next 30 days"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sophos-sg-inspector"
+      inspectorId: 43
+    liongardMetricName: "Sophos SG: Licenses within 30 Days of Expiration List"
+    liongardMetricId: 1396
+    liongardMetricUuid: "a0b8538f-95cc-4dab-b478-6694dd9ef763"
+    jmesPath: "SystemInfo.Licensing[?DaysUntilExpiration_r < `30`].name"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sophos-sg.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sophos-sg:nat-rules"
+    "@type": "liongard:MetricPrimitive"
+    name: "Sophos SG — NAT Rules"
+    description: "Returns name, source, service, and destination for all active NAT rules on the Sophos SG appliance"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sophos-sg-inspector"
+      inspectorId: 43
+    liongardMetricName: "Sophos SG: NAT Rules"
+    liongardMetricId: 496
+    liongardMetricUuid: "a2fba755-5863-494c-ba9c-e7d3c25b8d14"
+    jmesPath: "NAT[?status == `true`].[name, `| Src: `, source.name, `| Svc: `, service.name, `| Dest: `, destination.name]"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sophos-sg.md"
+    dateAdded: "2026-05-26"

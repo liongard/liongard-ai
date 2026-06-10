@@ -1,0 +1,288 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+  - "@id": "metrics:eset-inspector:count-of-privileged-users"
+    "@type": "liongard:MetricPrimitive"
+    name: "ESET Licensing — Count of Privileged Users"
+    description: "Count of ESET users with Write/admin permission"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "eset-licensing-inspector"
+      inspectorId: 69
+    liongardMetricName: "ESET Licensing: Count of Privileged Users"
+    liongardMetricId: 1047
+    liongardMetricUuid: "2ed6163b-11a2-469c-bd2a-cb86d67c1cff"
+    jmesPath: "Users[?Permission_r == `Write`] | length(@)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/eset-licensing.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:eset-inspector:list-of-privileged-users"
+    "@type": "liongard:MetricPrimitive"
+    name: "ESET Licensing — List of Privileged Users"
+    description: "Email addresses of ESET users with Write/admin permission"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "eset-licensing-inspector"
+      inspectorId: 69
+    liongardMetricName: "ESET Licensing: List of Privileged Users"
+    liongardMetricId: 1048
+    liongardMetricUuid: "7e1a24ee-1b85-4bea-9eda-6192faa83fcc"
+    jmesPath: "Users[?Permission_r == `Write`].Email"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/eset-licensing.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:eset-inspector:count-of-active-users"
+    "@type": "liongard:MetricPrimitive"
+    name: "ESET Licensing — Count of Active Users"
+    description: "Count of active ESET users (State == '1'); represents seat consumption"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "eset-licensing-inspector"
+      inspectorId: 69
+    liongardMetricName: "ESET Licensing: Count of Active Users"
+    liongardMetricId: 1049
+    liongardMetricUuid: "332918c2-d558-40a0-8f8f-875c08106abc"
+    jmesPath: "Users[?State == '1'] | length(@)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/eset-licensing.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:eset-inspector:list-of-active-users"
+    "@type": "liongard:MetricPrimitive"
+    name: "ESET Licensing — List of Active Users"
+    description: "Email addresses of active ESET users (State == '1')"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "eset-licensing-inspector"
+      inspectorId: 69
+    liongardMetricName: "ESET Licensing: List of Active Users"
+    liongardMetricId: 1050
+    liongardMetricUuid: "797a8d48-cc22-4fa4-ba92-c656c993bc99"
+    jmesPath: "Users[?State == '1'].Email"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/eset-licensing.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:eset-inspector:count-users-waiting-activation"
+    "@type": "liongard:MetricPrimitive"
+    name: "ESET Licensing — Total User Count Waiting for Activation / Activation Link Expired"
+    description: "Count of ESET users awaiting activation or whose activation link has expired (State == '2')"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "eset-licensing-inspector"
+      inspectorId: 69
+    liongardMetricName: "ESET Licensing: Total User Count Waiting for Activation/Activation Link Expired"
+    liongardMetricId: 1051
+    liongardMetricUuid: "66480a80-e616-401b-bf88-7198cc5ced14"
+    jmesPath: "Users[?State == '2'] | length(@)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/eset-licensing.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:eset-inspector:list-users-waiting-activation"
+    "@type": "liongard:MetricPrimitive"
+    name: "ESET Licensing — Total User List Waiting for Activation / Activation Link Expired"
+    description: "Email addresses of ESET users awaiting activation or with expired activation links (State == '2')"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "eset-licensing-inspector"
+      inspectorId: 69
+    liongardMetricName: "ESET Licensing: Total User List Waiting for Activation/Activation Link Expired"
+    liongardMetricId: 1052
+    liongardMetricUuid: "35cb1ce4-bf89-455f-8096-5321dd3f3422"
+    jmesPath: "Users[?State == '2'].Email"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/eset-licensing.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:eset-inspector:license-usage-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "ESET Licensing — License Usage Summary"
+    description: "Summary of active licenses with name, usage count, and total quantity"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "eset-licensing-inspector"
+      inspectorId: 69
+    liongardMetricName: "ESET Licensing: License Usage Summary"
+    liongardMetricId: 1053
+    liongardMetricUuid: "1020384d-ca5c-49de-8576-5370fd50f0c1"
+    jmesPath: "Licenses[?usage >`0`].join(` `,[`Name: `, Name, `, Usage:`, to_string(usage), `, Quantity:`, to_string(quantity)])"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/eset-licensing.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:eset-inspector:count-licenses-in-error"
+    "@type": "liongard:MetricPrimitive"
+    name: "ESET Licensing — Count of Licenses in an Error State"
+    description: "Count of ESET licenses currently in an Error state"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "eset-licensing-inspector"
+      inspectorId: 69
+    liongardMetricName: "ESET Licensing: Count of Licenses in an Error State"
+    liongardMetricId: 1054
+    liongardMetricUuid: "059f4743-d23c-4141-8730-743eb057d65d"
+    jmesPath: "Licenses[?State_r == `Error`] | length(@)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/eset-licensing.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:eset-inspector:list-licenses-in-error"
+    "@type": "liongard:MetricPrimitive"
+    name: "ESET Licensing — List of Licenses in an Error State"
+    description: "License names and public keys for ESET licenses in an Error state"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "eset-licensing-inspector"
+      inspectorId: 69
+    liongardMetricName: "ESET Licensing: List of Licenses in an Error State"
+    liongardMetricId: 1055
+    liongardMetricUuid: "a007930e-44ee-4862-885c-09abcc5abed7"
+    jmesPath: "Licenses[?State_r == `Error`].[Name, `-`, PublicLicenseKey]"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/eset-licensing.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:eset-inspector:count-licenses-suspended"
+    "@type": "liongard:MetricPrimitive"
+    name: "ESET Licensing — Count of Licenses in a Suspended State"
+    description: "Count of ESET licenses currently in a Suspended state"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "eset-licensing-inspector"
+      inspectorId: 69
+    liongardMetricName: "ESET Licensing: Count of Licenses in a Suspended State"
+    liongardMetricId: 1056
+    liongardMetricUuid: "db9b43ee-d3a3-4bdf-ad2b-f7e92a9853d9"
+    jmesPath: "Licenses[?State_r == `Suspend`] | length(@)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/eset-licensing.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:eset-inspector:list-licenses-suspended"
+    "@type": "liongard:MetricPrimitive"
+    name: "ESET Licensing — List of Licenses in a Suspended State"
+    description: "License names and public keys for ESET licenses in a Suspended state"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "eset-licensing-inspector"
+      inspectorId: 69
+    liongardMetricName: "ESET Licensing: List of Licenses in a Suspended State"
+    liongardMetricId: 1057
+    liongardMetricUuid: "97fbc3c4-a975-4c6b-ad51-edfd8afa29c8"
+    jmesPath: "Licenses[?State_r == `Suspend`].[Name, `-`, PublicLicenseKey]"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/eset-licensing.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:eset-inspector:count-licenses-in-warning"
+    "@type": "liongard:MetricPrimitive"
+    name: "ESET Licensing — Count of Licenses in a Warning State"
+    description: "Count of ESET licenses currently in a Warning state"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "eset-licensing-inspector"
+      inspectorId: 69
+    liongardMetricName: "ESET Licensing: Count of Licenses in a Warning State"
+    liongardMetricId: 1058
+    liongardMetricUuid: "d2a92b09-cf39-4dc0-b6cc-12a62be54a80"
+    jmesPath: "Licenses[?State_r == `Warning`] | length(@)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/eset-licensing.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:eset-inspector:list-licenses-in-warning"
+    "@type": "liongard:MetricPrimitive"
+    name: "ESET Licensing — List of Licenses in a Warning State"
+    description: "License names and public keys for ESET licenses in a Warning state"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "eset-licensing-inspector"
+      inspectorId: 69
+    liongardMetricName: "ESET Licensing: List of Licenses in a Warning State"
+    liongardMetricId: 1059
+    liongardMetricUuid: "710e58e4-9df0-426b-8245-20a83d52bfa8"
+    jmesPath: "Licenses[?State_r == `Warning`].[Name, `-`, PublicLicenseKey]"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/eset-licensing.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:eset-inspector:count-trial-licenses-expiring-30d"
+    "@type": "liongard:MetricPrimitive"
+    name: "ESET Licensing — Count of Trial Licenses Expiring in 30 Days"
+    description: "Count of ESET trial licenses expiring within 30 days (excluding already-expired)"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "eset-licensing-inspector"
+      inspectorId: 69
+    liongardMetricName: "ESET Licensing: Count of Trial Licenses Expiring in 30 days"
+    liongardMetricId: 1060
+    liongardMetricUuid: "559c2175-da2d-4557-99aa-fd115860f4f3"
+    jmesPath: "Licenses[?DaysUntilTrialExpiration_r < `30` && DaysUntilTrialExpiration_r != `0`].Name | length(@)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/eset-licensing.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:eset-inspector:list-trial-licenses-expiring-30d"
+    "@type": "liongard:MetricPrimitive"
+    name: "ESET Licensing — List of Trial Licenses Expiring in 30 Days"
+    description: "License names and keys for ESET trial licenses expiring within 30 days"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "eset-licensing-inspector"
+      inspectorId: 69
+    liongardMetricName: "ESET Licensing: List of Trial Licenses Expiring in 30 days"
+    liongardMetricId: 1061
+    liongardMetricUuid: "9ff98604-c1e9-4926-947a-18c8dde253dd"
+    jmesPath: "Licenses[?DaysUntilTrialExpiration_r < `30` && DaysUntilTrialExpiration_r != `0`].[Name, `-`, PublicLicenseKey]"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/eset-licensing.md"
+    dateAdded: "2026-05-26"

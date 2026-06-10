@@ -1,0 +1,301 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+  # ── Certificate identity & validity ──────────────────────────────────────
+
+  - "@id": "metrics:tls-ssl-inspector:cert-exists"
+    "@type": "liongard:MetricPrimitive"
+    name: "TLS/SSL — SSL Certificate Exists"
+    description: "Boolean indicating whether an SSL/TLS certificate was detected on the monitored host."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "tls-ssl-inspector"
+      inspectorId: 16
+    jmesPath: "SystemInfo.SSLCertExists"
+    resultType: "boolean"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/tls-ssl.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:tls-ssl-inspector:valid-from"
+    "@type": "liongard:MetricPrimitive"
+    name: "TLS/SSL — Certificate Valid From"
+    description: "Certificate issuance / start date (ISO date string)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "tls-ssl-inspector"
+      inspectorId: 16
+    jmesPath: "SystemInfo.ValidFrom"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/tls-ssl.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:tls-ssl-inspector:expires-on"
+    "@type": "liongard:MetricPrimitive"
+    name: "TLS/SSL — Certificate Expires On"
+    description: "Certificate expiration date (ISO date string)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "tls-ssl-inspector"
+      inspectorId: 16
+    jmesPath: "SystemInfo.ExpiresOn"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/tls-ssl.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:tls-ssl-inspector:days-till-expiration"
+    "@type": "liongard:MetricPrimitive"
+    name: "TLS/SSL — Days Till Certificate Expiration"
+    description: "Integer count of days until the TLS certificate expires. Primary expiration metric for SLA evaluation."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "tls-ssl-inspector"
+      inspectorId: 16
+    jmesPath: "Intel.SSLCertDaysTillExpiration"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/tls-ssl.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:tls-ssl-inspector:alt-names"
+    "@type": "liongard:MetricPrimitive"
+    name: "TLS/SSL — Subject Alternative Names"
+    description: "Array of SANs (subject alternative names) covered by the certificate."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "tls-ssl-inspector"
+      inspectorId: 16
+    jmesPath: "SystemInfo.AltNames"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/tls-ssl.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:tls-ssl-inspector:ssl-match-names"
+    "@type": "liongard:MetricPrimitive"
+    name: "TLS/SSL — Certificate Name Match"
+    description: "Boolean indicating whether the certificate CN/SANs match the probed hostname. False = browser cert mismatch error."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "tls-ssl-inspector"
+      inspectorId: 16
+    jmesPath: "SystemInfo.SSLMatchNames"
+    resultType: "boolean"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/tls-ssl.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:tls-ssl-inspector:sha256-fingerprint"
+    "@type": "liongard:MetricPrimitive"
+    name: "TLS/SSL — SHA-256 Fingerprint"
+    description: "SHA-256 certificate fingerprint for pinning and identity verification."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "tls-ssl-inspector"
+      inspectorId: 16
+    jmesPath: "SystemInfo.SHA256Fingerprint"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/tls-ssl.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:tls-ssl-inspector:public-key-pin"
+    "@type": "liongard:MetricPrimitive"
+    name: "TLS/SSL — Public Key Pin (HPKP)"
+    description: "HPKP pin value; useful for certificate pinning audits."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "tls-ssl-inspector"
+      inspectorId: 16
+    jmesPath: "SystemInfo.PublicKeyPin"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/tls-ssl.md"
+    dateAdded: "2026-05-26"
+
+  # ── Key + algorithm ───────────────────────────────────────────────────────
+
+  - "@id": "metrics:tls-ssl-inspector:public-key-algorithm"
+    "@type": "liongard:MetricPrimitive"
+    name: "TLS/SSL — Public Key Algorithm"
+    description: "Public key algorithm (RSA | ECDSA | etc.)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "tls-ssl-inspector"
+      inspectorId: 16
+    jmesPath: "SystemInfo.PublicKeyAlgorithm"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/tls-ssl.md"
+    dateAdded: "2026-05-26"
+
+  # ── Protocol support ──────────────────────────────────────────────────────
+
+  - "@id": "metrics:tls-ssl-inspector:protocol-tls10"
+    "@type": "liongard:MetricPrimitive"
+    name: "TLS/SSL — TLS 1.0 Support"
+    description: "TLS 1.0 support status. Value is string 'Supported' or other. Flag if 'Supported' — deprecated protocol, compliance-failing. NOTE: value is a string, not boolean."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "tls-ssl-inspector"
+      inspectorId: 16
+    jmesPath: "SystemInfo.Protocols.tls1"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/tls-ssl.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:tls-ssl-inspector:protocol-tls11"
+    "@type": "liongard:MetricPrimitive"
+    name: "TLS/SSL — TLS 1.1 Support"
+    description: "TLS 1.1 support status. Value is string 'Supported' or other. Flag if 'Supported' — deprecated protocol, compliance-failing. NOTE: value is a string, not boolean."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "tls-ssl-inspector"
+      inspectorId: 16
+    jmesPath: "SystemInfo.Protocols.tls1_1"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/tls-ssl.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:tls-ssl-inspector:protocol-tls12"
+    "@type": "liongard:MetricPrimitive"
+    name: "TLS/SSL — TLS 1.2 Support"
+    description: "TLS 1.2 support status. Value is string 'Supported' or other. Should be 'Supported'. NOTE: value is a string, not boolean."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "tls-ssl-inspector"
+      inspectorId: 16
+    jmesPath: "SystemInfo.Protocols.tls1_2"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/tls-ssl.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:tls-ssl-inspector:protocol-tls13"
+    "@type": "liongard:MetricPrimitive"
+    name: "TLS/SSL — TLS 1.3 Support"
+    description: "TLS 1.3 support status. Value is string 'Supported' or other. Preferred modern protocol. NOTE: value is a string, not boolean."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "tls-ssl-inspector"
+      inspectorId: 16
+    jmesPath: "SystemInfo.Protocols.tls1_3"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/tls-ssl.md"
+    dateAdded: "2026-05-26"
+
+  # ── HTTP redirect & revocation ────────────────────────────────────────────
+
+  - "@id": "metrics:tls-ssl-inspector:redirects"
+    "@type": "liongard:MetricPrimitive"
+    name: "TLS/SSL — HTTP Redirects"
+    description: "Boolean indicating whether the HTTP endpoint redirects (to HTTPS). False means HTTP is served without redirect — downgrade-attack exposure."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "tls-ssl-inspector"
+      inspectorId: 16
+    jmesPath: "SystemInfo.Redirects"
+    resultType: "boolean"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/tls-ssl.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:tls-ssl-inspector:redirects-to"
+    "@type": "liongard:MetricPrimitive"
+    name: "TLS/SSL — HTTP Redirects To"
+    description: "URL that the HTTP endpoint redirects to. Confirm target is https:// (not an HTTP loop or different domain)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "tls-ssl-inspector"
+      inspectorId: 16
+    jmesPath: "SystemInfo.RedirectsTo"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/tls-ssl.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:tls-ssl-inspector:ocsp-url"
+    "@type": "liongard:MetricPrimitive"
+    name: "TLS/SSL — OCSP Responder URL"
+    description: "OCSP responder URL from the certificate AIA extension. Used for certificate revocation checking."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "tls-ssl-inspector"
+      inspectorId: 16
+    jmesPath: "SystemInfo.OCSPUrl"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/tls-ssl.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:tls-ssl-inspector:aia-url"
+    "@type": "liongard:MetricPrimitive"
+    name: "TLS/SSL — Authority Information Access URL"
+    description: "AIA URL from the certificate extension. Used for chain building."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "tls-ssl-inspector"
+      inspectorId: 16
+    jmesPath: "SystemInfo.AIAUrl"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/tls-ssl.md"
+    dateAdded: "2026-05-26"
+
+  # ── Certificate extensions ────────────────────────────────────────────────
+
+  - "@id": "metrics:tls-ssl-inspector:extensions"
+    "@type": "liongard:MetricPrimitive"
+    name: "TLS/SSL — Certificate Extensions"
+    description: "Array of certificate extension objects (key usage, extended key usage, SAN, etc.)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "tls-ssl-inspector"
+      inspectorId: 16
+    jmesPath: "Extensions[*]"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/tls-ssl.md"
+    dateAdded: "2026-05-26"

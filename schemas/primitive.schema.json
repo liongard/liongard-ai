@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schema.liongard.com/recipe-library/v1/primitive.schema.json",
+  "title": "Liongard Metric Primitive",
+  "description": "Schema for a single entry in primitives/metrics-registry.yaml. Each primitive is an atomic, reusable evaluation against Liongard data — referenced by recipes via its stable @id so all downstream artifacts stay in sync when the primitive is revised.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["@id", "@type", "name", "evaluates", "resultType", "status"],
+  "properties": {
+    "@id": {
+      "type": "string",
+      "description": "Stable namespaced identifier. Format: metrics:{inspector-slug}:{kebab-case-condition}",
+      "pattern": "^metrics:[a-z0-9]+(-[a-z0-9]+)*:[a-z0-9]+(-[a-z0-9]+)*$",
+      "examples": [
+        "metrics:microsoft-365:active-users-count",
+        "metrics:sentinelone:agents-out-of-date",
+        "metrics:windows-server:rdp-exposed"
+      ]
+    },
+    "@type": {
+      "const": "liongard:MetricPrimitive"
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable label for the primitive — used in recipe rendering and error messages.",
+      "minLength": 3,
+      "maxLength": 120
+    },
+    "description": {
+      "type": "string",
+      "description": "What the primitive answers in one sentence. Used by the recipe-picker skill to match user intent."
+    },
+    "evaluates": {
+      "type": "object",
+      "description": "The inspector this primitive evaluates against.",
+      "additionalProperties": false,
+      "required": ["inspectorSlug"],
+      "properties": {
+        "@type": { "const": "liongard:Inspector" },
+        "inspectorSlug": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*-inspector$",
+          "description": "Kebab-case inspector identifier from reference/inspector-aliases.md. Must end in '-inspector'.",
+          "examples": ["microsoft-365-inspector", "sentinelone-inspector", "synology-nas-inspector"]
+        },
+        "inspectorId": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Numeric inspector ID from internal/inspector-name-system-id-mapping.xlsx. May differ across instances — informational only."
+        }
+      }
+    },
+
+    "jmesPath": {
+      "type": "string",
+      "description": "Inline JMESPath expression evaluated against the inspector dataprint. Exactly one of: (a) jmesPath, (b) liongardMetricUuid, (c) liongardMetricName must be present.",
+      "minLength": 1
+    },
+    "liongardMetricUuid": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      "description": "CANONICAL cross-instance reference to a stored Liongard Global metric, once the UUID endpoint is available. Stable across every Liongard deployment."
+    },
+    "liongardMetricName": {
+      "type": "string",
+      "description": "Acceptable canonical reference until UUID is exposed. Must match the live liongard_metric LIST output exactly for User='Global' metrics — same name on every deployment. Do NOT source from Liongard-Metrics.xlsx (it's a snapshot).",
+      "minLength": 3
+    },
+    "liongardMetricId": {
+      "type": "integer",
+      "description": "Local per-instance numeric ID. NOT a stable reference — informational/optimization hint only. The validator warns when this is the only liongard* field present.",
+      "minimum": 1
+    },
+
+    "resultType": {
+      "type": "string",
+      "enum": ["integer", "array", "object", "string", "boolean", "null"],
+      "description": "Shape of the EVALUATE result. Used by recipes to decide downstream handling (count, iterate, render)."
+    },
+    "resultUnit": {
+      "type": "string",
+      "description": "Unit hint when resultType is integer. Pin this so threshold comparisons don't drift (catalog trap from learnings.md — hours vs. minutes vs. days).",
+      "examples": ["count", "days", "hours", "minutes", "seconds", "bytes", "megabytes", "percent"]
+    },
+    "compliantWhen": {
+      "type": "string",
+      "description": "Logical condition under which the result indicates a compliant / healthy state. Free text but should be evaluable (e.g., 'result == 0', 'result >= 95', 'all entries have enable_status == \"enabled\"')."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["VALIDATED", "SCHEMA_CONFIRMED", "PROPOSED"],
+      "description": "Validation status per CLAUDE.md Phase 4. VALIDATED = confirmed non-null on a live dataprint. SCHEMA_CONFIRMED = field exists but array empty / degraded on test system. PROPOSED = not yet confirmed; requires Liongard metric request."
+    },
+    "validatedOn": {
+      "type": "string",
+      "format": "date",
+      "description": "Date the primitive was last validated against a live dataprint. Format YYYY-MM-DD."
+    },
+    "validatedSystemReference": {
+      "type": "string",
+      "description": "Anonymized reference to the system where validation ran (e.g., 'System A — dev environment'). NEVER real customer / tenant / partner names — see CLAUDE.md scrub rule."
+    },
+
+    "answersQuestion": {
+      "type": "array",
+      "description": "Cyber-insurance / CIS / onboarding QA questions this primitive provides evidence for. References by @id.",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    },
+    "compliesWith": {
+      "type": "array",
+      "description": "Compliance framework references this primitive maps to.",
+      "items": {
+        "type": "string",
+        "examples": [
+          "CIS-Controls-v8:5.1",
+          "CIS-Controls-v8:6.5",
+          "CMMC-L1:AC.L1-3.1.1",
+          "HIPAA:164.312(a)(1)",
+          "cyber-insurance-domain-auth",
+          "cyber-insurance-domain-endpoint"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "supersedes": {
+      "type": "string",
+      "description": "@id of an older primitive this one replaces (e.g., a stored Liongard metric superseding an inline JMESPath workaround)."
+    },
+    "sourceRecipe": {
+      "type": "string",
+      "description": "Path of the recipe this primitive was first extracted from. Provenance only — the validator builds the full reverse index from recipe primitives[] arrays.",
+      "pattern": "^recipes/"
+    },
+    "fieldGotcha": {
+      "type": "string",
+      "description": "Catalog-trap note when the field's shape or unit is non-obvious (per CLAUDE.md Phase 4 known traps). Surfaces in recipe rendering so MSP-side authors don't repeat the mistake."
+    },
+    "dateAdded": {
+      "type": "string",
+      "format": "date"
+    },
+    "dateModified": {
+      "type": "string",
+      "format": "date"
+    }
+  },
+
+  "anyOf": [
+    {
+      "title": "Primitive defined by inline JMESPath",
+      "required": ["jmesPath"]
+    },
+    {
+      "title": "Primitive backed by a stored Liongard Global metric — UUID (preferred)",
+      "required": ["liongardMetricUuid"]
+    },
+    {
+      "title": "Primitive backed by a stored Liongard Global metric — Name (acceptable until UUID exposed)",
+      "required": ["liongardMetricName"]
+    }
+  ]
+}

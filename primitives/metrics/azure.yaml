@@ -1,0 +1,134 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+# NOTE: The azure.md recipe uses proposed metric paths (azure.rbac.*, azure.nsg.*, etc.)
+# that do not yet exist in the Liongard Global metric catalog. The entries below
+# cover only the metrics confirmed in the catalog as of 2026-05-26.
+# All other fields in the recipe are marked PROPOSED and omitted here until
+# catalog IDs are assigned.
+#
+# IMPORTANT — inspector identity note: The azure-inspector (ID 11) covers Azure
+# subscription resources (VMs, NSGs, storage, etc.). Entra ID / Azure AD identity
+# data lives in the azure-active-directory-inspector (ID separate). These entries
+# are for the subscription inspector only.
+
+primitives:
+
+  - "@id": "metrics:azure:virtual-machine-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Azure — Virtual Machine Count"
+    description: "Total number of virtual machines in this Azure subscription. JMESPath: VirtualMachines | length(@)"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "azure-inspector"
+      inspectorId: 11
+    liongardMetricName: "Azure: Virtual Machine Count"
+    liongardMetricId: 14
+    liongardMetricUuid: "09db9bef-dee0-4c9c-9310-bee0d3b45fc4"
+    jmesPath: "VirtualMachines | length(@)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/azure.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:azure:virtual-machines-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Azure — Virtual Machines List"
+    description: "Names of all virtual machines in this Azure subscription. JMESPath: VirtualMachines[].name"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "azure-inspector"
+      inspectorId: 11
+    liongardMetricName: "Azure: Virtual Machines List"
+    liongardMetricId: 448
+    liongardMetricUuid: "e5fcf867-00fe-4510-a2d9-6fcfc0eac6de"
+    jmesPath: "VirtualMachines[].name"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/azure.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:azure:enabled-subscriptions-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Azure — Enabled Subscriptions Count"
+    description: "Count of Azure subscriptions in the Enabled state. JMESPath: Subscriptions[?state == `Enabled`] | length(@)"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "azure-inspector"
+      inspectorId: 11
+    liongardMetricName: "Azure: Enabled Subscriptions Count"
+    liongardMetricId: 245
+    liongardMetricUuid: "356d8d9e-6924-4352-838c-0ff803e59ab5"
+    jmesPath: "Subscriptions[?state == `Enabled`] | length(@)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/azure.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:azure:nsg-rdp-exposed-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Azure — NSG Rules with RDP Port Exposed to Internet Count"
+    description: "Count of NSG inbound allow rules that expose port 3389 from any source — critical finding. JMESPath: NetworkSecurityGroups[].properties.securityRules[?properties.destinationPortRange == '3389' && properties.direction == `Inbound` && properties.sourceAddressPrefix == `*` && properties.access == `Allow`][] | length(@)"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "azure-inspector"
+      inspectorId: 11
+    liongardMetricName: "Azure Inspector: Network Security Rules with Exposed Default RDP Port Count"
+    liongardMetricId: 952
+    liongardMetricUuid: "032fa8ae-f212-4775-bde1-5bfa96239cfc"
+    jmesPath: "NetworkSecurityGroups[].properties.securityRules[?properties.destinationPortRange == '3389' && properties.direction == `Inbound` && properties.sourceAddressPrefix == `*` && properties.access == `Allow`][] | length(@)"
+    resultType: "integer"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "CIS-Controls-v8:12.2"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/azure.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:azure:nsg-rdp-exposed-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Azure — NSG Rules with RDP Port Exposed to Internet List"
+    description: "IDs of NSG inbound allow rules that expose port 3389 from any source. JMESPath: NetworkSecurityGroups[].properties.securityRules[?...].id"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "azure-inspector"
+      inspectorId: 11
+    liongardMetricName: "Azure Inspector: Network Security Rules with Exposed Default RDP Port List"
+    liongardMetricId: 953
+    liongardMetricUuid: "4ee69d6f-d862-421d-b9c8-cbce3a46dd8a"
+    jmesPath: "NetworkSecurityGroups[].properties.securityRules[?properties.destinationPortRange == '3389' && properties.direction == `Inbound` && properties.sourceAddressPrefix == `*` && properties.access == `Allow`][].id"
+    resultType: "array"
+    compliantWhen: "result == null || length(result) == 0"
+    compliesWith:
+      - "CIS-Controls-v8:12.2"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/azure.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:azure:subnets-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Azure — Subnets List"
+    description: "Address prefixes of all subnets across all virtual networks in this subscription. JMESPath: join(`, `, VirtualNetworks[].properties[].subnets[].properties.addressPrefix)"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "azure-inspector"
+      inspectorId: 11
+    liongardMetricName: "Azure: Subnets List"
+    liongardMetricId: 15
+    liongardMetricUuid: "57a97a65-894d-4798-aee1-9a3f8b56fa89"
+    jmesPath: "join(`, `, VirtualNetworks[].properties[].subnets[].properties.addressPrefix)"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/azure.md"
+    dateAdded: "2026-05-26"

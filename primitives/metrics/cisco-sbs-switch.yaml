@@ -1,0 +1,173 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+# Cisco SBS Switch (Inspector ID 78)
+# Eval sweep 2026-05-28 findings:
+# Top-level keys: Raw, Name, VLAN, Users, SystemID, SystemInfo, RunningConfig, StartupConfig, InterfacesConfiguration
+# This is a NETWORK SWITCH inspector capturing CLI configuration — not a user management inspector.
+# CONFIRMED DATA GAPS: PoE data not in structure, Management.Telnet/HTTP not confirmed,
+#   EOL date not in structure, stacking mode not confirmed, SystemInfo.UptimeDays does not
+#   exist (SystemInfo.SystemUpTime is a STRING, not integer). LocalUsers/admin accounts not captured.
+#   All prior primitives used fabricated paths (Ports.X, VLANs.X, PoE.X, Management.X, etc.).
+# GOTCHA: Top-level array key is VLAN (singular), NOT VLANs (plural).
+# GOTCHA: InterfacesConfiguration[].State is Title Case STRING ("Up" not "UP" or "up").
+#   Filter must use == 'Up' not == 'UP'.
+# GOTCHA: Firmware version is at SystemInfo.SWVersion (not SystemInfo.FirmwareVersion — does not exist).
+# GOTCHA: Hostname is at SystemInfo.SystemName (not SystemInfo.Hostname — does not exist).
+# GOTCHA: Serial number is at SystemID.SerialNumber (not SystemInfo.SerialNumber — wrong top-level key).
+# GOTCHA: Users[] = currently logged-in CLI sessions only (not admin account inventory).
+
+primitives:
+
+  - "@id": "metrics:cisco-sbs-switch-inspector:firmware-version"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cisco SBS Switch — Firmware Version"
+    description: "Current firmware/software version running on the switch (SystemInfo.SWVersion)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cisco-sbs-switch-inspector"
+      inspectorId: 78
+    jmesPath: "SystemInfo.SWVersion"
+    resultType: "string"
+    fieldGotcha: "Firmware is at SWVersion not FirmwareVersion (which does not exist). SystemInfo fields: HWVersion, SWVersion (e.g. '1.4.11.5'), FansStatus, SystemName, BootVersion, SystemUpTime (string), SystemContact, SystemLocation, SystemObjectId, SystemMacAddress, SystemDescription."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Demo system (inspected 2025-12-02)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cisco-sbs-switch.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:cisco-sbs-switch-inspector:system-name"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cisco SBS Switch — System Name (Hostname)"
+    description: "System name/hostname configured on the switch."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cisco-sbs-switch-inspector"
+      inspectorId: 78
+    jmesPath: "SystemInfo.SystemName"
+    resultType: "string"
+    fieldGotcha: "Hostname is at SystemInfo.SystemName, NOT SystemInfo.Hostname (which does not exist in the dataprint)."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Demo system (inspected 2025-12-02)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cisco-sbs-switch.md"
+    dateAdded: "2026-05-28"
+
+  - "@id": "metrics:cisco-sbs-switch-inspector:serial-number"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cisco SBS Switch — Serial Number"
+    description: "Hardware serial number of the switch."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cisco-sbs-switch-inspector"
+      inspectorId: 78
+    jmesPath: "SystemID.SerialNumber"
+    resultType: "string"
+    fieldGotcha: "Serial number is at SystemID.SerialNumber (its own top-level object), NOT SystemInfo.SerialNumber which does not exist. SystemID contains only SerialNumber."
+    status: "SCHEMA_CONFIRMED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Demo system structure — field present as string in GET_OVERVIEW; value not directly EVALUATE-tested"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cisco-sbs-switch.md"
+    dateAdded: "2026-05-28"
+
+  - "@id": "metrics:cisco-sbs-switch-inspector:vlans-total-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cisco SBS Switch — Total VLAN Count"
+    description: "Total number of VLANs configured on the switch."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cisco-sbs-switch-inspector"
+      inspectorId: 78
+    jmesPath: "length(VLAN)"
+    resultType: "integer"
+    fieldGotcha: "Top-level key is VLAN (singular), NOT VLANs (plural). VLAN[] fields include: Name (string), Vlan (integer VLAN ID), CreatedBy, TaggedPorts (array of port IDs), UntaggedPorts (array of port IDs)."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Demo system (inspected 2025-12-02)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cisco-sbs-switch.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:cisco-sbs-switch-inspector:ports-total-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cisco SBS Switch — Total Port Count"
+    description: "Total number of physical switch ports in InterfacesConfiguration."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cisco-sbs-switch-inspector"
+      inspectorId: 78
+    jmesPath: "length(InterfacesConfiguration)"
+    resultType: "integer"
+    fieldGotcha: "The array is InterfacesConfiguration[], NOT a 'Ports' top-level key (which does not exist). Fields include: Neg, Mode, Port (identifier string), Type, Speed, State (string: 'Up'), Duplex, control, Pressure."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Demo system (inspected 2025-12-02)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cisco-sbs-switch.md"
+    dateAdded: "2026-05-28"
+
+  - "@id": "metrics:cisco-sbs-switch-inspector:ports-up-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cisco SBS Switch — Ports Up Count"
+    description: "Number of switch ports with State = 'Up' (link active)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cisco-sbs-switch-inspector"
+      inspectorId: 78
+    jmesPath: "length(InterfacesConfiguration[?State == 'Up'])"
+    resultType: "integer"
+    fieldGotcha: "InterfacesConfiguration[].State is STRING in Title Case: 'Up' (not 'UP' or 'up'). Filter must match case exactly. On demo all 28 ports showed State='Up'."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Demo system (inspected 2025-12-02)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cisco-sbs-switch.md"
+    dateAdded: "2026-05-28"
+
+  - '@id': metrics:cisco-sbs-switch-inspector:model
+    '@type': liongard:MetricPrimitive
+    name: Cisco SBS Switch — Model
+    description: Hardware model/description string (e.g., SG300-28P 28-Port Gigabit PoE Managed Switch).
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: cisco-sbs-switch-inspector
+      inspectorId: 78
+    jmesPath: SystemInfo.SystemDescription
+    resultType: string
+    status: VALIDATED
+    validatedOn: '2026-05-29'
+    validatedSystemReference: System E — internal dev instance (cisco SBS switch, inspected 2025-12-05)
+    sourceRecipe: recipes/single-system-analysis/by-inspector/cisco-sbs-switch.md
+    dateAdded: '2026-05-29'
+
+  - '@id': metrics:cisco-sbs-switch-inspector:local-users-total-count
+    '@type': liongard:MetricPrimitive
+    name: Cisco SBS Switch — Local Users Count
+    description: Count of locally-defined switch users.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: cisco-sbs-switch-inspector
+      inspectorId: 78
+    jmesPath: length(Users)
+    resultType: integer
+    resultUnit: count
+    status: VALIDATED
+    validatedOn: '2026-05-29'
+    validatedSystemReference: System E — internal dev instance (cisco SBS switch, inspected 2025-12-05)
+    compliesWith:
+    - CIS-Controls-v8:5.1
+    sourceRecipe: recipes/single-system-analysis/by-inspector/cisco-sbs-switch.md
+    dateAdded: '2026-05-29'
+
+  - '@id': metrics:cisco-sbs-switch-inspector:ports-disabled-count
+    '@type': liongard:MetricPrimitive
+    name: Cisco SBS Switch — Disabled Ports Count
+    description: Count of interfaces with AdminState Down.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: cisco-sbs-switch-inspector
+      inspectorId: 78
+    jmesPath: length(Interfaces[?AdminState=='Down'])
+    resultType: integer
+    resultUnit: count
+    status: VALIDATED
+    validatedOn: '2026-05-29'
+    validatedSystemReference: System E — internal dev instance (cisco SBS switch, inspected 2025-12-05)
+    sourceRecipe: recipes/single-system-analysis/by-inspector/cisco-sbs-switch.md
+    dateAdded: '2026-05-29'

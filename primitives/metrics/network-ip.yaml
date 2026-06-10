@@ -1,0 +1,103 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+# Network IP Address (Inspector ID 18)
+# Eval sweep 2026-05-28 findings:
+# Single-tenant inspector. Validated on active system (inspected 2026-03-13).
+# Dataprint root keys: UniqueCompositeKey, Name, Primary, SystemInfo.
+# SystemInfo sub-fields: Ip, ReverseLookup, AS, ASInfo, limitedOutput.
+# DATA GAPS confirmed: ALL 8 PROPOSED paths used fabricated 'network-ip.*' namespace.
+#   No reputation/blocklist/threatIntel/scan/cve keys exist in the dataprint. 8 primitives removed.
+# GOTCHA: SystemInfo.limitedOutput is a STRING containing a descriptive message (e.g.,
+#   'We were unable to get the entire network details'), NOT a boolean. Prior primitive had
+#   resultType 'boolean' — corrected to 'string'.
+
+primitives:
+
+- '@id': metrics:network-ip-inspector:ip-address
+  '@type': liongard:MetricPrimitive
+  name: Network IP — Monitored IP Address
+  description: The monitored public IP address.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: network-ip-inspector
+    inspectorId: 18
+  jmesPath: SystemInfo.Ip
+  resultType: string
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/network-ip-address.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:network-ip-inspector:reverse-lookup
+  '@type': liongard:MetricPrimitive
+  name: Network IP — Reverse DNS (PTR)
+  description: PTR record for the monitored IP. Empty string indicates missing reverse
+    DNS — mail-deliverability gap.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: network-ip-inspector
+    inspectorId: 18
+  jmesPath: SystemInfo.ReverseLookup
+  resultType: string
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/network-ip-address.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:network-ip-inspector:asn
+  '@type': liongard:MetricPrimitive
+  name: Network IP — ASN Number
+  description: Autonomous System Number for the IP (e.g., 'AS8075'). Used for hosting
+    provider identification.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: network-ip-inspector
+    inspectorId: 18
+  jmesPath: SystemInfo.AS
+  resultType: string
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/network-ip-address.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:network-ip-inspector:asn-info
+  '@type': liongard:MetricPrimitive
+  name: Network IP — ASN Organization Description
+  description: Human-readable ASN organization description (hosting provider / ISP
+    name).
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: network-ip-inspector
+    inspectorId: 18
+  jmesPath: SystemInfo.ASInfo
+  resultType: string
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/network-ip-address.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:network-ip-inspector:limited-output
+  '@type': liongard:MetricPrimitive
+  name: Network IP — Limited Output Message
+  description: 'String message explaining why only partial enrichment data was collected.
+    Empty string when full data is available. Example value: ''We were unable to get
+    the entire network details''.'
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: network-ip-inspector
+    inspectorId: 18
+  jmesPath: SystemInfo.limitedOutput
+  resultType: string
+  fieldGotcha: limitedOutput is a STRING containing a descriptive message, NOT a boolean.
+    Prior primitive had resultType 'boolean' — incorrect. Check for non-empty string
+    to detect limited output.
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System A (inspected 2026-03-13)
+  sourceRecipe: recipes/single-system-analysis/by-inspector/network-ip-address.md
+  dateAdded: '2026-05-26'
+

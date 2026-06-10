@@ -1,0 +1,84 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+# ConnectWise Automate (Inspector ID 36)
+# Eval sweep 2026-05-28 findings:
+# Top-level keys: Computers, NetworkDevices, UniqueCompositeKey
+# CONFIRMED DATA GAPS: No patch data, no alert data, no user/MFA data, no licensing,
+# no monitor data in this dataprint. All prior primitives used fabricated nested paths
+# (cw-automate.computers.X etc.) — those paths do not exist in any live dataprint.
+# Parent/child pattern: Demo systems show "Demo - Child" naming; child systems may have
+# per-client endpoint data, but could not be validated (Setup Issue status).
+# API note: OperatingSystemName field is misspelled 'OperatingSystecAame' in the API.
+
+primitives:
+
+  - "@id": "metrics:connectwise-automate:computers-total-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "ConnectWise Automate — Total Computer Count"
+    description: "Total number of computers visible to this ConnectWise Automate server."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "connectwise-automate-inspector"
+      inspectorId: 36
+    jmesPath: "length(Computers)"
+    resultType: "integer"
+    compliesWith:
+      - "CIS-Controls-v8:1.1"
+    fieldGotcha: "Computers[] is the only device data array in this dataprint. Fields include: ComputerID, ComputerName, DomainName, LocationId, LocationName, ClientId, ClientName, OperatingSystecAame (API typo — misspelled), OperatingSystemVersion, SerialNumber, LocalIPAddress, MACAddress, RemoteAgentLastContact, DaysSinceRemoteAgentLastContact_r, LastUserName."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "System B (Timeout status, last contact 2025-08-25)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/connectwise-automate.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:connectwise-automate:computers-stale-agent-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "ConnectWise Automate — Computers with Stale Agent Contact"
+    description: "Number of computers whose Automate agent has not checked in within 7 days. Stale agents may indicate offline machines, uninstalled agents, or network issues."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "connectwise-automate-inspector"
+      inspectorId: 36
+    jmesPath: "length(Computers[?DaysSinceRemoteAgentLastContact_r > `7`])"
+    resultType: "integer"
+    compliantWhen: "== 0"
+    fieldGotcha: "DaysSinceRemoteAgentLastContact_r is a Liongard-computed integer (days since last agent check-in). Adjust threshold in recipe customize block."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "System B (Timeout status, last contact 2025-08-25)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/connectwise-automate.md"
+    dateAdded: "2026-05-28"
+
+  - "@id": "metrics:connectwise-automate:computer-inventory"
+    "@type": "liongard:MetricPrimitive"
+    name: "ConnectWise Automate — Computer Inventory"
+    description: "List of managed computers with name, client, domain, IP, MAC, OS, and agent recency"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "connectwise-automate-inspector"
+      inspectorId: 36
+    jmesPath: "Computers[*].{name: ComputerName, client: ClientName, location: LocationName, domain: DomainName, ip: LocalIPAddress, mac: MACAddress, os: OperatingSystecAame, daysSinceContact: DaysSinceRemoteAgentLastContact_r}"
+    resultType: "array"
+    fieldGotcha: "OperatingSystemName is misspelled 'OperatingSystecAame' in the API — use that exact spelling. DaysSinceRemoteAgentLastContact_r is Liongard-computed."
+    status: "SCHEMA_CONFIRMED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "System B (Timeout status, last contact 2025-08-25)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/connectwise-automate.md"
+    dateAdded: "2026-05-28"
+
+  - "@id": "metrics:connectwise-automate:network-device-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "ConnectWise Automate — Network Device Count"
+    description: "Total number of network devices discovered by ConnectWise Automate network discovery"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "connectwise-automate-inspector"
+      inspectorId: 36
+    jmesPath: "length(NetworkDevices)"
+    resultType: "integer"
+    fieldGotcha: "NetworkDevices[] was empty (Array(0)) on the validation system — Automate network discovery may not be configured. Array exists in schema."
+    status: "SCHEMA_CONFIRMED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "System B (Timeout status, last contact 2025-08-25)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/connectwise-automate.md"
+    dateAdded: "2026-05-28"

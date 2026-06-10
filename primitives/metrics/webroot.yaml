@@ -1,0 +1,83 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+  - '@id': metrics:webroot:active-endpoint-count
+    '@type': liongard:MetricPrimitive
+    name: Webroot — Active Endpoint Count
+    description: Count of active (non-deactivated) endpoints in the Webroot SecureAnywhere
+      site.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: webroot-inspector
+      inspectorId: 15
+    liongardMetricName: 'Webroot: Active Endpoint Count'
+    jmesPath: Endpoints[?Deactivated == `false`] | length(@)
+    resultType: integer
+    compliantWhen: '>= slas.active_pct_min% of total'
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: System N — Contoso Nation, Completed 2026-03-12
+    sourceRecipe: recipes/single-system-analysis/by-inspector/webroot.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:webroot:devices-not-checked-in-30-days-count
+    '@type': liongard:MetricPrimitive
+    name: Webroot — Devices Not Checked In Within 30 Days Count
+    description: Count of endpoints that have not checked in within the last 30 days
+      (stale endpoints). No direct last-seen age field in dataprint. LastSeen is an
+      ISO timestamp; agent must compute days elapsed.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: webroot-inspector
+      inspectorId: 15
+    liongardMetricName: 'Webroot: Devices Not Checked in Within 30 Days Count'
+    resultType: integer
+    compliantWhen: == 0
+    status: PROPOSED
+    validatedOn: '2026-05-26'
+    validatedSystemReference: Liongard Global metric catalog
+    sourceRecipe: recipes/single-system-analysis/by-inspector/webroot.md
+    dateAdded: '2026-05-26'
+    jmesPath: N/A
+
+  - '@id': metrics:webroot:infected-device-count
+    '@type': liongard:MetricPrimitive
+    name: Webroot — Infected Device Count
+    description: Count of endpoints currently flagged as infected. Infected is null
+      (not false) on clean endpoints. JMESPath null != true, so filter works correctly.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: webroot-inspector
+      inspectorId: 15
+    liongardMetricName: 'Webroot: Infected Device Count'
+    resultType: integer
+    compliantWhen: == 0
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: System N — Contoso Nation, Completed 2026-03-12
+    sourceRecipe: recipes/single-system-analysis/by-inspector/webroot.md
+    dateAdded: '2026-05-26'
+    jmesPath: length(Endpoints[?Infected == `true`])
+
+  - '@id': metrics:webroot:endpoint-detail
+    '@type': liongard:MetricPrimitive
+    name: Webroot — Endpoint Detail
+    description: 'Per-endpoint projection: hostname, last seen, deactivated flag, infected
+      flag, OS. JMESPath: Endpoints[*].{hostname: HostName, lastSeen: LastSeen, deactivated:
+      Deactivated, infected: Infected, os: OperatingSystem}. Fields are PascalCase:
+      HostName, LastSeen, Deactivated, Infected, OperatingSystem. Infected is null on
+      clean endpoints.'
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: webroot-inspector
+      inspectorId: 15
+    jmesPath: 'Endpoints[*].{hostname: HostName, lastSeen: LastSeen, deactivated: Deactivated,
+      infected: Infected, os: OperatingSystem}'
+    resultType: array
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: System N — Contoso Nation, Completed 2026-03-12
+    sourceRecipe: recipes/single-system-analysis/by-inspector/webroot.md
+    dateAdded: '2026-05-26'
+

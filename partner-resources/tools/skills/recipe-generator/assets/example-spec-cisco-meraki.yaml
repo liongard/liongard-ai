@@ -1,0 +1,211 @@
+# Worked example — Cisco Meraki single-system recipe spec
+# Used by the recipe-generator skill to scaffold
+# recipes/single-system-analysis/by-inspector/cisco-meraki.md
+#
+# This spec covers all 40 partner-mapped fields from the partner onboarding
+# QA audit (general firewalls, managed switches, AP list, wireless networks).
+
+inspector:
+  slug: cisco-meraki-inspector
+  id: 3
+  display_name: Cisco Meraki
+  category: Network
+  target_system_type: Network Controller
+  parent_child: false                # Each Meraki organization shows as a per-network system
+  identifier_jmespath: SystemInfo.Name
+
+recipe:
+  family: single-system-analysis
+  scope_summary: >
+    Use this skill when the user wants a single-network analysis of a Cisco
+    Meraki organization — Periodic Business Review (PBR), firewall config
+    review, switch / AP / SSID inventory, license expiration, firmware
+    audit, VPN policy review. Trigger phrases: "Meraki PBR",
+    "pull Meraki data for <CUSTOMER>", "Meraki firewall review",
+    "Meraki network audit", "what's the firmware on <CUSTOMER>'s Meraki",
+    "any Meraki licenses expiring".
+  trigger_phrases:
+    - "Meraki PBR"
+    - "pull Meraki data for <CUSTOMER>"
+    - "Meraki firewall review"
+    - "Meraki network audit"
+    - "Meraki license expiration"
+    - "what APs are at <CUSTOMER>"
+    - "Meraki SSIDs review"
+  personas:
+    - noc
+    - soc
+    - vcio-account-manager
+    - technical-alignment-manager
+  output_formats:
+    - markdown
+    - word
+    - pptx
+    - xlsx
+
+aliases:
+  user_facing:
+    - Meraki
+    - Cisco Meraki
+    - MX
+    - MS
+    - MR
+
+slas:
+  inspector_lastseen_days_max: 1     # Meraki is cloud-managed, daily inspection expected
+  license_expiration_warn_days: 60   # Meraki licenses are typically annual
+  firmware_age_months_max: 6         # Meraki firmware drops monthly; ≤6 months = current
+  unsecured_ssid_max: 0              # any SSID without PSK / WPA2 = flag
+
+metrics:
+  - id: 439
+    name: "Cisco Meraki: SystemInfo"
+    jmes_path: SystemInfo
+    purpose: Network identifier (name, organization, time zone)
+    result_shape: <object>
+
+  - id: 635
+    name: "Cisco Meraki: Network Device Summary"
+    jmes_path: NetworkDevices[*].{ name: name, model: model, serial: serial, ipAddress: lanIp, firmware: firmware, type: type }
+    purpose: Make/model + IP + firmware for every network device (firewall + switch + AP)
+    result_shape: <array>
+
+  - id: 636
+    name: "Cisco Meraki: Device Firmware Summary"
+    jmes_path: NetworkDevices[*].{ name: name, model: model, firmware: firmware }
+    purpose: Firmware version + age audit
+    result_shape: <array>
+
+  - id: 637
+    name: "Cisco Meraki: Enabled VPN Subnet Summary"
+    jmes_path: VpnSubnets[*]
+    purpose: Site-to-site VPN policy / subnet enumeration
+    result_shape: <array>
+
+  - id: 638
+    name: "Cisco Meraki: L3 Policy Summary"
+    jmes_path: L3FirewallRules[*]
+    purpose: WAN-to-LAN access rule list
+    result_shape: <array>
+
+  - id: 639
+    name: "Cisco Meraki: VLAN Summary"
+    jmes_path: Vlans[*]
+    purpose: VLAN inventory (id, name, subnet, DHCP)
+    result_shape: <array>
+
+  - id: 706
+    name: "Cisco Meraki: License Status"
+    jmes_path: LicenseStatus
+    purpose: Per-product license state + days until expiration
+    result_shape: <object>
+
+  - id: 16
+    name: "Cisco Meraki: SSID List"
+    jmes_path: Ssids[*].{ name: name, enabled: enabled, vlanId: defaultVlanId, authMode: authMode, encryptionMode: encryptionMode }
+    purpose: Wireless SSID inventory + auth/encryption posture
+    result_shape: <array>
+
+  - id: 241
+    name: "Cisco Meraki: Switch List"
+    jmes_path: NetworkDevices[?starts_with(model, 'MS')]
+    purpose: Managed switch inventory
+    result_shape: <array>
+
+  - id: 238
+    name: "Cisco Meraki: Privileged User List"
+    jmes_path: Users[?Privileged == 'Yes'].{ name: name, email: email }
+    purpose: Default-credential audit + privileged-account inventory
+    result_shape: <array>
+
+  - id: 10
+    name: "Cisco Meraki: Days Until License Expiration"
+    jmes_path: LicenseStatus.expirationInDays
+    purpose: License renewal countdown
+    result_shape: <integer>
+
+  - id: 1750
+    name: "Cisco Meraki: Wireless Networks without Pre-Shared Key List"
+    jmes_path: Ssids[?authMode == 'open' || encryptionMode == null].name
+    purpose: Open / unencrypted SSID detection
+    result_shape: <array<string>>
+    compliant_when: empty
+
+  # Proposed metrics flagged by partner audit
+  - id: "[PROPOSED]"
+    name: "Cisco Meraki: VLAN DHCP Summary"
+    jmes_path: Vlans[*].{ vlan: id, name: name, dhcpHandling: dhcpHandling, dhcpLeaseTime: dhcpLeaseTime, dnsNameservers: dnsNameservers, fixedIpAssignments: fixedIpAssignments }
+    purpose: DHCP scope detail per VLAN — range, lease time, DNS, reservations
+
+  - id: "[PROPOSED]"
+    name: "Cisco Meraki: Switch IP Addresses"
+    jmes_path: NetworkDevices[?starts_with(model, 'MS')].{ name: name, lanIp: lanIp }
+    purpose: Per-switch management IP for inventory / topology
+
+  - id: "[PROPOSED]"
+    name: "Cisco Meraki: AP IP Addresses"
+    jmes_path: NetworkDevices[?starts_with(model, 'MR')].{ name: name, lanIp: lanIp }
+    purpose: Per-AP management IP for inventory / RF planning
+
+# Cross-check pattern — Meraki devices in the asset inventory
+cross_check:
+  asset_type: device
+  filter_pattern: 'inspectors contains "cisco-meraki-inspector"'
+  coverage_question: >
+    Network devices Liongard knows from other inspectors (e.g., RMM,
+    network discovery) but Meraki doesn't see — usually a misconfigured
+    organization scope or a rogue device on the Meraki-managed VLAN.
+
+proposed_metric_gaps:
+  - field: VLAN DHCP scope detail
+    fallback: client-side parse of Vlans[*] to extract DHCP fields
+    jira_ticket:                     # not yet filed
+  - field: Per-switch management IP
+    fallback: client-side filter on NetworkDevices[?starts_with(model, 'MS')]
+    jira_ticket:                     # not yet filed
+  - field: Per-AP management IP
+    fallback: client-side filter on NetworkDevices[?starts_with(model, 'MR')]
+    jira_ticket:                     # not yet filed
+
+trigger_keyword: meraki
+
+dataprint_keys:
+  - key: SystemInfo
+    description: Network identifier — name, organization, time zone
+  - key: NetworkDevices
+    description: Array of every network device (firewall MX, switches MS, APs MR)
+  - key: Vlans
+    description: VLAN configuration array — each with subnet + DHCP detail
+  - key: Ssids
+    description: Wireless SSID array — auth mode, encryption, VLAN binding
+  - key: L3FirewallRules
+    description: WAN-to-LAN access rules
+  - key: VpnSubnets
+    description: Site-to-site VPN policy / participating subnets
+  - key: LicenseStatus
+    description: License state — per-product co-termination model with days until expiration
+  - key: Users
+    description: Dashboard user accounts with privilege flag
+
+field_gotchas:
+  - field: NetworkDevices[*].model
+    note: >
+      Meraki model prefixes identify device class — MX = security appliance
+      (firewall), MS = switch, MR = wireless access point, MV = camera,
+      MG = cellular gateway. Filter by prefix to split the inventory.
+  - field: LicenseStatus
+    note: >
+      Meraki uses a co-termination license model — a single expiration
+      date applies to every license at the org level. Per-device license
+      counts are inside the object, but they all share one expirationInDays.
+
+large_arrays: []                    # Meraki dataprints are typically modest
+
+time_series_supported: true          # length(NetworkDevices), license days, etc.
+
+vendor_console_url_pattern: https://dashboard.meraki.com
+
+related_recipes:
+  - path: recipes/system-type-assessment/all-firewalls.md
+    relationship: rollup            # the firewall portion (MX) feeds this
+  # all-network-controllers.md and all-switches.md don't exist yet

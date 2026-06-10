@@ -1,0 +1,164 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+- '@id': metrics:godaddy-inspector:domain-count
+  '@type': liongard:MetricPrimitive
+  name: GoDaddy — Domain Count
+  description: Total number of domains in the GoDaddy account.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: godaddy-inspector
+    inspectorId: 23
+  jmesPath: length(Domains)
+  resultType: integer
+  resultUnit: count
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System N (inspected 2026-05-29)
+  sourceRecipe: recipes/single-system-analysis/by-inspector/godaddy.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:godaddy-inspector:domain-list
+  '@type': liongard:MetricPrimitive
+  name: GoDaddy — Domain List
+  description: Inventory of all domains including expiration date, auto-renew status,
+    transfer lock, and WHOIS privacy.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: godaddy-inspector
+    inspectorId: 23
+  jmesPath: 'Domains[].{domain: domain, status: status, expires: expires, autoRenew:
+    renewAuto, renewable: renewable, renewDeadline: renewDeadline, privacy: privacy,
+    locked: locked, nameServers: nameServers}'
+  resultType: array
+  fieldGotcha: renewAuto, locked, privacy, renewable are BOOLEAN. renewDeadline may
+    be null (field exists on all domains but is null until the domain is close to
+    expiry cutoff). nameServers is an array of strings.
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System N (inspected 2026-05-29)
+  sourceRecipe: recipes/single-system-analysis/by-inspector/godaddy.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:godaddy-inspector:domains-auto-renew-disabled
+  '@type': liongard:MetricPrimitive
+  name: GoDaddy — Domains With Auto-Renew Disabled
+  description: Domains where auto-renew is off — risk of accidental expiration.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: godaddy-inspector
+    inspectorId: 23
+  jmesPath: 'Domains[?renewAuto == `false`].{domain: domain, expires: expires, status:
+    status}'
+  resultType: array
+  fieldGotcha: renewAuto is BOOLEAN — use backtick-quoted `false`, not string 'false'.
+  compliantWhen: result is empty array (all domains have auto-renew enabled)
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System N (inspected 2026-05-29) — 10 domains with renewAuto
+    == false
+  sourceRecipe: recipes/single-system-analysis/by-inspector/godaddy.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:godaddy-inspector:domains-transfer-lock-disabled
+  '@type': liongard:MetricPrimitive
+  name: GoDaddy — Domains With Transfer Lock Disabled
+  description: Domains where the registrar transfer lock is off — unauthorized transfer
+    risk.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: godaddy-inspector
+    inspectorId: 23
+  jmesPath: 'Domains[?locked == `false`].{domain: domain, status: status}'
+  resultType: array
+  fieldGotcha: locked is BOOLEAN — use backtick-quoted `false`. A domain with status='CANCELLED'
+    may still appear here.
+  compliantWhen: result is empty array (all active domains have transfer lock enabled)
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System N (inspected 2026-05-29) — 1 domain with locked
+    == false
+  sourceRecipe: recipes/single-system-analysis/by-inspector/godaddy.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:godaddy-inspector:subscription-count
+  '@type': liongard:MetricPrimitive
+  name: GoDaddy — Subscription Count
+  description: Total number of GoDaddy subscriptions (website builder, SSL, email,
+    etc.).
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: godaddy-inspector
+    inspectorId: 23
+  jmesPath: length(Subscriptions)
+  resultType: integer
+  resultUnit: count
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System N (inspected 2026-05-29) — 2 subscriptions
+  sourceRecipe: recipes/single-system-analysis/by-inspector/godaddy.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:godaddy-inspector:subscription-list
+  '@type': liongard:MetricPrimitive
+  name: GoDaddy — Subscription List
+  description: Inventory of GoDaddy subscriptions with label, product group, status,
+    expiration, and renewal period.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: godaddy-inspector
+    inspectorId: 23
+  jmesPath: 'Subscriptions[].{label: label, productGroupKey: product.productGroupKey,
+    status: status, expiresAt: expiresAt, renewalPeriod: product.renewalPeriod, renewalPeriodUnit:
+    product.renewalPeriodUnit, renewAuto: renewAuto}'
+  resultType: array
+  fieldGotcha: productGroupKey, renewalPeriod, and renewalPeriodUnit are NESTED under
+    product.* — NOT top-level fields on the Subscription object. Prior path used top-level
+    productGroupKey (returns null). Price/currency are not accessible at subscription
+    level — use Orders[] for billing data.
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System N (inspected 2026-05-29) — confirmed product.productGroupKey='domains',
+    product.renewalPeriod=2, product.renewalPeriodUnit='ANNUAL'
+  sourceRecipe: recipes/single-system-analysis/by-inspector/godaddy.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:godaddy-inspector:order-count
+  '@type': liongard:MetricPrimitive
+  name: GoDaddy — Order Count
+  description: Total number of orders in the GoDaddy account history.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: godaddy-inspector
+    inspectorId: 23
+  jmesPath: length(Orders)
+  resultType: integer
+  resultUnit: count
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System N (inspected 2026-05-29) — 23 orders
+  sourceRecipe: recipes/single-system-analysis/by-inspector/godaddy.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:godaddy-inspector:order-list
+  '@type': liongard:MetricPrimitive
+  name: GoDaddy — Order List
+  description: Order history with order ID, creation date, currency, and total price
+    (in millicents — divide by 1,000,000 for dollars).
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: godaddy-inspector
+    inspectorId: 23
+  jmesPath: 'Orders[].{orderId: orderId, createdAt: createdAt, currency: currency,
+    totalPrice: pricing.total}'
+  resultType: array
+  fieldGotcha: pricing.total is an INTEGER in millicents (e.g., 44380000 = $44.38).
+    Do NOT use pricing.total.amount — pricing.total is already the scalar. currency
+    is a top-level field on the Order object (not under pricing). Orders do not have
+    a type field.
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System N (inspected 2026-05-29) — confirmed currency='USD',
+    pricing.total=44380000
+  sourceRecipe: recipes/single-system-analysis/by-inspector/godaddy.md
+  dateAdded: '2026-05-26'

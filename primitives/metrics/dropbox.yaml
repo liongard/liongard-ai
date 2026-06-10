@@ -1,0 +1,306 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+  - "@id": "metrics:dropbox:users-total-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Dropbox — Total User Count"
+    description: "Total number of users in the Dropbox Business tenant."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "dropbox-inspector"
+      inspectorId: 34
+    jmesPath: "dropbox.users.totalCount"
+    resultType: "integer"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/dropbox.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:dropbox:users-active-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Dropbox — Active User Count"
+    description: "Number of active users in the Dropbox Business tenant."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "dropbox-inspector"
+      inspectorId: 34
+    jmesPath: "dropbox.users.activeCount"
+    resultType: "integer"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/dropbox.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:dropbox:users-suspended-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Dropbox — Suspended User Count"
+    description: "Number of suspended users in the Dropbox Business tenant."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "dropbox-inspector"
+      inspectorId: 34
+    jmesPath: "dropbox.users.suspendedCount"
+    resultType: "integer"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/dropbox.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:dropbox:users-mfa-enabled-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Dropbox — MFA Enabled User Count"
+    description: "Number of Dropbox users with MFA enabled."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "dropbox-inspector"
+      inspectorId: 34
+    jmesPath: "dropbox.users.mfaEnabledCount"
+    resultType: "integer"
+    compliantWhen: "== active user count"
+    compliesWith:
+      - "CIS-Controls-v8:6.3"
+      - "CIS-Controls-v8:6.5"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/dropbox.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:dropbox:storage-total-gb"
+    "@type": "liongard:MetricPrimitive"
+    name: "Dropbox — Total Storage (GB)"
+    description: "Total storage capacity allocated to the Dropbox Business tenant in GB."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "dropbox-inspector"
+      inspectorId: 34
+    jmesPath: "dropbox.storage.totalGB"
+    resultType: "integer"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/dropbox.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:dropbox:storage-used-gb"
+    "@type": "liongard:MetricPrimitive"
+    name: "Dropbox — Used Storage (GB)"
+    description: "Storage currently used by the Dropbox Business tenant in GB."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "dropbox-inspector"
+      inspectorId: 34
+    jmesPath: "dropbox.storage.usedGB"
+    resultType: "integer"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/dropbox.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:dropbox:storage-utilization-pct"
+    "@type": "liongard:MetricPrimitive"
+    name: "Dropbox — Storage Utilization Percent"
+    description: "Percentage of total Dropbox storage currently in use."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "dropbox-inspector"
+      inspectorId: 34
+    jmesPath: "dropbox.storage.utilizationPct"
+    resultType: "integer"
+    compliantWhen: "< slas.storage_utilization_pct_warn"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/dropbox.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:dropbox:shares-external-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Dropbox — External Share Count"
+    description: "Number of active shares with external (non-tenant) users."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "dropbox-inspector"
+      inspectorId: 34
+    jmesPath: "dropbox.shares.externalCount"
+    resultType: "integer"
+    compliantWhen: "== 0"
+    compliesWith:
+      - "CIS-Controls-v8:3.3"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/dropbox.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:dropbox:shares-public-link-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Dropbox — Public Link Count"
+    description: "Number of unauthenticated public links in the Dropbox tenant."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "dropbox-inspector"
+      inspectorId: 34
+    jmesPath: "dropbox.shares.publicLinkCount"
+    resultType: "integer"
+    compliantWhen: "== 0"
+    compliesWith:
+      - "CIS-Controls-v8:3.3"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/dropbox.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:dropbox:shares-expiration-configured-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Dropbox — Links With Expiration Count"
+    description: "Number of external links that have an expiration date configured."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "dropbox-inspector"
+      inspectorId: 34
+    jmesPath: "dropbox.shares.expirationConfiguredCount"
+    resultType: "integer"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/dropbox.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:dropbox:content-stale-file-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Dropbox — Stale File Count"
+    description: "Number of files not modified within the stale_content_days_max threshold."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "dropbox-inspector"
+      inspectorId: 34
+    jmesPath: "dropbox.content.staleFileCount"
+    resultType: "integer"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/dropbox.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:dropbox:team-folders-total-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Dropbox — Team Folder Count"
+    description: "Total number of team folders in the Dropbox Business tenant."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "dropbox-inspector"
+      inspectorId: 34
+    jmesPath: "dropbox.teamFolders.totalCount"
+    resultType: "integer"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/dropbox.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:dropbox:team-folders-orphaned-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Dropbox — Orphaned Team Folder Count"
+    description: "Number of team folders with no active owner."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "dropbox-inspector"
+      inspectorId: 34
+    jmesPath: "dropbox.teamFolders.orphanedCount"
+    resultType: "integer"
+    compliantWhen: "== 0"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/dropbox.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:dropbox:licensing-seat-total"
+    "@type": "liongard:MetricPrimitive"
+    name: "Dropbox — Licensed Seat Total"
+    description: "Total number of licensed seats in the Dropbox subscription."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "dropbox-inspector"
+      inspectorId: 34
+    jmesPath: "dropbox.licensing.seatTotal"
+    resultType: "integer"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/dropbox.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:dropbox:licensing-seat-used"
+    "@type": "liongard:MetricPrimitive"
+    name: "Dropbox — Licensed Seat Used"
+    description: "Number of licensed seats currently in use."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "dropbox-inspector"
+      inspectorId: 34
+    jmesPath: "dropbox.licensing.seatUsed"
+    resultType: "integer"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/dropbox.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:dropbox:licensing-utilization-pct"
+    "@type": "liongard:MetricPrimitive"
+    name: "Dropbox — License Utilization Percent"
+    description: "Percentage of Dropbox licensed seats currently in use."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "dropbox-inspector"
+      inspectorId: 34
+    jmesPath: "dropbox.licensing.utilizationPct"
+    resultType: "integer"
+    compliantWhen: "< slas.license_utilization_pct_warn"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/dropbox.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:dropbox:security-admin-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Dropbox — Admin User Count"
+    description: "Number of users with admin roles in the Dropbox tenant."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "dropbox-inspector"
+      inspectorId: 34
+    jmesPath: "dropbox.security.adminCount"
+    resultType: "integer"
+    compliesWith:
+      - "CIS-Controls-v8:5.4"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/dropbox.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:dropbox:security-app-authorization-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Dropbox — Third-Party App Authorization Count"
+    description: "Number of third-party applications authorized in the Dropbox tenant."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "dropbox-inspector"
+      inspectorId: 34
+    jmesPath: "dropbox.security.appAuthorizationCount"
+    resultType: "integer"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/dropbox.md"
+    dateAdded: "2026-05-26"

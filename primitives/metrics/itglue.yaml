@@ -1,0 +1,138 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+# IT Glue (Inspector ID 26)
+# Eval sweep 2026-05-28 findings:
+# Top-level keys: Organizations, Domains, ConfigurationStatuses, ConfigurationTypes,
+# ContactTypes, ContactsCount (scalar), Countries, FlexibleAssetTypes, Locations,
+# Manufacturers, Models, OperatingSystems, OrganizationStatuses, OrganizationTypes,
+# Platforms, Regions, Users, Primary, UniqueCompositeKey, Name, Description, Fields, Discovered
+# CONFIRMED DATA GAPS: Passwords = null (no password vault data), Documents = null
+# (no documentation data). All prior primitives used fabricated nested paths
+# (itglue.organizations.X, itglue.passwords.X etc.) — those paths do not exist.
+# GOTCHA: Organizations[0] has null OrganizationStatusId/Name (top-level MSP org or
+# unclassified). Use null guard when counting active orgs.
+# GOTCHA: Users[].LastSignInAt can be null for some users (new/invited users with no login).
+# ContactsCount is a pre-aggregated SCALAR integer — not an array.
+
+primitives:
+
+  - "@id": "metrics:itglue-inspector:organizations-total-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "IT Glue — Total Organization Count"
+    description: "Total number of organizations in the IT Glue account."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "itglue-inspector"
+      inspectorId: 26
+    jmesPath: "length(Organizations)"
+    resultType: "integer"
+    compliesWith:
+      - "CIS-Controls-v8:1.1"
+    fieldGotcha: "Organizations[] includes the MSP's own account plus all client orgs. Fields include: Id, Name, OrganizationStatusId, OrganizationStatusName, OrganizationTypeName, PsaIntegration, SyncActive, ParentId, ShortName, Alert, HasPersonalPasswords."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "System E (inspected 2026-05-28)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/itglue.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:itglue-inspector:organizations-active-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "IT Glue — Active Organization Count"
+    description: "Number of organizations with OrganizationStatusName = 'Active'."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "itglue-inspector"
+      inspectorId: 26
+    jmesPath: "length(Organizations[?OrganizationStatusName == 'Active'])"
+    resultType: "integer"
+    fieldGotcha: "OrganizationStatusName is a STRING ('Active', 'Inactive', etc.). Some organizations (e.g. the MSP's own top-level org) have null OrganizationStatusName — the filter safely excludes them since null != 'Active'. No explicit null guard needed; the equality filter handles it."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "System E (inspected 2026-05-28)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/itglue.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:itglue-inspector:users-total-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "IT Glue — Total User Count"
+    description: "Total number of IT Glue user accounts."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "itglue-inspector"
+      inspectorId: 26
+    jmesPath: "length(Users)"
+    resultType: "integer"
+    fieldGotcha: "Users[] fields include: Id, FirstName, LastName, Name, RoleName, RoleId, Email, InvitationSentAt, InvitationAcceptedAt, CurrentSignInAt, LastSignInAt (ISO string or null), Reputation, MyGlue, AllOrganizations."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "System E (inspected 2026-05-28)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/itglue.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:itglue-inspector:users-with-sign-in-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "IT Glue — Users Who Have Signed In Count"
+    description: "Number of IT Glue users who have signed in at least once (LastSignInAt is not null). Useful to identify invited-but-never-logged-in accounts."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "itglue-inspector"
+      inspectorId: 26
+    jmesPath: "length(Users[?LastSignInAt != null])"
+    resultType: "integer"
+    fieldGotcha: "Users[].LastSignInAt is null for invited users who have never logged in. Use null guard. Format when present: ISO timestamp string e.g. '2025-09-29T19:37:33.000Z'."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "System E (inspected 2026-05-28)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/itglue.md"
+    dateAdded: "2026-05-28"
+
+  - "@id": "metrics:itglue-inspector:contacts-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "IT Glue — Total Contact Count"
+    description: "Total number of contacts across all organizations (pre-aggregated scalar from IT Glue API)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "itglue-inspector"
+      inspectorId: 26
+    jmesPath: "ContactsCount"
+    resultType: "integer"
+    fieldGotcha: "ContactsCount is a pre-aggregated SCALAR integer at the top level — NOT an array. Do not use length(). The IT Glue API returns this as a summary field rather than populating a Contacts[] array."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "System E (inspected 2026-05-28)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/itglue.md"
+    dateAdded: "2026-05-28"
+
+  - "@id": "metrics:itglue-inspector:flexible-asset-types-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "IT Glue — Flexible Asset Type Count"
+    description: "Total number of flexible asset types configured in the IT Glue account. High counts indicate extensive documentation schema customization."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "itglue-inspector"
+      inspectorId: 26
+    jmesPath: "length(FlexibleAssetTypes)"
+    resultType: "integer"
+    fieldGotcha: "FlexibleAssetTypes[] fields include: Id, Name, Description, Icon, Enabled, CreatedAt, UpdatedAt. These are the template types (e.g. 'Firewall', 'Domain Registrar'), not individual asset instances."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "System E (inspected 2026-05-28)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/itglue.md"
+    dateAdded: "2026-05-28"
+
+  - "@id": "metrics:itglue-inspector:domains-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "IT Glue — Domain Count"
+    description: "Total number of domains tracked in the IT Glue account."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "itglue-inspector"
+      inspectorId: 26
+    jmesPath: "length(Domains)"
+    resultType: "integer"
+    fieldGotcha: "Domains[] fields include: Id, OrganizationId, OrganizationName, Name, RegistrarName, ExpiresOn, Restricted, Notes, CreatedAt, UpdatedAt."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "System E (inspected 2026-05-28)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/itglue.md"
+    dateAdded: "2026-05-28"

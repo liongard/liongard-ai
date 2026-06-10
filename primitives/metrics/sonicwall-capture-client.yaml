@@ -1,0 +1,174 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+  - "@id": "metrics:sonicwall-capture-client-inspector:total-endpoints-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "SonicWall Capture Client — Total Endpoints"
+    description: "List of all enrolled endpoint names"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sonicwall-capture-client-inspector"
+      inspectorId: 95
+    liongardMetricName: "Sonicwall Capture Client: Total Endpoints"
+    liongardMetricId: 2147
+    liongardMetricUuid: "240d5519-b8ca-4087-9317-6e7b791b39ff"
+    jmesPath: "Endpoints[].name"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sonicwall-capture-client.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sonicwall-capture-client-inspector:count-total-endpoints"
+    "@type": "liongard:MetricPrimitive"
+    name: "SonicWall Capture Client — Count of Total Endpoints"
+    description: "Total count of all enrolled endpoints"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sonicwall-capture-client-inspector"
+      inspectorId: 95
+    liongardMetricName: "Sonicwall Capture Client: Count of Total Endpoints"
+    liongardMetricId: 2148
+    liongardMetricUuid: "43c5133e-e190-43d6-b62a-0847b57347fd"
+    jmesPath: "Endpoints[] | length(@)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sonicwall-capture-client.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sonicwall-capture-client-inspector:active-endpoints-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "SonicWall Capture Client — Active Endpoints"
+    description: "List of active endpoint names (isActive == true)"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sonicwall-capture-client-inspector"
+      inspectorId: 95
+    liongardMetricName: "Sonicwall Capture Client: Active Endpoints"
+    liongardMetricId: 2149
+    liongardMetricUuid: "ecce976b-0beb-4ab4-89f2-a1e0ad5bfa82"
+    jmesPath: "Endpoints[?isActive].name"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sonicwall-capture-client.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sonicwall-capture-client-inspector:count-active-endpoints"
+    "@type": "liongard:MetricPrimitive"
+    name: "SonicWall Capture Client — Count of Active Endpoints"
+    description: "Count of active endpoints (isActive == true)"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sonicwall-capture-client-inspector"
+      inspectorId: 95
+    liongardMetricName: "Sonicwall Capture Client: Count of Active Endpoints"
+    liongardMetricId: 2150
+    liongardMetricUuid: "45be3451-2c94-426d-8a4d-6c5c7e20e724"
+    jmesPath: "Endpoints[?isActive] | length(@)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sonicwall-capture-client.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sonicwall-capture-client-inspector:offline-endpoints-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "SonicWall Capture Client — Offline Endpoints"
+    description: "List of offline endpoint names (onlineStatus is falsy)"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sonicwall-capture-client-inspector"
+      inspectorId: 95
+    liongardMetricName: "Sonicwall Capture Client: Offline Endpoints"
+    liongardMetricId: 2151
+    liongardMetricUuid: "960afa15-e7f4-42da-bb5c-1f91b33f487e"
+    jmesPath: "Endpoints[?!onlineStatus].name"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sonicwall-capture-client.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sonicwall-capture-client-inspector:count-offline-endpoints"
+    "@type": "liongard:MetricPrimitive"
+    name: "SonicWall Capture Client — Count of Offline Endpoints"
+    description: "Count of offline endpoints (onlineStatus is falsy)"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sonicwall-capture-client-inspector"
+      inspectorId: 95
+    liongardMetricName: "Sonicwall Capture Client: Count of Offline Endpoints"
+    liongardMetricId: 2152
+    liongardMetricUuid: "a2d3964d-27e8-4618-9e95-197e080ae64a"
+    jmesPath: "Endpoints[?!onlineStatus] | length(@)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sonicwall-capture-client.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sonicwall-capture-client-inspector:infected-endpoints-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "SonicWall Capture Client — Infected Endpoints"
+    description: "List of endpoint names flagged as infected"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sonicwall-capture-client-inspector"
+      inspectorId: 95
+    liongardMetricName: "Sonicwall Capture Client: Infected Endpoints"
+    liongardMetricId: 2153
+    liongardMetricUuid: "b41807cc-ba4b-4253-88f4-27b0580d5ae8"
+    jmesPath: "Endpoints[?infected].name"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sonicwall-capture-client.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sonicwall-capture-client-inspector:count-infected-endpoints"
+    "@type": "liongard:MetricPrimitive"
+    name: "SonicWall Capture Client — Count of Infected Endpoints"
+    description: "Count of endpoints flagged as infected"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sonicwall-capture-client-inspector"
+      inspectorId: 95
+    liongardMetricName: "Sonicwall Capture Client: Count of Infected Endpoints"
+    liongardMetricId: 2154
+    liongardMetricUuid: "87c5c4f4-eeec-4b9a-8ff6-f5cbe8cbe1ab"
+    jmesPath: "Endpoints[?infected] | length(@)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sonicwall-capture-client.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sonicwall-capture-client-inspector:users"
+    "@type": "liongard:MetricPrimitive"
+    name: "SonicWall Capture Client — Users"
+    description: "Comma-separated list of user email addresses in the Capture Client tenant"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sonicwall-capture-client-inspector"
+      inspectorId: 95
+    liongardMetricName: "Sonicwall Capture Client: Users"
+    liongardMetricId: 2155
+    liongardMetricUuid: "2fe614bd-51d1-415b-963f-69e64edd2b9b"
+    jmesPath: "Users[].email | join(`, `, @)"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sonicwall-capture-client.md"
+    dateAdded: "2026-05-26"

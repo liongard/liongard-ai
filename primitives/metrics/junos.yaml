@@ -1,0 +1,22 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+  - "@id": "metrics:junos:full-configuration"
+    "@type": "liongard:MetricPrimitive"
+    name: "Junos — Full Configuration"
+    description: "Returns the full show configuration output from the Junos device"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "junos-inspector"
+      inspectorId: 42
+    liongardMetricName: "Juniper JunOS: Full Configuration"
+    liongardMetricId: 495
+    liongardMetricUuid: "cb6e56ba-df48-48ec-8d1f-450b72bf638e"
+    jmesPath: "ShowConfiguration"
+    resultType: "object"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/junos.md"
+    dateAdded: "2026-05-26"

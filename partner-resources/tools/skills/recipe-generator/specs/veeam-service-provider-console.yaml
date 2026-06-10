@@ -1,0 +1,113 @@
+inspector:
+  slug: veeam-service-provider-console-inspector
+  id: 75
+  display_name: Veeam Service Provider Console
+  category: Apps & Services
+  target_system_type: Virtual Server Backup
+  parent_child: true
+  identifier_jmespath: Tenant.name
+
+recipe:
+  family: single-system-analysis
+  scope_summary: >
+    Use this skill when the user wants a single-tenant analysis of a Veeam
+    Service Provider Console — per-tenant backup job inventory, last-run
+    status, agent + cloud-tenant inventory. VSPC is Veeam's
+    service-provider orchestration product (successor / variant of VAC
+    for the service-provider tier). Trigger phrases: "Veeam VSPC review",
+    "Service Provider Console PBR", "pull Veeam VSPC data".
+  trigger_phrases:
+    - "Veeam VSPC review"
+    - "Service Provider Console PBR"
+    - "pull Veeam VSPC data"
+    - "VSPC backup audit"
+  personas:
+    - noc
+    - vcio-account-manager
+    - technical-alignment-manager
+  output_formats:
+    - markdown
+    - word
+    - xlsx
+
+aliases:
+  user_facing:
+    - "Veeam VSPC"
+    - VSPC
+    - "Veeam Service Provider Console"
+
+slas:
+  inspector_lastseen_days_max: 1
+  failed_jobs_max: 0
+  hours_since_last_successful_max: 24
+
+metrics:
+  - id: "[PROPOSED]"
+    name: "Veeam VSPC: Per-Tenant Backup Job Inventory"
+    jmes_path: BackupJobs[*].{name: name, status: lastResult, lastRun: lastRunTime, scheduleType: scheduleType}
+    purpose: Per-job snapshot
+
+  - id: "[PROPOSED]"
+    name: "Veeam VSPC: Failed Job Count"
+    jmes_path: length(BackupJobs[?lastResult == `Failed`])
+    purpose: Count of jobs whose last run failed
+    compliant_when: "0"
+
+  - id: "[PROPOSED]"
+    name: "Veeam VSPC: Cloud Tenant Inventory"
+    jmes_path: CloudTenants[*].{name: name, quotaGB: quotaGB, usedGB: usedGB}
+    purpose: Per-cloud-tenant storage quota + utilization
+
+  - id: "[PROPOSED]"
+    name: "Veeam VSPC: Protected Agent Inventory"
+    jmes_path: Agents[*].{hostname: hostname, lastBackup: lastBackupTime, status: status}
+    purpose: Per-agent backup state — feeds the all-backups.md hostname join
+
+cross_check:
+  asset_type: device
+  filter_pattern: 'class == "server"'
+  coverage_question: >
+    Servers in the device inventory not present in Agents[*].hostname —
+    unprotected candidates.
+
+proposed_metric_gaps:
+  - field: "Per-tenant backup job inventory composite"
+    fallback: "Client-side parse of BackupJobs[*]"
+    jira_ticket:
+  - field: "Failed job count"
+    fallback: "Client-side length filter"
+    jira_ticket:
+  - field: "Cloud tenant quota / utilization"
+    fallback: "Manual confirm in VSPC console"
+    jira_ticket:
+  - field: "Per-agent backup state"
+    fallback: "Client-side parse of Agents[*]"
+    jira_ticket:
+
+trigger_keyword: veeam-spc
+
+dataprint_keys:
+  - key: Tenant
+    description: Tenant identifier (Tenant.name) for the child VSPC system
+  - key: BackupJobs
+    description: Job inventory with last-run state
+  - key: CloudTenants
+    description: Storage quota allocation per cloud tenant
+  - key: Agents
+    description: Per-protected-machine inventory
+
+field_gotchas:
+  - field: "VAC vs. VSPC distinction"
+    note: "Veeam has two separate inspectors — VAC (ID 35, target 'Backup / DR') and VSPC (ID 75, target 'Virtual Server Backup'). They cover similar concepts with different dataprint shapes. Confirm with user which product the customer actually runs."
+
+large_arrays: []
+
+time_series_supported: true
+
+vendor_console_url_pattern: https://vspc.veeam.com
+
+related_recipes:
+  - path: recipes/system-type-assessment/all-backups.md
+    relationship: rollup
+  - path: recipes/single-system-analysis/by-inspector/veeam-availability-console.md
+    relationship: sibling

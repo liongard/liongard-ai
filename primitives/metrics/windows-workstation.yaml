@@ -1,0 +1,564 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+# ── System Identity ───────────────────────────────────────────────────────────
+
+  - "@id": "metrics:windows-workstation:hostname"
+    "@type": "liongard:MetricPrimitive"
+    name: "Windows Workstation — Hostname"
+    description: "DNS hostname of the workstation from NetConfig[0].DNSHostName."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "windows-workstation-inspector"
+      inspectorId: 90
+    liongardMetricName: "Windows Workstation: Host Name [Power BI]"
+    liongardMetricId: 1814
+    liongardMetricUuid: "8da6a0e9-edb0-42bd-a1e2-9aae98439273"
+    jmesPath: "NetConfig[0].DNSHostName"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/windows-workstation.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:windows-workstation:os-name"
+    "@type": "liongard:MetricPrimitive"
+    name: "Windows Workstation — Operating System Name"
+    description: "Full OS name string from OS.OperatingSystemName (e.g. 'Microsoft Windows 10 Pro')."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "windows-workstation-inspector"
+      inspectorId: 90
+    liongardMetricName: "Windows Workstation: Operating System"
+    liongardMetricId: 1506
+    liongardMetricUuid: "85a77d1c-c7d6-4617-9086-1b3f2ff312ff"
+    jmesPath: "OS.OperatingSystemName"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/windows-workstation.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:windows-workstation:rdp-enabled"
+    "@type": "liongard:MetricPrimitive"
+    name: "Windows Workstation — RDP Enabled"
+    description: "Boolean whether Remote Desktop Protocol is enabled on the workstation from OS.RDPEnabled."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "windows-workstation-inspector"
+      inspectorId: 90
+    liongardMetricName: "Windows Workstation: Is RDP Enabled?"
+    liongardMetricId: 1505
+    liongardMetricUuid: "97c5e42f-6a35-46cc-b5d1-5690efcab68b"
+    jmesPath: "OS.RDPEnabled"
+    resultType: "boolean"
+    compliantWhen: "result == false"
+    compliesWith:
+      - "cyber-insurance-domain-endpoint"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    fieldGotcha: "Windows Workstation exposes RDP as OS.RDPEnabled (boolean). Windows Server uses RemoteDesktopConfig (object) — do not swap between inspector types."
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/windows-workstation.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:windows-workstation:software-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Windows Workstation — Installed Software Count"
+    description: "Total count of installed software entries from Software[] | length(@)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "windows-workstation-inspector"
+      inspectorId: 90
+    liongardMetricName: "Windows Workstation: Installed Software Count"
+    liongardMetricId: 1524
+    liongardMetricUuid: "5e120c9a-2837-4ce8-a7d6-40c494886f89"
+    jmesPath: "Software[] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/windows-workstation.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:windows-workstation:total-memory-gb"
+    "@type": "liongard:MetricPrimitive"
+    name: "Windows Workstation — Total Memory (GB)"
+    description: "Total RAM in GB from ceil(sum(Ram[].Capacity)). Capacity values are in GB."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "windows-workstation-inspector"
+      inspectorId: 90
+    liongardMetricName: "Windows Workstation: Total Memory (GB)"
+    liongardMetricId: 2026
+    liongardMetricUuid: "48473ea6-41a0-4bd6-9224-8ed9d0726576"
+    jmesPath: "ceil(sum(Ram[].Capacity))"
+    resultType: "integer"
+    resultUnit: "GB"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/windows-workstation.md"
+    dateAdded: "2026-05-26"
+
+# ── Firewall ──────────────────────────────────────────────────────────────────
+
+  - "@id": "metrics:windows-workstation:domain-firewall-enabled"
+    "@type": "liongard:MetricPrimitive"
+    name: "Windows Workstation — Domain Firewall Enabled"
+    description: "Whether the Windows Firewall Domain profile is enabled. Boolean from Firewall.Domain."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "windows-workstation-inspector"
+      inspectorId: 90
+    liongardMetricName: "Windows Workstation: Domain Firewall Enabled"
+    liongardMetricId: 1520
+    liongardMetricUuid: "e66777e3-7cd0-4673-bf2f-5308ccf67f4f"
+    jmesPath: "Firewall.Domain"
+    resultType: "boolean"
+    compliantWhen: "result == true"
+    compliesWith:
+      - "CIS-Controls-v8:4.5"
+      - "cyber-insurance-domain-endpoint"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    fieldGotcha: "Windows Workstation uses top-level Firewall.Domain (boolean). Windows Server uses Network.FirewallInfo.Domain.Enabled (nested path). Do not swap between inspector types."
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/windows-workstation.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:windows-workstation:public-firewall-enabled"
+    "@type": "liongard:MetricPrimitive"
+    name: "Windows Workstation — Public Firewall Enabled"
+    description: "Whether the Windows Firewall Public profile is enabled from Firewall.Public."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "windows-workstation-inspector"
+      inspectorId: 90
+    liongardMetricName: "Windows Workstation: Public Firewall Enabled"
+    liongardMetricId: 1521
+    liongardMetricUuid: "a9cee27d-f561-4506-9b6c-7bc6f6771acb"
+    jmesPath: "Firewall.Public"
+    resultType: "boolean"
+    compliantWhen: "result == true"
+    compliesWith:
+      - "CIS-Controls-v8:4.5"
+      - "cyber-insurance-domain-endpoint"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/windows-workstation.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:windows-workstation:private-firewall-enabled"
+    "@type": "liongard:MetricPrimitive"
+    name: "Windows Workstation — Private Firewall Enabled"
+    description: "Whether the Windows Firewall Private profile is enabled from Firewall.Private."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "windows-workstation-inspector"
+      inspectorId: 90
+    liongardMetricName: "Windows Workstation: Private Firewall Enabled"
+    liongardMetricId: 1522
+    liongardMetricUuid: "a06dac5a-d916-4dbb-aa43-3d8fdee47384"
+    jmesPath: "Firewall.Private"
+    resultType: "boolean"
+    compliantWhen: "result == true"
+    compliesWith:
+      - "CIS-Controls-v8:4.5"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/windows-workstation.md"
+    dateAdded: "2026-05-26"
+
+# ── Endpoint Protection ────────────────────────────────────────────────────────
+
+  - "@id": "metrics:windows-workstation:av-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Windows Workstation — Antivirus Software List"
+    description: "Names of all AV products from AVs[].Name."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "windows-workstation-inspector"
+      inspectorId: 90
+    liongardMetricName: "Windows Workstation: Antivirus on System"
+    liongardMetricId: 1507
+    liongardMetricUuid: "ad702c26-4558-424c-8131-77fb193b35ee"
+    jmesPath: "AVs[].Name"
+    resultType: "array"
+    compliantWhen: "result != []"
+    compliesWith:
+      - "CIS-Controls-v8:10.1"
+      - "cyber-insurance-domain-endpoint"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    fieldGotcha: "Windows Workstation AV key is AVs[].Name (top-level AVs array). Windows Server uses AntivirusSoftware[].Name. Do not swap between inspector types."
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/windows-workstation.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:windows-workstation:edr-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Windows Workstation — EDR Software List"
+    description: "Names of Endpoint Detection & Response products from EDR[].Name."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "windows-workstation-inspector"
+      inspectorId: 90
+    liongardMetricName: "Windows Workstation: Endpoint Detection on System"
+    liongardMetricId: 66599
+    liongardMetricUuid: "0299c0e6-f742-4285-8e0d-9df666e1ed66"
+    jmesPath: "EDR[].Name"
+    resultType: "array"
+    compliantWhen: "result != []"
+    compliesWith:
+      - "CIS-Controls-v8:13.7"
+      - "cyber-insurance-domain-endpoint"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/windows-workstation.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:windows-workstation:defender-av-enabled"
+    "@type": "liongard:MetricPrimitive"
+    name: "Windows Workstation — Defender Antivirus Enabled"
+    description: "Boolean whether Windows Defender antivirus is enabled from DefenderInfo.Status.AntivirusEnabled."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "windows-workstation-inspector"
+      inspectorId: 90
+    liongardMetricName: "Windows Workstation: Defender - Anti Virus Enabled"
+    liongardMetricId: 1545
+    liongardMetricUuid: "a432c9ad-ea5e-4903-9c85-1a7a13d88dde"
+    jmesPath: "DefenderInfo.Status.AntivirusEnabled"
+    resultType: "boolean"
+    compliantWhen: "result == true"
+    compliesWith:
+      - "CIS-Controls-v8:10.1"
+      - "cyber-insurance-domain-endpoint"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/windows-workstation.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:windows-workstation:defender-realtime-enabled"
+    "@type": "liongard:MetricPrimitive"
+    name: "Windows Workstation — Defender Real Time Protection Enabled"
+    description: "Boolean whether Defender real-time protection is active from DefenderInfo.Status.RealTimeProtectionEnabled."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "windows-workstation-inspector"
+      inspectorId: 90
+    liongardMetricName: "Windows Workstation: Defender - Real Time Protection Enabled"
+    liongardMetricId: 1550
+    liongardMetricUuid: "f85ae18d-ef70-419b-9e44-f0eccbe5ef22"
+    jmesPath: "DefenderInfo.Status.RealTimeProtectionEnabled"
+    resultType: "boolean"
+    compliantWhen: "result == true"
+    compliesWith:
+      - "CIS-Controls-v8:10.1"
+      - "cyber-insurance-domain-endpoint"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/windows-workstation.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:windows-workstation:defender-tamper-protected"
+    "@type": "liongard:MetricPrimitive"
+    name: "Windows Workstation — Defender Tamper Protection Enabled"
+    description: "Boolean whether Defender tamper protection is active from DefenderInfo.Status.IsTamperProtected."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "windows-workstation-inspector"
+      inspectorId: 90
+    liongardMetricName: "Windows Workstation: Defender - Is Tamper Protected"
+    liongardMetricId: 1546
+    liongardMetricUuid: "996ca550-a551-49b3-abed-b73417937bd4"
+    jmesPath: "DefenderInfo.Status.IsTamperProtected"
+    resultType: "boolean"
+    compliantWhen: "result == true"
+    compliesWith:
+      - "CIS-Controls-v8:10.1"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/windows-workstation.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:windows-workstation:defender-threat-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Windows Workstation — Defender Threat Count"
+    description: "Count of active Defender threats from DefenderInfo.Threats[] | length(@). Should be 0."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "windows-workstation-inspector"
+      inspectorId: 90
+    liongardMetricName: "Windows Workstation: Defender Count of Threats"
+    liongardMetricId: 1552
+    liongardMetricUuid: "fb1b5728-3bd8-4b88-9e05-0f7488c0ae42"
+    jmesPath: "DefenderInfo.Threats[] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "cyber-insurance-domain-endpoint"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/windows-workstation.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:windows-workstation:dns-filters-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Windows Workstation — DNS Filter Software List"
+    description: "Names and versions of DNS filtering products (Zscaler, Cloudflare WARP, Umbrella, NordLayer, DNSFilter) in installed software."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "windows-workstation-inspector"
+      inspectorId: 90
+    liongardMetricName: "Windows Workstation: DNS Filters Installed"
+    liongardMetricId: 2082
+    liongardMetricUuid: "4a72d6b9-b225-46d3-b3a8-a16eb58e5089"
+    jmesPath: "Software[?contains(Name, `Zscaler`) || contains(Name, `Cloudflare WARP`) || contains(Name, `Umbrella Roaming Client`) || contains(Name, `Nordlayer`) || contains(Name, `DNSFilter Agent`)].join(': ', [Name, to_string(Version)]) | sort(@)"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/windows-workstation.md"
+    dateAdded: "2026-05-26"
+
+# ── BitLocker / Drive Encryption ──────────────────────────────────────────────
+
+  - "@id": "metrics:windows-workstation:all-drives-encrypted"
+    "@type": "liongard:MetricPrimitive"
+    name: "Windows Workstation — All Fixed Drives Encrypted"
+    description: "True if all Fixed drives have BitlockerStatus == 'Fully Encrypted'."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "windows-workstation-inspector"
+      inspectorId: 90
+    liongardMetricName: "Windows Workstation: All Drives Encrypted"
+    liongardMetricId: 2067
+    liongardMetricUuid: "dab93476-f001-4751-a0cc-9329ad7d049e"
+    jmesPath: "length(Drives[?Type == 'Fixed' && BitlockerStatus == 'Fully Encrypted']) == length(Drives[?Type == 'Fixed'])"
+    resultType: "boolean"
+    compliantWhen: "result == true"
+    compliesWith:
+      - "CIS-Controls-v8:3.6"
+      - "cyber-insurance-domain-endpoint"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/windows-workstation.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:windows-workstation:all-drives-encrypted-protected"
+    "@type": "liongard:MetricPrimitive"
+    name: "Windows Workstation — All Fixed Drives Encrypted and Protected"
+    description: "True if all Fixed drives are Fully Encrypted AND ProtectionStatus == 'Protected'. Preferred for cyber insurance evidence."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "windows-workstation-inspector"
+      inspectorId: 90
+    liongardMetricName: "Windows Workstation: All Drives Encrypted and Protected"
+    liongardMetricId: 82345
+    liongardMetricUuid: "2858e36f-4c98-4627-9d34-c3514bec7132"
+    jmesPath: "length(Drives[?Type == 'Fixed' && BitlockerStatus == 'Fully Encrypted' && ProtectionStatus == 'Protected']) == length(Drives[?Type == 'Fixed'])"
+    resultType: "boolean"
+    compliantWhen: "result == true"
+    compliesWith:
+      - "CIS-Controls-v8:3.6"
+      - "cyber-insurance-domain-endpoint"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/windows-workstation.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:windows-workstation:drives-bitlocker-status"
+    "@type": "liongard:MetricPrimitive"
+    name: "Windows Workstation — Drives BitLocker Status List"
+    description: "Array of BitLocker status strings per drive from Drives[].BitlockerStatus."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "windows-workstation-inspector"
+      inspectorId: 90
+    liongardMetricName: "Windows Workstation: Bitlocker Status"
+    liongardMetricId: 2068
+    liongardMetricUuid: "c2e5b461-d8d8-486c-b6a7-ab4ba0c306d4"
+    jmesPath: "Drives[].BitlockerStatus"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/windows-workstation.md"
+    dateAdded: "2026-05-26"
+
+# ── Patch Management ──────────────────────────────────────────────────────────
+
+  - "@id": "metrics:windows-workstation:mandatory-updates-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Windows Workstation — Mandatory Updates Pending Count"
+    description: "Count of pending updates where IsMandatory == true from AvailableUpdates[?IsMandatory] | length(@)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "windows-workstation-inspector"
+      inspectorId: 90
+    liongardMetricName: "Windows Workstation: Mandatory Updates Not Installed Count"
+    liongardMetricId: 1574
+    liongardMetricUuid: "6a67eafe-6420-4593-bbd6-9695b500da76"
+    jmesPath: "AvailableUpdates[?IsMandatory] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "CIS-Controls-v8:7.3"
+      - "cyber-insurance-domain-endpoint"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    fieldGotcha: "Windows Workstation inspector HAS a Global metric for mandatory-updates-count (id=1574). Windows Server inspector does NOT — that path is PROPOSED for the server inspector."
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/windows-workstation.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:windows-workstation:mandatory-updates-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Windows Workstation — Mandatory Updates Pending List"
+    description: "Titles of pending mandatory updates from AvailableUpdates[?IsMandatory].Title."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "windows-workstation-inspector"
+      inspectorId: 90
+    liongardMetricName: "Windows Workstation: Mandatory Updates Not Installed"
+    liongardMetricId: 1573
+    liongardMetricUuid: "a29b3e38-3632-4583-9586-f9e505ada1b0"
+    jmesPath: "AvailableUpdates[?IsMandatory].Title"
+    resultType: "array"
+    compliantWhen: "result == []"
+    compliesWith:
+      - "CIS-Controls-v8:7.3"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/windows-workstation.md"
+    dateAdded: "2026-05-26"
+
+# ── Access Control ─────────────────────────────────────────────────────────────
+
+  - "@id": "metrics:windows-workstation:local-users-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Windows Workstation — Local Users List"
+    description: "Names of all local accounts from Users[?LocalAccount].Name."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "windows-workstation-inspector"
+      inspectorId: 90
+    liongardMetricName: "Windows Workstation: List of Local Users"
+    liongardMetricId: 1515
+    liongardMetricUuid: "089aeb7f-a3c5-49b8-9d57-e2e9b3cc92ff"
+    jmesPath: "Users[?LocalAccount].Name"
+    resultType: "array"
+    compliesWith:
+      - "CIS-Controls-v8:5.2"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/windows-workstation.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:windows-workstation:guest-account-disabled"
+    "@type": "liongard:MetricPrimitive"
+    name: "Windows Workstation — Guest Account Disabled"
+    description: "Array of Disabled boolean values for the built-in Guest account (SID ending -501). Compliant when [true] (disabled)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "windows-workstation-inspector"
+      inspectorId: 90
+    liongardMetricName: "Windows Workstation: Guest Account Disabled"
+    liongardMetricId: 1514
+    liongardMetricUuid: "2418a271-5c82-4688-8788-bb519e61be8c"
+    jmesPath: "Users[?contains(SID, '-501')].Disabled"
+    resultType: "array"
+    compliantWhen: "result == [`true`]  # single-element array with true"
+    compliesWith:
+      - "CIS-Controls-v8:5.2"
+      - "cyber-insurance-domain-auth"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    fieldGotcha: "Result is an array of boolean(s), not a scalar. Compliant state is [`true`] (guest exists and is disabled). Empty array means no -501 SID account found — treat as requires investigation."
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/windows-workstation.md"
+    dateAdded: "2026-05-26"
+
+# ── Warranty ──────────────────────────────────────────────────────────────────
+
+  - "@id": "metrics:windows-workstation:warranty-active"
+    "@type": "liongard:MetricPrimitive"
+    name: "Windows Workstation — Warranty Is Active"
+    description: "Boolean — true if time_until(Warranty.WarrantyExpirationDate, 'days') > 0."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "windows-workstation-inspector"
+      inspectorId: 90
+    liongardMetricName: "Windows Workstation: Machine Warranty is Active"
+    liongardMetricId: 1697
+    liongardMetricUuid: "732ca2ba-28da-41f5-8716-f3024fe8ddd3"
+    jmesPath: "time_until(Warranty.WarrantyExpirationDate, 'days') > `0`"
+    resultType: "boolean"
+    compliantWhen: "result == true"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/windows-workstation.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:windows-workstation:warranty-days-remaining"
+    "@type": "liongard:MetricPrimitive"
+    name: "Windows Workstation — Days Until Warranty Expiration"
+    description: "Days until the machine warranty expires via time_until(Warranty.WarrantyExpirationDate, 'days')."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "windows-workstation-inspector"
+      inspectorId: 90
+    liongardMetricName: "Windows Workstation: Days Until Machine Warranty Expiration"
+    liongardMetricId: 1698
+    liongardMetricUuid: "dd86b749-a73e-4d3e-b178-55f960242f6c"
+    jmesPath: "time_until(Warranty.WarrantyExpirationDate, 'days')"
+    resultType: "integer"
+    resultUnit: "days"
+    compliantWhen: "result > slas.warranty_warn_days (default 90)"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/windows-workstation.md"
+    dateAdded: "2026-05-26"
+
+# ── Windows 11 Readiness ──────────────────────────────────────────────────────
+
+  - "@id": "metrics:windows-workstation:win11-compatible-detail"
+    "@type": "liongard:MetricPrimitive"
+    name: "Windows Workstation — Windows 11 Compatibility Details"
+    description: "Object with Win11Compatible, TPMCheck, TPMVer, SecureBootCheck, TotalRamGB, and OSDriveSizeGB fields derived from Windows11Compatibility or IsWindows11Compatible dataprint keys."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "windows-workstation-inspector"
+      inspectorId: 90
+    liongardMetricName: "Windows Workstation: Windows 11 Compatibility Details [VI]"
+    liongardMetricId: 96226
+    liongardMetricUuid: "95760be8-1621-40ad-a5e9-6cb1877ba407"
+    jmesPath: "{ Win11Compatible: Windows11Compatibility.Compatible || IsWindows11Compatible.Compatible, TPMCheck: Windows11Compatibility.TpmCompatible || IsWindows11Compatible.TPMCheck, SecureBootCheck: Windows11Compatibility.SecureBootEnabled || IsWindows11Compatible.SecureBootCheck, TotalRamGB: Windows11Compatibility.RamGB || ComputerSystem.TotalRamGB }"
+    resultType: "object"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    fieldGotcha: "Two competing dataprint schemas exist across OS versions: IsWindows11Compatible (older) and Windows11Compatibility (newer). Use the OR pattern (newer || older) to handle both."
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/windows-workstation.md"
+    dateAdded: "2026-05-26"

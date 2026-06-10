@@ -1,0 +1,330 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+# ── Licensing ─────────────────────────────────────────────────────────────────
+
+  - "@id": "metrics:cisco-meraki:days-until-license-expiry"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cisco Meraki — Days Until License Expiration"
+    description: "Days until the Cisco Meraki license expires from LicensingOverview.DaysTillExpiration."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cisco-meraki-inspector"
+      inspectorId: 3
+    liongardMetricName: "Cisco Meraki: Days Until License Expiration"
+    liongardMetricId: 10
+    liongardMetricUuid: "4f03320f-0cce-4fde-93d7-58ba1ff84de4"
+    jmesPath: "LicensingOverview.DaysTillExpiration"
+    resultType: "integer"
+    resultUnit: "days"
+    compliantWhen: "result > slas.license_expiration_warn_days (default 30)"
+    compliesWith:
+      - "cyber-insurance-domain-endpoint"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    fieldGotcha: "Recipe verification logs may reference LicenseStatus.expirationInDays — this path does NOT exist. The correct field is LicensingOverview.DaysTillExpiration, confirmed by Global metric id=10."
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cisco-meraki.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:cisco-meraki:license-status"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cisco Meraki — License Status"
+    description: "License status string from LicensingOverview.status (e.g. 'OK', 'License Required')."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cisco-meraki-inspector"
+      inspectorId: 3
+    liongardMetricName: "Cisco Meraki: License Status"
+    liongardMetricId: 706
+    liongardMetricUuid: "0a18db60-c281-4842-8b38-c173c1f774a6"
+    jmesPath: "LicensingOverview.status"
+    resultType: "string"
+    compliantWhen: "result == 'OK'"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cisco-meraki.md"
+    dateAdded: "2026-05-26"
+
+# ── Network Devices ───────────────────────────────────────────────────────────
+
+  - "@id": "metrics:cisco-meraki:hardware-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cisco Meraki — Hardware Device List"
+    description: "Array of device objects (Model, DeviceName, NetworkName) from Networks[].Devices[?networkId]."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cisco-meraki-inspector"
+      inspectorId: 3
+    liongardMetricName: "Hardware list [VI]"
+    liongardMetricId: 104678
+    liongardMetricUuid: "9ae6582f-5688-418a-b906-d5aafda28a25"
+    jmesPath: "Networks[].Devices[?networkId].{Model: model, DeviceName: DeviceName, NetworkName: NetworkName}"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    fieldGotcha: "The top-level key for Meraki devices is Networks[].Devices[] — NOT NetworkDevices (which does not exist). Always traverse via Networks[]. Confirmed by Global metric id=104678 and recipe verification on System B (2026-05-22)."
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cisco-meraki.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:cisco-meraki:total-device-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cisco Meraki — Total Device Count"
+    description: "Count of all network devices across all networks. Traverse via Networks[].Devices[] — NOT a top-level key."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cisco-meraki-inspector"
+      inspectorId: 3
+    jmesPath: "length(Networks[].Devices[])"
+    resultType: "integer"
+    resultUnit: "count"
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "System M (inspected 2026-05-18)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cisco-meraki.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:cisco-meraki:device-serial-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cisco Meraki — Device Serial Number List"
+    description: "Sorted list of hardware serial numbers from Inventory[].serial."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cisco-meraki-inspector"
+      inspectorId: 3
+    liongardMetricName: "Cisco Meraki: Device Serial Number List"
+    liongardMetricId: 525
+    liongardMetricUuid: "383e5d24-5eb9-470a-9096-cdde9cb89d38"
+    jmesPath: "Inventory[].serial | sort(@)"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cisco-meraki.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:cisco-meraki:vlan-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cisco Meraki — VLAN Count"
+    description: "Total VLAN count summed across all networks via sum(Networks[].length(VLANs))."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cisco-meraki-inspector"
+      inspectorId: 3
+    liongardMetricName: "Cisco Meraki: VLAN Count"
+    liongardMetricId: 707
+    liongardMetricUuid: "87147db8-f0c3-48c2-91d1-3d97db41f176"
+    jmesPath: "sum(Networks[].length(VLANs))"
+    resultType: "integer"
+    resultUnit: "count"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cisco-meraki.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:cisco-meraki:device-firmware-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cisco Meraki — Device Firmware Summary"
+    description: "Sorted list of DeviceName + firmware version strings from Networks[].Devices[]."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cisco-meraki-inspector"
+      inspectorId: 3
+    liongardMetricName: "Cisco Meraki: Device Firmware Summary"
+    liongardMetricId: 636
+    liongardMetricUuid: "b1440eef-8146-419d-9ea8-c4e5b6eec998"
+    jmesPath: "Networks[].Devices[].join(', ', [join(': ', [`Device Name`, to_string(DeviceName)]), join(': ', [`Firmware`, to_string(firmware)])]) | sort(@)"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cisco-meraki.md"
+    dateAdded: "2026-05-26"
+
+# ── Wireless Security ─────────────────────────────────────────────────────────
+
+  - "@id": "metrics:cisco-meraki:open-ssid-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cisco Meraki — Open (No Auth) SSID Count"
+    description: "Count of enabled wireless SSIDs with authMode == 'open' (no PSK or 802.1x). Should be 0."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cisco-meraki-inspector"
+      inspectorId: 3
+    liongardMetricName: "Cisco Meraki: Wireless Networks without Pre-Shared Key Count"
+    liongardMetricId: 705
+    liongardMetricUuid: "aef0299e-bd94-4523-9b3a-77f4ef25404d"
+    jmesPath: "length(Networks[?Type==`wireless`].SSIDs[] | [?enabled==`true`] | [?authMode==`open`])"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "CIS-Controls-v8:12.1"
+      - "cyber-insurance-domain-endpoint"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    fieldGotcha: "SSIDs are nested under Networks[].SSIDs — not top-level Ssids[]. The recipe pattern Ssids[?authMode == 'open'] will return null. Always traverse via Networks[?Type=='wireless'].SSIDs[]."
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cisco-meraki.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:cisco-meraki:open-ssid-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cisco Meraki — Open (No Auth) SSID List"
+    description: "Names of enabled wireless SSIDs with authMode == 'open'. Should be empty."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cisco-meraki-inspector"
+      inspectorId: 3
+    liongardMetricName: "Cisco Meraki: Wireless Networks without Pre-Shared Key List"
+    liongardMetricId: 704
+    liongardMetricUuid: "c54e72e8-2438-448b-a95c-ec67dfb9d0a0"
+    jmesPath: "Networks[?Type==`wireless`].SSIDs[] | [?enabled==`true`] | [?authMode==`open`][].name || to_array(`-`) | join(`, `, @)"
+    resultType: "string"
+    compliantWhen: "result == '-'"
+    compliesWith:
+      - "CIS-Controls-v8:12.1"
+      - "cyber-insurance-domain-endpoint"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cisco-meraki.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:cisco-meraki:weak-encryption-ssid-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cisco Meraki — Weak Encryption SSID Count"
+    description: "Count of enabled wireless SSIDs where wpaEncryptionMode != 'WPA2 only'. Should be 0."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cisco-meraki-inspector"
+      inspectorId: 3
+    liongardMetricName: "Cisco Meraki: Wireless Networks with Weak Encryption Count"
+    liongardMetricId: 709
+    liongardMetricUuid: "164876b1-055f-4bf0-a293-bd0f2a634f69"
+    jmesPath: "length(Networks[?Type==`wireless`].SSIDs[] | [?enabled==`true`] | [?wpaEncryptionMode!=`WPA2 only`])"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "CIS-Controls-v8:12.1"
+      - "cyber-insurance-domain-endpoint"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cisco-meraki.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:cisco-meraki:weak-encryption-ssid-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cisco Meraki — Weak Encryption SSID List"
+    description: "Names of enabled wireless SSIDs not using WPA2-only encryption."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cisco-meraki-inspector"
+      inspectorId: 3
+    liongardMetricName: "Cisco Meraki: Wireless Network with Weak Encryption List"
+    liongardMetricId: 708
+    liongardMetricUuid: "7fb49887-01b6-44b6-b818-e6101a4c5637"
+    jmesPath: "Networks[?Type==`wireless`].SSIDs[] | [?enabled==`true`] | [?wpaEncryptionMode!=`WPA2 only`][].name || to_array(`-`) | join(`, `, @)"
+    resultType: "string"
+    compliantWhen: "result == '-'"
+    compliesWith:
+      - "CIS-Controls-v8:12.1"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cisco-meraki.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:cisco-meraki:ssid-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cisco Meraki — SSID List"
+    description: "Comma-joined list of all SSID names across all networks from Networks[].SSIDs[].name."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cisco-meraki-inspector"
+      inspectorId: 3
+    liongardMetricName: "Cisco Meraki: SSID List"
+    liongardMetricId: 16
+    liongardMetricUuid: "e67522cf-372b-41e5-8948-f502bdeae256"
+    jmesPath: "Networks[].SSIDs[].name | join(`, `,@)"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cisco-meraki.md"
+    dateAdded: "2026-05-26"
+
+# ── Admin Access ──────────────────────────────────────────────────────────────
+
+  - "@id": "metrics:cisco-meraki:privileged-user-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cisco Meraki — Privileged User Count"
+    description: "Count of dashboard users with Privileged == 'Yes' from Users[]."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cisco-meraki-inspector"
+      inspectorId: 3
+    liongardMetricName: "Cisco Meraki: Privileged User Count"
+    liongardMetricId: 237
+    liongardMetricUuid: "e2ca034c-ec60-4074-bbfb-7d2c54dd2869"
+    jmesPath: "Users[?Privileged == `Yes`].name | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliesWith:
+      - "CIS-Controls-v8:5.4"
+      - "cyber-insurance-domain-auth"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    fieldGotcha: "Privileged is the string 'Yes' not boolean true. Filter: Privileged == `Yes` (backtick-quoted string in JMESPath)."
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cisco-meraki.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:cisco-meraki:privileged-user-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cisco Meraki — Privileged User List"
+    description: "Comma-joined names of dashboard users with Privileged == 'Yes'."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cisco-meraki-inspector"
+      inspectorId: 3
+    liongardMetricName: "Cisco Meraki: Privileged User List"
+    liongardMetricId: 238
+    liongardMetricUuid: "208ff64b-9d6b-4f03-8998-477b8bb8c32c"
+    jmesPath: "Users[?Privileged == `Yes`].name | join(`, `, @)"
+    resultType: "string"
+    compliesWith:
+      - "CIS-Controls-v8:5.4"
+      - "cyber-insurance-domain-auth"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cisco-meraki.md"
+    dateAdded: "2026-05-26"
+
+# ── VPN ───────────────────────────────────────────────────────────────────────
+
+  - "@id": "metrics:cisco-meraki:vpn-enabled-subnets"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cisco Meraki — VPN Enabled Subnets"
+    description: "Array of [networkName, subnet list] pairs for networks with enabled VPN subnets."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cisco-meraki-inspector"
+      inspectorId: 3
+    liongardMetricName: "Cisco Meraki: Enabled VPN Subnet Summary"
+    liongardMetricId: 637
+    liongardMetricUuid: "dea200f7-174e-4110-8650-0121eef7c72f"
+    jmesPath: "Networks[].[name, join(`, `, [to_string(VPNs.EnabledSubnets[])])][]"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cisco-meraki.md"
+    dateAdded: "2026-05-26"

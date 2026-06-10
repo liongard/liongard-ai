@@ -1,0 +1,206 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+  - "@id": "metrics:addigy:user-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Addigy — User List"
+    description: "All user display names in the Addigy organisation. JMESPath: Users[].name"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "addigy-inspector"
+      inspectorId: 98
+    liongardMetricName: "Addigy: User List"
+    liongardMetricId: 67432
+    liongardMetricUuid: "e61eea81-d53f-49a0-b037-3976c09ac6cc"
+    jmesPath: "Users[].name"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/addigy.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:addigy:privileged-user-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Addigy — Privileged User List"
+    description: "Users with power, admin, or owner role. JMESPath: Users[?addigy_role == 'power' || addigy_role == 'admin' || addigy_role == 'owner'].join(' - ', [name, addigy_role])"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "addigy-inspector"
+      inspectorId: 98
+    liongardMetricName: "Addigy: Privileged User List"
+    liongardMetricId: 67433
+    liongardMetricUuid: "8e4b03f5-f115-4c61-9236-72f645b149db"
+    jmesPath: "Users[?addigy_role == 'power' || addigy_role == 'admin' || addigy_role == 'owner'].join(' - ', [name, addigy_role])"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/addigy.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:addigy:top-level-policy-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Addigy — Top-Level Policy List"
+    description: "Names of all top-level (root) Addigy policies (parent == null). JMESPath: Policies[?parent == null].name"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "addigy-inspector"
+      inspectorId: 98
+    liongardMetricName: "Addigy: Top-Level Policy List"
+    liongardMetricId: 67434
+    liongardMetricUuid: "311508e3-1863-4317-832d-40630a277efd"
+    jmesPath: "Policies[?parent == null].name"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/addigy.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:addigy:device-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Addigy — Device Count"
+    description: "Number of enrolled devices for a given Addigy child (per-policy) system. JMESPath: length(Devices)"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "addigy-inspector"
+      inspectorId: 98
+    liongardMetricName: "Addigy: Device Count"
+    liongardMetricId: 67431
+    liongardMetricUuid: "d9730fe3-1885-46f4-baad-d50cbc15cdda"
+    jmesPath: "length(Devices)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/addigy.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:addigy:device-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Addigy — Device List"
+    description: "Device names enrolled under an Addigy child (per-policy) system. JMESPath: Devices[].device_name"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "addigy-inspector"
+      inspectorId: 98
+    liongardMetricName: "Addigy: Device List"
+    liongardMetricId: 67435
+    liongardMetricUuid: "ab85a45a-def1-41e4-92ce-4aa1cdb6b3e9"
+    jmesPath: "Devices[].device_name"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/addigy.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:addigy:unique-application-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Addigy — Unique Application List"
+    description: "Unique list of deployed application name+version pairs for an Addigy child (per-policy) system. JMESPath: unique_list(Applications[].join(' ',[name,version]))"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "addigy-inspector"
+      inspectorId: 98
+    liongardMetricName: "Addigy: Unique Application List"
+    liongardMetricId: 67436
+    liongardMetricUuid: "14290f82-fa02-40e3-8bda-47488b8c9dbf"
+    jmesPath: "unique_list(Applications[].join(' ',[name,version]))"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/addigy.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:addigy:vnc-enabled-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Addigy — VNC Enabled List"
+    description: "Policy names where VNC remote access is enabled. JMESPath: Policies[?vnc_settings.enabled == true].name"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "addigy-inspector"
+      inspectorId: 98
+    liongardMetricName: "Addigy: VNC Enabled List"
+    liongardMetricId: 67437
+    liongardMetricUuid: "71273f86-46b2-4aea-84c1-fd2d02c0da86"
+    jmesPath: "Policies[?vnc_settings.enabled == true].name"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/addigy.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:addigy:splashtop-enabled-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Addigy — Splashtop Enabled List"
+    description: "Policy names where Splashtop remote access is enabled. JMESPath: Policies[?splashtop_settings.enabled == true].name"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "addigy-inspector"
+      inspectorId: 98
+    liongardMetricName: "Addigy: Splashtop Enabled List"
+    liongardMetricId: 67438
+    liongardMetricUuid: "2ee8f604-3897-4c08-82d1-0e830f44da0e"
+    jmesPath: "Policies[?splashtop_settings.enabled == true].name"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/addigy.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:addigy:ssh-enabled-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Addigy — SSH Enabled List"
+    description: "Policy names where SSH remote access is enabled. JMESPath: Policies[?ssh_settings.enabled == true].name"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "addigy-inspector"
+      inspectorId: 98
+    liongardMetricName: "Addigy: SSH Enabled List"
+    liongardMetricId: 67439
+    liongardMetricUuid: "fd70f790-7227-496d-b410-5c6a5d4c3032"
+    jmesPath: "Policies[?ssh_settings.enabled == true].name"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/addigy.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:addigy:policy-updates-ignored-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Addigy — Policies With Updates Ignored"
+    description: "Policies where macOS update management is disabled (ignore_updates == true). JMESPath: Policies[?ignore_updates == `true`].{policyId: policyId, name: name}"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "addigy-inspector"
+      inspectorId: 98
+    jmesPath: "Policies[?ignore_updates == `true`].{policyId: policyId, name: name}"
+    resultType: "array"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/addigy.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:addigy:discovered-child-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Addigy — Discovered Child System Count"
+    description: "Number of child launchpoints auto-discovered by the Addigy parent system. JMESPath: length(Discovered)"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "addigy-inspector"
+      inspectorId: 98
+    jmesPath: "length(Discovered)"
+    resultType: "integer"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/addigy.md"
+    dateAdded: "2026-05-26"

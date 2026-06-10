@@ -1,0 +1,245 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+  - '@id': metrics:connectwise-manage-inspector:tickets-open-count
+    '@type': liongard:MetricPrimitive
+    dateAdded: '2026-05-26'
+    description: Total number of currently open tickets in the ConnectWise Manage tenant.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorId: 9
+      inspectorSlug: connectwise-manage-inspector
+    jmesPath: N/A
+    name: ConnectWise Manage — Open Ticket Count
+    notes: 'DATA GAP: CW Manage dataprint captures Companies, Members, Configurations,
+      Boards — not ticket/SLA/agreement/time-entry data. No Tickets[] array in dataprint.
+      Requires a Liongard metric request.'
+    resultType: integer
+    sourceRecipe: recipes/single-system-analysis/by-inspector/connectwise-manage.md
+    status: PROPOSED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: 'System A (dev environment, inspected 2026-05-28) — array does
+      not exist in CW Manage dataprint'
+
+  - '@id': metrics:connectwise-manage-inspector:tickets-open-by-priority
+    '@type': liongard:MetricPrimitive
+    dateAdded: '2026-05-26'
+    description: Distribution of open tickets by priority level.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorId: 9
+      inspectorSlug: connectwise-manage-inspector
+    jmesPath: N/A
+    name: ConnectWise Manage — Open Tickets by Priority
+    notes: 'DATA GAP: CW Manage dataprint captures Companies, Members, Configurations,
+      Boards — not ticket/SLA/agreement/time-entry data.'
+    resultType: object
+    sourceRecipe: recipes/single-system-analysis/by-inspector/connectwise-manage.md
+    status: PROPOSED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: 'System A (dev environment, inspected 2026-05-28) — array does
+      not exist in CW Manage dataprint'
+
+  - '@id': metrics:connectwise-manage-inspector:tickets-aging-by-bracket
+    '@type': liongard:MetricPrimitive
+    dateAdded: '2026-05-26'
+    description: 'Open ticket count by aging bracket: 0-1d, 1-7d, 7-30d, 30+d.'
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorId: 9
+      inspectorSlug: connectwise-manage-inspector
+    jmesPath: N/A
+    name: ConnectWise Manage — Ticket Aging by Bracket
+    notes: 'DATA GAP: CW Manage dataprint captures Companies, Members, Configurations,
+      Boards — not ticket/SLA/agreement/time-entry data.'
+    resultType: object
+    sourceRecipe: recipes/single-system-analysis/by-inspector/connectwise-manage.md
+    status: PROPOSED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: 'System A (dev environment, inspected 2026-05-28) — array does
+      not exist in CW Manage dataprint'
+
+  - '@id': metrics:connectwise-manage-inspector:tickets-avg-time-to-close
+    '@type': liongard:MetricPrimitive
+    dateAdded: '2026-05-26'
+    description: Average time to close a ticket in the ConnectWise Manage tenant.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorId: 9
+      inspectorSlug: connectwise-manage-inspector
+    jmesPath: N/A
+    name: ConnectWise Manage — Average Time to Close
+    notes: 'DATA GAP: CW Manage dataprint captures Companies, Members, Configurations,
+      Boards — not ticket/SLA/agreement/time-entry data.'
+    resultType: integer
+    sourceRecipe: recipes/single-system-analysis/by-inspector/connectwise-manage.md
+    status: PROPOSED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: 'System A (dev environment, inspected 2026-05-28) — array does
+      not exist in CW Manage dataprint'
+
+  - '@id': metrics:connectwise-manage-inspector:sla-response-compliance-pct
+    '@type': liongard:MetricPrimitive
+    dateAdded: '2026-05-26'
+    description: Percentage of tickets meeting SLA response time.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorId: 9
+      inspectorSlug: connectwise-manage-inspector
+    jmesPath: N/A
+    name: ConnectWise Manage — SLA Response Compliance Percent
+    notes: 'DATA GAP: No SLA performance data in CW Manage dataprint.'
+    resultType: integer
+    sourceRecipe: recipes/single-system-analysis/by-inspector/connectwise-manage.md
+    status: PROPOSED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: 'System A (dev environment, inspected 2026-05-28) — no SLA
+      performance data in dataprint'
+
+  - '@id': metrics:connectwise-manage-inspector:sla-resolution-compliance-pct
+    '@type': liongard:MetricPrimitive
+    dateAdded: '2026-05-26'
+    description: Percentage of tickets meeting SLA resolution time.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorId: 9
+      inspectorSlug: connectwise-manage-inspector
+    jmesPath: N/A
+    name: ConnectWise Manage — SLA Resolution Compliance Percent
+    notes: 'DATA GAP: No SLA performance data in CW Manage dataprint.'
+    resultType: integer
+    sourceRecipe: recipes/single-system-analysis/by-inspector/connectwise-manage.md
+    status: PROPOSED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: 'System A (dev environment, inspected 2026-05-28) — no SLA
+      data in dataprint'
+
+  - '@id': metrics:connectwise-manage-inspector:sla-breached-count
+    '@type': liongard:MetricPrimitive
+    dateAdded: '2026-05-26'
+    description: Number of tickets that have breached SLA.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorId: 9
+      inspectorSlug: connectwise-manage-inspector
+    jmesPath: N/A
+    name: ConnectWise Manage — SLA Breached Count
+    notes: 'DATA GAP: No SLA breach data in CW Manage dataprint.'
+    resultType: integer
+    sourceRecipe: recipes/single-system-analysis/by-inspector/connectwise-manage.md
+    status: PROPOSED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: 'System A (dev environment, inspected 2026-05-28) — no SLA
+      data in dataprint'
+
+  - '@id': metrics:connectwise-manage-inspector:members-total-count
+    '@type': liongard:MetricPrimitive
+    dateAdded: '2026-05-26'
+    description: Total number of technician members in the ConnectWise Manage tenant.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorId: 9
+      inspectorSlug: connectwise-manage-inspector
+    jmesPath: length(Members)
+    name: ConnectWise Manage — Total Member Count
+    notes: 'Members[] is the technician/staff roster. inactiveFlag is boolean. GOTCHA:
+      status and securityRole are objects with a ''name'' sub-key — filter as status.name
+      == ''Active'', securityRole.name == ''Admin''.'
+    resultType: integer
+    sourceRecipe: recipes/single-system-analysis/by-inspector/connectwise-manage.md
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: 'System A (dev environment, inspected 2026-05-28) — returned
+      32'
+
+  - '@id': metrics:connectwise-manage-inspector:members-billable-utilization-pct
+    '@type': liongard:MetricPrimitive
+    dateAdded: '2026-05-26'
+    description: Per-member billable utilization percentage.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorId: 9
+      inspectorSlug: connectwise-manage-inspector
+    jmesPath: N/A
+    name: ConnectWise Manage — Member Billable Utilization Percent
+    notes: 'DATA GAP: No per-member billable utilization percentage in CW Manage dataprint.'
+    resultType: object
+    sourceRecipe: recipes/single-system-analysis/by-inspector/connectwise-manage.md
+    status: PROPOSED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: 'System A (dev environment, inspected 2026-05-28) — no utilization
+      data in dataprint'
+
+  - '@id': metrics:connectwise-manage-inspector:time-entries-total-count
+    '@type': liongard:MetricPrimitive
+    dateAdded: '2026-05-26'
+    description: Total number of time entries in the ConnectWise Manage tenant.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorId: 9
+      inspectorSlug: connectwise-manage-inspector
+    jmesPath: N/A
+    name: ConnectWise Manage — Total Time Entry Count
+    notes: 'DATA GAP: No TimeEntries[] array in CW Manage dataprint.'
+    resultType: integer
+    sourceRecipe: recipes/single-system-analysis/by-inspector/connectwise-manage.md
+    status: PROPOSED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: 'System A (dev environment, inspected 2026-05-28) — no TimeEntries[]
+      in dataprint'
+
+  - '@id': metrics:connectwise-manage-inspector:agreements-active-count
+    '@type': liongard:MetricPrimitive
+    dateAdded: '2026-05-26'
+    description: Number of active agreements/contracts in the ConnectWise Manage tenant.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorId: 9
+      inspectorSlug: connectwise-manage-inspector
+    jmesPath: N/A
+    name: ConnectWise Manage — Active Agreement Count
+    notes: 'DATA GAP: No Agreements[] array in CW Manage dataprint.'
+    resultType: integer
+    sourceRecipe: recipes/single-system-analysis/by-inspector/connectwise-manage.md
+    status: PROPOSED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: 'System A (dev environment, inspected 2026-05-28) — no Agreements[]
+      in dataprint'
+
+  - '@id': metrics:connectwise-manage-inspector:agreements-expiring-count
+    '@type': liongard:MetricPrimitive
+    dateAdded: '2026-05-26'
+    description: Number of agreements expiring within the configured warning window.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorId: 9
+      inspectorSlug: connectwise-manage-inspector
+    jmesPath: N/A
+    name: ConnectWise Manage — Agreements Expiring Within Warning Period
+    notes: 'DATA GAP: No Agreements[] array in CW Manage dataprint.'
+    resultType: integer
+    sourceRecipe: recipes/single-system-analysis/by-inspector/connectwise-manage.md
+    status: PROPOSED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: 'System A (dev environment, inspected 2026-05-28) — no Agreements[]
+      in dataprint'
+
+  - '@id': metrics:connectwise-manage-inspector:agreements-without-member-count
+    '@type': liongard:MetricPrimitive
+    dateAdded: '2026-05-26'
+    description: Number of agreements that have no technician member assigned.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorId: 9
+      inspectorSlug: connectwise-manage-inspector
+    jmesPath: N/A
+    name: ConnectWise Manage — Agreements Without Assigned Member
+    notes: 'DATA GAP: No Agreements[] array in CW Manage dataprint.'
+    resultType: integer
+    sourceRecipe: recipes/single-system-analysis/by-inspector/connectwise-manage.md
+    status: PROPOSED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: 'System A (dev environment, inspected 2026-05-28) — no Agreements[]
+      in dataprint'
+

@@ -1,0 +1,585 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+# ── Device Identity ───────────────────────────────────────────────────────────
+
+  - "@id": "metrics:sonicwall:hostname"
+    "@type": "liongard:MetricPrimitive"
+    name: "SonicWall — Hostname (Firewall Name)"
+    description: "Firewall display name from Administration.FirewallName (SonicOS 7). Use for asset identification and report headers."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sonicwall-inspector"
+      inspectorId: 7
+    liongardMetricName: "SonicWall: Hostname"
+    liongardMetricId: 1998
+    liongardMetricUuid: "38af37ee-30a9-11ee-be56-0242ac120002"
+    jmesPath: "Administration.FirewallName"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    fieldGotcha: "SonicOS 7 path is Administration.FirewallName. SonicOS 6 uses System.Administration.FirewallName. The id=1998 Global metric uses the shorter path — confirmed correct for inspectorId=7."
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sonicwall.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sonicwall:model"
+    "@type": "liongard:MetricPrimitive"
+    name: "SonicWall — Hardware Model"
+    description: "Hardware model identifier from System.Model. Used for lifecycle/EOL tracking."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sonicwall-inspector"
+      inspectorId: 7
+    liongardMetricName: "SonicWall: Model"
+    liongardMetricId: 252
+    liongardMetricUuid: "67713200-dc91-41d0-81f9-39fcd508008f"
+    jmesPath: "System.Model"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sonicwall.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sonicwall:serial-number"
+    "@type": "liongard:MetricPrimitive"
+    name: "SonicWall — Serial Number"
+    description: "Hardware serial number from System.SerialNumber."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sonicwall-inspector"
+      inspectorId: 7
+    liongardMetricName: "Sonicwall: Serial Number"
+    liongardMetricId: 536
+    liongardMetricUuid: "70b56f9e-f41e-457f-b29f-7fd376a82b81"
+    jmesPath: "System.SerialNumber"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sonicwall.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sonicwall:firmware-version"
+    "@type": "liongard:MetricPrimitive"
+    name: "SonicWall — Firmware Version"
+    description: "Running SonicOS firmware version string from System.FirmwareVersion. Cross-reference against known CVEs in the NVD."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sonicwall-inspector"
+      inspectorId: 7
+    liongardMetricName: "SonicWall: Software Version"
+    liongardMetricId: 253
+    liongardMetricUuid: "56ac617f-e627-424c-9f3b-165a021ca3ce"
+    jmesPath: "System.FirmwareVersion"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sonicwall.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sonicwall:restart-required"
+    "@type": "liongard:MetricPrimitive"
+    name: "SonicWall — Device Restart Required"
+    description: "Boolean flag indicating whether a device restart is pending from System.RestartRequired. A pending restart may mean a firmware update has not taken effect."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sonicwall-inspector"
+      inspectorId: 7
+    liongardMetricName: "Sonicwall: Device Restart Required"
+    liongardMetricId: 701
+    liongardMetricUuid: "fab84409-f1cd-4e60-bc6b-fa4c96956d43"
+    jmesPath: "System.RestartRequired"
+    resultType: "boolean"
+    compliantWhen: "result == false"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sonicwall.md"
+    dateAdded: "2026-05-26"
+
+# ── Admin Access Security ─────────────────────────────────────────────────────
+
+  - "@id": "metrics:sonicwall:admin-username"
+    "@type": "liongard:MetricPrimitive"
+    name: "SonicWall — Administrator Username"
+    description: "Configured administrator account name from System.Administration.AdminName. Default 'admin' username significantly reduces brute-force resistance."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sonicwall-inspector"
+      inspectorId: 7
+    liongardMetricName: "Sonicwall: Configured administrator username (default 'admin' account risk)"
+    liongardMetricId: 106905
+    liongardMetricUuid: "b72b3659-e911-4e45-a4b9-82b1282d3aa4"
+    jmesPath: "System.Administration.AdminName"
+    resultType: "string"
+    compliantWhen: "result != 'admin'"
+    compliesWith:
+      - "CIS-Controls-v8:5.2"
+      - "cyber-insurance-domain-auth"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sonicwall.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sonicwall:http-management-enabled"
+    "@type": "liongard:MetricPrimitive"
+    name: "SonicWall — Cleartext HTTP Web Management Allowed"
+    description: "Whether HTTP (cleartext) web management is enabled from System.Administration.WebManagementAllowHttp. When true, admin credentials are transmitted in cleartext."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sonicwall-inspector"
+      inspectorId: 7
+    liongardMetricName: "Sonicwall: Cleartext HTTP web management allowed"
+    liongardMetricId: 106907
+    liongardMetricUuid: "b682a22a-125d-4c62-9774-84222f6e3cfd"
+    jmesPath: "System.Administration.WebManagementAllowHttp"
+    resultType: "boolean"
+    compliantWhen: "result == false"
+    compliesWith:
+      - "CIS-Controls-v8:12.6"
+      - "cyber-insurance-domain-auth"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sonicwall.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sonicwall:user-lockout-enabled"
+    "@type": "liongard:MetricPrimitive"
+    name: "SonicWall — User Account Lockout Policy Enabled"
+    description: "Whether account lockout is enforced from System.Administration.UserLockoutEnable. Without lockout, accounts are vulnerable to unlimited password guessing."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sonicwall-inspector"
+      inspectorId: 7
+    liongardMetricName: "Sonicwall: User account lockout policy enabled"
+    liongardMetricId: 106906
+    liongardMetricUuid: "967bbb1a-af06-4e9a-a5dd-f3dd41a535cc"
+    jmesPath: "System.Administration.UserLockoutEnable"
+    resultType: "boolean"
+    compliantWhen: "result == true"
+    compliesWith:
+      - "CIS-Controls-v8:5.2"
+      - "cyber-insurance-domain-auth"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sonicwall.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sonicwall:min-password-length"
+    "@type": "liongard:MetricPrimitive"
+    name: "SonicWall — Minimum Password Length (Characters)"
+    description: "Minimum password length requirement from System.Administration.PasswordMinimumLength. Values below 12 indicate insufficient complexity."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sonicwall-inspector"
+      inspectorId: 7
+    liongardMetricName: "Sonicwall: Minimum password length requirement (characters)"
+    liongardMetricId: 106908
+    liongardMetricUuid: "b94ece20-60e6-4110-b07a-90c87052f5ed"
+    jmesPath: "System.Administration.PasswordMinimumLength"
+    resultType: "integer"
+    resultUnit: "characters"
+    compliantWhen: "result >= 12"
+    compliesWith:
+      - "CIS-Controls-v8:5.2"
+      - "cyber-insurance-domain-auth"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sonicwall.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sonicwall:otp-config-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "SonicWall — Administrator OTP Configuration Entries"
+    description: "Count of one-time password (OTP/MFA) entries configured for admin accounts from CurrentConfig.administration.admin.one_time_password | length(@). Zero means MFA is not configured."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sonicwall-inspector"
+      inspectorId: 7
+    liongardMetricName: "Sonicwall: Administrator one-time password (OTP) configuration entries"
+    liongardMetricId: 106911
+    liongardMetricUuid: "8e610686-081d-4e51-a416-c6cef7851292"
+    jmesPath: "CurrentConfig.administration.admin.one_time_password | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result > 0"
+    compliesWith:
+      - "CIS-Controls-v8:6.3"
+      - "cyber-insurance-domain-auth"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    fieldGotcha: "CurrentConfig uses camelCase path (.administration.admin) vs the System.Administration path used elsewhere. Both paths exist in the dataprint — CurrentConfig contains the full SonicOS running config JSON, System contains the parsed top-level fields."
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sonicwall.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sonicwall:local-users-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "SonicWall — Local User Account Count"
+    description: "Count of local (non-centralized) user accounts from Users.LocalUsers | length(@). Local accounts bypass LDAP/AD and complicate offboarding."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sonicwall-inspector"
+      inspectorId: 7
+    liongardMetricName: "Sonicwall: Count of local (non-centralized) user accounts"
+    liongardMetricId: 106913
+    liongardMetricUuid: "7ae197d7-6cad-48a4-ab55-8983ab660b19"
+    jmesPath: "Users.LocalUsers | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliesWith:
+      - "CIS-Controls-v8:5.6"
+      - "cyber-insurance-domain-auth"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sonicwall.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sonicwall:admin-session-idle-timeout"
+    "@type": "liongard:MetricPrimitive"
+    name: "SonicWall — Administrator Session Idle Logout Timeout (Minutes)"
+    description: "Admin session idle timeout in minutes from System.Administration.IdleLogoutTime. Timeouts exceeding 10 minutes leave sessions exposed."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sonicwall-inspector"
+      inspectorId: 7
+    liongardMetricName: "Sonicwall: Administrative session idle logout timeout (minutes)"
+    liongardMetricId: 106910
+    liongardMetricUuid: "32dd1068-2323-41ff-b0fc-142735cd7a6d"
+    jmesPath: "System.Administration.IdleLogoutTime"
+    resultType: "integer"
+    resultUnit: "minutes"
+    compliantWhen: "result <= 10"
+    compliesWith:
+      - "CIS-Controls-v8:5.2"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sonicwall.md"
+    dateAdded: "2026-05-26"
+
+# ── Threat Protection ─────────────────────────────────────────────────────────
+
+  - "@id": "metrics:sonicwall:capture-atp-enabled"
+    "@type": "liongard:MetricPrimitive"
+    name: "SonicWall — Capture Advanced Threat Protection (ATP) Enabled"
+    description: "Whether Capture ATP sandbox analysis is enabled from CurrentConfig.capture_atp.enable. Without ATP, zero-day threats bypass inspection entirely."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sonicwall-inspector"
+      inspectorId: 7
+    liongardMetricName: "Sonicwall: Capture Advanced Threat Protection (ATP) enabled"
+    liongardMetricId: 106918
+    liongardMetricUuid: "bd776e8f-f169-479f-a846-b42a09d6aed2"
+    jmesPath: "CurrentConfig.capture_atp.enable"
+    resultType: "boolean"
+    compliantWhen: "result == true"
+    compliesWith:
+      - "CIS-Controls-v8:10.1"
+      - "cyber-insurance-domain-endpoint"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sonicwall.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sonicwall:stealth-mode-enabled"
+    "@type": "liongard:MetricPrimitive"
+    name: "SonicWall — Firewall Stealth Mode Enabled"
+    description: "Whether stealth mode is active from Firewall.Settings.StealthMode. When false, the device responds to ICMP probes and is discoverable to network scanners."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sonicwall-inspector"
+      inspectorId: 7
+    liongardMetricName: "Sonicwall: Firewall stealth mode enabled"
+    liongardMetricId: 106926
+    liongardMetricUuid: "771b0d02-df6e-48d2-adef-67ce2f8244fb"
+    jmesPath: "Firewall.Settings.StealthMode"
+    resultType: "boolean"
+    compliantWhen: "result == true"
+    compliesWith:
+      - "CIS-Controls-v8:12.2"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sonicwall.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sonicwall:zones-without-ips-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "SonicWall — Zones Without Intrusion Prevention Count"
+    description: "Count of network zones where IntrusionPrevention is false from length(Network.Zones[?IntrusionPrevention=='false']). Should be 0."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sonicwall-inspector"
+      inspectorId: 7
+    liongardMetricName: "Sonicwall: Zones without Intrusion Prevention Count"
+    liongardMetricId: 703
+    liongardMetricUuid: "0b9a5a9f-466e-4d6b-9b6f-8e6794046045"
+    jmesPath: "length(Network.Zones[?IntrusionPrevention ==`false`])"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "CIS-Controls-v8:13.3"
+      - "cyber-insurance-domain-network"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    fieldGotcha: "IntrusionPrevention is boolean False (not string 'false') — the Global metric uses backtick `false` which is JSON false in JMESPath. The id=106916 variant uses `Network.Zones[?IntrusionPrevention==False]` (Python-style) and also returns a valid result. Use backtick-quoted boolean for strict JMESPath compliance."
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sonicwall.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sonicwall:zones-without-ips-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "SonicWall — Zones Without Intrusion Prevention List"
+    description: "Comma-joined names of zones without IPS enabled. Should be '-' (empty)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sonicwall-inspector"
+      inspectorId: 7
+    liongardMetricName: "Sonicwall: Zones without Intrusion Prevention List"
+    liongardMetricId: 702
+    liongardMetricUuid: "a6b1e49a-9f13-4c5d-8e37-03a310455281"
+    jmesPath: "Network.Zones[?IntrusionPrevention  == `false`].Name || to_array(`-`) | join(`, `, @)"
+    resultType: "string"
+    compliantWhen: "result == '-'"
+    compliesWith:
+      - "CIS-Controls-v8:13.3"
+      - "cyber-insurance-domain-network"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sonicwall.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sonicwall:zones-without-gav-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "SonicWall — Zones With Gateway Anti-Virus Disabled Count"
+    description: "Count of zones where GatewayAntiVirus is false. Zones without GAV allow uninspected HTTP/FTP/SMTP traffic."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sonicwall-inspector"
+      inspectorId: 7
+    liongardMetricName: "Sonicwall: Zones with Gateway Anti-Virus disabled"
+    liongardMetricId: 106915
+    liongardMetricUuid: "46eff5cf-f5c9-4378-a7e9-e29386c5de01"
+    jmesPath: "Network.Zones[?GatewayAntiVirus==False] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "CIS-Controls-v8:10.1"
+      - "cyber-insurance-domain-endpoint"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sonicwall.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sonicwall:any-to-any-allow-rules-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "SonicWall — Permissive Any-to-Any Allow Firewall Rule Count"
+    description: "Count of IPv4 firewall rules allowing any source, any destination, any service from Firewall.AccessRulesIPv4[?SourceAddressAny==true && DestinationAddressAny==true && ServiceAny==true && Action=='allow'] | length(@). Should be 0."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sonicwall-inspector"
+      inspectorId: 7
+    liongardMetricName: "Sonicwall: Count of permissive any-to-any allow firewall rules"
+    liongardMetricId: 106925
+    liongardMetricUuid: "59156452-4fe4-410d-be59-0694f7b48648"
+    jmesPath: "Firewall.AccessRulesIPv4[?SourceAddressAny==true && DestinationAddressAny==true && ServiceAny==true && Action=='allow'] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "CIS-Controls-v8:12.2"
+      - "cyber-insurance-domain-network"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sonicwall.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sonicwall:wan-allow-rules-for-management-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "SonicWall — WAN Allow Rules Permitting Management Traffic Count"
+    description: "Count of WAN-inbound allow rules targeting management services. Internet-exposed admin interfaces significantly increase attack surface."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sonicwall-inspector"
+      inspectorId: 7
+    liongardMetricName: "Sonicwall: WAN allow rules permitting management-service traffic"
+    liongardMetricId: 106909
+    liongardMetricUuid: "0dc56fc8-343c-4b0e-83a6-850f7c0048f8"
+    jmesPath: "Firewall.AccessRulesIPv4[?From=='WAN' && Action=='allow' && ((ServiceName != null && contains(ServiceName, 'Management')) || ServiceAny==True)] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "CIS-Controls-v8:12.2"
+      - "cyber-insurance-domain-network"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sonicwall.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sonicwall:wan-to-lan-explicit-allow-any-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "SonicWall — Explicit Allow Any WAN-to-LAN Rules"
+    description: "Names of WAN→LAN allow rules with both source and destination set to ANY. These rules bypass the firewall perimeter entirely."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sonicwall-inspector"
+      inspectorId: 7
+    liongardMetricName: "Sonicwall: List of Explicit Allow Any WAN to LAN Rules"
+    liongardMetricId: 1135
+    liongardMetricUuid: "5a7da1f5-f15d-463f-8da3-cc362ae1ac0c"
+    jmesPath: "[Firewall.AccessRulesIPv4[?From == `WAN` && To == `LAN` && Action == `allow` && SourceAddressAny && DestinationAddressAny && Enable], Firewall.AccessRulesIPv6[?From == `WAN` && To == `LAN` && Action == `allow` && SourceAddressAny && DestinationAddressAny && Enable]][].Name"
+    resultType: "array"
+    compliantWhen: "result == []"
+    compliesWith:
+      - "CIS-Controls-v8:12.2"
+      - "cyber-insurance-domain-network"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sonicwall.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sonicwall:geo-ip-block-all-enabled"
+    "@type": "liongard:MetricPrimitive"
+    name: "SonicWall — Geo-IP Block All Inbound Connections Enabled"
+    description: "Whether Geo-IP block-all is active from CurrentConfig.geo_ip.block.connections.all. Without this, connections from high-risk IP ranges are accepted."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sonicwall-inspector"
+      inspectorId: 7
+    liongardMetricName: "Sonicwall: Geo-IP block all inbound connections enabled"
+    liongardMetricId: 106919
+    liongardMetricUuid: "6ca3f4a6-d868-4d17-8341-fc4b7eab9736"
+    jmesPath: "CurrentConfig.geo_ip.block.connections.all"
+    resultType: "boolean"
+    compliantWhen: "result == true"
+    compliesWith:
+      - "cyber-insurance-domain-network"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sonicwall.md"
+    dateAdded: "2026-05-26"
+
+# ── Licensing ─────────────────────────────────────────────────────────────────
+
+  - "@id": "metrics:sonicwall:licenses-expiring-30d-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "SonicWall — Licenses Expiring Within 30 Days Count"
+    description: "Count of security service licenses expiring in fewer than 30 days from length(Licenses.[?Expiration && time_until(Expiration, 'days') < 30])."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sonicwall-inspector"
+      inspectorId: 7
+    liongardMetricName: "Sonicwall: Licenses within 30 Days of Expiration Count"
+    liongardMetricId: 700
+    liongardMetricUuid: "aaf840d6-7c9a-467f-b0e1-df9d8a8e575c"
+    jmesPath: "length(Licenses.[?Expiration && time_until(Expiration, `days`) < `30`])"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sonicwall.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sonicwall:licenses-expiring-30d-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "SonicWall — Licenses Expiring Within 30 Days List"
+    description: "Pipe-joined list of security service names expiring within 30 days."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sonicwall-inspector"
+      inspectorId: 7
+    liongardMetricName: "Sonicwall: Licenses within 30 Days of Expiration List"
+    liongardMetricId: 699
+    liongardMetricUuid: "f6e8e9e7-0bde-40c3-8c7b-0b8d878caec1"
+    jmesPath: "join(' | ' ,Licenses[?Expiration && time_until(Expiration, `days`) < `30`].SecurityService)"
+    resultType: "string"
+    compliantWhen: "result == null || result == ''"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sonicwall.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sonicwall:agss-license-expiry"
+    "@type": "liongard:MetricPrimitive"
+    name: "SonicWall — AGSS License Expiration Date"
+    description: "Expiration date for the Advanced Gateway Security Suite (AGSS) subscription from Licenses[?Name=='AGSS'].ExpiryDate. AGSS covers AV, IPS, APP Control, and ATP."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sonicwall-inspector"
+      inspectorId: 7
+    liongardMetricName: "Sonicwall: Advanced Gateway Security Suite (AGSS) license expiration date"
+    liongardMetricId: 106974
+    liongardMetricUuid: "1bfc5ce3-7a62-4e4f-bb7b-fb38d4b46ed4"
+    jmesPath: "Licenses[?Name=='AGSS'].ExpiryDate"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sonicwall.md"
+    dateAdded: "2026-05-26"
+
+# ── Logging & Monitoring ──────────────────────────────────────────────────────
+
+  - "@id": "metrics:sonicwall:syslog-configured"
+    "@type": "liongard:MetricPrimitive"
+    name: "SonicWall — Syslog Server Forwarding Configured"
+    description: "Syslog forwarding configuration from CurrentConfig.log.syslog. Without a syslog server, logs cannot be retained in a SIEM or compliant storage."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sonicwall-inspector"
+      inspectorId: 7
+    liongardMetricName: "Sonicwall: Syslog server forwarding destination configured"
+    liongardMetricId: 106954
+    liongardMetricUuid: "9d65a0ae-617b-4e8c-91d6-f6e952c9a076"
+    jmesPath: "CurrentConfig.log.syslog"
+    resultType: "object"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sonicwall.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sonicwall:audit-logging-enabled"
+    "@type": "liongard:MetricPrimitive"
+    name: "SonicWall — Enhanced Audit Logging Enabled"
+    description: "Whether enhanced audit logging for configuration changes is active from System.Administration.EnhancedAuditLogging. Without this, config changes are not recorded."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sonicwall-inspector"
+      inspectorId: 7
+    liongardMetricName: "Sonicwall: Enhanced audit logging for configuration changes enabled"
+    liongardMetricId: 106950
+    liongardMetricUuid: "30693eda-59ce-4778-8567-d88dfe7d9828"
+    jmesPath: "System.Administration.EnhancedAuditLogging"
+    resultType: "boolean"
+    compliantWhen: "result == true"
+    compliesWith:
+      - "CIS-Controls-v8:8.2"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sonicwall.md"
+    dateAdded: "2026-05-26"

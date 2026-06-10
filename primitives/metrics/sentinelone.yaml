@@ -1,0 +1,334 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+# SentinelOne (Inspector ID 70)
+# Eval sweep 2026-05-28 findings:
+# Parent/child inspector — target child for EVALUATE. System validated here is a single-tenant
+#   view (child equivalent): has Users[], Agents[], Threats, SystemInfo, AgentsSummary, ThreatsSummary.
+# All 12 previously-PROPOSED paths upgraded to VALIDATED using active system (inspected 2026-03-19).
+# AgentsSummary and ThreatsSummary are pre-computed summary objects — use them for counts.
+# GOTCHA: AgentsSummary.decommissioned includes decommissioned agents still in the record (not just active).
+# GOTCHA: SystemInfo.expiration is a timestamp string — use SystemInfo.daysUntilExpiration (integer) for comparisons.
+# GOTCHA: Users[].twoFaEnabled is BOOLEAN — note spelling ('twoFa' not 'twoFA' or '2fa').
+# GOTCHA: Agents[].infected is BOOLEAN; Agents[].isActive is BOOLEAN; Agents[].isUpToDate is BOOLEAN.
+
+primitives:
+
+# ── License & Tenant ──────────────────────────────────────────────────────────
+
+  - "@id": "metrics:sentinelone:days-until-license-expiry"
+    "@type": "liongard:MetricPrimitive"
+    name: "SentinelOne — Days Until License Expiry"
+    description: "Number of days until the SentinelOne license expires, from SystemInfo.daysUntilExpiration."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sentinelone-inspector"
+      inspectorId: 70
+    liongardMetricName: "SentinelOne: Days Until License Expiry Count"
+    liongardMetricId: 1044
+    liongardMetricUuid: "74c81b68-9b41-4669-a142-c4a7b3132f43"
+    jmesPath: "SystemInfo.daysUntilExpiration"
+    resultType: "integer"
+    resultUnit: "days"
+    fieldGotcha: "SystemInfo confirmed fields: id (string), name (string), state (string), totalLicenses (integer), activeLicenses (integer), daysUntilExpiration (integer), healthStatus (boolean), unlimitedLicenses (boolean), unlimitedExpiration (boolean)."
+    compliantWhen: "result > slas.license_expiration_warn_days (default 30)"
+    compliesWith:
+      - "cyber-insurance-domain-endpoint"
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Active system (inspected 2026-03-19)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sentinelone.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sentinelone:total-licenses"
+    "@type": "liongard:MetricPrimitive"
+    name: "SentinelOne — Total Licenses"
+    description: "Total license seat count from SystemInfo.totalLicenses."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sentinelone-inspector"
+      inspectorId: 70
+    jmesPath: "SystemInfo.totalLicenses"
+    resultType: "integer"
+    resultUnit: "count"
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Active system (inspected 2026-03-19)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sentinelone.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sentinelone:active-licenses"
+    "@type": "liongard:MetricPrimitive"
+    name: "SentinelOne — Active Licenses"
+    description: "Count of currently active license seats from SystemInfo.activeLicenses."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sentinelone-inspector"
+      inspectorId: 70
+    jmesPath: "SystemInfo.activeLicenses"
+    resultType: "integer"
+    resultUnit: "count"
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Active system (inspected 2026-03-19)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sentinelone.md"
+    dateAdded: "2026-05-26"
+
+# ── Agent Health ──────────────────────────────────────────────────────────────
+
+  - "@id": "metrics:sentinelone:agents-total"
+    "@type": "liongard:MetricPrimitive"
+    name: "SentinelOne — Total Agents"
+    description: "Total agent count from AgentsSummary.total. Use as the denominator for coverage calculations."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sentinelone-inspector"
+      inspectorId: 70
+    jmesPath: "AgentsSummary.total"
+    resultType: "integer"
+    resultUnit: "count"
+    fieldGotcha: "AgentsSummary confirmed fields: total (integer), online (integer), infected (integer), upToDate (integer), outOfDate (integer), decommissioned (integer). All are pre-computed summary counts."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Active system (inspected 2026-03-19)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sentinelone.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sentinelone:agents-online"
+    "@type": "liongard:MetricPrimitive"
+    name: "SentinelOne — Agents Online"
+    description: "Count of agents currently online from AgentsSummary.online."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sentinelone-inspector"
+      inspectorId: 70
+    jmesPath: "AgentsSummary.online"
+    resultType: "integer"
+    resultUnit: "count"
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Active system (inspected 2026-03-19)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sentinelone.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sentinelone:agents-infected"
+    "@type": "liongard:MetricPrimitive"
+    name: "SentinelOne — Infected Agents"
+    description: "Count of agents with active infections from AgentsSummary.infected. Should be 0."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sentinelone-inspector"
+      inspectorId: 70
+    jmesPath: "AgentsSummary.infected"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "cyber-insurance-domain-endpoint"
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Active system (inspected 2026-03-19)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sentinelone.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sentinelone:agents-up-to-date"
+    "@type": "liongard:MetricPrimitive"
+    name: "SentinelOne — Agents Up-to-Date"
+    description: "Count of agents on the current agent version from AgentsSummary.upToDate."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sentinelone-inspector"
+      inspectorId: 70
+    jmesPath: "AgentsSummary.upToDate"
+    resultType: "integer"
+    resultUnit: "count"
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Active system (inspected 2026-03-19)"
+    compliesWith:
+      - "CIS-Controls-v8:7.4"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sentinelone.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sentinelone:agents-out-of-date-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "SentinelOne — Agents Out of Date Count"
+    description: "Count of SentinelOne agents not on the latest version from AgentsSummary.outOfDate."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sentinelone-inspector"
+      inspectorId: 70
+    jmesPath: "AgentsSummary.outOfDate"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result <= (totalAgents * 0.05)  # within 5% out-of-date tolerance"
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Active system (inspected 2026-03-19)"
+    compliesWith:
+      - "CIS-Controls-v8:7.4"
+      - "cyber-insurance-domain-endpoint"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sentinelone.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sentinelone:agents-decommissioned"
+    "@type": "liongard:MetricPrimitive"
+    name: "SentinelOne — Decommissioned Agents"
+    description: "Count of decommissioned agent records from AgentsSummary.decommissioned."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sentinelone-inspector"
+      inspectorId: 70
+    jmesPath: "AgentsSummary.decommissioned"
+    resultType: "integer"
+    resultUnit: "count"
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Active system (inspected 2026-03-19)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sentinelone.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sentinelone:infected-agents-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "SentinelOne — Infected Agents List"
+    description: "Joined site name + computer name strings for agents where infected == true."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sentinelone-inspector"
+      inspectorId: 70
+    liongardMetricName: "SentinelOne: Systems With Active Threats List"
+    liongardMetricId: 1043
+    liongardMetricUuid: "8a64c523-8cde-4936-bdec-f25a53253314"
+    jmesPath: "Agents[?infected==`true`].join(` `,[`Site Name: `, siteName, `, Computer Name: `, computerName])"
+    resultType: "array"
+    compliantWhen: "result == []"
+    compliesWith:
+      - "cyber-insurance-domain-endpoint"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "System A — dev environment"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sentinelone.md"
+    dateAdded: "2026-05-26"
+
+# ── Threat Summary ────────────────────────────────────────────────────────────
+
+  - "@id": "metrics:sentinelone:threats-total"
+    "@type": "liongard:MetricPrimitive"
+    name: "SentinelOne — Total Threats"
+    description: "Total threat count in the reporting period from ThreatsSummary.total."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sentinelone-inspector"
+      inspectorId: 70
+    jmesPath: "ThreatsSummary.total"
+    resultType: "integer"
+    resultUnit: "count"
+    fieldGotcha: "ThreatsSummary confirmed fields: total, resolved, inProgress, notResolved, notMitigated, maliciousNotResolved, suspiciousNotResolved, notMitigatedNotResolved, suspiciousNotMitigatedNotResolved — all integers."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Active system (inspected 2026-03-19)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sentinelone.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sentinelone:threats-unresolved"
+    "@type": "liongard:MetricPrimitive"
+    name: "SentinelOne — Unresolved Threats"
+    description: "Count of threats not yet resolved from ThreatsSummary.notResolved. Should be 0."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sentinelone-inspector"
+      inspectorId: 70
+    jmesPath: "ThreatsSummary.notResolved"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "cyber-insurance-domain-endpoint"
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Active system (inspected 2026-03-19)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sentinelone.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sentinelone:threats-malicious-unresolved"
+    "@type": "liongard:MetricPrimitive"
+    name: "SentinelOne — Malicious Unresolved Threats"
+    description: "Count of confirmed-malicious threats not yet resolved from ThreatsSummary.maliciousNotResolved. Critical — must be 0."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sentinelone-inspector"
+      inspectorId: 70
+    jmesPath: "ThreatsSummary.maliciousNotResolved"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "cyber-insurance-domain-endpoint"
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Active system (inspected 2026-03-19)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sentinelone.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sentinelone:threats-resolved"
+    "@type": "liongard:MetricPrimitive"
+    name: "SentinelOne — Resolved Threats"
+    description: "Count of resolved threats from ThreatsSummary.resolved."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sentinelone-inspector"
+      inspectorId: 70
+    jmesPath: "ThreatsSummary.resolved"
+    resultType: "integer"
+    resultUnit: "count"
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Active system (inspected 2026-03-19)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sentinelone.md"
+    dateAdded: "2026-05-26"
+
+# ── Console Users / Access ────────────────────────────────────────────────────
+
+  - "@id": "metrics:sentinelone:console-users-without-mfa-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "SentinelOne — Console Users Without MFA List"
+    description: "Email addresses of console users where twoFaEnabled == false."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sentinelone-inspector"
+      inspectorId: 70
+    liongardMetricName: "SentinelOne: Users Without MFA Enabled List"
+    liongardMetricId: 1041
+    liongardMetricUuid: "fceeec36-b6d8-496a-9eaf-21fb44147280"
+    jmesPath: "Users[?twoFaEnabled==`false`].email"
+    resultType: "array"
+    fieldGotcha: "Users[].twoFaEnabled is BOOLEAN — spelling is 'twoFaEnabled' (camelCase, not 'twoFAEnabled' or '2faEnabled'). Users[] confirmed fields: id, email, fullName, scope, source, lastLogin, dateJoined, firstLogin, lowestRole, twoFaEnabled, daysSinceLastLogin, daysUntilApiExpiration."
+    compliantWhen: "result == []"
+    compliesWith:
+      - "CIS-Controls-v8:6.3"
+      - "cyber-insurance-domain-auth"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "System A — dev environment"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sentinelone.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sentinelone:console-users-with-api-tokens-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "SentinelOne — Console Users With API Tokens List"
+    description: "Name:email joined strings for console users where apiToken != null. API tokens are attack surface — audit for service accounts."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sentinelone-inspector"
+      inspectorId: 70
+    liongardMetricName: "SentinelOne: Users With API Tokens List"
+    liongardMetricId: 1042
+    liongardMetricUuid: "e6bbfb47-96ff-4149-97b3-da325da585d7"
+    jmesPath: "Users[?apiToken!=`null`].join(`: `,[fullName, email])"
+    resultType: "array"
+    compliesWith:
+      - "CIS-Controls-v8:5.4"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "System A — dev environment"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sentinelone.md"
+    dateAdded: "2026-05-26"

@@ -1,0 +1,366 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+# Auvik inspector ID 62. Parent/Child pattern (parent holds Tenants[]; child holds device/network data).
+# Eval sweep 2026-05-28 findings:
+# Validated against active child system (Timeout status — last successful inspection data valid).
+# GOTCHA: ALL Auvik data is wrapped in Auvik API envelope: {id, type, links, attributes, relationships}.
+#   Field data is inside the 'attributes' sub-object — use Devices[].attributes.fieldName.
+# GOTCHA: Devices[].attributes.deviceType = string (e.g. 'unknown', 'virtualAppliance', 'switch').
+# GOTCHA: Devices[].attributes.onlineStatus = LOWERCASE string ('online', 'offline') — NOT 'Online'.
+# GOTCHA: Networks[].attributes.scanStatus = string (e.g. 'notAllowed', 'allowed').
+# GOTCHA: length(Tenants) — parent-only path; not available on child systems. Remains PROPOSED.
+# Validated: Devices(165), Alerts(81), Configurations(9), EntityAudits(1); Networks-notAllowed(38 of 72).
+
+primitives:
+
+  # ── VALIDATED — confirmed catalog metric names from recipe verification log ──
+
+  - "@id": "metrics:auvik-inspector:expired-device-service-coverage-status-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Auvik — Expired Device Service Coverage Status List"
+    description: "List of devices with expired service coverage status from DeviceWarranties"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "auvik-inspector"
+      inspectorId: 62
+    liongardMetricName: "Auvik: Expired Device Service Coverage Status List"
+    jmesPath: "DeviceWarranties[?attributes.serviceCoverageStatus == 'Expired']"
+    resultType: "array"
+    fieldGotcha: "DeviceWarranties[].attributes confirmed fields: deviceName (string), serviceCoverageStatus (string — 'Expired', 'Active', etc.), warrantyCoverageStatus (string), warrantyExpirationDate (string). Data is inside 'attributes' sub-object."
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/auvik.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:auvik-inspector:expired-device-service-coverage-status-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Auvik — Expired Device Service Coverage Status Count"
+    description: "Count of devices with expired service coverage status from DeviceWarranties"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "auvik-inspector"
+      inspectorId: 62
+    liongardMetricName: "Auvik: Expired Device Service Coverage Status Count"
+    jmesPath: "length(DeviceWarranties[?attributes.serviceCoverageStatus == 'Expired'])"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/auvik.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:auvik-inspector:expired-device-warranty-coverage-status-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Auvik — Expired Device Warranty Coverage Status List"
+    description: "List of devices with expired warranty coverage status from DeviceWarranties"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "auvik-inspector"
+      inspectorId: 62
+    liongardMetricName: "Auvik: Expired Device Warranty Coverage Status List"
+    jmesPath: "DeviceWarranties[?attributes.warrantyCoverageStatus == 'Expired']"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/auvik.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:auvik-inspector:expired-device-warranty-coverage-status-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Auvik — Expired Device Warranty Coverage Status Count"
+    description: "Count of devices with expired warranty coverage status from DeviceWarranties"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "auvik-inspector"
+      inspectorId: 62
+    liongardMetricName: "Auvik: Expired Device Warranty Coverage Status Count"
+    jmesPath: "length(DeviceWarranties[?attributes.warrantyCoverageStatus == 'Expired'])"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/auvik.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:auvik-inspector:unknown-device-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Auvik — Unknown Device Count"
+    description: "Count of devices Auvik has discovered but cannot identify by type"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "auvik-inspector"
+      inspectorId: 62
+    liongardMetricName: "Auvik: Unknown Device count"
+    jmesPath: "length(Devices[?attributes.deviceType == 'unknown'])"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/auvik.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:auvik-inspector:unknown-device-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Auvik — Unknown Device List"
+    description: "List of devices Auvik has discovered but cannot identify by type"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "auvik-inspector"
+      inspectorId: 62
+    liongardMetricName: "Auvik: Unknown Device List"
+    jmesPath: "Devices[?attributes.deviceType == 'unknown']"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/auvik.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:auvik-inspector:windows-7-workstations-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Auvik — Windows 7 Workstations List"
+    description: "List of Windows 7 workstations discovered by Auvik (EOL OS risk)"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "auvik-inspector"
+      inspectorId: 62
+    liongardMetricName: "Auvik: Windows 7 Workstations List"
+    jmesPath: "Devices[?contains(attributes.softwareVersion, 'Windows 7')]"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/auvik.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:auvik-inspector:windows-7-workstation-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Auvik — Windows 7 Workstation Count"
+    description: "Count of Windows 7 workstations discovered by Auvik (EOL OS risk)"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "auvik-inspector"
+      inspectorId: 62
+    liongardMetricName: "Auvik: Windows 7 Workstation Count"
+    jmesPath: "length(Devices[?contains(attributes.softwareVersion, 'Windows 7')])"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/auvik.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:auvik-inspector:known-interface-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "Auvik — Known Interface Summary"
+    description: "Summary of known network interfaces from Auvik interface inventory"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "auvik-inspector"
+      inspectorId: 62
+    liongardMetricName: "Auvik: Known Interface Summary"
+    jmesPath: "Interfaces[?attributes.interfaceType != 'unknown']"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/auvik.md"
+    dateAdded: "2026-05-26"
+
+  # ── VALIDATED catalog metrics with confirmed numeric IDs ─────────────────
+
+  - "@id": "metrics:auvik-inspector:network-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "Auvik — Network Summary"
+    description: "Network/VLAN summary for the Auvik tenant; child dataprint metric"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "auvik-inspector"
+      inspectorId: 62
+    liongardMetricName: "Auvik: Network Summary"
+    liongardMetricId: 620
+    liongardMetricUuid: "c6abc65c-c14f-417e-af58-3481fce0dd11"
+    jmesPath: "Networks[].attributes.{networkType: networkType, networkName: networkName, description: description, scanStatus: scanStatus, lastModified: lastModified}"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/auvik.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:auvik-inspector:device-ip-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "Auvik — Device IP Summary"
+    description: "Summary of device IP address assignments from Auvik device inventory; child dataprint metric"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "auvik-inspector"
+      inspectorId: 62
+    liongardMetricName: "Auvik: Device IP Summary"
+    liongardMetricId: 621
+    liongardMetricUuid: "b9a9e251-bf71-4dc5-a1ab-0ffa8a79d5e3"
+    jmesPath: "Devices[].attributes.{deviceName: deviceName, deviceType: deviceType, ipAddresses: ipAddresses}"
+    resultType: "array"
+    fieldGotcha: "Devices[].attributes confirmed fields: makeModel, deviceName, deviceType (string e.g. 'virtualAppliance', 'unknown'), vendorName, ipAddresses (array), onlineStatus (LOWERCASE string: 'online'/'offline'), firmwareVersion, softwareVersion, lastModified, lastSeenTime, serialNumber."
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/auvik.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:auvik-inspector:device-warranty-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "Auvik — Device Warranty Summary"
+    description: "Warranty and service coverage summary across all devices in the Auvik tenant; child dataprint metric"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "auvik-inspector"
+      inspectorId: 62
+    liongardMetricName: "Auvik: Device Warranty Summary"
+    liongardMetricId: 623
+    liongardMetricUuid: "f3403a47-d8c4-485a-8cac-3d22256add2c"
+    jmesPath: "DeviceWarranties[].attributes.{deviceName: deviceName, serviceCoverageStatus: serviceCoverageStatus, warrantyCoverageStatus: warrantyCoverageStatus, warrantyExpirationDate: warrantyExpirationDate}"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/auvik.md"
+    dateAdded: "2026-05-26"
+
+  # ── VALIDATED — direct JMESPath paths confirmed on active child system ──────
+
+  - "@id": "metrics:auvik-inspector:child-device-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Auvik — Device Count (Child)"
+    description: "Total number of devices discovered by Auvik in this tenant; child dataprint only"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "auvik-inspector"
+      inspectorId: 62
+    jmesPath: "length(Devices)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Active child system (last inspected 2026-03-13)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/auvik.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:auvik-inspector:child-alert-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Auvik — Active Alert Count (Child)"
+    description: "Total number of active alerts in this Auvik tenant; child dataprint only"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "auvik-inspector"
+      inspectorId: 62
+    jmesPath: "length(Alerts)"
+    resultType: "integer"
+    fieldGotcha: "Alerts[] uses Auvik API envelope format: {id, type, links, attributes, relationships}. Alert details are inside attributes."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Active child system (last inspected 2026-03-13)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/auvik.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:auvik-inspector:child-configuration-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Auvik — Configuration Backup Count (Child)"
+    description: "Total number of device configuration captures in this Auvik tenant; child dataprint only"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "auvik-inspector"
+      inspectorId: 62
+    jmesPath: "length(Configurations)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Active child system (last inspected 2026-03-13)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/auvik.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:auvik-inspector:child-entity-audit-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Auvik — Entity Audit Count (Child)"
+    description: "Total number of change audit events in this Auvik tenant; child dataprint only"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "auvik-inspector"
+      inspectorId: 62
+    jmesPath: "length(EntityAudits)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Active child system (last inspected 2026-03-13)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/auvik.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:auvik-inspector:scan-disabled-network-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Auvik — Scan-Disabled Network Count (Child)"
+    description: "Count of networks where scanStatus is notAllowed — scan permission not granted, device discovery blocked"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "auvik-inspector"
+      inspectorId: 62
+    jmesPath: "length(Networks[?attributes.scanStatus == 'notAllowed'])"
+    resultType: "integer"
+    fieldGotcha: "Networks[].attributes.scanStatus is a LOWERCASE string. Confirmed value: 'notAllowed'. Data is inside attributes sub-object."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Active child system (last inspected 2026-03-13)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/auvik.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:auvik-inspector:child-network-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Auvik — Network Count (Child)"
+    description: "Number of networks/VLANs defined in this Auvik tenant; child dataprint only"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "auvik-inspector"
+      inspectorId: 62
+    jmesPath: "length(Networks)"
+    resultType: "integer"
+    status: "SCHEMA_CONFIRMED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Active child system — Networks array confirmed in GET_OVERVIEW structure (Array(72)); length() not directly EVALUATE-tested"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/auvik.md"
+    dateAdded: "2026-05-26"
+
+  # ── PROPOSED — parent-only paths; no parent system available for validation ─
+
+  - "@id": "metrics:auvik-inspector:parent-tenant-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Auvik — Tenant Count (Parent)"
+    description: "Total number of Auvik tenants registered under this MSP account; parent dataprint only. DATA GAP on child systems."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "auvik-inspector"
+      inspectorId: 62
+    jmesPath: "length(Tenants)"
+    resultType: "integer"
+    fieldGotcha: "PARENT-ONLY: Tenants[] key does not exist on child/single-tenant systems. Only valid when evaluated against the MSP-level parent launchpoint. No parent system was available for validation on this instance."
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/auvik.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:auvik-inspector:parent-tenant-roster"
+    "@type": "liongard:MetricPrimitive"
+    name: "Auvik — Tenant Roster (Parent)"
+    description: "Full tenant list with type, ID, domain prefix, and tenant type; parent dataprint only. DATA GAP on child systems."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "auvik-inspector"
+      inspectorId: 62
+    jmesPath: "Tenants[].{type: type, id: id, domainPrefix: attributes.domainPrefix, tenantType: attributes.tenantType}"
+    resultType: "array"
+    fieldGotcha: "PARENT-ONLY: Tenants[] key does not exist on child systems. No parent system was available for validation."
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/auvik.md"
+    dateAdded: "2026-05-26"

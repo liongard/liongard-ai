@@ -1,0 +1,512 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+  - "@id": "metrics:n-able-n-central:list-of-windows-servers"
+    "@type": "liongard:MetricPrimitive"
+    name: "N-able N-central — List of Windows Servers"
+    description: "Returns the display names of all Windows Server devices managed by N-central"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "n-able-n-central-inspector"
+      inspectorId: 71
+    liongardMetricName: "SolarWinds N-central: List of Windows Servers"
+    liongardMetricId: 1477
+    liongardMetricUuid: "f60bdb27-d28b-4c5c-b6ab-4f6fc4a2dfbe"
+    jmesPath: "Devices[?Deviceclass == `Servers - Windows`].Longname"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/n-able-n-central.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:n-able-n-central:count-of-windows-servers"
+    "@type": "liongard:MetricPrimitive"
+    name: "N-able N-central — Count of Windows Servers"
+    description: "Total number of Windows Server devices managed by N-central"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "n-able-n-central-inspector"
+      inspectorId: 71
+    liongardMetricName: "SolarWinds N-central: Count of Windows Servers"
+    liongardMetricId: 1454
+    liongardMetricUuid: "d194a35d-3e6a-44bf-8f27-b51f3ef878c1"
+    jmesPath: "Devices[?Deviceclass == `Servers - Windows`] | length(@)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/n-able-n-central.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:n-able-n-central:list-of-workstations"
+    "@type": "liongard:MetricPrimitive"
+    name: "N-able N-central — List of Workstations"
+    description: "Returns the display names of all workstation devices managed by N-central"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "n-able-n-central-inspector"
+      inspectorId: 71
+    liongardMetricName: "SolarWinds N-central: List of Workstations"
+    liongardMetricId: 1437
+    liongardMetricUuid: "ca6b8457-066e-4c82-a8dc-5e7b5706572f"
+    jmesPath: "Devices[?contains(Deviceclass, `Workstation`)].Longname"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/n-able-n-central.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:n-able-n-central:count-of-workstations"
+    "@type": "liongard:MetricPrimitive"
+    name: "N-able N-central — Count of Workstations"
+    description: "Total number of workstation devices managed by N-central"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "n-able-n-central-inspector"
+      inspectorId: 71
+    liongardMetricName: "SolarWinds N-central: Count of Workstations"
+    liongardMetricId: 1470
+    liongardMetricUuid: "9765ba28-1616-408e-b17d-dba5a020bb84"
+    jmesPath: "Devices[?contains(Deviceclass, `Workstation`)] | length(@)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/n-able-n-central.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:n-able-n-central:list-of-esxi-servers"
+    "@type": "liongard:MetricPrimitive"
+    name: "N-able N-central — List of ESXi Servers"
+    description: "Returns the display names of all ESXi Server devices managed by N-central"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "n-able-n-central-inspector"
+      inspectorId: 71
+    liongardMetricName: "SolarWinds N-central: List of ESXi Servers"
+    liongardMetricId: 1436
+    liongardMetricUuid: "9fff0c45-76e3-430f-a64a-c41ca9490998"
+    jmesPath: "Devices[?Deviceclass == `Server - ESXi`].Longname"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/n-able-n-central.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:n-able-n-central:count-of-esxi-servers"
+    "@type": "liongard:MetricPrimitive"
+    name: "N-able N-central — Count of ESXi Servers"
+    description: "Total number of ESXi Server devices managed by N-central"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "n-able-n-central-inspector"
+      inspectorId: 71
+    liongardMetricName: "SolarWinds N-central: Count of ESXi Servers"
+    liongardMetricId: 1432
+    liongardMetricUuid: "6be19034-2777-46fc-a017-0abd56b61937"
+    jmesPath: "Devices[?Deviceclass == `Server - ESXi`] | length(@)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/n-able-n-central.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:n-able-n-central:list-of-windows-laptops"
+    "@type": "liongard:MetricPrimitive"
+    name: "N-able N-central — List of Windows Laptop Devices"
+    description: "Returns the display names of all Windows Laptop devices managed by N-central"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "n-able-n-central-inspector"
+      inspectorId: 71
+    liongardMetricName: "SolarWinds N-central: List of Windows Laptop Devices"
+    liongardMetricId: 1440
+    liongardMetricUuid: "04e1a0dc-3c79-4c8d-b514-18472e5bb11f"
+    jmesPath: "Devices[?Deviceclass == `Laptop - Windows`].Longname"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/n-able-n-central.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:n-able-n-central:count-of-windows-laptops"
+    "@type": "liongard:MetricPrimitive"
+    name: "N-able N-central — Count of Windows Laptop Devices"
+    description: "Total number of Windows Laptop devices managed by N-central"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "n-able-n-central-inspector"
+      inspectorId: 71
+    liongardMetricName: "SolarWinds N-central: Count of Windows Laptop Devices"
+    liongardMetricId: 1450
+    liongardMetricUuid: "2d1f2d96-0234-47a5-b810-1d307de46b1c"
+    jmesPath: "Devices[?Deviceclass == `Laptop - Windows`] | length(@)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/n-able-n-central.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:n-able-n-central:list-of-printers"
+    "@type": "liongard:MetricPrimitive"
+    name: "N-able N-central — List of Printer Devices"
+    description: "Returns the display names of all Printer devices managed by N-central"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "n-able-n-central-inspector"
+      inspectorId: 71
+    liongardMetricName: "SolarWinds N-central: List of Printer Devices"
+    liongardMetricId: 1476
+    liongardMetricUuid: "c288aa0b-9493-4792-b53f-b135e985a921"
+    jmesPath: "Devices[?Deviceclass == `Printer`].Longname"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/n-able-n-central.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:n-able-n-central:count-of-printers"
+    "@type": "liongard:MetricPrimitive"
+    name: "N-able N-central — Count of Printer Devices"
+    description: "Total number of Printer devices managed by N-central"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "n-able-n-central-inspector"
+      inspectorId: 71
+    liongardMetricName: "SolarWinds N-central: Count of Printer Devices"
+    liongardMetricId: 1466
+    liongardMetricUuid: "02de9e55-6dde-4a1b-93e9-7e4328ea35d5"
+    jmesPath: "Devices[?Deviceclass == `Printer`] | length(@)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/n-able-n-central.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:n-able-n-central:list-of-switch-router-devices"
+    "@type": "liongard:MetricPrimitive"
+    name: "N-able N-central — List of Switch/Router Devices"
+    description: "Returns the display names of all Switch/Router devices managed by N-central"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "n-able-n-central-inspector"
+      inspectorId: 71
+    liongardMetricName: "SolarWinds N-central: List of Switch/Router Devices"
+    jmesPath: "Devices[?Deviceclass == `Switch/Router`].Longname"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/n-able-n-central.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:n-able-n-central:count-of-switch-router-devices"
+    "@type": "liongard:MetricPrimitive"
+    name: "N-able N-central — Count of Switch/Router Devices"
+    description: "Total number of Switch/Router devices managed by N-central"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "n-able-n-central-inspector"
+      inspectorId: 71
+    liongardMetricName: "SolarWinds N-central: Count of Switch/Router Devices"
+    liongardMetricId: 1474
+    liongardMetricUuid: "9b9f789d-f43a-4231-8692-5df7801d1333"
+    jmesPath: "Devices[?Deviceclass == `Switch/Router`] | length(@)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/n-able-n-central.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:n-able-n-central:list-of-storage-devices"
+    "@type": "liongard:MetricPrimitive"
+    name: "N-able N-central — List of Storage Devices"
+    description: "Returns the display names of all Storage devices managed by N-central"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "n-able-n-central-inspector"
+      inspectorId: 71
+    liongardMetricName: "SolarWinds N-central: List of Storage Devices"
+    liongardMetricId: 1473
+    liongardMetricUuid: "3e88633b-31a7-4752-a80d-4ce49f7cf3c6"
+    jmesPath: "Devices[?Deviceclass == `Storage`].Longname"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/n-able-n-central.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:n-able-n-central:count-of-storage-devices"
+    "@type": "liongard:MetricPrimitive"
+    name: "N-able N-central — Count of Storage Devices"
+    description: "Total number of Storage devices managed by N-central"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "n-able-n-central-inspector"
+      inspectorId: 71
+    liongardMetricName: "SolarWinds N-central: Count of Storage Devices"
+    liongardMetricId: 1446
+    liongardMetricUuid: "b6a45ac2-4d0e-4059-83c5-2d4ebcfd2512"
+    jmesPath: "Devices[?Deviceclass == `Storage`] | length(@)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/n-able-n-central.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:n-able-n-central:list-of-devices-failed-state"
+    "@type": "liongard:MetricPrimitive"
+    name: "N-able N-central — List of Devices in a Failed State"
+    description: "Returns the display names of all N-central-managed devices currently in Failed state"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "n-able-n-central-inspector"
+      inspectorId: 71
+    liongardMetricName: "SolarWinds N-central: List of Devices in a Failed State"
+    liongardMetricId: 1426
+    liongardMetricUuid: "4c5fac34-f7a0-4036-a40d-d21eb7a59cd6"
+    jmesPath: "Devices[?Statestatus == `Failed`].Longname"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/n-able-n-central.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:n-able-n-central:count-of-devices-failed-state"
+    "@type": "liongard:MetricPrimitive"
+    name: "N-able N-central — Count of Devices in a Failed State"
+    description: "Total number of N-central-managed devices currently in Failed state"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "n-able-n-central-inspector"
+      inspectorId: 71
+    liongardMetricName: "SolarWinds N-central: Count of Devices in a Failed State"
+    jmesPath: "Devices[?Statestatus == `Failed`] | length(@)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/n-able-n-central.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:n-able-n-central:list-of-devices-warning-state"
+    "@type": "liongard:MetricPrimitive"
+    name: "N-able N-central — List of Devices in a Warning State"
+    description: "Returns the display names of all N-central-managed devices currently in Warning state"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "n-able-n-central-inspector"
+      inspectorId: 71
+    liongardMetricName: "SolarWinds N-central: List of Devices in a Warning State"
+    liongardMetricId: 1460
+    liongardMetricUuid: "74b3d8b8-7bcb-482d-a0c5-56ac417ac645"
+    jmesPath: "Devices[?Statestatus == `Warning`].Longname"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/n-able-n-central.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:n-able-n-central:count-of-devices-warning-state"
+    "@type": "liongard:MetricPrimitive"
+    name: "N-able N-central — Count of Devices in a Warning State"
+    description: "Total number of N-central-managed devices currently in Warning state"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "n-able-n-central-inspector"
+      inspectorId: 71
+    liongardMetricName: "SolarWinds N-central: Count of Devices in a Warning State"
+    liongardMetricId: 1425
+    liongardMetricUuid: "8b5b3189-8a79-42f5-b1fe-8e9d28f8000e"
+    jmesPath: "Devices[?Statestatus == `Warning`] | length(@)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/n-able-n-central.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:n-able-n-central:list-of-devices-stale-state"
+    "@type": "liongard:MetricPrimitive"
+    name: "N-able N-central — List of Devices in a Stale State"
+    description: "Returns the display names of all N-central-managed devices currently in Stale state"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "n-able-n-central-inspector"
+      inspectorId: 71
+    liongardMetricName: "SolarWinds N-central: List of Devices in a Stale State"
+    liongardMetricId: 1424
+    liongardMetricUuid: "fed48852-0010-4d94-b2be-c1384b55cace"
+    jmesPath: "Devices[?Statestatus == `Stale`].Longname"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/n-able-n-central.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:n-able-n-central:count-of-devices-stale-state"
+    "@type": "liongard:MetricPrimitive"
+    name: "N-able N-central — Count of Devices in a Stale State"
+    description: "Total number of N-central-managed devices currently in Stale state"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "n-able-n-central-inspector"
+      inspectorId: 71
+    liongardMetricName: "SolarWinds N-central: Count of Devices in a Stale State"
+    liongardMetricId: 1423
+    liongardMetricUuid: "71ee8492-d579-41ba-9b74-4ce4653248a2"
+    jmesPath: "Devices[?Statestatus == `Stale`] | length(@)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/n-able-n-central.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:n-able-n-central:list-of-failed-jobs"
+    "@type": "liongard:MetricPrimitive"
+    name: "N-able N-central — List of Failed Jobs"
+    description: "Returns the job names of all jobs currently in Failed status in N-central"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "n-able-n-central-inspector"
+      inspectorId: 71
+    liongardMetricName: "SolarWinds N-central: List of Failed Jobs"
+    liongardMetricId: 1465
+    liongardMetricUuid: "58f497a1-33e9-465b-9871-3ab2464b145f"
+    jmesPath: "Jobs[?Status ==`Failed`].Jobname"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/n-able-n-central.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:n-able-n-central:count-of-failed-jobs"
+    "@type": "liongard:MetricPrimitive"
+    name: "N-able N-central — Count of Failed Jobs"
+    description: "Total number of jobs currently in Failed status in N-central"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "n-able-n-central-inspector"
+      inspectorId: 71
+    liongardMetricName: "SolarWinds N-central: Count of Failed Jobs"
+    liongardMetricId: 1441
+    liongardMetricUuid: "00ab04ab-22e2-4075-b0c5-7102ea82f669"
+    jmesPath: "Jobs[?Status ==`Failed`] | length(@)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/n-able-n-central.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:n-able-n-central:list-of-devices-added-last-30-days"
+    "@type": "liongard:MetricPrimitive"
+    name: "N-able N-central — List of Devices Added in the Last 30 Days"
+    description: "Returns the display names of all N-central-managed devices added within the past 30 days"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "n-able-n-central-inspector"
+      inspectorId: 71
+    liongardMetricName: "SolarWinds N-central: List of Devices added in the last 30 Days"
+    liongardMetricId: 1445
+    liongardMetricUuid: "27ea237b-ceb3-45bc-b88f-3e186ea6c24c"
+    jmesPath: "Devices[?DaysSinceCreated_r < `30`].Longname"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/n-able-n-central.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:n-able-n-central:count-of-devices-added-last-30-days"
+    "@type": "liongard:MetricPrimitive"
+    name: "N-able N-central — Count of Devices Added in the Last 30 Days"
+    description: "Total number of N-central-managed devices added within the past 30 days"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "n-able-n-central-inspector"
+      inspectorId: 71
+    liongardMetricName: "SolarWinds N-central: Count of Devices added in the last 30 Days"
+    liongardMetricId: 1472
+    liongardMetricUuid: "16f2062e-5d2c-45d2-bffe-99f75148f9be"
+    jmesPath: "Devices[?DaysSinceCreated_r < `30`] | length(@)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/n-able-n-central.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:n-able-n-central:device-details-powerbi"
+    "@type": "liongard:MetricPrimitive"
+    name: "N-able N-central — Device Details"
+    description: "Returns name, URI, supported OS, and connection status for all N-central-managed devices"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "n-able-n-central-inspector"
+      inspectorId: 71
+    liongardMetricName: "N-able N-central: Device Details [PowerBI]"
+    liongardMetricId: 1828
+    liongardMetricUuid: "ca8cde39-91d3-4fc7-b1da-803b32d2174f"
+    jmesPath: "Devices[].[Longname, Uri, Supportedos, Details.Isconnected]"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/n-able-n-central.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:n-able-n-central:device-list-powerbi"
+    "@type": "liongard:MetricPrimitive"
+    name: "N-able N-central — Device List"
+    description: "Returns the Longname of all N-central-managed devices"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "n-able-n-central-inspector"
+      inspectorId: 71
+    liongardMetricName: "N-able N-central: Device List [Power BI]"
+    liongardMetricId: 1827
+    liongardMetricUuid: "8a6d9325-2f5b-4827-a341-df8bac4297da"
+    jmesPath: "Devices[].Longname"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/n-able-n-central.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:n-able-n-central:device-info-with-last-user"
+    "@type": "liongard:MetricPrimitive"
+    name: "N-able N-central — Device Information with Last User"
+    description: "Returns device name and last logged-in user for all N-central-managed devices"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "n-able-n-central-inspector"
+      inspectorId: 71
+    liongardMetricName: "N-able N-Central: Device Information with Last User [Power BI]"
+    liongardMetricId: 1829
+    liongardMetricUuid: "cebf2213-09c7-4f2c-9ee4-a770bfb414e6"
+    jmesPath: "[Devices[].join( `, `, [join(`: `, [`Device Name`, to_string(Longname)]),join(`: `, [`Last User`, to_string(Lastloggedinuser)])])]"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/n-able-n-central.md"
+    dateAdded: "2026-05-26"

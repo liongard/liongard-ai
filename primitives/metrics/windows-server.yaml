@@ -1,0 +1,530 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+  - '@id': metrics:windows-server:hostname
+    '@type': liongard:MetricPrimitive
+    name: Windows Server — Hostname
+    description: DNS hostname of the server from NetConfig[0].DNSHostName.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: windows-server-inspector
+      inspectorId: 25
+    liongardMetricName: 'Windows Server: Host Name'
+    liongardMetricId: 79800
+    liongardMetricUuid: "eb89ccc4-d29c-47c8-8ab9-2d8cd58b3ba9"
+    jmesPath: NetConfig[0].DNSHostName
+    resultType: string
+    status: VALIDATED
+    validatedOn: '2026-05-26'
+    validatedSystemReference: Liongard Global metric catalog
+    sourceRecipe: recipes/single-system-analysis/by-inspector/windows-server.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:windows-server:os-name
+    '@type': liongard:MetricPrimitive
+    name: Windows Server — Operating System Name
+    description: Full OS name string from OS.OperatingSystemName (e.g. 'Windows Server
+      2019 Standard').
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: windows-server-inspector
+      inspectorId: 25
+    liongardMetricName: 'Windows Server: Operating System'
+    liongardMetricId: 2160
+    liongardMetricUuid: "c709d4a1-e490-4215-8f23-a233b8e69b7a"
+    jmesPath: OS.OperatingSystemName
+    resultType: string
+    status: VALIDATED
+    validatedOn: '2026-05-26'
+    validatedSystemReference: Liongard Global metric catalog
+    sourceRecipe: recipes/single-system-analysis/by-inspector/windows-server.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:windows-server:days-since-last-reboot
+    '@type': liongard:MetricPrimitive
+    name: Windows Server — Days Since Last Reboot
+    description: Number of days since the server was last rebooted from SystemInfo.DaysSinceLastReboot.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: windows-server-inspector
+      inspectorId: 25
+    liongardMetricName: 'Windows Server: Days Since Last Reboot Count'
+    liongardMetricId: 1239
+    liongardMetricUuid: "1943f878-9c8f-4800-964d-73521793f813"
+    jmesPath: SystemInfo.DaysSinceLastReboot
+    resultType: integer
+    resultUnit: days
+    compliantWhen: result <= slas.max_days_since_reboot (default 30)
+    compliesWith:
+    - cyber-insurance-domain-endpoint
+    status: VALIDATED
+    validatedOn: '2026-05-26'
+    validatedSystemReference: Liongard Global metric catalog
+    sourceRecipe: recipes/single-system-analysis/by-inspector/windows-server.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:windows-server:installed-roles-list
+    '@type': liongard:MetricPrimitive
+    name: Windows Server — Installed Roles List
+    description: Comma-joined string of installed Windows Server roles from Roles[?Installed].Name.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: windows-server-inspector
+      inspectorId: 25
+    liongardMetricName: 'Windows: Installed Roles List'
+    liongardMetricId: 203
+    liongardMetricUuid: "2e2db9a4-c6b3-448d-af29-66afef5e27dd"
+    jmesPath: Roles[?Installed].Name | join(', ' @)
+    resultType: string
+    status: VALIDATED
+    validatedOn: '2026-05-26'
+    validatedSystemReference: Liongard Global metric catalog
+    sourceRecipe: recipes/single-system-analysis/by-inspector/windows-server.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:windows-server:file-share-count
+    '@type': liongard:MetricPrimitive
+    name: Windows Server — File Share Count
+    description: Total number of file shares configured on the server from length(Shares).
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: windows-server-inspector
+      inspectorId: 25
+    liongardMetricName: 'Windows Server: File Share Count'
+    liongardMetricId: 26
+    liongardMetricUuid: "d293f608-f10c-4fe0-b4e2-70195794ab7a"
+    jmesPath: length(Shares)
+    resultType: integer
+    resultUnit: count
+    status: VALIDATED
+    validatedOn: '2026-05-26'
+    validatedSystemReference: Liongard Global metric catalog
+    sourceRecipe: recipes/single-system-analysis/by-inspector/windows-server.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:windows-server:domain-firewall-enabled
+    '@type': liongard:MetricPrimitive
+    name: Windows Server — Domain Firewall Enabled
+    description: Whether the Windows Firewall Domain profile is enabled. Boolean from
+      Network.FirewallInfo.Domain.Enabled. Correct top-level path is Firewall.Domain
+      (bool). Network.FirewallInfo.Domain.Enabled returns null.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: windows-server-inspector
+      inspectorId: 25
+    liongardMetricName: 'Windows Server: Domain Firewall Enabled'
+    liongardMetricId: 2087
+    liongardMetricUuid: "39d7c9f6-5a2d-4dd2-87d6-bf7fa84b3713"
+    jmesPath: Firewall.Domain
+    resultType: boolean
+    compliantWhen: result == true
+    compliesWith:
+    - CIS-Controls-v8:4.5
+    - cyber-insurance-domain-endpoint
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: System E — Windows Server 2025, Completed 2026-05-18
+    fieldGotcha: Windows Server firewall path is Network.FirewallInfo.Domain.Enabled
+      (nested under Network). Windows Workstation uses Firewall.Domain (top-level).
+      Do not swap these between inspector types.
+    sourceRecipe: recipes/single-system-analysis/by-inspector/windows-server.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:windows-server:private-firewall-enabled
+    '@type': liongard:MetricPrimitive
+    name: Windows Server — Private Firewall Enabled
+    description: Whether the Windows Firewall Private profile is enabled from Network.FirewallInfo.Private.Enabled.
+      Correct path is Firewall.Private. Network.FirewallInfo.Private.Enabled returns
+      null.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: windows-server-inspector
+      inspectorId: 25
+    liongardMetricName: 'Windows Server: Private Firewall Enabled'
+    liongardMetricId: 2088
+    liongardMetricUuid: "2b7878b6-cc73-4729-9923-c90ea5b4ce45"
+    jmesPath: Firewall.Private
+    resultType: boolean
+    compliantWhen: result == true
+    compliesWith:
+    - CIS-Controls-v8:4.5
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: System E — Windows Server 2025, Completed 2026-05-18
+    sourceRecipe: recipes/single-system-analysis/by-inspector/windows-server.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:windows-server:public-firewall-enabled
+    '@type': liongard:MetricPrimitive
+    name: Windows Server — Public Firewall Enabled
+    description: Whether the Windows Firewall Public profile is enabled from Network.FirewallInfo.Public.Enabled.
+      Correct path is Firewall.Public. Network.FirewallInfo.Public.Enabled returns null.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: windows-server-inspector
+      inspectorId: 25
+    liongardMetricName: 'Windows Server: Public Firewall Enabled'
+    liongardMetricId: 2089
+    liongardMetricUuid: "1e059d03-7804-44cd-8b61-0bc47a703662"
+    jmesPath: Firewall.Public
+    resultType: boolean
+    compliantWhen: result == true
+    compliesWith:
+    - CIS-Controls-v8:4.5
+    - cyber-insurance-domain-endpoint
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: System E — Windows Server 2025, Completed 2026-05-18
+    sourceRecipe: recipes/single-system-analysis/by-inspector/windows-server.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:windows-server:antivirus-list
+    '@type': liongard:MetricPrimitive
+    name: Windows Server — Antivirus Software List
+    description: Names of antivirus products installed on the server from AntivirusSoftware[].Name.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: windows-server-inspector
+      inspectorId: 25
+    liongardMetricName: 'Windows Server: Antivirus on System'
+    liongardMetricId: 1964
+    liongardMetricUuid: "55552e84-1131-4ee2-9fcc-612efff71212"
+    jmesPath: AntivirusSoftware[].Name
+    resultType: array
+    compliantWhen: result != []
+    compliesWith:
+    - CIS-Controls-v8:10.1
+    - cyber-insurance-domain-endpoint
+    status: VALIDATED
+    validatedOn: '2026-05-26'
+    validatedSystemReference: Liongard Global metric catalog
+    fieldGotcha: Windows Server exposes AV via AntivirusSoftware[].Name. Windows Workstation
+      exposes AV via AVs[].Name. These are different top-level keys — do not swap between
+      inspector types.
+    sourceRecipe: recipes/single-system-analysis/by-inspector/windows-server.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:windows-server:edr-list
+    '@type': liongard:MetricPrimitive
+    name: Windows Server — EDR Software List
+    description: Names of Endpoint Detection & Response products installed on the server
+      from EDR[].Name.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: windows-server-inspector
+      inspectorId: 25
+    liongardMetricName: 'Windows Server: Endpoint Detection on System'
+    liongardMetricId: 67997
+    liongardMetricUuid: "96d7f32d-c5de-4ad7-b303-05b5822a1b31"
+    jmesPath: EDR[].Name
+    resultType: array
+    compliantWhen: result != []
+    compliesWith:
+    - CIS-Controls-v8:13.7
+    - cyber-insurance-domain-endpoint
+    status: VALIDATED
+    validatedOn: '2026-05-26'
+    validatedSystemReference: Liongard Global metric catalog
+    sourceRecipe: recipes/single-system-analysis/by-inspector/windows-server.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:windows-server:dns-filters-list
+    '@type': liongard:MetricPrimitive
+    name: Windows Server — DNS Filter Software List
+    description: Names of DNS filtering products (Zscaler, Cloudflare WARP, Umbrella,
+      NordLayer, DNSFilter) detected in installed software.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: windows-server-inspector
+      inspectorId: 25
+    liongardMetricName: 'Windows Server: DNS Filters Installed'
+    liongardMetricId: 2098
+    liongardMetricUuid: "fbf6ff20-e9de-4533-bcf6-a6d627f1ebca"
+    jmesPath: Software[?contains(Name, `Zscaler`) || contains(Name, `Cloudflare WARP`)
+      || contains(Name, `Umbrella Roaming Client`) || contains(Name, `Nordlayer`) ||
+      contains(Name, `DNSFilter Agent`)].Name
+    resultType: array
+    status: VALIDATED
+    validatedOn: '2026-05-26'
+    validatedSystemReference: Liongard Global metric catalog
+    sourceRecipe: recipes/single-system-analysis/by-inspector/windows-server.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:windows-server:all-drives-encrypted
+    '@type': liongard:MetricPrimitive
+    name: Windows Server — All Fixed Drives Encrypted
+    description: True if all Fixed drives have BitlockerStatus == 'Fully Encrypted'.
+      Compares encrypted count to total fixed count.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: windows-server-inspector
+      inspectorId: 25
+    liongardMetricName: 'Windows Server: All Drives Encrypted'
+    liongardMetricId: 2093
+    liongardMetricUuid: "615bffdd-9b36-4368-a3d0-25a49cef7b02"
+    jmesPath: length(Drives[?Type == 'Fixed' && BitlockerStatus == 'Fully Encrypted'])
+      == length(Drives[?Type == 'Fixed'])
+    resultType: boolean
+    compliantWhen: result == true
+    compliesWith:
+    - CIS-Controls-v8:3.6
+    - cyber-insurance-domain-endpoint
+    status: VALIDATED
+    validatedOn: '2026-05-26'
+    validatedSystemReference: Liongard Global metric catalog
+    sourceRecipe: recipes/single-system-analysis/by-inspector/windows-server.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:windows-server:all-drives-encrypted-protected
+    '@type': liongard:MetricPrimitive
+    name: Windows Server — All Fixed Drives Encrypted and Protected
+    description: True if all Fixed drives are Fully Encrypted AND ProtectionStatus ==
+      'Protected'. Stricter than all-drives-encrypted — prefer for cyber insurance evidence.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: windows-server-inspector
+      inspectorId: 25
+    liongardMetricName: 'Windows Server: All Drives Encrypted and Protected'
+    liongardMetricId: 82406
+    liongardMetricUuid: "3944dd17-911c-4e4c-bbfa-fd70193855d6"
+    jmesPath: length(Drives[?Type == 'Fixed' && BitlockerStatus == 'Fully Encrypted'
+      && ProtectionStatus == 'Protected']) == length(Drives[?Type == 'Fixed'])
+    resultType: boolean
+    compliantWhen: result == true
+    compliesWith:
+    - CIS-Controls-v8:3.6
+    - cyber-insurance-domain-endpoint
+    status: VALIDATED
+    validatedOn: '2026-05-26'
+    validatedSystemReference: Liongard Global metric catalog
+    sourceRecipe: recipes/single-system-analysis/by-inspector/windows-server.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:windows-server:drives-bitlocker-status
+    '@type': liongard:MetricPrimitive
+    name: Windows Server — Drives BitLocker Status List
+    description: 'Array of BitLocker status strings per drive from Drives[].BitlockerStatus.
+      Typical values: ''Fully Encrypted'', ''Fully Decrypted'', ''Encryption In Progress''.'
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: windows-server-inspector
+      inspectorId: 25
+    liongardMetricName: 'Windows Server: Bitlocker Status'
+    liongardMetricId: 2069
+    liongardMetricUuid: "61820c0f-8163-4e8e-9731-da2a2285c459"
+    jmesPath: Drives[].BitlockerStatus
+    resultType: array
+    status: VALIDATED
+    validatedOn: '2026-05-26'
+    validatedSystemReference: Liongard Global metric catalog
+    sourceRecipe: recipes/single-system-analysis/by-inspector/windows-server.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:windows-server:failed-patches-count
+    '@type': liongard:MetricPrimitive
+    name: Windows Server — Failed Patches Count
+    description: Count of patches with Status == 'Failed' from InstalledUpdates[]. Should
+      be 0.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: windows-server-inspector
+      inspectorId: 25
+    liongardMetricName: 'Windows: Failed Patches Count'
+    liongardMetricId: 1637
+    liongardMetricUuid: "a86b9bef-8b1d-4d9a-8cde-b346feee8a58"
+    jmesPath: InstalledUpdates[?Status == 'Failed'].Name | length(@)
+    resultType: integer
+    resultUnit: count
+    compliantWhen: result == 0
+    compliesWith:
+    - CIS-Controls-v8:7.3
+    status: VALIDATED
+    validatedOn: '2026-05-26'
+    validatedSystemReference: Liongard Global metric catalog
+    sourceRecipe: recipes/single-system-analysis/by-inspector/windows-server.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:windows-server:failed-patches-list
+    '@type': liongard:MetricPrimitive
+    name: Windows Server — Failed Patches List
+    description: Names of patches with Status == 'Failed' from InstalledUpdates[]. Should
+      be empty.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: windows-server-inspector
+      inspectorId: 25
+    liongardMetricName: 'Windows: Failed Patches List'
+    liongardMetricId: 1636
+    liongardMetricUuid: "e32c3ccb-eb50-4660-8721-280e008333a5"
+    jmesPath: InstalledUpdates[?Status == 'Failed'].Name
+    resultType: array
+    compliantWhen: result == []
+    compliesWith:
+    - CIS-Controls-v8:7.3
+    status: VALIDATED
+    validatedOn: '2026-05-26'
+    validatedSystemReference: Liongard Global metric catalog
+    sourceRecipe: recipes/single-system-analysis/by-inspector/windows-server.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:windows-server:available-updates-count
+    '@type': liongard:MetricPrimitive
+    name: Windows Server — Available Updates Count
+    description: Count of pending (not yet installed) Windows updates from AvailableUpdates[].
+      No Liongard Global metric exists for this path on Windows Server — PROPOSED pending
+      ROAR ticket.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: windows-server-inspector
+      inspectorId: 25
+    jmesPath: length(AvailableUpdates)
+    resultType: integer
+    resultUnit: count
+    compliantWhen: result == 0
+    compliesWith:
+    - CIS-Controls-v8:7.3
+    status: VALIDATED
+    sourceRecipe: recipes/single-system-analysis/by-inspector/windows-server.md
+    dateAdded: '2026-05-26'
+    validatedOn: '2026-05-28'
+    validatedSystemReference: System E — Windows Server 2025, Completed 2026-05-18
+
+  - '@id': metrics:windows-server:mandatory-updates-count
+    '@type': liongard:MetricPrimitive
+    name: Windows Server — Mandatory Updates Pending Count
+    description: Count of pending updates where IsMandatory == true. No Liongard Global
+      metric for Windows Server (Windows Workstation inspector has Global metric id=1574
+      for this path). IsMandatory is a boolean field in AvailableUpdates[].
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: windows-server-inspector
+      inspectorId: 25
+    jmesPath: AvailableUpdates[?IsMandatory] | length(@)
+    resultType: integer
+    resultUnit: count
+    compliantWhen: result == 0
+    compliesWith:
+    - CIS-Controls-v8:7.3
+    - cyber-insurance-domain-endpoint
+    status: VALIDATED
+    validatedOn: '2026-05-29'
+    validatedSystemReference: "System A (inspected 2026-05-18) — AvailableUpdates[0].IsMandatory\
+      \ confirmed as boolean (value: false); filter evaluates correctly, returns integer\
+      \ 0"
+    sourceRecipe: recipes/single-system-analysis/by-inspector/windows-server.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:windows-server:critical-updates-count
+    '@type': liongard:MetricPrimitive
+    name: Windows Server — Critical Pending Updates Count
+    description: Count of pending updates with MsrcSeverity == 'Critical'. No Liongard
+      Global metric exists — PROPOSED.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: windows-server-inspector
+      inspectorId: 25
+    jmesPath: length(AvailableUpdates[?MsrcSeverity == 'Critical'])
+    resultType: integer
+    resultUnit: count
+    compliantWhen: result == 0
+    compliesWith:
+    - CIS-Controls-v8:7.3
+    - cyber-insurance-domain-endpoint
+    status: VALIDATED
+    sourceRecipe: recipes/single-system-analysis/by-inspector/windows-server.md
+    dateAdded: '2026-05-26'
+    validatedOn: '2026-05-28'
+    validatedSystemReference: System E — Windows Server 2025, Completed 2026-05-18
+
+  - '@id': metrics:windows-server:local-admin-list
+    '@type': liongard:MetricPrimitive
+    name: Windows Server — Local Admin List
+    description: Sorted names of local administrator accounts (Admin == true AND LocalAccount
+      == true) from Users[].
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: windows-server-inspector
+      inspectorId: 25
+    liongardMetricName: 'Windows: Local Privileged User List'
+    liongardMetricId: 511
+    liongardMetricUuid: "914da1c9-1af1-4289-813d-d6d9bac0f105"
+    jmesPath: Users[?Admin && LocalAccount].Name | sort(@)
+    resultType: array
+    compliesWith:
+    - CIS-Controls-v8:5.4
+    - cyber-insurance-domain-auth
+    status: VALIDATED
+    validatedOn: '2026-05-26'
+    validatedSystemReference: Liongard Global metric catalog
+    sourceRecipe: recipes/single-system-analysis/by-inspector/windows-server.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:windows-server:rdp-config
+    '@type': liongard:MetricPrimitive
+    name: Windows Server — RDP Configuration
+    description: Full RemoteDesktopConfig object. Check .Settings.RDP for status string;
+      'RDP connections are not allowed' means disabled.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: windows-server-inspector
+      inspectorId: 25
+    liongardMetricName: 'Windows Server: RDP Allowed'
+    liongardMetricId: 2164
+    liongardMetricUuid: "70fb0686-951d-11ee-b9d1-0242ac120002"
+    jmesPath: RemoteDesktopConfig
+    resultType: object
+    compliesWith:
+    - cyber-insurance-domain-endpoint
+    status: VALIDATED
+    validatedOn: '2026-05-26'
+    validatedSystemReference: Liongard Global metric catalog
+    fieldGotcha: Windows Server uses RemoteDesktopConfig (object) — NOT OS.RDPEnabled
+      (boolean). OS.RDPEnabled exists on Windows Workstation inspector only. Parse RemoteDesktopConfig.Settings.RDP
+      for the readable status string.
+    sourceRecipe: recipes/single-system-analysis/by-inspector/windows-server.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:windows-server:warranty-active
+    '@type': liongard:MetricPrimitive
+    name: Windows Server — Warranty Is Active
+    description: Boolean — true if time_until(Warranty.WarrantyExpirationDate, 'days')
+      > 0.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: windows-server-inspector
+      inspectorId: 25
+    liongardMetricName: 'Windows Server: Machine Warranty is Active'
+    liongardMetricId: 1788
+    liongardMetricUuid: "77739678-014d-11ed-b939-0242ac120002"
+    jmesPath: time_until(Warranty.WarrantyExpirationDate, 'days') > `0`
+    resultType: boolean
+    compliantWhen: result == true
+    status: VALIDATED
+    validatedOn: '2026-05-26'
+    validatedSystemReference: Liongard Global metric catalog
+    sourceRecipe: recipes/single-system-analysis/by-inspector/windows-server.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:windows-server:warranty-days-remaining
+    '@type': liongard:MetricPrimitive
+    name: Windows Server — Days Until Warranty Expiration
+    description: Days until machine warranty expires, via time_until(Warranty.WarrantyExpirationDate,
+      'days').
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: windows-server-inspector
+      inspectorId: 25
+    liongardMetricName: 'Windows Server: Days Until Machine Warranty Expiration'
+    liongardMetricId: 1789
+    liongardMetricUuid: "a1189168-014d-11ed-b939-0242ac120002"
+    jmesPath: time_until(Warranty.WarrantyExpirationDate, 'days')
+    resultType: integer
+    resultUnit: days
+    compliantWhen: result > slas.warranty_warn_days (default 90)
+    status: VALIDATED
+    validatedOn: '2026-05-26'
+    validatedSystemReference: Liongard Global metric catalog
+    sourceRecipe: recipes/single-system-analysis/by-inspector/windows-server.md
+    dateAdded: '2026-05-26'
+

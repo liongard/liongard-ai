@@ -1,0 +1,385 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+# ── Endpoint Health ───────────────────────────────────────────────────────────
+
+  - "@id": "metrics:sophos-central:threat-health-not-good-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Sophos Central — Endpoints with Threat Health Not Good Count"
+    description: "Count of endpoints where health.threats.status != 'good'. Any result > 0 requires active threat investigation."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sophos-central-inspector"
+      inspectorId: 65
+    liongardMetricName: "Sophos Central: Endpoints with Threat Health Not In Good State Count"
+    liongardMetricId: 927
+    liongardMetricUuid: "7ea6fdad-ca12-43d7-ab6e-e8e01d2cdea2"
+    jmesPath: "Endpoints[?health.threats.status != `good`] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "cyber-insurance-domain-endpoint"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    fieldGotcha: "health.threats.status is a string — 'good' is the compliant value. Other values include 'bad' and 'suspicious'. Filter uses backtick-quoted string in JMESPath."
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sophos-central.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sophos-central:threat-health-not-good-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Sophos Central — Endpoints with Threat Health Not Good List"
+    description: "Hostnames of endpoints where health.threats.status != 'good'."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sophos-central-inspector"
+      inspectorId: 65
+    liongardMetricName: "Sophos Central: Endpoints with Threat Health Not In Good State List"
+    liongardMetricId: 926
+    liongardMetricUuid: "6ae6b0fb-697a-4bef-a375-2ec76e7cb03a"
+    jmesPath: "Endpoints[?health.threats.status != `good`].hostname"
+    resultType: "array"
+    compliantWhen: "result == []"
+    compliesWith:
+      - "cyber-insurance-domain-endpoint"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sophos-central.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sophos-central:service-health-not-good-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Sophos Central — Endpoints with Service Health Not Good Count"
+    description: "Count of endpoints where health.services.status != 'good'. Indicates Sophos services are degraded or stopped on those hosts."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sophos-central-inspector"
+      inspectorId: 65
+    liongardMetricName: "Sophos Central: Endpoints with Service Health Not In Good State Count"
+    liongardMetricId: 929
+    liongardMetricUuid: "df61f11f-8add-4224-a330-8e703aa324aa"
+    jmesPath: "Endpoints[?health.services.status != `good`] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "cyber-insurance-domain-endpoint"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sophos-central.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sophos-central:service-health-not-good-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Sophos Central — Endpoints with Service Health Not Good List"
+    description: "Hostnames of endpoints where health.services.status != 'good'."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sophos-central-inspector"
+      inspectorId: 65
+    liongardMetricName: "Sophos Central: Endpoints with Service Health Not In Good State"
+    liongardMetricId: 928
+    liongardMetricUuid: "e428b64f-0301-4ba6-a6bb-fb534dd341ba"
+    jmesPath: "Endpoints[?health.services.status != `good`].hostname"
+    resultType: "array"
+    compliantWhen: "result == []"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sophos-central.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sophos-central:tamper-protection-disabled-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Sophos Central — Endpoints with Tamper Protection Disabled Count"
+    description: "Count of endpoints where tamperProtectionEnabled == false. Should be 0 — tamper protection prevents agent removal by malware."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sophos-central-inspector"
+      inspectorId: 65
+    liongardMetricName: "Sophos Central: Endpoints with Tamper Protection Disabled Count"
+    liongardMetricId: 931
+    liongardMetricUuid: "21b603a2-96ca-4513-b0b7-99e6c0df1bef"
+    jmesPath: "Endpoints[?tamperProtectionEnabled == `false`] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "CIS-Controls-v8:10.1"
+      - "cyber-insurance-domain-endpoint"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sophos-central.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sophos-central:tamper-protection-disabled-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Sophos Central — Endpoints with Tamper Protection Disabled List"
+    description: "Hostnames of endpoints where tamperProtectionEnabled == false."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sophos-central-inspector"
+      inspectorId: 65
+    liongardMetricName: "Sophos Central: Endpoints with Tamper Protection Disabled List"
+    liongardMetricId: 930
+    liongardMetricUuid: "a270854f-214b-4151-94ce-0bbfbf4c18f4"
+    jmesPath: "Endpoints[?tamperProtectionEnabled == `false`].hostname"
+    resultType: "array"
+    compliantWhen: "result == []"
+    compliesWith:
+      - "CIS-Controls-v8:10.1"
+      - "cyber-insurance-domain-endpoint"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sophos-central.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sophos-central:endpoints-total-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Sophos Central — Total Endpoints Count"
+    description: "Total managed endpoint count. Use as denominator for coverage percentage calculations."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sophos-central-inspector"
+      inspectorId: 65
+    jmesPath: "length(Endpoints)"
+    resultType: "integer"
+    resultUnit: "count"
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "System N (inspected 2025-12-02)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sophos-central.md"
+    dateAdded: "2026-05-26"
+
+# ── Product Coverage ──────────────────────────────────────────────────────────
+
+  - "@id": "metrics:sophos-central:endpoint-protection-installed-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Sophos Central — Endpoint Protection Installed Count"
+    description: "Count of endpoints with assignedProducts code='endpointProtection' and status='installed'."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sophos-central-inspector"
+      inspectorId: 65
+    liongardMetricName: "Sophos Central: Endpoints with Endpoint Protection Installed Count"
+    liongardMetricId: 402
+    liongardMetricUuid: "266f6c9f-b073-4f26-871a-d6a6574e558d"
+    jmesPath: "Endpoints[?assignedProducts[?code == `endpointProtection` && status==`installed`]] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliesWith:
+      - "CIS-Controls-v8:10.1"
+      - "cyber-insurance-domain-endpoint"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    fieldGotcha: "assignedProducts is an array of objects with 'code' and 'status' fields. code values are camelCase strings: 'endpointProtection', 'interceptX', 'coreAgent', 'mtr', 'deviceEncryption'. status values are camelCase: 'installed', 'notInstalled'. Neither field uses booleans."
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sophos-central.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sophos-central:endpoint-protection-not-installed-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Sophos Central — Endpoint Protection NOT Installed Count"
+    description: "Count of endpoints where endpointProtection status == 'notInstalled'. Should be 0 if all endpoints are covered."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sophos-central-inspector"
+      inspectorId: 65
+    liongardMetricName: "Sophos Central: Endpoints with Endpoint Protection Not Installed Count"
+    liongardMetricId: 404
+    liongardMetricUuid: "f66802e0-db10-4818-bdad-6a4c063ca01c"
+    jmesPath: "Endpoints[?assignedProducts[?code == `endpointProtection` && status==`notInstalled`]] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "CIS-Controls-v8:10.1"
+      - "cyber-insurance-domain-endpoint"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sophos-central.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sophos-central:endpoint-protection-not-installed-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Sophos Central — Endpoint Protection NOT Installed List"
+    description: "Hostnames of endpoints where endpointProtection status == 'notInstalled'."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sophos-central-inspector"
+      inspectorId: 65
+    liongardMetricName: "Sophos Central: Endpoints with Endpoint Protection Not Installed List"
+    liongardMetricId: 405
+    liongardMetricUuid: "5de18a67-5ff0-4c99-a8ba-6e970f8072b9"
+    jmesPath: "Endpoints[?assignedProducts[?code == `endpointProtection` && status==`notInstalled`]].hostname"
+    resultType: "array"
+    compliantWhen: "result == []"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sophos-central.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sophos-central:intercept-x-installed-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Sophos Central — Intercept X Installed Count"
+    description: "Count of endpoints with Intercept X (EDR/XDR) status == 'installed'."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sophos-central-inspector"
+      inspectorId: 65
+    liongardMetricName: "Sophos Central: Endpoints with Intercept X Installed Count"
+    liongardMetricId: 406
+    liongardMetricUuid: "db8871ba-90c4-4cac-8bc4-85bf5a3b25b3"
+    jmesPath: "Endpoints[?assignedProducts[?code == `interceptX` && status==`installed`]] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliesWith:
+      - "CIS-Controls-v8:13.7"
+      - "cyber-insurance-domain-endpoint"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sophos-central.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sophos-central:intercept-x-not-installed-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Sophos Central — Intercept X NOT Installed Count"
+    description: "Count of endpoints where Intercept X status == 'notInstalled'. Use to identify EDR coverage gaps."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sophos-central-inspector"
+      inspectorId: 65
+    liongardMetricName: "Sophos Central: Endpoints with Intercept X Not Installed Count"
+    liongardMetricId: 408
+    liongardMetricUuid: "a431fe65-7119-4308-852b-c7f72338ea8e"
+    jmesPath: "Endpoints[?assignedProducts[?code == `interceptX` && status==`notInstalled`]] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "CIS-Controls-v8:13.7"
+      - "cyber-insurance-domain-endpoint"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sophos-central.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sophos-central:intercept-x-not-installed-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Sophos Central — Intercept X NOT Installed List"
+    description: "Hostnames of endpoints where Intercept X status == 'notInstalled'."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sophos-central-inspector"
+      inspectorId: 65
+    liongardMetricName: "Sophos Central: Endpoints with Intercept X Not Installed List"
+    liongardMetricId: 409
+    liongardMetricUuid: "71a4caf3-ae5f-48ae-b1fc-a2ebf9784308"
+    jmesPath: "Endpoints[?assignedProducts[?code == `interceptX` && status==`notInstalled`]].hostname"
+    resultType: "array"
+    compliantWhen: "result == []"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sophos-central.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sophos-central:device-encryption-installed-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Sophos Central — Device Encryption Installed Count"
+    description: "Count of endpoints with Sophos Device Encryption (BitLocker management) status == 'installed'."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sophos-central-inspector"
+      inspectorId: 65
+    liongardMetricName: "Sophos Central: Endpoints with Device Encryption Installed Count"
+    liongardMetricId: 418
+    liongardMetricUuid: "1d88323c-9272-4140-88a6-65d8ef56c241"
+    jmesPath: "Endpoints[?assignedProducts[?code == `deviceEncryption` && status==`installed`]] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliesWith:
+      - "CIS-Controls-v8:3.6"
+      - "cyber-insurance-domain-endpoint"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sophos-central.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sophos-central:device-encryption-not-installed-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Sophos Central — Device Encryption NOT Installed Count"
+    description: "Count of endpoints where Device Encryption status == 'notInstalled'. Encryption coverage gap."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sophos-central-inspector"
+      inspectorId: 65
+    liongardMetricName: "Sophos Central: Endpoints with Device Encryption Not Installed Count"
+    liongardMetricId: 420
+    liongardMetricUuid: "2a029159-4979-49ee-9308-f028e6a8cdf9"
+    jmesPath: "Endpoints[?assignedProducts[?code == `deviceEncryption` && status==`notInstalled`]] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "CIS-Controls-v8:3.6"
+      - "cyber-insurance-domain-endpoint"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sophos-central.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sophos-central:device-encryption-not-installed-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Sophos Central — Device Encryption NOT Installed List"
+    description: "Hostnames of endpoints where Device Encryption status == 'notInstalled'."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sophos-central-inspector"
+      inspectorId: 65
+    liongardMetricName: "Sophos Central: Endpoints with Device Encryption Not Installed List"
+    liongardMetricId: 421
+    liongardMetricUuid: "bdf04590-2204-4d3b-98f5-faf94b804a5a"
+    jmesPath: "Endpoints[?assignedProducts[?code == `deviceEncryption` && status==`notInstalled`]].hostname"
+    resultType: "array"
+    compliantWhen: "result == []"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sophos-central.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sophos-central:mtr-installed-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Sophos Central — MDR (MTR) Installed Count"
+    description: "Count of endpoints with Managed Threat Response (mtr) status == 'installed'. MDR coverage indicator."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sophos-central-inspector"
+      inspectorId: 65
+    liongardMetricName: "Sophos Central: Endpoints with MTR Installed Count"
+    liongardMetricId: 414
+    liongardMetricUuid: "a5f13f2b-0f6b-4529-9843-c819d3ba197c"
+    jmesPath: "Endpoints[?assignedProducts[?code == `mtr` && status==`installed`]] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliesWith:
+      - "CIS-Controls-v8:13.7"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    fieldGotcha: "Sophos MTR (Managed Threat Response) is now marketed as Sophos MDR. The dataprint still uses code='mtr' as the product code string."
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sophos-central.md"
+    dateAdded: "2026-05-26"

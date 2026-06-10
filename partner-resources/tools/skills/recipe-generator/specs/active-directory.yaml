@@ -1,0 +1,341 @@
+inspector:
+  slug: active-directory-inspector
+  id: 13
+  display_name: Active Directory
+  category: Apps & Services
+  target_system_type: Directory Service
+  parent_child: false
+  identifier_jmespath: Domain.Name
+
+recipe:
+  family: single-system-analysis
+  scope_summary: >
+    Use this skill when the user wants a single-domain analysis of an
+    on-premises Active Directory — Periodic Business Review, password
+    policy + account lockout audit, privileged user inventory + group
+    membership, stale / disabled account review, default accounts
+    posture, EOL workstation roster, DHCP scope inventory. Trigger
+    phrases include "AD PBR", "AD review", "pull AD data", "AD password
+    policy audit", "AD privileged users", "stale AD accounts", "AD DHCP
+    scopes". Distinct from the cyber-insurance auth domain file (which
+    is question-driven for insurance evidence) — this is operational
+    AD assessment.
+  trigger_phrases:
+    - "AD PBR"
+    - "AD review"
+    - "pull AD data"
+    - "AD password policy audit"
+    - "AD privileged users"
+    - "stale AD accounts"
+    - "AD DHCP scopes"
+    - "Active Directory review for the customer"
+  personas:
+    - noc
+    - soc
+    - vcio-account-manager
+    - technical-alignment-manager
+  output_formats:
+    - markdown
+    - word
+    - pptx
+    - xlsx
+
+aliases:
+  user_facing:
+    - AD
+    - ADDS
+    - "AD DS"
+    - DC
+    - "Domain Controller"
+    - "on-prem AD"
+
+slas:
+  inspector_lastseen_days_max: 1
+  password_min_length: 14            # CIS 5.2
+  password_history: 24               # CIS standard
+  password_max_age_days: 90
+  account_lockout_threshold_max: 10
+  account_lockout_duration_min: 15   # minutes
+  stale_account_days_max: 45         # CIS 5.3
+  default_admin_enabled: false
+  default_guest_enabled: false
+
+metrics:
+  # ── Identity / Domain ──────────────────────────────────────────────
+  - id: 23
+    name: "Active Directory: Privileged Users Count"
+    jmes_path: SystemInfo.NumPrivilegedUsers
+    purpose: Count of privileged accounts in the domain
+    result_shape: <integer>
+    compliant_when: "low / role-appropriate"
+
+  - id: 76
+    name: "Active Directory: Privileged Users List"
+    jmes_path: SystemInfo.PrivilegedUsersStr
+    purpose: Enumeration of privileged users
+    result_shape: <array>
+
+  # ── Password policy ────────────────────────────────────────────────
+  - id: 792
+    name: "Active Directory: Account Minimum Password Length"
+    jmes_path: AccountPolicy.MinPasswordLength
+    purpose: Minimum password length policy
+    result_shape: <integer>
+    compliant_when: "≥ slas.password_min_length"
+
+  - id: 793
+    name: "Active Directory: Account Password Complexity"
+    jmes_path: AccountPolicy.PasswordComplexity
+    purpose: Whether complexity rules are enforced
+    result_shape: <bool>
+    compliant_when: "true"
+
+  - id: 2022
+    name: "Active Directory: Password History Length"
+    jmes_path: AccountPolicy.pwdHistoryLength
+    purpose: How many previous passwords are remembered
+    result_shape: <integer>
+    compliant_when: "≥ slas.password_history"
+
+  - id: 748
+    name: "Active Directory: Maximum Password Age"
+    jmes_path: AccountPolicy.MaxPasswordAge
+    purpose: Maximum password age before forced rotation
+    result_shape: <integer>
+    compliant_when: "≤ slas.password_max_age_days (or rotation-free with high entropy + monitoring)"
+
+  - id: 1623
+    name: "Active Directory: Minimum Password Age"
+    jmes_path: AccountPolicy.MinPasswordAge
+    purpose: Minimum password age (prevents rapid rotation back to a known password)
+    result_shape: <integer>
+
+  - id: 1819
+    name: "Active Directory: Account Policy [Power BI]"
+    jmes_path: AccountPolicy
+    purpose: Full account policy snapshot for reporting
+    result_shape: <object>
+
+  # ── Account lockout ────────────────────────────────────────────────
+  - id: 794
+    name: "Active Directory: Account Lockout Threshold"
+    jmes_path: AccountPolicy.lockoutThreshold
+    purpose: Failed-attempt count before lockout
+    result_shape: <integer>
+    compliant_when: "≤ slas.account_lockout_threshold_max"
+
+  - id: 795
+    name: "Active Directory: Account Lockout Observation Window"
+    jmes_path: AccountPolicy.AccountLockoutObservationWindow
+    purpose: Time window for failed attempts to accumulate
+    result_shape: <integer>
+
+  - id: 796
+    name: "Active Directory: Account Lockout Duration"
+    jmes_path: AccountPolicy.AccountLockoutDuration
+    purpose: How long an account stays locked
+    result_shape: <integer>
+    compliant_when: "≥ slas.account_lockout_duration_min"
+
+  # ── Default accounts ───────────────────────────────────────────────
+  - id: 1945
+    name: "Active Directory: Default Administrator Account Enabled"
+    jmes_path: Users[?CN==`Administrator`].Enabled | [0]
+    purpose: Default Administrator account state
+    result_shape: <bool>
+    compliant_when: "false"
+
+  - id: 780
+    name: "Active Directory: Default Guest Account Enabled"
+    jmes_path: DefaultGuestAccountEnabled
+    purpose: Default Guest account state
+    result_shape: <bool>
+    compliant_when: "false"
+
+  - id: 781
+    name: "Active Directory: Default Guest Account Enabled Count"
+    jmes_path: length(GuestMembers)
+    purpose: Number of accounts in the Guests group
+    result_shape: <integer>
+    compliant_when: "0"
+
+  # ── Stale / disabled accounts ──────────────────────────────────────
+  - id: 773
+    name: "Active Directory: Stale User Accounts Count"
+    jmes_path: Users[?UserActivity==`Stale` && DefaultSystemUser==`false` && Enabled == `true`] | length(@)
+    purpose: Count of stale-but-not-system accounts
+    result_shape: <integer>
+    compliant_when: "0"
+
+  - id: 1900
+    name: "Active Directory: Stale Users List"
+    jmes_path: >-
+      Users[?UserActivity==`Stale` && DefaultSystemUser==`false` && Enabled == `true`].join( ' - ', [join(`: `, [to_string(UserName)]), join(`: `, [`Days since last login`, to_string(DaysSinceLastLogin)])])
+    purpose: Enumeration of stale enabled users
+    result_shape: <array|string>
+
+  - id: 775
+    name: "Active Directory: Never Used User Accounts Count"
+    jmes_path: Users[?LastLogonDate == `null` && DefaultSystemUser == `false` && Enabled == `true`] | length(@)
+    purpose: Count of accounts that have never logged in
+    result_shape: <integer>
+    compliant_when: "0"
+
+  - id: 774
+    name: "Active Directory: Never Used User Accounts Summary"
+    jmes_path: >-
+      Users[?LastLogonDate==`null` && DefaultSystemUser == `false` && Enabled == `true`].join(``, [UserName, `, Created On:`, Created]) | join(` | `, @)
+    purpose: Enumeration of never-logged-in enabled accounts
+    result_shape: <string>
+
+  - id: 1901
+    name: "Active Directory: Disabled Users List"
+    jmes_path: Users[?UserStatus == `Disabled`]
+    purpose: Enumeration of disabled accounts (offboarding evidence)
+    result_shape: <array>
+
+  # ── Computer / endpoint EOL ────────────────────────────────────────
+  - id: 1133
+    name: "Active Directory: End of Life Workstations"
+    jmes_path: >-
+      Computers[?Type == `Workstation` && Activity != `Stale` && Enabled == `true` && OperatingSystemVersionNum < `6.2` && OperatingSystem.contains(@, `Windows`)&& contains(MemberOf, `RoarExclude`)==`false`].[Name, `|` ,` Operating System:` , OperatingSystem]
+    purpose: Workstations on EOL operating systems
+    result_shape: <array>
+
+  - id: 790
+    name: "Active Directory: Workstations at or near End of OS Support Summary"
+    jmes_path: >-
+      Computers[?Type==`Workstation` && Activity!=`Stale` && Enabled ==`true` && OperatingSystemVersionNum < `6.2` && OperatingSystem.contains(@, `Windows`)].join(``, [Name, `, Operating System:`, OperatingSystem]) | join(` | `, @)
+    purpose: Workstation roster near EOL
+    result_shape: <string>
+
+  - id: 791
+    name: "Active Directory: Workstations at or near End of OS Support Count"
+    jmes_path: >-
+      Computers[?Type==`Workstation` && Activity!=`Stale` && Enabled ==`true` && OperatingSystemVersionNum < `6.2` && OperatingSystem.contains(@, `Windows`)] | length(@)
+    purpose: Count of workstations near EOL
+    result_shape: <integer>
+
+  # ── DHCP ───────────────────────────────────────────────────────────
+  - id: 1758
+    name: "Active Directory: DHCP % In Use Over 80 List"
+    jmes_path: DHCP.Serverv4Scopes[?Statistics.PercentageInUse >= `80`].Name
+    purpose: DHCP scopes approaching capacity
+    result_shape: <array>
+    compliant_when: "empty"
+
+  # ── Reversible encryption (critical) ───────────────────────────────
+  - id: 178
+    name: "Active Directory: Store Passwords With Reversible Encryption"
+    jmes_path: AccountPolicy.PasswordReversible
+    purpose: Whether reversible encryption is enabled (CRITICAL — should always be false)
+    compliant_when: "false"
+
+  # ── Domain identity (proposed) ─────────────────────────────────────
+  - id: 175
+    name: "Active Directory: Domain Name"
+    jmes_path: Domain.Name
+    purpose: AD domain FQDN
+
+  - id: "[PROPOSED]"
+    name: "Active Directory: Account Policy Domain Name"
+    jmes_path: AccountPolicy.CanonicalName
+    purpose: The domain the policy applies to (distinct from the AD inspector's overall domain when multiple domains in a forest are inspected separately)
+
+  # ── DHCP scope detail (proposed) ───────────────────────────────────
+  - id: "[PROPOSED]"
+    name: "Active Directory: DHCP Scope Names"
+    jmes_path: DHCP.Serverv4Scopes[*].Name
+    purpose: Per-scope name
+
+  - id: "[PROPOSED]"
+    name: "Active Directory: DHCP Scope Ranges"
+    jmes_path: >-
+      DHCP.Serverv4Scopes[*].{ScopeId: ScopeId, StartRange: StartRange, EndRange: EndRange}
+    purpose: Per-scope IP range (start/end)
+
+  - id: "[PROPOSED]"
+    name: "Active Directory: DHCP Lease Duration"
+    jmes_path: DHCP.Serverv4Scopes[*].LeaseDuration
+    purpose: Per-scope lease duration
+
+  - id: "[PROPOSED]"
+    name: "Active Directory: DHCP DNS Servers"
+    jmes_path: DHCP.Serverv4Scopes[*].DNSServers
+    purpose: Per-scope DNS server assignment
+
+  - id: "[PROPOSED]"
+    name: "Active Directory: DHCP Reservations"
+    jmes_path: DHCP.Serverv4Scopes[*].Reservations
+    purpose: Per-scope IP reservations
+
+  # ── Domain summary ────────────────────────────────────────────────
+  - id: 568
+    name: "Active Directory: Password Policy Summary [composite]"
+    jmes_path: >-
+      AccountPolicy.[ join(`: `, [to_string(`Minimum Password Length`), to_string(MinPasswordLength)]), join(`: `, [to_string(`Maximum Password Age`), to_string(MaxPasswordAge)]), join(`: `, [to_string(`Minimum Password Age`), to_string(MinPasswordAge)]), join(`: `, [to_string(`Password Complexity`), to_string(PasswordComplexity)]), join(`: `, [to_string(`Account Lockout Duration`), to_string(AccountLockoutDuration)]), join(`: `, [to_string(`Account Lockout Threshold`), to_string(lockoutThreshold)]), join(`: `, [to_string(`Password History Length`), to_string(pwdHistoryLength)])]
+    purpose: Single composite metric for the password-policy section of a report (avoids 7 separate metric calls)
+
+cross_check:
+  asset_type: identity
+  filter_pattern: 'inspectors contains "active-directory-inspector"'
+  coverage_question: >
+    Identities synthesized across AD + M365 + Duo + others — confirms
+    the privileged / stale / disabled findings against the
+    cross-inspector reconciled view, and detects M365-only privileged
+    users that AD alone wouldn't surface.
+
+proposed_metric_gaps:
+  - field: "Per-scope DHCP detail (name, range, lease, DNS, reservations)"
+    fallback: "Client-side parse of DHCP.Serverv4Scopes array; field population varies by dataprint"
+    jira_ticket:
+
+trigger_keyword: active-directory
+
+dataprint_keys:
+  - key: Domain
+    description: Domain identity — Name, DomainMode, DomainModeStr, FSMO role holders
+  - key: SystemInfo
+    description: Domain posture summary — NumPrivilegedUsers, PrivilegedUsersStr, Recycle Bin fields
+  - key: AccountPolicy
+    description: Domain password + lockout policy (MinPasswordLength, PasswordComplexity, etc.)
+  - key: Users
+    description: Domain user account array — UserActivity, LastLogonDate, UserStatus, memberOf, DefaultSystemUser flags
+  - key: Computers
+    description: Domain-joined computer accounts — Type (Workstation/Server), OS, Activity, OperatingSystemVersionNum
+  - key: DHCP
+    description: DHCP scope inventory (Serverv4Scopes array with usage, range, lease detail)
+  - key: GuestMembers
+    description: Members of the Guests group (should be empty)
+  - key: DefaultGuestAccountEnabled
+    description: Top-level flag for default Guest account state
+
+field_gotchas:
+  - field: "AccountPolicy"
+    note: "Liongard's AccountPolicy reflects the default domain policy. Custom Fine-Grained Password Policies (FGPP) applied to specific groups are NOT in this object — they would require separate inspection. If the customer uses FGPP, surface that as a manual-verification item."
+  - field: "Users[*].UserActivity"
+    note: "Liongard computes UserActivity as a synthesized state across LastLogonDate + signInActivity + other inspector signals. Values: 'Active', 'Stale', 'Dormant', 'Never Used', 'No Activity Found', null. Filter on this instead of raw LastLogonDate when possible — it's more accurate across replicated DCs."
+  - field: "Computers[*].OperatingSystemVersionNum"
+    note: "Current EOL workstation metrics use OperatingSystemVersionNum < 6.2 plus Windows / enabled / non-stale filters; sampled dataprints did not populate a boolean Computers[*].EOL field."
+  - field: "DHCP.Serverv4Scopes"
+    note: "DHCP scope data lives under DHCP.Serverv4Scopes, not DHCP.Scopes. Statistics.PercentageInUse drives metric 1758."
+
+large_arrays:
+  - field: Users
+    typical_size: "Domain-scale — 100s to 10000s. Use length() filtered queries; don't dump the full array."
+  - field: Computers
+    typical_size: "Same scale as Users. Filter by Type / Activity / EOL before pulling detail."
+
+time_series_supported: true
+
+vendor_console_url_pattern:                # AD doesn't have a single cloud console
+  # Note in recipe: use Active Directory Users and Computers (dsa.msc) /
+  # Group Policy Management (gpmc.msc) for manual confirms
+
+related_recipes:
+  - path: recipes/compliance/cyber-insurance/domains/auth.md
+    relationship: compliance               # cyber-insurance Q2/Q4/Q14/Q17/Q30/Q31/Q38/Q39 sources
+  - path: recipes/system-type-assessment/all-endpoints.md
+    relationship: sibling                  # AD Computers[] feeds the endpoint inventory
+  - path: recipes/single-system-analysis/by-inspector/microsoft-365.md
+    relationship: sibling                  # Entra ID identity overlap — privileged user reconciliation

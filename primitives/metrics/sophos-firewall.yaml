@@ -1,0 +1,136 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+  - "@id": "metrics:sophos-firewall:active-user-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Sophos Firewall — Active User List"
+    description: "Returns the names of all currently active users on the Sophos XG/XGS firewall"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sophos-firewall-inspector"
+      inspectorId: 28
+    liongardMetricName: "Sophos XG: Active User List"
+    liongardMetricId: 220
+    liongardMetricUuid: "502c1159-472f-492c-90ec-67daa8d3f61d"
+    jmesPath: "User[?Status == `Active`].Name | join(`, `, @)"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sophos-firewall.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sophos-firewall:interfaces-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Sophos Firewall — Interfaces Count"
+    description: "Total number of interfaces configured on the Sophos XG/XGS firewall"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sophos-firewall-inspector"
+      inspectorId: 28
+    liongardMetricName: "Sophos XG: Interfaces Count"
+    liongardMetricId: 221
+    liongardMetricUuid: "bb45a089-bfde-4b0e-b673-7b31bc6a4ae0"
+    jmesPath: "SystemInfo.InterfacesCount"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sophos-firewall.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sophos-firewall:user-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "Sophos Firewall — Active User Summary"
+    description: "Returns name, status, and group membership for all active users on the Sophos XG/XGS firewall"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sophos-firewall-inspector"
+      inspectorId: 28
+    liongardMetricName: "Sophos XG: User Summary"
+    liongardMetricId: 582
+    liongardMetricUuid: "ff180dfa-102d-4ebc-9348-13a31373cb3b"
+    jmesPath: "User[?Status == `Active`].join( ` ', ' `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`Status`, to_string(Status)])])"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sophos-firewall.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sophos-firewall:security-policy-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "Sophos Firewall — Security Policy Summary"
+    description: "Returns name and ordering details for all security policies on the Sophos XG/XGS firewall"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sophos-firewall-inspector"
+      inspectorId: 28
+    liongardMetricName: "Sophos XG: Security Policy Summary"
+    liongardMetricId: 583
+    liongardMetricUuid: "17ef3d5d-e78c-4f38-9f5d-915d970f411c"
+    jmesPath: "SecurityPolicy[].join( ` ', ' `, [join(`: `, [`Name`,to_string(Name)]), join(`: `, [`After`, to_string(After.Name)])])"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sophos-firewall.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sophos-firewall:device-dns-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "Sophos Firewall — Device DNS Summary"
+    description: "Returns the DNS IPv4 summary configuration for the Sophos XG/XGS firewall"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sophos-firewall-inspector"
+      inspectorId: 28
+    liongardMetricName: "Sophos XG: Device DNS Summary"
+    liongardMetricId: 584
+    liongardMetricUuid: "c45e7494-a6ae-478b-be57-2d566081097f"
+    jmesPath: "SystemInfo.DNS_IPv4_Summary"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sophos-firewall.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sophos-firewall:user-group-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "Sophos Firewall — User Group Summary"
+    description: "Returns name and type details for all user groups configured on the Sophos XG/XGS firewall"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sophos-firewall-inspector"
+      inspectorId: 28
+    liongardMetricName: "Sophos XG: User Group Summary"
+    liongardMetricId: 585
+    liongardMetricUuid: "8de0e68d-cd57-4f48-a6ab-df632af05a92"
+    jmesPath: "UserGroup.GroupDetail[].join( ` ', ' `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`Type`, to_string(GroupType)])])"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sophos-firewall.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:sophos-firewall:zone-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "Sophos Firewall — Zone Summary"
+    description: "Returns name, type, and SSH/HTTPS management flags for all security zones on the Sophos XG/XGS firewall"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "sophos-firewall-inspector"
+      inspectorId: 28
+    liongardMetricName: "Sophos XG: Zone Summary"
+    liongardMetricId: 586
+    liongardMetricUuid: "657903cb-7ae2-4ce4-965c-d9a6f471e2fe"
+    jmesPath: "Zone[].join( `, `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`Type`, to_string(Type)]), join(`: `, [`SSH`, to_string(SSH)])])"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/sophos-firewall.md"
+    dateAdded: "2026-05-26"

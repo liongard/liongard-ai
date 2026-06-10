@@ -1,0 +1,173 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+  - '@id': metrics:ninjaone:devices-total-count
+    '@type': liongard:MetricPrimitive
+    compliesWith:
+    - CIS-Controls-v8:1.1
+    dateAdded: '2026-05-26'
+    description: Total number of devices managed by the NinjaOne tenant.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorId: 72
+      inspectorSlug: ninjaone-inspector
+    jmesPath: length(Devices)
+    name: NinjaOne — Total Device Count
+    notes: 'Devices[].offline is boolean: false=online, true=offline.'
+    resultType: integer
+    sourceRecipe: recipes/single-system-analysis/by-inspector/ninjaone.md
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: System A (inspected 2026-05-18) — returned 4
+
+  - '@id': metrics:ninjaone:devices-online-count
+    '@type': liongard:MetricPrimitive
+    dateAdded: '2026-05-26'
+    description: Number of devices currently online in the NinjaOne tenant.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorId: 72
+      inspectorSlug: ninjaone-inspector
+    jmesPath: length(Devices[?offline == `false`])
+    name: NinjaOne — Online Device Count
+    notes: Devices.offline is boolean. Online = offline == `false`. Use backtick-quoted
+      boolean.
+    resultType: integer
+    sourceRecipe: recipes/single-system-analysis/by-inspector/ninjaone.md
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: System A (inspected 2026-05-18) — returned 4
+
+  - '@id': metrics:ninjaone:patches-pending-count
+    '@type': liongard:MetricPrimitive
+    compliesWith:
+    - CIS-Controls-v8:7.3
+    - CIS-Controls-v8:7.4
+    dateAdded: '2026-05-26'
+    description: Total number of patches pending installation across all managed devices.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorId: 72
+      inspectorSlug: ninjaone-inspector
+    jmesPath: N/A
+    name: NinjaOne — Pending Patch Count
+    notes: 'DATA GAP: NinjaOne dataprint has only Devices[], Users[], SystemInfo, DiskSummary,
+      AntiVirusSummary. No Patches[], Alerts[], or Licensing data.'
+    resultType: integer
+    sourceRecipe: recipes/single-system-analysis/by-inspector/ninjaone.md
+    status: PROPOSED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: System A (inspected 2026-05-18) — no Patches[] array in
+      dataprint
+
+  - '@id': metrics:ninjaone:patches-critical-pending-count
+    '@type': liongard:MetricPrimitive
+    compliesWith:
+    - CIS-Controls-v8:7.3
+    - CIS-Controls-v8:7.4
+    dateAdded: '2026-05-26'
+    description: Number of critical-severity patches pending installation.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorId: 72
+      inspectorSlug: ninjaone-inspector
+    jmesPath: N/A
+    name: NinjaOne — Critical Pending Patch Count
+    notes: 'DATA GAP: NinjaOne dataprint has only Devices[], Users[], SystemInfo, DiskSummary,
+      AntiVirusSummary. No Patches[], Alerts[], or Licensing data.'
+    resultType: integer
+    sourceRecipe: recipes/single-system-analysis/by-inspector/ninjaone.md
+    status: PROPOSED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: System A (inspected 2026-05-18) — no Patches[] in dataprint
+
+  - '@id': metrics:ninjaone:alerts-open-count
+    '@type': liongard:MetricPrimitive
+    dateAdded: '2026-05-26'
+    description: Number of currently open/unresolved alerts in NinjaOne.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorId: 72
+      inspectorSlug: ninjaone-inspector
+    jmesPath: N/A
+    name: NinjaOne — Open Alert Count
+    notes: 'DATA GAP: NinjaOne dataprint has only Devices[], Users[], SystemInfo, DiskSummary,
+      AntiVirusSummary. No Patches[], Alerts[], or Licensing data.'
+    resultType: integer
+    sourceRecipe: recipes/single-system-analysis/by-inspector/ninjaone.md
+    status: PROPOSED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: System A (inspected 2026-05-18) — no Alerts[] array in
+      dataprint
+
+  - '@id': metrics:ninjaone:alerts-critical-count
+    '@type': liongard:MetricPrimitive
+    dateAdded: '2026-05-26'
+    description: Number of open critical-priority alerts in NinjaOne.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorId: 72
+      inspectorSlug: ninjaone-inspector
+    jmesPath: N/A
+    name: NinjaOne — Critical Alert Count
+    notes: 'DATA GAP: NinjaOne dataprint has only Devices[], Users[], SystemInfo, DiskSummary,
+      AntiVirusSummary. No Patches[], Alerts[], or Licensing data.'
+    resultType: integer
+    sourceRecipe: recipes/single-system-analysis/by-inspector/ninjaone.md
+    status: PROPOSED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: System A (inspected 2026-05-18) — no Alerts[] in dataprint
+
+  - '@id': metrics:ninjaone:users-technician-count
+    '@type': liongard:MetricPrimitive
+    dateAdded: '2026-05-26'
+    description: Number of technician accounts in the NinjaOne tenant.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorId: 72
+      inspectorSlug: ninjaone-inspector
+    jmesPath: length(Users)
+    name: NinjaOne — Technician Count
+    notes: Users[] is the NinjaOne technician/user roster. Users[].enabled is boolean.
+    resultType: integer
+    sourceRecipe: recipes/single-system-analysis/by-inspector/ninjaone.md
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: System A (inspected 2026-05-18) — returned 2
+
+  - '@id': metrics:ninjaone:users-mfa-enabled-count
+    '@type': liongard:MetricPrimitive
+    dateAdded: '2026-05-26'
+    description: Number of technician accounts with MFA enabled.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorId: 72
+      inspectorSlug: ninjaone-inspector
+    jmesPath: length(Users[?mfaConfigured == `true`])
+    name: NinjaOne — Technician MFA Enabled Count
+    notes: mfaConfigured is boolean. Use backtick-quoted `true`.
+    resultType: integer
+    sourceRecipe: recipes/single-system-analysis/by-inspector/ninjaone.md
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: System A (inspected 2026-05-18) — returned 2
+
+  - '@id': metrics:ninjaone:licensing-utilization-pct
+    '@type': liongard:MetricPrimitive
+    dateAdded: '2026-05-26'
+    description: Percentage of device-seat licenses currently in use.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorId: 72
+      inspectorSlug: ninjaone-inspector
+    jmesPath: N/A
+    name: NinjaOne — License Utilization Percent
+    notes: 'DATA GAP: No licensing/seat data in NinjaOne dataprint.'
+    resultType: integer
+    sourceRecipe: recipes/single-system-analysis/by-inspector/ninjaone.md
+    status: PROPOSED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: System A (inspected 2026-05-18) — no Licensing object
+      in dataprint
+

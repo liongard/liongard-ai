@@ -1,0 +1,131 @@
+inspector:
+  slug: veeam-availability-console-inspector
+  id: 35
+  display_name: Veeam Availability Console
+  category: Apps & Services
+  target_system_type: Backup / DR
+  parent_child: true
+  identifier_jmespath: BackupRepositories[0].companyName
+
+recipe:
+  family: single-system-analysis
+  scope_summary: >
+    Use this skill when the user wants a single-tenant analysis of a Veeam
+    Availability Console — per-tenant backup job inventory, last-run
+    status, repository capacity, agent inventory. VAC is Veeam's
+    MSP-oriented orchestration product for managed-customer backups.
+    Trigger phrases: "Veeam VAC review", "Veeam Availability Console PBR",
+    "pull Veeam backup data", "Veeam tenant audit", "VAC backup job
+    status".
+  trigger_phrases:
+    - "Veeam VAC review"
+    - "Veeam Availability Console PBR"
+    - "pull Veeam backup data"
+    - "Veeam tenant audit"
+    - "VAC backup job status"
+  personas:
+    - noc
+    - vcio-account-manager
+    - technical-alignment-manager
+  output_formats:
+    - markdown
+    - word
+    - xlsx
+
+aliases:
+  user_facing:
+    - "Veeam VAC"
+    - VAC
+    - "Veeam Availability Console"
+
+slas:
+  inspector_lastseen_days_max: 1
+  failed_jobs_max: 0
+  hours_since_last_successful_max: 24
+  repository_capacity_warn_percent: 80
+
+metrics:
+  - id: "[PROPOSED]"
+    name: "Veeam VAC: Per-Tenant Backup Job Inventory"
+    jmes_path: Backups[*].{name: name, status: lastResult, lastRun: lastRunTime, nextRun: nextRunTime, scheduleType: scheduleType}
+    purpose: Per-job snapshot — last run, status, schedule
+
+  - id: "[PROPOSED]"
+    name: "Veeam VAC: Failed Backup Job Count"
+    jmes_path: length(Backups[?lastResult == `Failed`])
+    purpose: Count of jobs whose last run failed
+    compliant_when: "0"
+
+  - id: "[PROPOSED]"
+    name: "Veeam VAC: Repository Capacity Status"
+    jmes_path: BackupRepositories[*].{name: name, capacityGB: capacityGB, freeGB: freeGB, percentUsed: percentUsed}
+    purpose: Per-repository capacity for capacity planning
+
+  - id: "[PROPOSED]"
+    name: "Veeam VAC: Repository >80% Utilized List"
+    jmes_path: BackupRepositories[?percentUsed > `80`]
+    purpose: Repositories approaching capacity — pre-failure warning
+    compliant_when: "empty"
+
+  - id: "[PROPOSED]"
+    name: "Veeam VAC: Per-Protected-Server Last Backup"
+    jmes_path: Backups[*].objects[*].{hostname: name, lastBackup: lastRunTime, jobName: parent_job_name}
+    purpose: Per-server last-backup snapshot for the all-backups.md join (objects[*].name is the hostname-join key)
+
+  - id: "[PROPOSED]"
+    name: "Veeam VAC: Tenant Identity"
+    jmes_path: BackupRepositories[0].companyName
+    purpose: The tenant / company this child VAC system represents
+
+cross_check:
+  asset_type: device
+  filter_pattern: 'class == "server"'
+  coverage_question: >
+    Servers in the device inventory not present in any backup job's
+    objects[*].name — unprotected candidates.
+
+proposed_metric_gaps:
+  - field: "Per-tenant backup job inventory composite"
+    fallback: "Client-side parse of Backups[*]"
+    jira_ticket:
+  - field: "Failed job count"
+    fallback: "Client-side length filter"
+    jira_ticket:
+  - field: "Repository capacity status"
+    fallback: "Manual confirm in VAC console"
+    jira_ticket:
+  - field: "Per-server last backup (the all-backups.md join key)"
+    fallback: "Client-side parse of Backups[*].objects[*]"
+    jira_ticket:
+
+trigger_keyword: veeam
+
+dataprint_keys:
+  - key: LicenseSettings
+    description: VAC product / license identifier (parent system)
+  - key: BackupRepositories
+    description: Storage repositories — BackupRepositories[0].companyName identifies the tenant on the child
+  - key: Backups
+    description: Per-job backup definitions; each Backups[*].objects[*] contains the protected hostnames
+  - key: Computers
+    description: Per-protected-computer inventory with agent-state detail
+
+field_gotchas:
+  - field: "Parent vs. child distinction"
+    note: "VAC uses parent/child. Parent has LicenseSettings.productName = 'Veeam Availability Console'. Each child represents one MSP-managed tenant — identified by BackupRepositories[0].companyName. Target the child for per-customer reports; the parent's view is account-level."
+  - field: "Disambiguate from VSPC"
+    note: "Veeam Service Provider Console (VSPC, inspector ID 75) is a separate inspector with similar concepts but a different shape. Confirm with user which product the customer runs."
+  - field: "Backups[*].objects[*]"
+    note: "A job typically protects multiple servers — the objects array enumerates each. For the all-backups.md hostname join, flatten across all jobs and dedupe by hostname."
+
+large_arrays: []
+
+time_series_supported: true
+
+vendor_console_url_pattern: https://vac.veeam.com
+
+related_recipes:
+  - path: recipes/system-type-assessment/all-backups.md
+    relationship: rollup
+  - path: recipes/single-system-analysis/by-inspector/veeam-service-provider-console.md
+    relationship: sibling

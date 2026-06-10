@@ -1,0 +1,244 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+- '@id': metrics:linux-inspector:software-version
+  '@type': liongard:MetricPrimitive
+  name: Linux — OS Version
+  description: Linux operating system version string (e.g., '16.04.6 LTS (Xenial Xerus)').
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: linux-inspector
+    inspectorId: 53
+  liongardMetricName: 'Linux: Software Version'
+  liongardMetricId: 440
+  liongardMetricUuid: "b87ff45c-103e-4974-b034-da22de5abe18"
+  jmesPath: SystemInfo.VERSION
+  resultType: string
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System P (inspected 2026-03-13) — '16.04.6 LTS (Xenial
+    Xerus)'
+  sourceRecipe: recipes/single-system-analysis/by-inspector/linux.md
+  dateAdded: '2026-05-28'
+
+- '@id': metrics:linux-inspector:hostname
+  '@type': liongard:MetricPrimitive
+  name: Linux — Hostname
+  description: Hostname of the Linux server.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: linux-inspector
+    inspectorId: 53
+  jmesPath: Hostname
+  resultType: string
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System P (inspected 2026-03-13)
+  sourceRecipe: recipes/single-system-analysis/by-inspector/linux.md
+  dateAdded: '2026-05-28'
+
+- '@id': metrics:linux-inspector:kernel-release
+  '@type': liongard:MetricPrimitive
+  name: Linux — Kernel Release
+  description: Kernel release string (e.g., '4.4.0-1087-aws').
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: linux-inspector
+    inspectorId: 53
+  jmesPath: KernelRelease
+  resultType: string
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System P (inspected 2026-03-13) — '4.4.0-1087-aws'
+  sourceRecipe: recipes/single-system-analysis/by-inspector/linux.md
+  dateAdded: '2026-05-28'
+
+- '@id': metrics:linux-inspector:memory-total-mb
+  '@type': liongard:MetricPrimitive
+  name: Linux — Total Memory (MB)
+  description: Total installed RAM in megabytes.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: linux-inspector
+    inspectorId: 53
+  liongardMetricName: 'Linux: Total Memory (MB)'
+  liongardMetricId: 380
+  liongardMetricUuid: "2ad04994-6069-4c65-8a2e-b4b9934fe456"
+  jmesPath: Memory.Total
+  resultType: integer
+  resultUnit: MB
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System P (inspected 2026-03-13) — 1998 MB
+  sourceRecipe: recipes/single-system-analysis/by-inspector/linux.md
+  dateAdded: '2026-05-28'
+
+- '@id': metrics:linux-inspector:processor-model
+  '@type': liongard:MetricPrimitive
+  name: Linux — Processor Model
+  description: CPU model name string from /proc/cpuinfo.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: linux-inspector
+    inspectorId: 53
+  liongardMetricName: 'Linux: Processor'
+  liongardMetricId: 379
+  liongardMetricUuid: "6c6c152f-65c5-4a08-b194-2fe764d32036"
+  jmesPath: Processor."Model name"
+  resultType: string
+  fieldGotcha: 'Key name contains a space — must be double-quoted in JMESPath: Processor."Model
+    name" (not Processor.ModelName or Processor.model).'
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System P (inspected 2026-03-13) — 'Intel(R) Xeon(R) CPU
+    E5-2676 v3 @ 2.40GHz'
+  sourceRecipe: recipes/single-system-analysis/by-inspector/linux.md
+  dateAdded: '2026-05-28'
+
+- '@id': metrics:linux-inspector:user-count
+  '@type': liongard:MetricPrimitive
+  name: Linux — User Count
+  description: Total number of user accounts on the Linux system (from /etc/passwd).
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: linux-inspector
+    inspectorId: 53
+  jmesPath: length(Users)
+  resultType: integer
+  resultUnit: count
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System P (inspected 2026-03-13) — 31 users
+  sourceRecipe: recipes/single-system-analysis/by-inspector/linux.md
+  dateAdded: '2026-05-28'
+
+- '@id': metrics:linux-inspector:privileged-user-count
+  '@type': liongard:MetricPrimitive
+  name: Linux — Privileged (sudo) User Count
+  description: Number of users with sudo group membership.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: linux-inspector
+    inspectorId: 53
+  jmesPath: length(PrivilegedUsers)
+  resultType: integer
+  resultUnit: count
+  compliesWith:
+  - CIS-Controls-v8:5.4
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System P (inspected 2026-03-13) — 1 privileged user
+  sourceRecipe: recipes/single-system-analysis/by-inspector/linux.md
+  dateAdded: '2026-05-28'
+
+- '@id': metrics:linux-inspector:privileged-user-list
+  '@type': liongard:MetricPrimitive
+  name: Linux — Privileged (sudo) User List
+  description: Comma-joined list of usernames with sudo group membership.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: linux-inspector
+    inspectorId: 53
+  liongardMetricName: 'Linux: Privileged User List'
+  liongardMetricId: 378
+  liongardMetricUuid: "6795d9b9-279b-40f0-ab45-c16be5e1c7cb"
+  jmesPath: join(', ', PrivilegedUsers[].user)
+  resultType: string
+  fieldGotcha: 'PrivilegedUsers[] has two fields: raw (the /etc/group entry string)
+    and user (just the username). Use PrivilegedUsers[].user for the clean name list.'
+  compliesWith:
+  - CIS-Controls-v8:5.4
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System P (inspected 2026-03-13) — 'ubuntu'
+  sourceRecipe: recipes/single-system-analysis/by-inspector/linux.md
+  dateAdded: '2026-05-28'
+
+- '@id': metrics:linux-inspector:ssh-port
+  '@type': liongard:MetricPrimitive
+  name: Linux — SSH Port
+  description: SSH daemon listening port (from sshd_config).
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: linux-inspector
+    inspectorId: 53
+  liongardMetricName: 'Linux: SSH Port Number'
+  liongardMetricId: 381
+  liongardMetricUuid: "c2ff4ef0-b68b-410c-80d2-f8fea2f36770"
+  jmesPath: SSH.Port
+  resultType: string
+  fieldGotcha: SSH.Port is a STRING (e.g., '22'), not an integer. Use string equality
+    for comparisons.
+  compliantWhen: result != '22' (non-default port reduces attack surface)
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System P (inspected 2026-03-13) — '22'
+  sourceRecipe: recipes/single-system-analysis/by-inspector/linux.md
+  dateAdded: '2026-05-28'
+
+- '@id': metrics:linux-inspector:ssh-permit-root-login
+  '@type': liongard:MetricPrimitive
+  name: Linux — SSH PermitRootLogin
+  description: 'SSH daemon root login policy (from sshd_config). Compliant values:
+    ''no'' or ''prohibit-password''.'
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: linux-inspector
+    inspectorId: 53
+  jmesPath: SSH.PermitRootLogin
+  resultType: string
+  fieldGotcha: 'All SSH config fields are STRINGS, not booleans. Observed values:
+    ''no'', ''prohibit-password'', ''yes'', ''forced-commands-only''. Do NOT use boolean
+    comparison.'
+  compliantWhen: result == 'no' or result == 'prohibit-password'
+  compliesWith:
+  - CIS-Controls-v8:5.4
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System P (inspected 2026-03-13) — 'prohibit-password'
+  sourceRecipe: recipes/single-system-analysis/by-inspector/linux.md
+  dateAdded: '2026-05-28'
+
+- '@id': metrics:linux-inspector:ssh-password-auth
+  '@type': liongard:MetricPrimitive
+  name: Linux — SSH PasswordAuthentication
+  description: 'Whether SSH allows password-based login (from sshd_config). Compliant
+    value: ''no''.'
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: linux-inspector
+    inspectorId: 53
+  jmesPath: SSH.PasswordAuthentication
+  resultType: string
+  fieldGotcha: 'SSH.PasswordAuthentication is a STRING ''yes''/''no'', not a boolean.
+    Filter: == `no` (backtick-quoted string).'
+  compliantWhen: result == 'no'
+  compliesWith:
+  - CIS-Controls-v8:12.3
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System P (inspected 2026-03-13) — 'no'
+  sourceRecipe: recipes/single-system-analysis/by-inspector/linux.md
+  dateAdded: '2026-05-28'
+
+- '@id': metrics:linux-inspector:firewall-rules-count
+  '@type': liongard:MetricPrimitive
+  name: Linux — Firewall Rules Count
+  description: Number of active firewall rules. A count of 0 may indicate iptables/ufw
+    not configured.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: linux-inspector
+    inspectorId: 53
+  jmesPath: length(FirewallRules)
+  resultType: integer
+  resultUnit: count
+  fieldGotcha: length(FirewallRules) == 0 does NOT mean no firewall — it means no
+    rules were captured (cloud instances often use security groups instead of host-level
+    iptables). Investigate before flagging.
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System P (inspected 2026-03-13) — 0 rules (AWS instance
+    using security groups)
+  sourceRecipe: recipes/single-system-analysis/by-inspector/linux.md
+  dateAdded: '2026-05-28'

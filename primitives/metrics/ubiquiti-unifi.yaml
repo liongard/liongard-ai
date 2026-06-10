@@ -1,0 +1,117 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+  - "@id": "metrics:ubiquiti-unifi:subnets-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Ubiquiti UniFi — Subnets List"
+    description: "Returns the name and IP subnet for all network configurations on the UniFi controller"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "ubiquiti-unifi-inspector"
+      inspectorId: 40
+    liongardMetricName: "UniFi: Subnets List"
+    liongardMetricId: 232
+    liongardMetricUuid: "f46e28e2-374c-41e6-b294-2e0e299cdd6b"
+    jmesPath: "NetworkConf[?ip_subnet && name].join(`:` , [name, ip_subnet])"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/ubiquiti-unifi.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:ubiquiti-unifi:devices-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Ubiquiti UniFi — Devices List"
+    description: "Returns the name and model for all devices registered on the UniFi controller"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "ubiquiti-unifi-inspector"
+      inspectorId: 40
+    liongardMetricName: "UniFi: Devices List"
+    liongardMetricId: 233
+    liongardMetricUuid: "ac1a7c13-8c39-4d05-bfd3-6e888a2d58ae"
+    jmesPath: "Devices[?name && model].join(`:` , [name,model])"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/ubiquiti-unifi.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:ubiquiti-unifi:super-admin-users-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Ubiquiti UniFi — Super Admin Users List"
+    description: "Returns a comma-separated list of all Super Admin users on the UniFi controller"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "ubiquiti-unifi-inspector"
+      inspectorId: 40
+    liongardMetricName: "UniFi: Super Admin Users List"
+    liongardMetricId: 234
+    liongardMetricUuid: "6dfe87f8-feca-4e5d-bddf-149e6674cca2"
+    jmesPath: "Users[?is_super == `true`].name | join(`, `, @)"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/ubiquiti-unifi.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:ubiquiti-unifi:device-serial-number-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Ubiquiti UniFi — Device Serial Number List"
+    description: "Returns a sorted list of serial numbers for all devices on the UniFi controller"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "ubiquiti-unifi-inspector"
+      inspectorId: 40
+    liongardMetricName: "Ubiquiti UniFi: Device Serial Number List"
+    liongardMetricId: 524
+    liongardMetricUuid: "90f737fd-e240-4501-91df-bf54c10e3a40"
+    jmesPath: "Devices[].serial | sort(@)"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/ubiquiti-unifi.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:ubiquiti-unifi:controller-version"
+    "@type": "liongard:MetricPrimitive"
+    name: "Ubiquiti UniFi — Controller Version"
+    description: "Returns the software version of the UniFi controller"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "ubiquiti-unifi-inspector"
+      inspectorId: 40
+    liongardMetricName: "Ubiquiti UniFi: Version (6.5.54)"
+    liongardMetricId: 1643
+    liongardMetricUuid: "baf80347-9248-4633-afc9-3acd90426af0"
+    jmesPath: "SystemInfo[].version"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/ubiquiti-unifi.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:ubiquiti-unifi:hardware-type-and-version"
+    "@type": "liongard:MetricPrimitive"
+    name: "Ubiquiti UniFi — Hardware Type and Version"
+    description: "Returns the name, type, model, and firmware version for all devices on the UniFi controller"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "ubiquiti-unifi-inspector"
+      inspectorId: 40
+    liongardMetricName: "Ubiquiti Unifi: Hardware type and version"
+    liongardMetricId: 1644
+    liongardMetricUuid: "2e5e88cd-e281-4d86-bebd-34e5077b69e2"
+    jmesPath: "Devices[].join(`: `, [name,type,model,version])"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/ubiquiti-unifi.md"
+    dateAdded: "2026-05-26"

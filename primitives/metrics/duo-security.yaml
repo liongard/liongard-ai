@@ -1,0 +1,218 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+  - '@id': metrics:duo-security:active-user-count
+    '@type': liongard:MetricPrimitive
+    name: Duo Security — Active User Count
+    description: 'Count of Duo users with status == active. JMESPath: Users[?status
+      == `active`] | length(@). status is a string — use single quotes, not backtick-quoted
+      literals.'
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: duo-security-inspector
+      inspectorId: 47
+    liongardMetricName: 'Duo: Active User Count'
+    liongardMetricId: 214
+    liongardMetricUuid: "bddd8450-a2f4-4a61-aa9c-6d1c20ab563a"
+    jmesPath: Users[?status == 'active'] | length(@)
+    resultType: integer
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: System A (child) — Completed 2026-05-18
+    sourceRecipe: recipes/single-system-analysis/by-inspector/duo-security.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:duo-security:active-user-list
+    '@type': liongard:MetricPrimitive
+    name: Duo Security — Active User List
+    description: 'Comma-separated real names of Duo users with status == active. JMESPath:
+      Users[?status == `active`].realname | join(`, `, @). status is a string — use
+      single quotes.'
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: duo-security-inspector
+      inspectorId: 47
+    liongardMetricName: 'Duo: Active User List'
+    liongardMetricId: 215
+    liongardMetricUuid: "7133a265-617e-4cc2-b836-443561b9d6a1"
+    jmesPath: Users[?status == 'active'].realname
+    resultType: string
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: System A (child) — Completed 2026-05-18
+    sourceRecipe: recipes/single-system-analysis/by-inspector/duo-security.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:duo-security:users-not-enrolled-mfa-count
+    '@type': liongard:MetricPrimitive
+    name: Duo Security — Users Not Enrolled in MFA Count
+    description: 'Count of Duo users who are not enrolled in MFA (is_enrolled == false).
+      JMESPath: length(Users[?is_enrolled == `false`])'
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: duo-security-inspector
+      inspectorId: 47
+    liongardMetricName: 'Duo Security: Users Not Enrolled in MFA Count'
+    jmesPath: length(Users[?is_enrolled == `false`])
+    resultType: integer
+    compliantWhen: result == 0
+    compliesWith:
+    - CIS-Controls-v8:6.3
+    - CIS-Controls-v8:6.5
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: System A (child) — Completed 2026-05-18
+    sourceRecipe: recipes/single-system-analysis/by-inspector/duo-security.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:duo-security:users-not-enrolled-mfa-list
+    '@type': liongard:MetricPrimitive
+    name: Duo Security — Users Not Enrolled in MFA List
+    description: List of users not enrolled in MFA with username, realname, status,
+      and creation date.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: duo-security-inspector
+      inspectorId: 47
+    liongardMetricName: 'Duo Security: Users Not Enrolled in MFA List'
+    jmesPath: 'Users[?is_enrolled == `false`].{username: username, realname: realname,
+      status: status, created: created}'
+    resultType: array
+    compliantWhen: result == null || length(result) == 0
+    compliesWith:
+    - CIS-Controls-v8:6.3
+    - CIS-Controls-v8:6.5
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: System A (child) — Completed 2026-05-18
+    sourceRecipe: recipes/single-system-analysis/by-inspector/duo-security.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:duo-security:active-bypass-lockedout-user-count
+    '@type': liongard:MetricPrimitive
+    name: Duo Security — Active, Bypass, and Locked Out User Count
+    description: 'Count of users with status active, bypass, or locked out. Used to
+      surface bypass users as a finding. JMESPath: Users[?status == `active` || status
+      == `bypass` || status == `locked out`].realname | length(@). status is a string
+      enum — use single quotes not backtick-quoted literals.'
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: duo-security-inspector
+      inspectorId: 47
+    liongardMetricName: 'Duo Security: Active, Bypass, & Locked Out User Count'
+    liongardMetricId: 6566
+    liongardMetricUuid: "c749beca-b754-4ca3-a870-9f4c18e51be3"
+    jmesPath: Users[?status == 'active' || status == 'bypass' || status == 'locked out']
+      | length(@)
+    resultType: integer
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: System A (child) — Completed 2026-05-18
+    sourceRecipe: recipes/single-system-analysis/by-inspector/duo-security.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:duo-security:user-summary-dashboard
+    '@type': liongard:MetricPrimitive
+    name: Duo Security — User Summary (Dashboard)
+    description: 'Per-user summary including username, status, enrollment status, last
+      login, and created date. JMESPath: Users[].{UserName: username, Status: status,
+      Enrolled: is_enrolled, LastLogin: last_login, CreatedDate: created}. Added status
+      != null guard to exclude null ghost entry.'
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: duo-security-inspector
+      inspectorId: 47
+    liongardMetricName: 'Duo Security: User Summary [Dashboard]'
+    liongardMetricId: 3710
+    liongardMetricUuid: "9f759bd3-2a25-4d2b-bfe2-dbc2e47870c7"
+    jmesPath: 'Users[?status != null].{UserName: username, Status: status, Enrolled:
+      is_enrolled, LastLogin: last_login, CreatedDate: created}'
+    resultType: array
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: System A (child) — Completed 2026-05-18
+    sourceRecipe: recipes/single-system-analysis/by-inspector/duo-security.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:duo-security:count-of-integrations
+    '@type': liongard:MetricPrimitive
+    name: Duo Security — Count of Integrations
+    description: 'Total number of integrations (protected applications) configured in
+      this Duo tenant. JMESPath: SystemInfo.integration_count'
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: duo-security-inspector
+      inspectorId: 47
+    liongardMetricName: Duo Security | Count of Integrations
+    liongardMetricId: 2181
+    liongardMetricUuid: "f1d99d37-1d5a-4f14-aa9f-fc7ee1a114aa"
+    jmesPath: SystemInfo.integration_count
+    resultType: integer
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: System A (child) — Completed 2026-05-18
+    sourceRecipe: recipes/single-system-analysis/by-inspector/duo-security.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:duo-security:bypass-codes-summary
+    '@type': liongard:MetricPrimitive
+    name: Duo Security — Bypass Codes Summary
+    description: 'Full array of active bypass codes in this Duo tenant — any non-empty
+      result warrants review. JMESPath: BypassCodes[]. BypassCodes[] confirmed. reuse_count
+      is a string not integer.'
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: duo-security-inspector
+      inspectorId: 47
+    liongardMetricName: Duo Security | Bypass Codes Summary
+    liongardMetricId: 2184
+    liongardMetricUuid: "a0952045-789d-4f45-9b1d-e05ce38e1f2e"
+    jmesPath: BypassCodes[]
+    resultType: array
+    compliantWhen: result == null || length(result) == 0
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: System A (child) — Completed 2026-05-18
+    sourceRecipe: recipes/single-system-analysis/by-inspector/duo-security.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:duo-security:settings-summary
+    '@type': liongard:MetricPrimitive
+    name: Duo Security — Settings Summary
+    description: 'Tenant-level Duo settings object (policy defaults, allowed auth methods,
+      device-trust config). JMESPath: Settings'
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: duo-security-inspector
+      inspectorId: 47
+    liongardMetricName: Duo Security | Settings Summary
+    liongardMetricId: 2183
+    liongardMetricUuid: "bf2f457e-ea5f-47a0-99f8-761d7fc25796"
+    jmesPath: Settings
+    resultType: object
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: System A (child) — Completed 2026-05-18
+    sourceRecipe: recipes/single-system-analysis/by-inspector/duo-security.md
+    dateAdded: '2026-05-26'
+
+  - '@id': metrics:duo-security:admins-summary
+    '@type': liongard:MetricPrimitive
+    name: Duo Security — Admins Summary
+    description: 'Full array of Duo admin accounts for this tenant. JMESPath: Admins[]'
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: duo-security-inspector
+      inspectorId: 47
+    liongardMetricName: Duo Security | Admins Summary
+    liongardMetricId: 2180
+    liongardMetricUuid: "27e9d90e-c160-4db4-b08f-3165df17067d"
+    jmesPath: Admins[]
+    resultType: array
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: System A (child) — Completed 2026-05-18
+    sourceRecipe: recipes/single-system-analysis/by-inspector/duo-security.md
+    dateAdded: '2026-05-26'
+

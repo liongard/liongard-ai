@@ -1,0 +1,203 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+  # ── Network identity ──────────────────────────────────────────────────────
+
+  - "@id": "metrics:autodiscovery-inspector:network-info"
+    "@type": "liongard:MetricPrimitive"
+    name: "Network Discovery — Network Info"
+    description: "Full network identity object: ExternalIP, ISP, GatewayIP, GatewayVendor, DNSServers, LocalMachineIP, SubnetMask, SlashNotation, MAC, ExternalDNS."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "autodiscovery-inspector"
+      inspectorId: 41
+    jmesPath: "NetworkInfo.{ExternalIP: ExternalIP, ISP: ISP, GatewayIP: GatewayIP, GatewayVendor: GatewayVendor, DNSServers: DNSServers, LocalMachineIP: LocalMachineIP, SubnetMask: LocalMachineIPSubnetMask, SlashNotation: LocalMachineIPSubnetMaskSlashNotation, MAC: LocalMachineMac, ExternalDNS: ExternalDNS}"
+    resultType: "object"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/network-discovery.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:autodiscovery-inspector:external-ip"
+    "@type": "liongard:MetricPrimitive"
+    name: "Network Discovery — External IP"
+    description: "Customer's outbound public IP address as seen by the Liongard agent."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "autodiscovery-inspector"
+      inspectorId: 41
+    jmesPath: "NetworkInfo.ExternalIP"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/network-discovery.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:autodiscovery-inspector:isp"
+    "@type": "liongard:MetricPrimitive"
+    name: "Network Discovery — ISP"
+    description: "ISP name as identified by the external IP. Cross-reference against expected ISP from onboarding intake."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "autodiscovery-inspector"
+      inspectorId: 41
+    jmesPath: "NetworkInfo.ISP"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/network-discovery.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:autodiscovery-inspector:gateway-ip"
+    "@type": "liongard:MetricPrimitive"
+    name: "Network Discovery — Gateway IP"
+    description: "Internal default gateway IP address."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "autodiscovery-inspector"
+      inspectorId: 41
+    jmesPath: "NetworkInfo.GatewayIP"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/network-discovery.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:autodiscovery-inspector:dns-servers"
+    "@type": "liongard:MetricPrimitive"
+    name: "Network Discovery — DNS Servers"
+    description: "Array of internal DNS server IP strings as seen by the agent. Used to validate acceptable port 53 hosts."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "autodiscovery-inspector"
+      inspectorId: 41
+    jmesPath: "NetworkInfo.DNSServers"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/network-discovery.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:autodiscovery-inspector:subnet-slash-notation"
+    "@type": "liongard:MetricPrimitive"
+    name: "Network Discovery — Subnet Slash Notation"
+    description: "Subnet mask in CIDR slash notation (e.g., 24 for /24). Used to document network scope."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "autodiscovery-inspector"
+      inspectorId: 41
+    jmesPath: "NetworkInfo.LocalMachineIPSubnetMaskSlashNotation"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/network-discovery.md"
+    dateAdded: "2026-05-26"
+
+  # ── Host inventory ────────────────────────────────────────────────────────
+
+  - "@id": "metrics:autodiscovery-inspector:total-host-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Network Discovery — Total Host Count"
+    description: "Total number of hosts discovered in the subnet sweep."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "autodiscovery-inspector"
+      inspectorId: 41
+    jmesPath: "length(Hosts)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/network-discovery.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:autodiscovery-inspector:alive-host-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Network Discovery — Alive Host Count"
+    description: "Number of hosts responding to the scan (Alive = true)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "autodiscovery-inspector"
+      inspectorId: 41
+    jmesPath: "length(Hosts[?Alive == `true`])"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/network-discovery.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:autodiscovery-inspector:hosts-with-open-ports-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Network Discovery — Hosts With Open Ports Count"
+    description: "Number of discovered hosts with at least one open port in the scanned set (21, 22, 80, 161, 443)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "autodiscovery-inspector"
+      inspectorId: 41
+    jmesPath: "length(Hosts[?Ports[?Status == 'open']])"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/network-discovery.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:autodiscovery-inspector:host-port-matrix"
+    "@type": "liongard:MetricPrimitive"
+    name: "Network Discovery — Host / Port Matrix"
+    description: "Array of all hosts with Ip, Hostname, Alive flag, and Ports array. Each Ports entry: {Port, Status}. Scanner probes ports 21, 22, 80, 161, and 443 only."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "autodiscovery-inspector"
+      inspectorId: 41
+    jmesPath: "Hosts[].{Ip: Ip, Hostname: Hostname, Alive: Alive, Ports: Ports}"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/network-discovery.md"
+    dateAdded: "2026-05-26"
+
+  # ── Hostname gap analysis ─────────────────────────────────────────────────
+
+  - "@id": "metrics:autodiscovery-inspector:alive-hosts-without-hostname-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Network Discovery — Alive Hosts Without Hostname Count"
+    description: "Count of alive hosts with no resolvable hostname. Unnamed hosts are harder to attribute; may indicate shadow IT, IoT, or unmanaged devices."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "autodiscovery-inspector"
+      inspectorId: 41
+    jmesPath: "length(Hosts[?Alive == `true` && Hostname == ''])"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/network-discovery.md"
+    dateAdded: "2026-05-26"
+
+  # ── DHCP servers ──────────────────────────────────────────────────────────
+
+  - "@id": "metrics:autodiscovery-inspector:dhcp-servers"
+    "@type": "liongard:MetricPrimitive"
+    name: "Network Discovery — DHCP Servers"
+    description: "Array of DHCP server objects detected on the scanned subnet. Empty array when no DHCP server detected. Multiple entries indicate potential rogue DHCP servers."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "autodiscovery-inspector"
+      inspectorId: 41
+    jmesPath: "DHCPServers"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/network-discovery.md"
+    dateAdded: "2026-05-26"

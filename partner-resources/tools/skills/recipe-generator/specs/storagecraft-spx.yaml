@@ -1,0 +1,117 @@
+inspector:
+  slug: storagecraft-spx-inspector
+  id: 46
+  display_name: StorageCraft SPX
+  category: Apps & Services
+  target_system_type: Backup / DR
+  parent_child: false
+  identifier_jmespath: SystemInfo.Hostname
+
+recipe:
+  family: single-system-analysis
+  scope_summary: >
+    Use this skill when the user wants a single-server analysis of a
+    StorageCraft SPX installation — per-job backup status, retention
+    policy, last-valid-backup time, license / product key audit. Unlike
+    other backup inspectors, SPX inspects one protected server per
+    Liongard system (not a multi-tenant console). Trigger phrases:
+    "StorageCraft SPX review", "SPX backup audit", "pull SPX data",
+    "ShadowProtect review".
+  trigger_phrases:
+    - "StorageCraft SPX review"
+    - "SPX backup audit"
+    - "pull SPX data"
+    - "ShadowProtect review"
+  personas:
+    - noc
+    - vcio-account-manager
+    - technical-alignment-manager
+  output_formats:
+    - markdown
+    - word
+    - xlsx
+
+aliases:
+  user_facing:
+    - SPX
+    - "StorageCraft SPX"
+    - StorageCraft
+    - ShadowProtect
+
+slas:
+  inspector_lastseen_days_max: 1
+  failed_jobs_max: 0
+  hours_since_last_successful_max: 24
+
+metrics:
+  - id: "[PROPOSED]"
+    name: "StorageCraft SPX: Per-Job Status"
+    jmes_path: Jobs[*].{name: name, status: lastResult, lastRun: lastRunTime, nextRun: nextRunTime, retention: retentionDays}
+    purpose: Per-backup-job snapshot for this server
+
+  - id: "[PROPOSED]"
+    name: "StorageCraft SPX: Failed Job Count"
+    jmes_path: length(Jobs[?lastResult == `Failed`])
+    purpose: Count of jobs whose last run failed
+    compliant_when: "0"
+
+  - id: "[PROPOSED]"
+    name: "StorageCraft SPX: Hours Since Last Successful Backup"
+    jmes_path: max(Jobs[?lastResult == `Successful`].hoursSinceLastSuccessful || `[24]`)
+    purpose: Worst-case time since last successful backup across all jobs on this server
+
+  - id: "[PROPOSED]"
+    name: "StorageCraft SPX: Backup Image Retention Compliance"
+    jmes_path: Jobs[*].{name: name, retentionDays: retentionDays, oldestImageAge: oldestImageDays}
+    purpose: Per-job retention vs. configured policy
+
+cross_check:
+  asset_type: device
+  filter_pattern: 'hostname == "<this SPX server hostname>"'
+  coverage_question: >
+    This SPX inspector represents one protected server. Confirm in
+    liongard_device that the corresponding server is also reported by
+    a server-OS inspector (windows-server-inspector / linux-inspector)
+    — the device record's inspectors[] array should contain both.
+
+proposed_metric_gaps:
+  - field: "Per-job status composite"
+    fallback: "Client-side parse of Jobs[*]"
+    jira_ticket:
+  - field: "Failed job count"
+    fallback: "Client-side length filter"
+    jira_ticket:
+  - field: "Hours since last successful backup"
+    fallback: "Client-side max() over Jobs[*]"
+    jira_ticket:
+  - field: "Backup image retention compliance"
+    fallback: "Manual confirm in SPX console"
+    jira_ticket:
+
+trigger_keyword: storagecraft
+
+dataprint_keys:
+  - key: SystemInfo
+    description: This SPX server's identity — Hostname, ProductKey, SystemOS
+  - key: System
+    description: Same hostname identifier in lowercase path
+  - key: Jobs
+    description: Backup job array for this server
+  - key: License
+    description: SPX license / product key
+
+field_gotchas:
+  - field: "Single-server inspector"
+    note: "Unlike Datto BCDR / Cove / Acronis / Axcient / Veeam VAC / Veeam VSPC, the StorageCraft SPX inspector represents ONE protected server per Liongard system. If the customer has 10 servers backed up via SPX, there will be 10 SPX systems in Liongard. The all-backups.md hostname join is one-to-one for SPX."
+  - field: "SystemInfo.Hostname"
+    note: "This is both the SPX-installation identifier AND the protected-server hostname. The all-backups.md join key is straightforward — no parent/child traversal needed."
+
+large_arrays: []
+
+time_series_supported: true
+
+vendor_console_url_pattern: https://www.storagecraft.com
+
+related_recipes:
+  - path: recipes/system-type-assessment/all-backups.md
+    relationship: rollup

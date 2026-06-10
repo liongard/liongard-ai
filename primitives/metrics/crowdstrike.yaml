@@ -1,0 +1,223 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+# CrowdStrike Falcon (Inspector ID 102) — Parent/Child inspector
+# Eval sweep 2026-05-28 findings:
+# Child system validated (inspected 2026-05-18).
+# Dataprint root keys (child): UserIDs, DeviceIDs, CustomerIDs, Organizations, DevicesDetails,
+#   Users, CustomerDetails, CIDs, CIDGroups, CIDRoles, TokenSettings, InstallTokens, Discovered,
+#   UsersOverview, Name.
+# DATA GAPS confirmed: Detections, Alerts, ZeroTrustAssessments, EndpointDevicePolicies,
+#   PreventionPolicies, FirewallPolicies — none of these keys exist in the child dataprint.
+#   10 prior PROPOSED primitives removed.
+# GOTCHA: DaysSinceLastSeen is a Liongard-computed integer field on DevicesDetails[] — VALIDATED (= 0 on healthy system).
+# GOTCHA: Users[].DaysSinceLastLogin is Liongard-computed; Users[].factors is an ARRAY.
+# GOTCHA: UsersOverview is a pre-computed summary object: {TotalUsers, UsersWithCustomerScope,
+#   UsersWithMFA, InactiveUsers, UsersWithMultipleRoles} — use for quick counts instead of filtering Users[].
+# GOTCHA: reduced_functionality_mode = string 'yes'/'no'; rtr_state = string 'enabled'/'disabled'.
+# All 6 SCHEMA_CONFIRMED upgraded to VALIDATED. Scrub violation in prior records fixed.
+
+primitives:
+
+- '@id': metrics:crowdstrike:stale-hosts-count-30d
+  '@type': liongard:MetricPrimitive
+  name: CrowdStrike — Stale Hosts Count (> 30 days)
+  description: Devices not checked in to Falcon in more than 30 days. Strong signal
+    for decommissioned or unmanaged endpoints.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: crowdstrike-inspector
+    inspectorId: 102
+  liongardMetricName: 'CrowdStrike: Stale Hosts Count (>30 days)'
+  liongardMetricId: 107486
+  liongardMetricUuid: "9b3d6f25-4d12-4ce9-a3a0-0e6c8d1c4d20"
+  jmesPath: DevicesDetails[?DaysSinceLastSeen > `30`] | length(@)
+  resultType: integer
+  resultUnit: count
+  compliantWhen: result == 0
+  compliesWith:
+  - CIS-Controls-v8:13.7
+  - cyber-insurance-domain-endpoint
+  fieldGotcha: DaysSinceLastSeen is a Liongard-computed integer field on DevicesDetails[]
+    — not the raw last_seen timestamp string.
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System M (inspected 2026-05-18)
+  sourceRecipe: recipes/single-system-analysis/by-inspector/crowdstrike.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:crowdstrike:stale-hosts-list-30d
+  '@type': liongard:MetricPrimitive
+  name: CrowdStrike — Stale Hosts List (> 30 days)
+  description: Hostnames of devices not checked in for more than 30 days.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: crowdstrike-inspector
+    inspectorId: 102
+  liongardMetricName: 'CrowdStrike: Stale Hosts List (>30 days)'
+  liongardMetricId: 107487
+  liongardMetricUuid: "6d12c4f3-3a2b-4e76-9b1c-7e2c5a3d4d21"
+  jmesPath: DevicesDetails[?DaysSinceLastSeen > `30`].hostname
+  resultType: array
+  compliantWhen: result == []
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System M (inspected 2026-05-18)
+  sourceRecipe: recipes/single-system-analysis/by-inspector/crowdstrike.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:crowdstrike:stale-hosts-count-7d
+  '@type': liongard:MetricPrimitive
+  name: CrowdStrike — Stale Hosts Count (> 7 days)
+  description: Devices not checked in for more than 7 days. Early-warning threshold
+    before the 30-day SLA fires.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: crowdstrike-inspector
+    inspectorId: 102
+  liongardMetricName: 'CrowdStrike: Stale Hosts Count (>7 days)'
+  liongardMetricId: 107484
+  liongardMetricUuid: "4e6cb5c3-71b8-4ad2-9c0e-2f3d6e9a4d18"
+  jmesPath: DevicesDetails[?DaysSinceLastSeen > `7`] | length(@)
+  resultType: integer
+  resultUnit: count
+  compliantWhen: result == 0
+  fieldGotcha: DaysSinceLastSeen is a Liongard-computed integer field on DevicesDetails[].
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System M (inspected 2026-05-18)
+  sourceRecipe: recipes/single-system-analysis/by-inspector/crowdstrike.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:crowdstrike:reduced-functionality-mode-count
+  '@type': liongard:MetricPrimitive
+  name: CrowdStrike — Devices in Reduced Functionality Mode Count
+  description: Devices reporting reduced_functionality_mode == 'yes'. RFM means the
+    Falcon sensor cannot fully protect the host. Must be 0.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: crowdstrike-inspector
+    inspectorId: 102
+  liongardMetricName: 'CrowdStrike: Devices in Reduced Functionality Mode Count'
+  liongardMetricId: 107488
+  liongardMetricUuid: "3c8e1a72-9b5d-4f23-a04e-d4f1c8a64d22"
+  jmesPath: DevicesDetails[?reduced_functionality_mode == 'yes'] | length(@)
+  resultType: integer
+  resultUnit: count
+  compliantWhen: result == 0
+  compliesWith:
+  - cyber-insurance-domain-endpoint
+  fieldGotcha: 'reduced_functionality_mode is a STRING ''yes''/''no'', not a boolean.
+    Filter: reduced_functionality_mode == ''yes'' (quoted string).'
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System M (inspected 2026-05-18)
+  sourceRecipe: recipes/single-system-analysis/by-inspector/crowdstrike.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:crowdstrike:no-rtr-count
+  '@type': liongard:MetricPrimitive
+  name: CrowdStrike — Devices Without RTR Enabled Count
+  description: Devices where Real Time Response is not enabled (rtr_state != 'enabled').
+    Limits ability to remotely investigate or remediate.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: crowdstrike-inspector
+    inspectorId: 102
+  liongardMetricName: 'CrowdStrike: Devices Without RTR Enabled Count'
+  liongardMetricId: 107489
+  liongardMetricUuid: "7a4d3e89-1f6c-4b02-9b3a-c4e2f9b54d23"
+  jmesPath: DevicesDetails[?rtr_state != 'enabled'] | length(@)
+  resultType: integer
+  resultUnit: count
+  compliantWhen: result == 0
+  fieldGotcha: 'rtr_state is a STRING. Compliant value is ''enabled''. Filter: rtr_state
+    != ''enabled'' catches any non-enabled value.'
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System M (inspected 2026-05-18)
+  sourceRecipe: recipes/single-system-analysis/by-inspector/crowdstrike.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:crowdstrike:high-risk-users-list
+  '@type': liongard:MetricPrimitive
+  name: CrowdStrike — High-Risk Users by Device Association List
+  description: Last-logged-in users on devices that are stale (>30d), in RFM, or non-normal
+    sensor status. Watch list for users associated with at-risk endpoints.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: crowdstrike-inspector
+    inspectorId: 102
+  liongardMetricName: 'CrowdStrike: High-Risk Users by Device Association List'
+  liongardMetricId: 107490
+  liongardMetricUuid: "2b5e9c1d-7a3f-4e89-b21c-3d8f6a154d24"
+  jmesPath: DevicesDetails[?(reduced_functionality_mode == 'yes' || status != 'normal'
+    || DaysSinceLastSeen > `30`) && last_login_user].last_login_user
+  resultType: array
+  compliantWhen: result == []
+  compliesWith:
+  - cyber-insurance-domain-auth
+  fieldGotcha: last_login_user is a string field on DevicesDetails[]. DaysSinceLastSeen
+    is Liongard-computed. status is a string (e.g. normal/contained).
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System M (inspected 2026-05-18)
+  sourceRecipe: recipes/single-system-analysis/by-inspector/crowdstrike.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:crowdstrike:users-without-mfa-count
+  '@type': liongard:MetricPrimitive
+  name: CrowdStrike — Console Users Without MFA Count
+  description: 'Number of Falcon console users with no MFA factors enrolled. Should
+    be 0. Alternative: UsersOverview.UsersWithMFA gives pre-aggregated enrolled count.'
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: crowdstrike-inspector
+    inspectorId: 102
+  liongardMetricName: 'CrowdStrike: Users Without MFA Count'
+  liongardMetricId: 107494
+  liongardMetricUuid: "8e1d3c97-2a4b-4f76-b09c-d6f1e7a44d28"
+  jmesPath: Users[?!factors || length(factors) == `0`] | length(@)
+  resultType: integer
+  resultUnit: count
+  compliantWhen: result == 0
+  compliesWith:
+  - CIS-Controls-v8:6.3
+  - cyber-insurance-domain-auth
+  fieldGotcha: Users[].factors is an ARRAY of enrolled MFA factor objects — filter
+    on empty/null factors array. UsersOverview.UsersWithMFA provides a pre-aggregated
+    enrolled count; subtract from TotalUsers for without-MFA count.
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System M (inspected 2026-05-18)
+  sourceRecipe: recipes/single-system-analysis/by-inspector/crowdstrike.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:crowdstrike:inactive-users-count-30d
+  '@type': liongard:MetricPrimitive
+  name: CrowdStrike — Inactive Console Users Count (> 30 days)
+  description: 'Falcon console users with no login in the last 30+ days. Stale accounts
+    are an access-control risk. Alternative: UsersOverview.InactiveUsers gives pre-aggregated
+    count.'
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: crowdstrike-inspector
+    inspectorId: 102
+  liongardMetricName: 'CrowdStrike: Inactive Users Count (>30 days)'
+  liongardMetricId: 107495
+  liongardMetricUuid: "3a8c4f17-6b2e-4c91-b7a3-9e2d8c354d29"
+  jmesPath: Users[?DaysSinceLastLogin > `30`] | length(@)
+  resultType: integer
+  resultUnit: count
+  compliantWhen: result == 0
+  compliesWith:
+  - CIS-Controls-v8:5.3
+  - cyber-insurance-domain-auth
+  fieldGotcha: Users[].DaysSinceLastLogin is a Liongard-computed integer. UsersOverview.InactiveUsers
+    provides a pre-aggregated inactive count — use for quick checks without filtering
+    Users[].
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: System M (inspected 2026-05-18)
+  sourceRecipe: recipes/single-system-analysis/by-inspector/crowdstrike.md
+  dateAdded: '2026-05-26'
+

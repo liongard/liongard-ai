@@ -1,0 +1,150 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+# Managed Printer (Inspector ID 89)
+# Eval sweep 2026-05-28 findings:
+# Single-tenant inspector. Validated on Demo system (Timeout — last inspection data valid ~2025-12).
+# Contoso system (sys 7670) had stale/purged data — all paths returned null.
+# Dataprint root keys: SystemInfo, Consumables, ifTable, prtMarkerTable, prtGeneralTable, and others.
+# GOTCHA: SystemInfo.ipAddress can be '127.0.0.1' (loopback) — use ifTable[?ipAdEntAddr != '127.0.0.1'].ipAdEntAddr | [0] for real IP.
+# GOTCHA: prtMarkerSuppliesPercentageRemaining_r is an INTEGER (0-100) — Liongard-computed field.
+# GOTCHA: prtMarkerLifeCount appears in BOTH SystemInfo.prtMarkerDetails AND prtMarkerTable[0] — use prtMarkerTable path.
+# All 6 PROPOSED paths upgraded to VALIDATED. Total: 7 primitives.
+
+primitives:
+
+- '@id': metrics:managed-printer-inspector:system-uptime
+  '@type': liongard:MetricPrimitive
+  name: Managed Printer — System Uptime
+  description: Printer uptime as reported via SNMP sysUpTime (formatted string, not
+    numeric duration)
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: managed-printer-inspector
+    inspectorId: 89
+  liongardMetricName: managed-printer-inspector:System Uptime (dani)
+  jmesPath: SystemInfo.sysUpTime
+  resultType: string
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/managed-printer.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:managed-printer-inspector:sys-name
+  '@type': liongard:MetricPrimitive
+  name: Managed Printer — Printer Name (sysName)
+  description: SNMP sysName — printer hostname as configured on the device
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: managed-printer-inspector
+    inspectorId: 89
+  jmesPath: SystemInfo.sysName
+  resultType: string
+  fieldGotcha: 'SystemInfo confirmed fields: sysDesc (string), sysObjectID (string),
+    sysUpTime (string), sysContact (string), sysName (string), sysLocation (string),
+    snmpOutTraps (integer), sysServices (integer), ifNumber (integer), vendor (string),
+    printerSerialNumber (string), ipAddress (string), prtMarkerDetails (object). NOTE:
+    SystemInfo.ipAddress may be ''127.0.0.1'' (loopback) — use ifTable path for real
+    management IP.'
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: Demo system (Timeout — data valid, last inspection ~2025-12)
+  sourceRecipe: recipes/single-system-analysis/by-inspector/managed-printer.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:managed-printer-inspector:printer-serial-number
+  '@type': liongard:MetricPrimitive
+  name: Managed Printer — Printer Serial Number
+  description: Printer serial number from SNMP printerSerialNumber OID
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: managed-printer-inspector
+    inspectorId: 89
+  jmesPath: SystemInfo.printerSerialNumber
+  resultType: string
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: Demo system (Timeout — data valid, last inspection ~2025-12)
+  sourceRecipe: recipes/single-system-analysis/by-inspector/managed-printer.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:managed-printer-inspector:network-interface-ip
+  '@type': liongard:MetricPrimitive
+  name: Managed Printer — Network Interface IP
+  description: Actual management IP address from ifTable (excludes loopback 127.0.0.1)
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: managed-printer-inspector
+    inspectorId: 89
+  jmesPath: ifTable[?ipAdEntAddr != '127.0.0.1'].ipAdEntAddr | [0]
+  resultType: string
+  fieldGotcha: 'SystemInfo.ipAddress can be ''127.0.0.1'' (loopback — the SNMP management
+    address Liongard used to connect). The real device IP is in ifTable[].ipAdEntAddr.
+    Filter != ''127.0.0.1'' to get the actual network interface address. Validated:
+    returned ''192.168.128.190''.'
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: Demo system (Timeout — data valid, last inspection ~2025-12)
+  sourceRecipe: recipes/single-system-analysis/by-inspector/managed-printer.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:managed-printer-inspector:consumables-low
+  '@type': liongard:MetricPrimitive
+  name: Managed Printer — Consumables Below 20%
+  description: List of consumables with percentage remaining below 20%; integer 0-100
+    comparison
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: managed-printer-inspector
+    inspectorId: 89
+  jmesPath: 'Consumables[?prtMarkerSuppliesPercentageRemaining_r < `20`].{desc: prtMarkerSuppliesDescription,
+    pct: prtMarkerSuppliesPercentageRemaining_r}'
+  resultType: array
+  fieldGotcha: 'Consumables[] confirmed fields: prtMarkerSuppliesMarkerIndex, prtMarkerSuppliesColorantIndex,
+    prtMarkerSuppliesClass, prtMarkerSuppliesType (string e.g. ''Toner''), prtMarkerSuppliesDescription
+    (string e.g. ''Black Cartridge HP W2020X''), prtMarkerSuppliesSupplyUnit (string
+    ''Percent''), prtMarkerSuppliesMaxCapacity (integer 100), prtMarkerSuppliesLevel
+    (integer), prtMarkerSuppliesPercentageRemaining_r (INTEGER 0-100 — Liongard computed).
+    Use prtMarkerSuppliesPercentageRemaining_r for numeric comparison.'
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: Demo system (Timeout — data valid, last inspection ~2025-12)
+  sourceRecipe: recipes/single-system-analysis/by-inspector/managed-printer.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:managed-printer-inspector:marker-life-count
+  '@type': liongard:MetricPrimitive
+  name: Managed Printer — Lifetime Impression Count
+  description: Total lifetime page impression count from prtMarkerLifeCount (integer)
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: managed-printer-inspector
+    inspectorId: 89
+  jmesPath: prtMarkerTable[0].prtMarkerLifeCount
+  resultType: integer
+  fieldGotcha: 'prtMarkerLifeCount also appears nested in SystemInfo.prtMarkerDetails.prtMarkerLifeCount
+    — both paths return the same value. Use prtMarkerTable[0].prtMarkerLifeCount (the
+    direct SNMP MIB path). Validated value: 13529.'
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: Demo system (Timeout — data valid, last inspection ~2025-12)
+  sourceRecipe: recipes/single-system-analysis/by-inspector/managed-printer.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:managed-printer-inspector:alert-critical-events
+  '@type': liongard:MetricPrimitive
+  name: Managed Printer — Critical Alert Event Count
+  description: Lifetime count of critical alert events from prtAlertCriticalEvents
+    (integer; 0 = no critical alerts)
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: managed-printer-inspector
+    inspectorId: 89
+  jmesPath: prtGeneralTable[0].prtAlertCriticalEvents
+  resultType: integer
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: Demo system (Timeout — data valid, last inspection ~2025-12)
+  sourceRecipe: recipes/single-system-analysis/by-inspector/managed-printer.md
+  dateAdded: '2026-05-26'
+

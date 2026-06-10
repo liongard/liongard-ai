@@ -1,0 +1,167 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+# NOTE: The barracuda-firewall.md recipe uses proposed metric paths
+# (barracuda-fw.system.*, barracuda-fw.services.*, etc.) that have NO confirmed
+# entries in the Liongard Global metric catalog as of 2026-05-26.
+# All entries below are PROPOSED. liongardMetricId and liongardMetricName are
+# omitted until catalog IDs are assigned via a metric request.
+
+primitives:
+
+  - "@id": "metrics:barracuda-firewall:system-model"
+    "@type": "liongard:MetricPrimitive"
+    name: "Barracuda Firewall — System Model"
+    description: "Hardware model of the Barracuda CloudGen Firewall appliance."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "barracuda-firewall-inspector"
+      inspectorId: 52
+    jmesPath: "barracuda-fw.system.model"
+    resultType: "string"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/barracuda-firewall.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:barracuda-firewall:firmware-version"
+    "@type": "liongard:MetricPrimitive"
+    name: "Barracuda Firewall — Firmware Version"
+    description: "Current firmware version installed on the Barracuda CloudGen Firewall appliance."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "barracuda-firewall-inspector"
+      inspectorId: 52
+    jmesPath: "barracuda-fw.system.firmwareVersion"
+    resultType: "string"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/barracuda-firewall.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:barracuda-firewall:energize-updates-days-until-expiration"
+    "@type": "liongard:MetricPrimitive"
+    name: "Barracuda Firewall — Energize Updates Days Until Expiration"
+    description: "Days remaining until Energize Updates subscription expires. Subscription feeds IPS, AV, and URL filter signatures — expiry stops all signature updates."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "barracuda-firewall-inspector"
+      inspectorId: 52
+    jmesPath: "barracuda-fw.energizeUpdates.daysUntilExpiration"
+    resultType: "integer"
+    compliantWhen: "result > 60"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/barracuda-firewall.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:barracuda-firewall:ips-enabled"
+    "@type": "liongard:MetricPrimitive"
+    name: "Barracuda Firewall — IPS Enabled"
+    description: "Whether the Intrusion Prevention System (IPS) security service is enabled on the appliance."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "barracuda-firewall-inspector"
+      inspectorId: 52
+    jmesPath: "barracuda-fw.services.ips.enabled"
+    resultType: "boolean"
+    compliantWhen: "result == true"
+    compliesWith:
+      - "CIS-Controls-v8:13.1"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/barracuda-firewall.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:barracuda-firewall:atp-enabled"
+    "@type": "liongard:MetricPrimitive"
+    name: "Barracuda Firewall — Advanced Threat Protection Enabled"
+    description: "Whether the Advanced Threat Protection (ATP) service is enabled on the appliance."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "barracuda-firewall-inspector"
+      inspectorId: 52
+    jmesPath: "barracuda-fw.services.atp.enabled"
+    resultType: "boolean"
+    compliantWhen: "result == true"
+    compliesWith:
+      - "CIS-Controls-v8:13.1"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/barracuda-firewall.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:barracuda-firewall:application-control-enabled"
+    "@type": "liongard:MetricPrimitive"
+    name: "Barracuda Firewall — Application Control Enabled"
+    description: "Whether the Application Control security service is enabled on the appliance."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "barracuda-firewall-inspector"
+      inspectorId: 52
+    jmesPath: "barracuda-fw.services.applicationControl.enabled"
+    resultType: "boolean"
+    compliantWhen: "result == true"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/barracuda-firewall.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:barracuda-firewall:rules-open-any-to-any-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Barracuda Firewall — Open Any-to-Any Access Rules Count"
+    description: "Count of access rules permitting any source to any destination — critical finding requiring immediate restriction."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "barracuda-firewall-inspector"
+      inspectorId: 52
+    jmesPath: "barracuda-fw.rules.openAnyToAnyCount"
+    resultType: "integer"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "CIS-Controls-v8:12.2"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/barracuda-firewall.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:barracuda-firewall:wan-management-allowed"
+    "@type": "liongard:MetricPrimitive"
+    name: "Barracuda Firewall — WAN Management Allowed"
+    description: "Whether management access is permitted from the WAN interface — must be false per MSP baseline."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "barracuda-firewall-inspector"
+      inspectorId: 52
+    jmesPath: "barracuda-fw.management.wanAllowed"
+    resultType: "boolean"
+    compliantWhen: "result == false"
+    compliesWith:
+      - "CIS-Controls-v8:12.6"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/barracuda-firewall.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:barracuda-firewall:local-users-total-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Barracuda Firewall — Local Users Total Count"
+    description: "Total number of local user accounts configured on the appliance."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "barracuda-firewall-inspector"
+      inspectorId: 52
+    jmesPath: "barracuda-fw.localUsers.totalCount"
+    resultType: "integer"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/barracuda-firewall.md"
+    dateAdded: "2026-05-26"

@@ -1,0 +1,63 @@
+# Liongard Prompt Library — MSP Local Override (template)
+#
+# Copy this file to `msp-config.local.yaml` (in the same directory)
+# and fill in your MSP's real values. The local file is gitignored —
+# it will not be committed.
+#
+#   cp config/msp-config.local.yaml.example config/msp-config.local.yaml
+#
+# You only need to set the values you want to override. Anything you
+# don't set falls back to the defaults in `msp-config.yaml`.
+#
+# Example: a small MSP might only set brand identity + their preferred
+# EDR / backup / firewall vendors and inherit everything else. A large
+# MSP with strict standards might also override the SLA block.
+
+brand:
+  company_name: "Acme Managed Services"
+  primary_color: "#0E4F87"
+  secondary_color: "#FFFFFF"
+  logo_path: "config/acme-logo.png"
+  letterhead_path: "config/acme-letterhead.docx"
+  cover_image_path: "config/acme-cover.png"
+
+defaults:
+  audience_tone: "balanced"
+  output_format: "pptx"
+
+preferred_stack:
+  identity_primary: "microsoft-365"
+  mfa_layer: "duo"
+  edr: "sentinelone"
+  backup_workstation: "datto-bcdr"
+  backup_server: "datto-bcdr"
+  firewall: "fortinet-fortigate"
+  rmm: "ninjaone"
+  psa: "connectwise-manage"
+  documentation: "itglue"
+  domain_registrar: ""
+  ssl_certificate_authority: ""
+  workstation_oem: "Dell"
+  laptop_oem: "Dell"
+  server_oem: "Dell"
+
+# Override SLAs only if your MSP standard differs from the library default.
+# Most MSPs can omit this block entirely.
+slas:
+  mfa_coverage_pct_min: 98                 # stricter than library default
+  patch_age_days_max: 14                   # stricter than library default
+
+# Privacy overrides
+privacy:
+  redact_individual_users_in_executive_output: true
+
+# If your MSP has industry-vertical cost benchmarks, populate these so
+# the roadmap recipe surfaces budget figures.
+cost_estimates:
+  workstation_replacement_avg: 1200
+  laptop_replacement_avg: 1500
+  server_replacement_avg: 8000
+  firewall_replacement_avg: 2400
+  m365_seat_avg_monthly: 22
+  edr_seat_avg_annual: 36
+  backup_seat_avg_annual: 60

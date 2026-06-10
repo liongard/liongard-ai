@@ -1,0 +1,118 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+# ConnectWise Asio (Inspector ID 103)
+# Eval sweep 2026-05-28 findings:
+# Parent/child inspector. Only parent system available on production (Discovered[] shows 2 children
+#   but no child launchpoints are active on this instance).
+# Parent holds Companies[] (company roster) and Discovered[] (child discovery entries).
+# GOTCHA: activityStatus is an OBJECT {id, name, activeFlag, defaultFlag} — NOT a string.
+#   Use activityStatus.name for string match ('Active Customer') OR
+#   activityStatus.activeFlag for boolean filter.
+# GOTCHA: ownershipType is an OBJECT {id, name} — NOT a string.
+#   Use ownershipType.name for the label.
+# GOTCHA: SitesCount and DevicesCount are INTEGERS.
+# Validated against Demo Parent system (inspected 2026-05-28).
+
+primitives:
+
+  - "@id": "metrics:connectwise-asio-inspector:company-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "ConnectWise Asio — Managed Company Count"
+    description: "Total number of managed companies in this ConnectWise Asio MSP account."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "connectwise-asio-inspector"
+      inspectorId: 103
+    jmesPath: "length(Companies)"
+    resultType: "integer"
+    fieldGotcha: "Companies[] fields confirmed: id (UUID string), name (string), friendlyName (string), activityStatus (OBJECT with id/name/activeFlag/defaultFlag), ownershipType (OBJECT with id/name), SitesCount (integer), DevicesCount (integer), lifeCycleState (string)."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Demo Parent system (inspected 2026-05-28)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/connectwise-asio.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:connectwise-asio-inspector:active-company-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "ConnectWise Asio — Active Company Count"
+    description: "Count of companies where activityStatus.activeFlag is true."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "connectwise-asio-inspector"
+      inspectorId: 103
+    jmesPath: "length(Companies[?activityStatus.activeFlag == `true`])"
+    resultType: "integer"
+    fieldGotcha: "activityStatus is an OBJECT — NOT a string. Use activityStatus.activeFlag (BOOLEAN) for boolean filter. Alternatively: activityStatus.name == 'Active Customer'."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Demo Parent system (inspected 2026-05-28)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/connectwise-asio.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:connectwise-asio-inspector:company-roster"
+    "@type": "liongard:MetricPrimitive"
+    name: "ConnectWise Asio — Company Roster"
+    description: "Full company roster with identity, classification, activity status label, ownership type, site count, and device count."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "connectwise-asio-inspector"
+      inspectorId: 103
+    jmesPath: "Companies[].{id: id, name: name, friendlyName: friendlyName, activityStatus: activityStatus.name, ownershipType: ownershipType.name, sitesCount: SitesCount, devicesCount: DevicesCount}"
+    resultType: "array"
+    fieldGotcha: "activityStatus.name and ownershipType.name extract the string label from their respective OBJECT fields. Both activityStatus and ownershipType are objects, not strings."
+    status: "SCHEMA_CONFIRMED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Demo Parent system — all field names confirmed individually via Companies[0]; multi-field projection not directly EVALUATE-tested"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/connectwise-asio.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:connectwise-asio-inspector:zero-device-companies"
+    "@type": "liongard:MetricPrimitive"
+    name: "ConnectWise Asio — Companies With Zero Devices"
+    description: "List of companies with no managed devices — indicates a coverage gap for that client."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "connectwise-asio-inspector"
+      inspectorId: 103
+    jmesPath: "Companies[?DevicesCount == `0`].{name: name, friendlyName: friendlyName}"
+    resultType: "array"
+    fieldGotcha: "DevicesCount is INTEGER — use backtick-quoted literal `0`. Confirmed integer on Companies[0].DevicesCount."
+    status: "SCHEMA_CONFIRMED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Demo Parent system — DevicesCount confirmed as integer; == `0` filter not directly EVALUATE-tested"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/connectwise-asio.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:connectwise-asio-inspector:discovered-child-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "ConnectWise Asio — Discovered Child System Count"
+    description: "Count of child launchpoints auto-discovered by this parent system."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "connectwise-asio-inspector"
+      inspectorId: 103
+    jmesPath: "length(Discovered)"
+    resultType: "integer"
+    fieldGotcha: "Discovered[] fields confirmed: EnvironmentSearch (string — company short-name), Alias (string — friendly name for the child launchpoint), Inspector (string — inspector slug), Parent (integer — parent launchpoint ID), Config (object with COMPANY_ID)."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Demo Parent system (inspected 2026-05-28)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/connectwise-asio.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:connectwise-asio-inspector:discovered-children"
+    "@type": "liongard:MetricPrimitive"
+    name: "ConnectWise Asio — Discovered Children"
+    description: "List of auto-discovered child launchpoints with environment search key, alias, and inspector type."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "connectwise-asio-inspector"
+      inspectorId: 103
+    jmesPath: "Discovered[].{EnvironmentSearch: EnvironmentSearch, Alias: Alias, Inspector: Inspector}"
+    resultType: "array"
+    fieldGotcha: "Discovered[0] confirmed fields: EnvironmentSearch, Alias, Inspector (all strings). Additional fields in the raw object: Parent (integer), Config (object with COMPANY_ID key)."
+    status: "SCHEMA_CONFIRMED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Demo Parent system — Discovered[0] field names confirmed; multi-field projection not directly EVALUATE-tested"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/connectwise-asio.md"
+    dateAdded: "2026-05-26"

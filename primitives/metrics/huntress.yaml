@@ -1,0 +1,201 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+# Huntress (Inspector ID 97)
+# Eval sweep 2026-05-28 findings:
+# PARENT/CHILD inspector — target child for EVALUATE.
+# Validated on child system (Timeout — data valid from 2025-12-02).
+# Child dataprint root keys: Agents, Organization, Name.
+# DATA GAP: Incidents[] does NOT exist in the child dataprint.
+# DATA GAP: Footholds[] does NOT exist in the child dataprint.
+#   Alternative: Organization.incident_reports_count (integer) = pre-aggregated incident report count.
+# GOTCHA: Agents[].DaysSinceLastCheckin is an INTEGER (Liongard-computed).
+# GOTCHA: Organization is a single OBJECT (not array) with pre-aggregated counts.
+# 3 PROPOSED: agents-total-count → VALIDATED; active-incidents-count → VALIDATED (path changed);
+#   footholds-count → REMOVED (data gap). Net: 9 → 8 primitives.
+
+primitives:
+
+- '@id': metrics:huntress:agents-total-count
+  '@type': liongard:MetricPrimitive
+  name: Huntress — Total Agents Count
+  description: Total count of Huntress agents enrolled from length(Agents).
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: huntress-inspector
+    inspectorId: 97
+  jmesPath: length(Agents)
+  resultType: integer
+  resultUnit: count
+  fieldGotcha: 'Agents[] confirmed fields: id, version, arch, win_build_number, domain_name,
+    created_at, hostname, ipv4_address, external_ip, mac_addresses, updated_at, last_survey_at,
+    last_callback_at, account_id, organization_id, platform, os, os_major, os_minor,
+    os_patch, os_build_version, os_version, service_pack, service_pack_major, service_pack_minor,
+    edr_version, version_number, serial_number, tags, DaysSinceLastCheckin (integer).
+    NOTE: Incidents[] and Footholds[] do NOT exist in the child dataprint.'
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: Active system (Timeout — data valid, inspected 2025-12-02)
+  sourceRecipe: recipes/single-system-analysis/by-inspector/huntress.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:huntress:unresponsive-agents-count-30d
+  '@type': liongard:MetricPrimitive
+  name: Huntress — Unresponsive Agents Count (30 days)
+  description: Count of agents that have not checked in for 30+ days from Agents[?DaysSinceLastCheckin
+    >= 30]. Should be 0 for healthy managed endpoints.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: huntress-inspector
+    inspectorId: 97
+  liongardMetricName: 'Huntress: Unresponsive agents count (30 days)'
+  liongardMetricId: 24303
+  liongardMetricUuid: "0a7a2220-e538-4130-8901-dfbe1183cf3f"
+  jmesPath: Agents[?DaysSinceLastCheckin >= `30`] | length(@)
+  resultType: integer
+  resultUnit: count
+  compliantWhen: result == 0
+  compliesWith:
+  - CIS-Controls-v8:13.7
+  - cyber-insurance-domain-endpoint
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/huntress.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:huntress:unresponsive-agents-list-30d
+  '@type': liongard:MetricPrimitive
+  name: Huntress — Unresponsive Agents List (30 days)
+  description: Hostnames of agents not checked in for 30+ days from Agents[?DaysSinceLastCheckin
+    >= 30].hostname.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: huntress-inspector
+    inspectorId: 97
+  liongardMetricName: 'Huntress: Unresponsive agents list (30 days)'
+  liongardMetricId: 24302
+  liongardMetricUuid: "d8d2a6e5-9d8f-434a-8fa9-5e45750cf57c"
+  jmesPath: Agents[?DaysSinceLastCheckin >= `30`].hostname
+  resultType: array
+  compliantWhen: result == []
+  compliesWith:
+  - CIS-Controls-v8:13.7
+  - cyber-insurance-domain-endpoint
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/huntress.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:huntress:unresponsive-agents-count-21d
+  '@type': liongard:MetricPrimitive
+  name: Huntress — Unresponsive Agents Count (21 days)
+  description: Count of agents not checked in for 21+ days. Use as an early-warning
+    threshold before the 30-day alert fires.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: huntress-inspector
+    inspectorId: 97
+  liongardMetricName: 'Huntress: Unresponsive agents count(21 days)'
+  liongardMetricId: 24301
+  liongardMetricUuid: "06bb3656-1286-434b-85bf-4216f26c89bf"
+  jmesPath: Agents[?DaysSinceLastCheckin >= `21`] | length(@)
+  resultType: integer
+  resultUnit: count
+  compliantWhen: result == 0
+  compliesWith:
+  - CIS-Controls-v8:13.7
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/huntress.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:huntress:unresponsive-agents-list-21d
+  '@type': liongard:MetricPrimitive
+  name: Huntress — Unresponsive Agents List (21 days)
+  description: Hostnames of agents not checked in for 21+ days.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: huntress-inspector
+    inspectorId: 97
+  liongardMetricName: 'Huntress: Unresponsive agents list(21 days)'
+  liongardMetricId: 24300
+  liongardMetricUuid: "0012c370-2ff1-45ab-93f0-c8f7de66966b"
+  jmesPath: Agents[?DaysSinceLastCheckin >= `21`].hostname
+  resultType: array
+  compliantWhen: result == []
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/huntress.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:huntress:unresponsive-agents-count-60d
+  '@type': liongard:MetricPrimitive
+  name: Huntress — Unresponsive Agents Count (60 days)
+  description: Count of agents not checked in for 60+ days. Strong indicator of decommissioned
+    or unmanaged hosts.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: huntress-inspector
+    inspectorId: 97
+  liongardMetricName: 'Huntress: Unresponsive agents count (60 days)'
+  liongardMetricId: 24307
+  liongardMetricUuid: "fe35b729-4812-4fb3-89c5-4d6a8f0e51e5"
+  jmesPath: Agents[?DaysSinceLastCheckin >= `60`] | length(@)
+  resultType: integer
+  resultUnit: count
+  compliantWhen: result == 0
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/huntress.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:huntress:unresponsive-agents-list-60d
+  '@type': liongard:MetricPrimitive
+  name: Huntress — Unresponsive Agents List (60 days)
+  description: Hostnames of agents not checked in for 60+ days.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: huntress-inspector
+    inspectorId: 97
+  liongardMetricName: 'Huntress: Unresponsive agents list (60 days)'
+  liongardMetricId: 24306
+  liongardMetricUuid: "1e76cb22-cc6c-4314-b628-983297ddf084"
+  jmesPath: Agents[?DaysSinceLastCheckin >= `60`].hostname
+  resultType: array
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/huntress.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:huntress:active-incidents-count
+  '@type': liongard:MetricPrimitive
+  name: Huntress — Incident Reports Count
+  description: 'Pre-aggregated count of incident reports from Organization.incident_reports_count.
+    Note: Incidents[] array does not exist in the child dataprint — this is the closest
+    available alternative.'
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: huntress-inspector
+    inspectorId: 97
+  jmesPath: Organization.incident_reports_count
+  resultType: integer
+  resultUnit: count
+  fieldGotcha: 'Incidents[] and Footholds[] arrays DO NOT exist in the Huntress child
+    dataprint. The only available incident indicator is Organization.incident_reports_count
+    (integer, pre-aggregated). Organization confirmed fields: id, name, created_at,
+    updated_at, account_id, key, notify_emails, microsoft_365_tenant_id, incident_reports_count
+    (integer), agents_count (integer), microsoft_365_users_count (integer).'
+  compliantWhen: result == 0
+  compliesWith:
+  - cyber-insurance-domain-endpoint
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: Active system (Timeout — data valid, inspected 2025-12-02)
+  sourceRecipe: recipes/single-system-analysis/by-inspector/huntress.md
+  dateAdded: '2026-05-26'
+

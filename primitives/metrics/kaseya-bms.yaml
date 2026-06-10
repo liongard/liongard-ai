@@ -1,0 +1,115 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+# Kaseya BMS (Inspector ID 83)
+# Eval sweep 2026-05-28 findings:
+# Top-level keys: Users, Roles, Contracts, Accounts, Services, Discovered, Name
+# CONFIRMED DATA GAPS: No Tickets data, no SLA metrics, no billable utilization,
+# no MFA field on Users. All prior primitives used fabricated nested paths
+# (kaseya-bms.tickets.X, kaseya-bms.sla.X etc.) — those paths do not exist.
+# IsActive is BOOLEAN on both Users[] and Accounts[].
+# Contracts[].Status is a STRING (e.g. "New"). EndDate is ISO datetime string.
+# Users[].SecurityUser is a STRING (empty string = non-security user).
+
+primitives:
+
+  - "@id": "metrics:kaseya-bms-inspector:users-total-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Kaseya BMS — Total User Count"
+    description: "Total number of BMS user accounts (technicians and staff)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "kaseya-bms-inspector"
+      inspectorId: 83
+    jmesPath: "length(Users)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "System C (inspected 2026-05-28)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/kaseya-bms.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:kaseya-bms-inspector:users-active-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Kaseya BMS — Active User Count"
+    description: "Number of BMS users with IsActive = true."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "kaseya-bms-inspector"
+      inspectorId: 83
+    jmesPath: "length(Users[?IsActive == `true`])"
+    resultType: "integer"
+    fieldGotcha: "Users[].IsActive is BOOLEAN (true/false). Use backtick-quoted boolean literal. Different from some other PSA inspectors where active flag is an integer."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "System C (inspected 2026-05-28)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/kaseya-bms.md"
+    dateAdded: "2026-05-28"
+
+  - "@id": "metrics:kaseya-bms-inspector:accounts-total-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Kaseya BMS — Total Account Count"
+    description: "Total number of customer accounts (companies) in the BMS tenant."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "kaseya-bms-inspector"
+      inspectorId: 83
+    jmesPath: "length(Accounts)"
+    resultType: "integer"
+    compliesWith:
+      - "CIS-Controls-v8:1.1"
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "System C (inspected 2026-05-28)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/kaseya-bms.md"
+    dateAdded: "2026-05-28"
+
+  - "@id": "metrics:kaseya-bms-inspector:accounts-active-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Kaseya BMS — Active Account Count"
+    description: "Number of active customer accounts (IsActive = true) in the BMS tenant."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "kaseya-bms-inspector"
+      inspectorId: 83
+    jmesPath: "length(Accounts[?IsActive == `true`])"
+    resultType: "integer"
+    fieldGotcha: "Accounts[].IsActive is BOOLEAN (true/false). Account fields include: Id, AccountName, AccountType, BusinessType, ServiceType, AccountManager, IsActive, IsBilling, CreditLimit, TenantName."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "System C (inspected 2026-05-28)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/kaseya-bms.md"
+    dateAdded: "2026-05-28"
+
+  - "@id": "metrics:kaseya-bms-inspector:contracts-total-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Kaseya BMS — Total Contract Count"
+    description: "Total number of contracts in the BMS tenant."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "kaseya-bms-inspector"
+      inspectorId: 83
+    jmesPath: "length(Contracts)"
+    resultType: "integer"
+    fieldGotcha: "Contracts[].Status is a STRING (e.g. 'New'). Contracts[].EndDate is ISO datetime string (e.g. '2022-09-08T00:00:00'). Fields include: Id, ContractName, AccountName, Type, SLA, Status, ContractHours, StartDate, EndDate, BillingCycle, ContractBillingPrice."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "System C (inspected 2026-05-28)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/kaseya-bms.md"
+    dateAdded: "2026-05-28"
+
+  - "@id": "metrics:kaseya-bms-inspector:roles-total-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Kaseya BMS — Total Role Count"
+    description: "Total number of BMS roles defined in the tenant."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "kaseya-bms-inspector"
+      inspectorId: 83
+    jmesPath: "length(Roles)"
+    resultType: "integer"
+    fieldGotcha: "Roles[].fields include: Id, Name, Description, IsActive, BillingRate."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "System C (inspected 2026-05-28)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/kaseya-bms.md"
+    dateAdded: "2026-05-28"

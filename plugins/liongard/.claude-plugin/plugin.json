@@ -1,0 +1,19 @@
+{
+  "name": "liongard",
+  "version": "0.1.0",
+  "description": "Official Liongard MCP setup commands and MSP workflow skills for Claude Code.",
+  "author": {
+    "name": "Liongard"
+  },
+  "homepage": "https://github.com/liongard/liongard-ai",
+  "repository": "https://github.com/liongard/liongard-ai",
+  "license": "Apache-2.0",
+  "keywords": [
+    "liongard",
+    "mcp",
+    "msp",
+    "alerts",
+    "inspections",
+    "cyber-risk"
+  ]
+}

@@ -1,0 +1,180 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+  - "@id": "metrics:cisco-asa:model"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cisco ASA — Model"
+    description: "Hardware model from SystemInfo.Model."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cisco-asa-inspector"
+      inspectorId: 22
+    liongardMetricName: "Cisco ASA: Model"
+    liongardMetricId: 257
+    liongardMetricUuid: "4dd6b51f-f899-455a-a104-da376683023e"
+    jmesPath: "SystemInfo.Model"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cisco-asa.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:cisco-asa:serial-number"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cisco ASA — Serial Number"
+    description: "Hardware serial number from SystemInfo.SerialNumber."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cisco-asa-inspector"
+      inspectorId: 22
+    liongardMetricName: "Cisco ASA: Serial Number"
+    liongardMetricId: 9
+    liongardMetricUuid: "c9ff5e73-c870-4875-80c8-db9a484977ec"
+    jmesPath: "SystemInfo.SerialNumber"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cisco-asa.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:cisco-asa:software-version"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cisco ASA — ASA Software Version"
+    description: "ASA software version string from SystemInfo.CiscoAdaptiveSecurityApplianceSoftwareVersion."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cisco-asa-inspector"
+      inspectorId: 22
+    liongardMetricName: "Cisco ASA: ASA Software Version"
+    liongardMetricId: 254
+    liongardMetricUuid: "a64239c6-a0f1-4f4b-85ab-3537e1a4cd12"
+    jmesPath: "SystemInfo.CiscoAdaptiveSecurityApplianceSoftwareVersion"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cisco-asa.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:cisco-asa:last-config-modified"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cisco ASA — Last Config Modification Date"
+    description: "Timestamp of the last configuration change from SystemInfo.LastModifiedAt. Use for change detection."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cisco-asa-inspector"
+      inspectorId: 22
+    liongardMetricName: "Cisco ASA: Last Config Modification Date"
+    liongardMetricId: 18
+    liongardMetricUuid: "53d9ca67-aa20-4cbb-bae5-0f0ffaec3148"
+    jmesPath: "SystemInfo.LastModifiedAt"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cisco-asa.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:cisco-asa:configs-match"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cisco ASA — Running and Startup Configs Match"
+    description: "Boolean indicating whether the running config matches the startup config from SystemInfo.MatchingConfigurations. False means unsaved changes will be lost on reboot."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cisco-asa-inspector"
+      inspectorId: 22
+    liongardMetricName: "Cisco ASA: Running and Startup Configs Match"
+    liongardMetricId: 736
+    liongardMetricUuid: "7f047528-594e-4e1b-b11f-6ff0fa9e51d3"
+    jmesPath: "SystemInfo.MatchingConfigurations"
+    resultType: "boolean"
+    compliantWhen: "result == true"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cisco-asa.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:cisco-asa:licenses-expiring-30d-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cisco ASA — Active Licenses Expiring Within 30 Days Count"
+    description: "Count of active ASA licenses expiring within 30 days from SystemInfo.Licenses[?DaysTillExpiration<=30 && Active==true]."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cisco-asa-inspector"
+      inspectorId: 22
+    liongardMetricName: "Cisco ASA: Licenses Expiring within 30 Days Count"
+    liongardMetricId: 732
+    liongardMetricUuid: "ba4abdd3-e964-4d8a-99c9-92aeeccf768f"
+    jmesPath: "length(SystemInfo.Licenses[?DaysTillExpiration<=`30` && Active==`true`])"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cisco-asa.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:cisco-asa:licenses-expiring-5d-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cisco ASA — Active Licenses Expiring Within 5 Days Count"
+    description: "Count of active ASA licenses expiring within 5 days — critical alert threshold."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cisco-asa-inspector"
+      inspectorId: 22
+    liongardMetricName: "Cisco ASA: Licenses Expiring within 5 Days Count"
+    liongardMetricId: 731
+    liongardMetricUuid: "74c22cb5-ca65-4a0f-80db-f8c00cdb4351"
+    jmesPath: "length(SystemInfo.Licenses[?DaysTillExpiration<=`5` && Active==`true`])"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cisco-asa.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:cisco-asa:licenses-expiring-5d-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cisco ASA — Active Licenses Expiring Within 5 Days List"
+    description: "List of active ASA license objects expiring within 5 days."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cisco-asa-inspector"
+      inspectorId: 22
+    liongardMetricName: "Cisco ASA: Licenses Expiring within 5 Days List"
+    liongardMetricId: 730
+    liongardMetricUuid: "182d65f5-af8b-4d02-b1ca-8fcbfea3c54d"
+    jmesPath: "to_string(SystemInfo.Licenses[?DaysTillExpiration<=`5` && Active==`true`] || `-`)"
+    resultType: "string"
+    compliantWhen: "result == '-'"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cisco-asa.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:cisco-asa:running-config"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cisco ASA — Running Configuration"
+    description: "Full running configuration snapshot from RunningConfig. Use for policy review and change detection."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cisco-asa-inspector"
+      inspectorId: 22
+    liongardMetricName: "Cisco ASA: Running Configuration"
+    liongardMetricId: 522
+    liongardMetricUuid: "1f9bea10-9f81-4018-b3e2-b4ed980b005c"
+    jmesPath: "RunningConfig"
+    resultType: "object"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cisco-asa.md"
+    dateAdded: "2026-05-26"

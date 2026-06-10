@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "liongard": {
+      "type": "http",
+      "url": "https://<instance>.app.liongard.com/api/mcp",
+      "headers": {
+        "Authorization": "Bearer ${LIONGARD_MCP_TOKEN}"
+      }
+    }
+  }
+}

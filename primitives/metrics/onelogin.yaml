@@ -1,0 +1,338 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+# OneLogin (Inspector ID 27)
+# Eval sweep 2026-05-28 findings:
+# Single-tenant inspector. Validated on active system (inspected 2026-05-28, today).
+# Dataprint root keys: Users, Groups, Roles, UserMappings, AuthServers, Rules, Apps, Name.
+# GOTCHA: 4 prior PROPOSED paths used fabricated 'onelogin.*' namespace — ALL returned null.
+#   Real: 'onelogin.users.mfaEnrolledCount' → length(Users[?length(EnrolledAuthenticationFactors) > `0`])
+#   Real: 'onelogin.applications.totalCount' → length(Apps)
+# DATA GAPS confirmed: Admin privilege level not on Users[] — no admin-count path possible.
+# DATA GAPS confirmed: No security policy/MFA-required field on Apps — unprotected-count not possible.
+# Users[].EnrolledAuthenticationFactors is an ARRAY (empty = not enrolled; use length() filter).
+# Users[].status integer values: 0=unactivated, 1=active, 2=suspended, 3=locked, 4=password_expired.
+# 2 PROPOSED paths upgraded with real paths; 2 data-gap primitives removed. Net: 18 → 16 primitives.
+
+primitives:
+
+- '@id': metrics:onelogin:user-summary
+  '@type': liongard:MetricPrimitive
+  name: OneLogin — User Summary
+  description: List of users with email and assigned roles.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: onelogin-inspector
+    inspectorId: 27
+  liongardMetricName: 'OneLogin: User Summary'
+  liongardMetricId: 1243
+  liongardMetricUuid: "83be2884-4f3a-4542-a11f-9a7f3ed40c36"
+  jmesPath: 'Users[].[`Email: ` email, `| Roles: `join(`, `assignedRoles_r) || to_array(`-`)]'
+  resultType: array
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/onelogin.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:onelogin:application-summary
+  '@type': liongard:MetricPrimitive
+  name: OneLogin — Application Summary
+  description: Summary of each SSO application including name, auth method, assigned
+    roles, and last updated date.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: onelogin-inspector
+    inspectorId: 27
+  liongardMetricName: 'OneLogin: Application Summary'
+  liongardMetricId: 1244
+  liongardMetricUuid: "4f61d304-0d35-4e33-b3bc-2aa6769f52c3"
+  jmesPath: 'Apps[].[`Name: ` name, `  |  Authentication Method:` auth_method_description
+    `| Roles: `join(`, `roles_r) || to_array(''-'') `| Last Updated: `updated_at]'
+  resultType: array
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/onelogin.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:onelogin:active-users-count
+  '@type': liongard:MetricPrimitive
+  name: OneLogin — Active Users Count
+  description: Number of users with active status (status == 1) in the OneLogin tenant.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: onelogin-inspector
+    inspectorId: 27
+  liongardMetricName: 'OneLogin: Active Users Count'
+  liongardMetricId: 1246
+  liongardMetricUuid: "c78b40a9-cf07-42ec-a4ed-9301644a4645"
+  jmesPath: Users[?status==`1`] | length(@)
+  resultType: integer
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/onelogin.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:onelogin:active-users-list
+  '@type': liongard:MetricPrimitive
+  name: OneLogin — Active Users List
+  description: Email addresses of all active users (status == 1) in the OneLogin tenant.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: onelogin-inspector
+    inspectorId: 27
+  liongardMetricName: 'OneLogin: Active Users List'
+  liongardMetricId: 1245
+  liongardMetricUuid: "51dfe530-17b5-4bac-ae58-e8ca06571441"
+  jmesPath: Users[?status==`1`].email
+  resultType: array
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/onelogin.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:onelogin:never-logged-in-users-count
+  '@type': liongard:MetricPrimitive
+  name: OneLogin — Never Logged In Users Count
+  description: Number of users who have never logged in to OneLogin.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: onelogin-inspector
+    inspectorId: 27
+  liongardMetricName: 'OneLogin: Never Logged In Users Count'
+  liongardMetricId: 1248
+  liongardMetricUuid: "58a299ee-2e11-49d5-ab72-e4b85208cacd"
+  jmesPath: Users[?last_login==`null`] | length(@)
+  resultType: integer
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/onelogin.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:onelogin:never-logged-in-users-list
+  '@type': liongard:MetricPrimitive
+  name: OneLogin — Never Logged In Users List
+  description: Email addresses of users who have never logged in to OneLogin.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: onelogin-inspector
+    inspectorId: 27
+  liongardMetricName: 'OneLogin: Never Logged In Users List'
+  liongardMetricId: 1247
+  liongardMetricUuid: "c1c5e3f4-7bd3-4eb2-96f4-f1b517d19165"
+  jmesPath: Users[?last_login==`null`].email
+  resultType: array
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/onelogin.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:onelogin:unactivated-users-count
+  '@type': liongard:MetricPrimitive
+  name: OneLogin — Unactivated Users Count
+  description: Number of users who have not yet activated their OneLogin account (status
+    == 0).
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: onelogin-inspector
+    inspectorId: 27
+  liongardMetricName: 'OneLogin: Unactivated Users Count'
+  liongardMetricId: 1250
+  liongardMetricUuid: "c473b1b4-6e21-4be1-a098-6039c45680c0"
+  jmesPath: Users[?status==`0`] | length(@)
+  resultType: integer
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/onelogin.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:onelogin:unactivated-users-list
+  '@type': liongard:MetricPrimitive
+  name: OneLogin — Unactivated Users List
+  description: Email addresses of users who have not yet activated their OneLogin
+    account (status == 0).
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: onelogin-inspector
+    inspectorId: 27
+  liongardMetricName: 'OneLogin: Unactivated Users List'
+  liongardMetricId: 1249
+  liongardMetricUuid: "2d0b5c12-b90b-4bd2-9c9e-ba9ba4e113ab"
+  jmesPath: Users[?status==`0`].email
+  resultType: array
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/onelogin.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:onelogin:suspended-users-count
+  '@type': liongard:MetricPrimitive
+  name: OneLogin — Suspended Users Count
+  description: Number of suspended users (status == 2) in the OneLogin tenant.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: onelogin-inspector
+    inspectorId: 27
+  liongardMetricName: 'OneLogin: Suspended Users Count'
+  liongardMetricId: 1252
+  liongardMetricUuid: "78d3244d-314f-4b02-821d-ccff5a31be75"
+  jmesPath: Users[?status==`2`] | length(@)
+  resultType: integer
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/onelogin.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:onelogin:suspended-users-list
+  '@type': liongard:MetricPrimitive
+  name: OneLogin — Suspended Users List
+  description: Email addresses of suspended users (status == 2) in the OneLogin tenant.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: onelogin-inspector
+    inspectorId: 27
+  liongardMetricName: 'OneLogin: Suspended Users List'
+  liongardMetricId: 1251
+  liongardMetricUuid: "48102984-cebc-4ccc-99e6-39af18ed5e73"
+  jmesPath: Users[?status==`2`].email
+  resultType: array
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/onelogin.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:onelogin:locked-users-count
+  '@type': liongard:MetricPrimitive
+  name: OneLogin — Locked Users Count
+  description: Number of locked users (status == 3) in the OneLogin tenant.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: onelogin-inspector
+    inspectorId: 27
+  liongardMetricName: 'OneLogin: Locked Users Count'
+  liongardMetricId: 1254
+  liongardMetricUuid: "1cb982ee-6035-429c-9e33-d665806a4992"
+  jmesPath: Users[?status==`3`] | length(@)
+  resultType: integer
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/onelogin.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:onelogin:locked-users-list
+  '@type': liongard:MetricPrimitive
+  name: OneLogin — Locked Users List
+  description: Email addresses of locked users (status == 3) in the OneLogin tenant.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: onelogin-inspector
+    inspectorId: 27
+  liongardMetricName: 'OneLogin: Locked Users List'
+  liongardMetricId: 1253
+  liongardMetricUuid: "f40ea9b3-0137-4ed7-b143-a7ff47f891e6"
+  jmesPath: Users[?status==`3`].email
+  resultType: array
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/onelogin.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:onelogin:users-with-expired-password-count
+  '@type': liongard:MetricPrimitive
+  name: OneLogin — Users With Expired Password Count
+  description: Number of users with expired passwords (status == 4) in the OneLogin
+    tenant.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: onelogin-inspector
+    inspectorId: 27
+  liongardMetricName: 'OneLogin: Users With Expired Password Count'
+  liongardMetricId: 1256
+  liongardMetricUuid: "1f95298b-f6e5-4c63-bd47-c4a540f20279"
+  jmesPath: Users[?status==`4`] | length(@)
+  resultType: integer
+  compliantWhen: == 0
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/onelogin.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:onelogin:users-with-expired-password-list
+  '@type': liongard:MetricPrimitive
+  name: OneLogin — Users With Expired Password List
+  description: Email addresses of users with expired passwords (status == 4) in the
+    OneLogin tenant.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: onelogin-inspector
+    inspectorId: 27
+  liongardMetricName: 'OneLogin: Users With Expired Password List'
+  liongardMetricId: 1255
+  liongardMetricUuid: "d91cf9c0-c455-4938-aabd-211d7e09a8e9"
+  jmesPath: Users[?status==`4`].email
+  resultType: array
+  compliantWhen: length == 0
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/onelogin.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:onelogin:users-mfa-enrolled-count
+  '@type': liongard:MetricPrimitive
+  name: OneLogin — MFA Enrolled User Count
+  description: Number of users with at least one enrolled MFA factor in the OneLogin
+    tenant.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: onelogin-inspector
+    inspectorId: 27
+  jmesPath: length(Users[?length(EnrolledAuthenticationFactors) > `0`])
+  resultType: integer
+  fieldGotcha: 'EnrolledAuthenticationFactors is an ARRAY on each User object — use
+    length() filter to count users with >=1 enrolled factor. Prior PROPOSED path ''onelogin.users.mfaEnrolledCount''
+    was a fabricated namespace and returned null. NOTE: Admin privilege level is NOT
+    surfaced on Users[] in the dataprint — no admin-count primitive is possible via
+    JMESPath.'
+  compliantWhen: == active user count
+  compliesWith:
+  - CIS-Controls-v8:6.3
+  - CIS-Controls-v8:6.5
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: Active system (inspected 2026-05-28)
+  sourceRecipe: recipes/single-system-analysis/by-inspector/onelogin.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:onelogin:applications-total-count
+  '@type': liongard:MetricPrimitive
+  name: OneLogin — Application Count
+  description: Total number of SSO applications configured in the OneLogin tenant.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: onelogin-inspector
+    inspectorId: 27
+  jmesPath: length(Apps)
+  resultType: integer
+  fieldGotcha: 'Apps[] confirmed fields: id, name, description, connector_id, auth_method
+    (integer), auth_method_description (string), created_at, updated_at, AssignedUsers[],
+    Rules[], Conditions[], Actions[], roles_r[], daysSinceAppCreated_r, daysSinceLastUpdated_r.
+    NOTE: No security policy or MFA-required flag on Apps — unprotected-app count
+    is a DATA GAP.'
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: Active system (inspected 2026-05-28)
+  sourceRecipe: recipes/single-system-analysis/by-inspector/onelogin.md
+  dateAdded: '2026-05-26'
+

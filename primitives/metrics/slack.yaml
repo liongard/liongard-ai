@@ -1,0 +1,364 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+# Slack (Inspector ID 66)
+# Eval sweep 2026-05-28 findings:
+# Single-tenant inspector. Validated on active system (inspected 2026-04-30).
+# Dataprint root keys: Name, Users, Profile, SystemInfo, BillableInfo, Conversations, UniqueCompositeKey.
+# GOTCHA: Groups[] key does NOT exist in the Slack dataprint — user-groups-count primitive removed (data gap).
+# GOTCHA: Users[].deleted is BOOLEAN (true = deactivated user).
+# GOTCHA: Users[].is_bot is BOOLEAN.
+# GOTCHA: Users[].is_restricted (multi-channel guest) and is_ultra_restricted (single-channel guest) are BOOLEAN.
+# All 7 prior PROPOSED paths validated: 6 confirmed, 1 removed (Groups[] data gap).
+
+primitives:
+
+- '@id': metrics:slack:admin-users-count
+  '@type': liongard:MetricPrimitive
+  name: Slack — Admin Users Count
+  description: Total count of workspace admin users (includes deleted users). Use
+    extended query with deleted == false filter for accurate security posture.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: slack-inspector
+    inspectorId: 66
+  liongardMetricName: 'Slack: Admin Users Count'
+  liongardMetricId: 1145
+  liongardMetricUuid: "3d5731c7-2dbf-4aeb-8bfc-22fab67b4668"
+  jmesPath: Users[?is_admin == `true`] | length(@)
+  resultType: integer
+  compliantWhen: <= slas.admin_user_count_max
+  compliesWith:
+  - CIS-Controls-v8:5.4
+  - CIS-Controls-v8:6.8
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/slack.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:slack:admin-users-list
+  '@type': liongard:MetricPrimitive
+  name: Slack — Admin Users List
+  description: List of workspace admin users with real name and email.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: slack-inspector
+    inspectorId: 66
+  liongardMetricName: 'Slack: Slack: Admin Users List'
+  liongardMetricId: 1146
+  liongardMetricUuid: "7b2f8364-776b-4d6d-b782-f68da4cfb68b"
+  jmesPath: Users[?is_admin == `true`].join(`, `, [profile.real_name, profile.email])
+  resultType: array
+  compliesWith:
+  - CIS-Controls-v8:5.4
+  - CIS-Controls-v8:6.8
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/slack.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:slack:users-with-2fa-count
+  '@type': liongard:MetricPrimitive
+  name: Slack — Users With 2FA Enabled Count
+  description: Count of users with 2FA enabled. Includes deleted users and bots —
+    use extended query for accurate active-user posture.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: slack-inspector
+    inspectorId: 66
+  liongardMetricName: 'Slack: Users with 2FA Enabled Count'
+  liongardMetricId: 1147
+  liongardMetricUuid: "33b572c7-c26b-47a6-89e9-269904a4f1ed"
+  jmesPath: Users[?has_2fa == `true`] | length(@)
+  resultType: integer
+  compliesWith:
+  - CIS-Controls-v8:6.3
+  - CIS-Controls-v8:6.5
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/slack.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:slack:users-without-2fa-count
+  '@type': liongard:MetricPrimitive
+  name: Slack — Users Without 2FA Enabled Count
+  description: Count of users without 2FA enabled. Includes deleted users and bots
+    — use extended query (deleted == false && is_bot == false) for accurate active-user
+    posture.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: slack-inspector
+    inspectorId: 66
+  liongardMetricName: 'Slack: Users without 2FA Enabled Count'
+  liongardMetricId: 1148
+  liongardMetricUuid: "e4981069-9808-4abc-a971-8860f6bc5abc"
+  jmesPath: Users[?has_2fa == `false`] | length(@)
+  resultType: integer
+  compliantWhen: == 0
+  compliesWith:
+  - CIS-Controls-v8:6.3
+  - CIS-Controls-v8:6.5
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/slack.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:slack:users-without-2fa-list
+  '@type': liongard:MetricPrimitive
+  name: Slack — Users Without 2FA Enabled List
+  description: List of users without 2FA enabled, with real name and email.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: slack-inspector
+    inspectorId: 66
+  liongardMetricName: 'Slack: Users without 2FA Enabled List'
+  liongardMetricId: 1149
+  liongardMetricUuid: "9b5f33df-3fc1-4fe2-b005-c356e3590c29"
+  jmesPath: Users[?has_2fa == `false`].join(`, `, [profile.real_name, profile.email])
+  resultType: array
+  compliantWhen: length == 0
+  compliesWith:
+  - CIS-Controls-v8:6.3
+  - CIS-Controls-v8:6.5
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/slack.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:slack:channels-count
+  '@type': liongard:MetricPrimitive
+  name: Slack — Channels Count
+  description: Total number of channels (conversations of type channel) in the workspace.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: slack-inspector
+    inspectorId: 66
+  liongardMetricName: 'Slack: Channels Count'
+  liongardMetricId: 1150
+  liongardMetricUuid: "059b1779-80bb-4950-98f8-705cbc554bce"
+  jmesPath: Conversations[?is_channel == `true`] | length(@)
+  resultType: integer
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/slack.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:slack:public-channels-count
+  '@type': liongard:MetricPrimitive
+  name: Slack — Public Channels Count
+  description: Number of public (non-private) channels in the workspace.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: slack-inspector
+    inspectorId: 66
+  liongardMetricName: 'Slack: Public Channels Count'
+  liongardMetricId: 1151
+  liongardMetricUuid: "5bf1d375-0861-432f-ac84-eb442c997c30"
+  jmesPath: Conversations[?is_channel == `true` && is_private == `false`] | length(@)
+  resultType: integer
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/slack.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:slack:externally-shared-channels-count
+  '@type': liongard:MetricPrimitive
+  name: Slack — Externally Shared Channels Count
+  description: Number of channels shared with external organizations.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: slack-inspector
+    inspectorId: 66
+  liongardMetricName: 'Slack: Externally Shared Channels Count'
+  liongardMetricId: 1152
+  liongardMetricUuid: "5550e1ad-8d17-41ff-9efd-f4a6a6f77665"
+  jmesPath: Conversations[?is_channel == `true` && is_ext_shared == `true`] | length(@)
+  resultType: integer
+  compliesWith:
+  - CIS-Controls-v8:3.3
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/slack.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:slack:externally-shared-channels-list
+  '@type': liongard:MetricPrimitive
+  name: Slack — Externally Shared Channels List
+  description: Names of all channels shared with external organizations.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: slack-inspector
+    inspectorId: 66
+  liongardMetricName: 'Slack: Externally Shared Channels List'
+  liongardMetricId: 1153
+  liongardMetricUuid: "34ad5f03-72dc-4f07-bc5b-26cc324bcca7"
+  jmesPath: Conversations[?is_channel == `true` && is_ext_shared == `true`].name
+  resultType: array
+  compliesWith:
+  - CIS-Controls-v8:3.3
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/slack.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:slack:archived-channels-count
+  '@type': liongard:MetricPrimitive
+  name: Slack — Archived Channels Count
+  description: Number of archived channels in the workspace.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: slack-inspector
+    inspectorId: 66
+  liongardMetricName: 'Slack: Archived Channels Count'
+  liongardMetricId: 1154
+  liongardMetricUuid: "5efdc46c-778b-46aa-9380-e559277f397a"
+  jmesPath: Conversations[?is_channel == `true` && is_archived == `true`] | length(@)
+  resultType: integer
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/slack.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:slack:archived-channels-list
+  '@type': liongard:MetricPrimitive
+  name: Slack — Archived Channels List
+  description: Names of all archived channels in the workspace.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: slack-inspector
+    inspectorId: 66
+  liongardMetricName: 'Slack: Archived Channels List'
+  liongardMetricId: 1155
+  liongardMetricUuid: "58c31139-3bc0-477e-8a32-0d2fe2f6b8f9"
+  jmesPath: Conversations[?is_channel == `true` && is_archived == `true`].name
+  resultType: array
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/slack.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:slack:active-users-count
+  '@type': liongard:MetricPrimitive
+  name: Slack — Active Non-Bot User Count
+  description: Count of active, non-deleted, non-bot users. Extended version of catalog
+    metric 1147/1148 with accurate active-user filter.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: slack-inspector
+    inspectorId: 66
+  jmesPath: Users[?deleted == `false` && is_bot == `false`] | length(@)
+  resultType: integer
+  fieldGotcha: 'Users[].deleted is BOOLEAN (true=deactivated). Users[].is_bot is BOOLEAN.
+    Users[].is_restricted (multi-channel guest) and is_ultra_restricted (single-channel
+    guest) are also BOOLEAN. NOTE: Groups[] key does NOT exist in the Slack dataprint
+    — user groups cannot be counted via JMESPath.'
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: Active system (inspected 2026-04-30)
+  sourceRecipe: recipes/single-system-analysis/by-inspector/slack.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:slack:active-users-without-2fa-count
+  '@type': liongard:MetricPrimitive
+  name: Slack — Active Non-Bot Users Without 2FA Count
+  description: Count of active, non-deleted, non-bot users without 2FA. Preferred
+    over catalog metric 1148 for security posture reporting.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: slack-inspector
+    inspectorId: 66
+  jmesPath: Users[?has_2fa == `false` && deleted == `false` && is_bot == `false`]
+    | length(@)
+  resultType: integer
+  compliantWhen: == 0
+  compliesWith:
+  - CIS-Controls-v8:6.3
+  - CIS-Controls-v8:6.5
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: Active system (inspected 2026-04-30)
+  sourceRecipe: recipes/single-system-analysis/by-inspector/slack.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:slack:active-admin-count
+  '@type': liongard:MetricPrimitive
+  name: Slack — Active Admin Count
+  description: Count of non-deleted workspace admins. Preferred over catalog metric
+    1145 for posture reporting.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: slack-inspector
+    inspectorId: 66
+  jmesPath: Users[?is_admin == `true` && deleted == `false`] | length(@)
+  resultType: integer
+  compliantWhen: <= slas.admin_user_count_max
+  compliesWith:
+  - CIS-Controls-v8:5.4
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: Active system (inspected 2026-04-30)
+  sourceRecipe: recipes/single-system-analysis/by-inspector/slack.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:slack:guest-users-count
+  '@type': liongard:MetricPrimitive
+  name: Slack — Guest (Restricted) User Count
+  description: Count of multi-channel guest users (is_restricted == true) who are
+    not deleted.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: slack-inspector
+    inspectorId: 66
+  jmesPath: Users[?is_restricted == `true` && deleted == `false`] | length(@)
+  resultType: integer
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: Active system (inspected 2026-04-30)
+  sourceRecipe: recipes/single-system-analysis/by-inspector/slack.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:slack:single-channel-guest-count
+  '@type': liongard:MetricPrimitive
+  name: Slack — Single-Channel Guest Count
+  description: Count of single-channel guest users (is_ultra_restricted == true) who
+    are not deleted.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: slack-inspector
+    inspectorId: 66
+  jmesPath: Users[?is_ultra_restricted == `true` && deleted == `false`] | length(@)
+  resultType: integer
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: Active system (inspected 2026-04-30)
+  sourceRecipe: recipes/single-system-analysis/by-inspector/slack.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:slack:deleted-users-count
+  '@type': liongard:MetricPrimitive
+  name: Slack — Deleted / Deactivated User Count
+  description: Count of deactivated users in the workspace.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: slack-inspector
+    inspectorId: 66
+  jmesPath: Users[?deleted == `true`] | length(@)
+  resultType: integer
+  compliesWith:
+  - CIS-Controls-v8:5.3
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: Active system (inspected 2026-04-30)
+  sourceRecipe: recipes/single-system-analysis/by-inspector/slack.md
+  dateAdded: '2026-05-26'
+

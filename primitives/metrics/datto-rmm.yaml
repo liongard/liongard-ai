@@ -1,0 +1,46 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+  - "@id": "metrics:datto-rmm:devices-pending-patches-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Datto RMM — Devices with Pending Approved Patches Count"
+    description: "Count of devices with approved patches pending installation from Devices[?patchManagement.patchesApprovedPending > 0] | length(@)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "datto-rmm-inspector"
+      inspectorId: 73
+    liongardMetricName: "datto-rmm-inspector: Devices with Pending Patches Count"
+    liongardMetricId: 1069
+    liongardMetricUuid: "e842ef15-426a-4d1b-a921-6787d6c11574"
+    jmesPath: "Devices[?patchManagement.patchesApprovedPending > `0`] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "CIS-Controls-v8:7.3"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/datto-rmm.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:datto-rmm:devices-snmp-enabled-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Datto RMM — Devices with SNMP Enabled Count"
+    description: "Count of managed devices with SNMP enabled from Devices[?snmpEnabled == true] | length(@). SNMP v1/v2c without authentication presents lateral movement risk."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "datto-rmm-inspector"
+      inspectorId: 73
+    liongardMetricName: "datto-rmm-inspector: Devices with SNMP Enabled Count"
+    liongardMetricId: 1070
+    liongardMetricUuid: "c111227e-586e-46d9-b62d-6e5e8e2d006f"
+    jmesPath: "Devices[?snmpEnabled == `true`] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/datto-rmm.md"
+    dateAdded: "2026-05-26"

@@ -1,0 +1,461 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+  # ── Registration & expiration ─────────────────────────────────────────────
+
+  - "@id": "metrics:internet-domain-dns-inspector:domain-name"
+    "@type": "liongard:MetricPrimitive"
+    name: "Internet Domain / DNS — Domain Name"
+    description: "The monitored domain name (FQDN)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "internet-domain-dns-inspector"
+      inspectorId: 2
+    jmesPath: "SystemInfo.DomainName"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/internet-domain-dns.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:internet-domain-dns-inspector:registrar"
+    "@type": "liongard:MetricPrimitive"
+    name: "Internet Domain / DNS — Registrar"
+    description: "Domain registrar name."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "internet-domain-dns-inspector"
+      inspectorId: 2
+    jmesPath: "SystemInfo.Registrar"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/internet-domain-dns.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:internet-domain-dns-inspector:domain-creation-date"
+    "@type": "liongard:MetricPrimitive"
+    name: "Internet Domain / DNS — Domain Creation Date"
+    description: "Date the domain was originally registered (ISO 8601)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "internet-domain-dns-inspector"
+      inspectorId: 2
+    jmesPath: "SystemInfo.DomainCreationDate"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/internet-domain-dns.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:internet-domain-dns-inspector:domain-expiration-date"
+    "@type": "liongard:MetricPrimitive"
+    name: "Internet Domain / DNS — Domain Expiration Date"
+    description: "Domain expiration date (ISO 8601). Primary expiry date field."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "internet-domain-dns-inspector"
+      inspectorId: 2
+    jmesPath: "SystemInfo.DomainExpirationDate"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/internet-domain-dns.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:internet-domain-dns-inspector:domain-status"
+    "@type": "liongard:MetricPrimitive"
+    name: "Internet Domain / DNS — Domain Status"
+    description: "WHOIS status flags (e.g., 'clientTransferProhibited' = registrar lock on). NOTE: registrar lock is not a separate boolean field — check this field for 'clientTransferProhibited'."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "internet-domain-dns-inspector"
+      inspectorId: 2
+    jmesPath: "SystemInfo.DomainStatus"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/internet-domain-dns.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:internet-domain-dns-inspector:days-till-expiration"
+    "@type": "liongard:MetricPrimitive"
+    name: "Internet Domain / DNS — Days Till Expiration"
+    description: "Integer count of days until the domain expires. Primary expiry metric for SLA evaluation."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "internet-domain-dns-inspector"
+      inspectorId: 2
+    jmesPath: "DaysTillExpiration"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/internet-domain-dns.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:internet-domain-dns-inspector:whois-server"
+    "@type": "liongard:MetricPrimitive"
+    name: "Internet Domain / DNS — WHOIS Server"
+    description: "WHOIS server hostname for the domain's TLD."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "internet-domain-dns-inspector"
+      inspectorId: 2
+    jmesPath: "SystemInfo.WhoIsServer"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/internet-domain-dns.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:internet-domain-dns-inspector:registrant-contact-email"
+    "@type": "liongard:MetricPrimitive"
+    name: "Internet Domain / DNS — Registrant Contact Email"
+    description: "Registrant contact email from WHOIS. Should be masked/private if WHOIS privacy is enabled."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "internet-domain-dns-inspector"
+      inspectorId: 2
+    jmesPath: "SystemInfo.RegistrantContactEmail"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/internet-domain-dns.md"
+    dateAdded: "2026-05-26"
+
+  # ── Website posture ───────────────────────────────────────────────────────
+
+  - "@id": "metrics:internet-domain-dns-inspector:website-http-status-code"
+    "@type": "liongard:MetricPrimitive"
+    name: "Internet Domain / DNS — Website HTTP Status Code"
+    description: "HTTP response status code. Should be a redirect (301/302) to HTTPS."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "internet-domain-dns-inspector"
+      inspectorId: 2
+    jmesPath: "Website.HTTP.statusCode"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/internet-domain-dns.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:internet-domain-dns-inspector:website-https-status-code"
+    "@type": "liongard:MetricPrimitive"
+    name: "Internet Domain / DNS — Website HTTPS Status Code"
+    description: "HTTPS response status code for the domain's primary website."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "internet-domain-dns-inspector"
+      inspectorId: 2
+    jmesPath: "Website.HTTPS.statusCode"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/internet-domain-dns.md"
+    dateAdded: "2026-05-26"
+
+  # ── Email authentication ──────────────────────────────────────────────────
+
+  - "@id": "metrics:internet-domain-dns-inspector:spf-exists"
+    "@type": "liongard:MetricPrimitive"
+    name: "Internet Domain / DNS — SPF Record Exists"
+    description: "Boolean indicating whether an SPF record is published for the domain."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "internet-domain-dns-inspector"
+      inspectorId: 2
+    jmesPath: "SPFExists"
+    resultType: "boolean"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/internet-domain-dns.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:internet-domain-dns-inspector:spf-record"
+    "@type": "liongard:MetricPrimitive"
+    name: "Internet Domain / DNS — SPF Record"
+    description: "Raw SPF TXT record string."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "internet-domain-dns-inspector"
+      inspectorId: 2
+    jmesPath: "SPFRecord"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/internet-domain-dns.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:internet-domain-dns-inspector:spf-all-exists"
+    "@type": "liongard:MetricPrimitive"
+    name: "Internet Domain / DNS — SPF All Qualifier"
+    description: "SPF -all qualifier strength: 'strong' = -all, 'weak' = ~all. Flag if not 'strong'."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "internet-domain-dns-inspector"
+      inspectorId: 2
+    jmesPath: "SPFAllExists"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/internet-domain-dns.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:internet-domain-dns-inspector:spf-record-breakdown"
+    "@type": "liongard:MetricPrimitive"
+    name: "Internet Domain / DNS — SPF Record Breakdown"
+    description: "Human-readable parsed SPF mechanism string."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "internet-domain-dns-inspector"
+      inspectorId: 2
+    jmesPath: "SPFRecordBreakdown"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/internet-domain-dns.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:internet-domain-dns-inspector:dmarc-exists"
+    "@type": "liongard:MetricPrimitive"
+    name: "Internet Domain / DNS — DMARC Record Exists"
+    description: "Boolean indicating whether a DMARC record is published for the domain."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "internet-domain-dns-inspector"
+      inspectorId: 2
+    jmesPath: "DMARCExists"
+    resultType: "boolean"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/internet-domain-dns.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:internet-domain-dns-inspector:dmarc-record"
+    "@type": "liongard:MetricPrimitive"
+    name: "Internet Domain / DNS — DMARC Record"
+    description: "Raw DMARC TXT record string."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "internet-domain-dns-inspector"
+      inspectorId: 2
+    jmesPath: "DMARCRecord"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/internet-domain-dns.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:internet-domain-dns-inspector:dmarc-policy"
+    "@type": "liongard:MetricPrimitive"
+    name: "Internet Domain / DNS — DMARC Policy"
+    description: "DMARC policy value including p= prefix (e.g., 'p=reject'). NOTE: value includes the 'p=' prefix — compare as 'p=none', 'p=quarantine', 'p=reject', not bare policy strings."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "internet-domain-dns-inspector"
+      inspectorId: 2
+    jmesPath: "DMARCPolicy"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/internet-domain-dns.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:internet-domain-dns-inspector:dmarc-agg-reports"
+    "@type": "liongard:MetricPrimitive"
+    name: "Internet Domain / DNS — DMARC Aggregate Reports (rua)"
+    description: "Boolean indicating whether DMARC rua= aggregate report URI is present."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "internet-domain-dns-inspector"
+      inspectorId: 2
+    jmesPath: "DMARCAggReports"
+    resultType: "boolean"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/internet-domain-dns.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:internet-domain-dns-inspector:dkim-found"
+    "@type": "liongard:MetricPrimitive"
+    name: "Internet Domain / DNS — DKIM Found"
+    description: "Boolean indicating whether at least one DKIM selector was found for the domain."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "internet-domain-dns-inspector"
+      inspectorId: 2
+    jmesPath: "DKIMFound"
+    resultType: "boolean"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/internet-domain-dns.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:internet-domain-dns-inspector:email-security-overview"
+    "@type": "liongard:MetricPrimitive"
+    name: "Internet Domain / DNS — Email Security Overview"
+    description: "Rolled-up pass/fail summary per protocol. Sub-fields: SpfRecord, SpfRecordResult, DkimRecord, DkimRecordResult, DmarcRecord, DmarcRecordResult."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "internet-domain-dns-inspector"
+      inspectorId: 2
+    jmesPath: "EmailSecurityOverview"
+    resultType: "object"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/internet-domain-dns.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:internet-domain-dns-inspector:spoof-intel"
+    "@type": "liongard:MetricPrimitive"
+    name: "Internet Domain / DNS — Spoof Intel"
+    description: "Composite spoofing risk object with fields: spfExists, dmarcExists, spfAll, strongInclude, dmarcAgg, dmarcFor, dmarcPolicy."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "internet-domain-dns-inspector"
+      inspectorId: 2
+    jmesPath: "SpoofIntel"
+    resultType: "object"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/internet-domain-dns.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:internet-domain-dns-inspector:dkim-records"
+    "@type": "liongard:MetricPrimitive"
+    name: "Internet Domain / DNS — DKIM Records"
+    description: "Array of DKIM selector records with Selector, KeyType, PublicKeySize, and Domain. Each selector represents one authorized sending platform."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "internet-domain-dns-inspector"
+      inspectorId: 2
+    jmesPath: "EmailSecurity.dkimRecords[*].{Selector: Selector, KeyType: KeyType, PublicKeySize: PublicKeySize, Domain: Domain}"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/internet-domain-dns.md"
+    dateAdded: "2026-05-26"
+
+  # ── DNS records ───────────────────────────────────────────────────────────
+
+  - "@id": "metrics:internet-domain-dns-inspector:dns-mx-records"
+    "@type": "liongard:MetricPrimitive"
+    name: "Internet Domain / DNS — MX Records"
+    description: "MX records with Exchange hostname, Preference, ASN, and address information. Exchange hostname identifies the inbound mail security stack."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "internet-domain-dns-inspector"
+      inspectorId: 2
+    jmesPath: "DNSMXRecords[*].{Exchange: Exchange, Preference: Preference, ASStr: ASStr, ASInfoStr: ASInfoStr, AddressStr: AddressStr}"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/internet-domain-dns.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:internet-domain-dns-inspector:dns-txt-records"
+    "@type": "liongard:MetricPrimitive"
+    name: "Internet Domain / DNS — TXT Records"
+    description: "Array of DNS TXT records. Contains domain-verification tokens revealing SaaS platform footprint."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "internet-domain-dns-inspector"
+      inspectorId: 2
+    jmesPath: "DNSTXTRecords[*].data"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/internet-domain-dns.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:internet-domain-dns-inspector:dns-ns-records"
+    "@type": "liongard:MetricPrimitive"
+    name: "Internet Domain / DNS — NS Records"
+    description: "Nameserver records with hostname and ASN provider information."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "internet-domain-dns-inspector"
+      inspectorId: 2
+    jmesPath: "DNSNSRecords[*].{data: data, ASStr: ASStr, ASInfoStr: ASInfoStr}"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/internet-domain-dns.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:internet-domain-dns-inspector:dns-a-records"
+    "@type": "liongard:MetricPrimitive"
+    name: "Internet Domain / DNS — A Records"
+    description: "DNS A records with IP address and ASN/cloud provider information."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "internet-domain-dns-inspector"
+      inspectorId: 2
+    jmesPath: "DNSARecords[*].{data: data, AddressStr: AddressStr, ASStr: ASStr, ASInfoStr: ASInfoStr}"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/internet-domain-dns.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:internet-domain-dns-inspector:dnssec"
+    "@type": "liongard:MetricPrimitive"
+    name: "Internet Domain / DNS — DNSSEC"
+    description: "Array of DNSKEY objects. Empty array indicates DNSSEC is not configured."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "internet-domain-dns-inspector"
+      inspectorId: 2
+    jmesPath: "DNSSEC"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/internet-domain-dns.md"
+    dateAdded: "2026-05-26"
+
+  # ── Subdomains ────────────────────────────────────────────────────────────
+
+  - "@id": "metrics:internet-domain-dns-inspector:subdomains"
+    "@type": "liongard:MetricPrimitive"
+    name: "Internet Domain / DNS — Subdomains"
+    description: "Array of discovered subdomains with CNAME target, hostname, SSL presence, and IP. CNAME target reveals CDN/WAF/hosting provider."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "internet-domain-dns-inspector"
+      inspectorId: 2
+    jmesPath: "Subdomains[*].{target: target, hostname: hostname, subdomainHasSSL: subdomainHasSSL, ipaddress: ipaddress}"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/internet-domain-dns.md"
+    dateAdded: "2026-05-26"

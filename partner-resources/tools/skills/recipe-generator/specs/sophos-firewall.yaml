@@ -1,0 +1,169 @@
+inspector:
+  slug: sophos-firewall-inspector
+  id: 28
+  display_name: Sophos Firewall
+  category: Network
+  target_system_type: Firewall (XG/XGS)
+  parent_child: false
+  identifier_jmespath: SystemInfo.Hostname
+
+recipe:
+  family: single-system-analysis
+  scope_summary: >
+    Use this skill when the user wants a single-firewall analysis of a
+    Sophos XG / XGS firewall (NOT Sophos Central, NOT Sophos SG legacy)
+    — Periodic Business Review, firmware audit, security-services
+    posture (IPS, Gateway AV), firewall rule summary, site-to-site VPN
+    review, central-management status. Trigger phrases include "Sophos
+    XG review", "XGS firewall PBR", "pull Sophos firewall data", "Sophos
+    XG audit". Confirm with user that they mean the XG/XGS firewall, not
+    Sophos Central (endpoint EDR) or Sophos SG (legacy UTM).
+  trigger_phrases:
+    - "Sophos XG review"
+    - "Sophos XGS PBR"
+    - "pull Sophos firewall data"
+    - "Sophos XG audit"
+    - "Sophos firewall rules review"
+  personas:
+    - noc
+    - soc
+    - vcio-account-manager
+    - technical-alignment-manager
+  output_formats:
+    - markdown
+    - word
+    - pptx
+
+aliases:
+  user_facing:
+    - "Sophos XG"
+    - "Sophos XGS"
+    - "XG firewall"
+    - "XGS firewall"
+    - "Sophos firewall"
+
+slas:
+  inspector_lastseen_days_max: 1
+  license_expiration_warn_days: 60
+  firmware_age_months_max: 12
+
+metrics:
+  - id: 583
+    name: "Sophos XG: Security Policy Summary"
+    jmes_path: SecurityPolicies[*]
+    purpose: Firewall rule enumeration (WAN-to-LAN access rules)
+    result_shape: <array>
+
+  - id: "[PROPOSED]"
+    name: "Sophos XG: Hostname"
+    jmes_path: SystemInfo.Hostname
+    purpose: Firewall identifier
+
+  - id: "[PROPOSED]"
+    name: "Sophos XG: Managed by Sophos Central"
+    jmes_path: SystemInfo.CentralManagement
+    purpose: Whether the firewall is centrally managed (cross-link with sophos-central recipe)
+
+  - id: "[PROPOSED]"
+    name: "Sophos XG: WAN Zones with Admin Access Enabled"
+    jmes_path: Zones[?type == 'WAN' && AdminAccess]
+    purpose: WAN-side admin / SSH exposure audit
+
+  - id: "[PROPOSED]"
+    name: "Sophos XG: IPS Service Status"
+    jmes_path: Services.IPS.Enabled
+    purpose: Intrusion Prevention service enabled flag
+
+  - id: "[PROPOSED]"
+    name: "Sophos XG: Gateway AntiVirus Service Status"
+    jmes_path: Services.GatewayAV.Enabled
+    purpose: Gateway AV service enabled flag
+
+  - id: "[PROPOSED]"
+    name: "Sophos XG: Site-to-Site VPN Connections"
+    jmes_path: VpnConnections[*]
+    purpose: Site-to-site VPN policy enumeration
+
+  - id: "[PROPOSED]"
+    name: "Sophos XG: Primary DNS Server"
+    jmes_path: DNSConfig.Primary
+    purpose: Primary DNS configured on the firewall
+
+  - id: "[PROPOSED]"
+    name: "Sophos XG: Secondary DNS Server"
+    jmes_path: DNSConfig.Secondary
+    purpose: Secondary DNS configured on the firewall
+
+  - id: "[PROPOSED]"
+    name: "Sophos XG: Tertiary DNS Server"
+    jmes_path: DNSConfig.Tertiary
+    purpose: Tertiary DNS configured on the firewall
+
+  - id: "[PROPOSED]"
+    name: "Sophos XG: DHCP Server Scope Summary"
+    jmes_path: DhcpServers[*]
+    purpose: DHCP scope detail per interface
+
+cross_check:
+  asset_type: device
+  filter_pattern: 'inspectors contains "sophos-firewall-inspector"'
+  coverage_question: >
+    Devices behind the Sophos firewall that Liongard sees from other
+    inspectors — confirm scope of this firewall's protection.
+
+proposed_metric_gaps:
+  - field: "Sophos XG: Hostname (separate metric)"
+    fallback: "Use SystemInfo direct read"
+    jira_ticket:
+  - field: "Central management status"
+    fallback: "Check both sophos-firewall-inspector AND sophos-central-inspector — overlap = centrally managed"
+    jira_ticket:
+  - field: "WAN admin access exposure"
+    fallback: "Manual review of zone configuration in Sophos UI"
+    jira_ticket:
+  - field: "IPS / Gateway AV / VPN service status"
+    fallback: "Manual review in Sophos UI"
+    jira_ticket:
+  - field: "DNS configuration (primary/secondary/tertiary)"
+    fallback: "Manual review in Sophos UI"
+    jira_ticket:
+  - field: "DHCP scope detail"
+    fallback: "Manual review in Sophos UI"
+    jira_ticket:
+
+trigger_keyword: sophos-firewall
+
+dataprint_keys:
+  - key: SystemInfo
+    description: Firewall identity — hostname, model, firmware
+  - key: SecurityPolicies
+    description: Firewall rule list (zone-to-zone)
+  - key: Zones
+    description: Security zone definitions (LAN, WAN, DMZ)
+  - key: Services
+    description: Per-service enable/disable flags (IPS, Gateway AV, etc.)
+  - key: VpnConnections
+    description: Site-to-site VPN tunnel list
+  - key: DhcpServers
+    description: DHCP server scope detail
+
+field_gotchas:
+  - field: "Vendor name disambiguation"
+    note: >
+      Three Sophos inspectors exist — sophos-firewall-inspector (this one,
+      XG/XGS), sophos-central-inspector (cloud EDR / endpoint protection),
+      sophos-sg-inspector (legacy SG firewall). Always confirm with the
+      user which they mean. The XG and SG firewalls are distinct product
+      lines with different inspectors.
+
+large_arrays: []
+
+time_series_supported: true
+
+vendor_console_url_pattern: https://central.sophos.com
+
+related_recipes:
+  - path: recipes/system-type-assessment/all-firewalls.md
+    relationship: rollup
+  - path: recipes/single-system-analysis/by-inspector/sophos-central.md
+    relationship: sibling                # central management overlap

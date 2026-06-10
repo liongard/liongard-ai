@@ -1,0 +1,514 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+# ── Failed & Overdue Backups ──────────────────────────────────────────────────
+
+  - "@id": "metrics:cove-data-protection:count-failed-backups"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cove Data Protection — Count of Failed Backups"
+    description: "Count of devices where BackupStatus is 'Failed'. Should be 0. This is the primary headline metric for Cove backup health."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cove-data-protection-inspector"
+      inspectorId: 76
+    liongardMetricName: "Cove Data Protection: Count of Failed Backups"
+    liongardMetricId: 1190
+    liongardMetricUuid: "c93f17d7-2ae5-407b-8adf-37083dc5cdd3"
+    jmesPath: "Devices[?BackupStatus==`Failed`] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "CIS-Controls-v8:11.1"
+      - "cyber-insurance-domain-backup"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cove-data-protection.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:cove-data-protection:list-failed-backups"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cove Data Protection — List of Failed Backups"
+    description: "Names of devices where BackupStatus is 'Failed'. Companion list for the failed backup count metric."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cove-data-protection-inspector"
+      inspectorId: 76
+    liongardMetricName: "Cove Data Protection: List of Failed Backups"
+    liongardMetricId: 1191
+    liongardMetricUuid: "39fcd8e1-dc9b-4117-b009-b82687065eee"
+    jmesPath: "Devices[?BackupStatus==`Failed`].Name"
+    resultType: "array"
+    compliantWhen: "result == []"
+    compliesWith:
+      - "CIS-Controls-v8:11.1"
+      - "cyber-insurance-domain-backup"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cove-data-protection.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:cove-data-protection:count-backups-completed-with-errors"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cove Data Protection — Count of Backups Completed with Errors"
+    description: "Count of devices where BackupStatus is 'CompletedWithErrors'. Non-zero requires investigation even though backup completed."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cove-data-protection-inspector"
+      inspectorId: 76
+    liongardMetricName: "Cove Data Protection: Count of Backups Completed with Errors"
+    liongardMetricId: 1192
+    liongardMetricUuid: "f02eaed7-d7e9-4e2f-8527-d64a873cef44"
+    jmesPath: "Devices[?BackupStatus==`CompletedWithErrors`] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "CIS-Controls-v8:11.1"
+      - "cyber-insurance-domain-backup"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cove-data-protection.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:cove-data-protection:list-backups-completed-with-errors"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cove Data Protection — List of Backups Completed with Errors"
+    description: "Names of devices where BackupStatus is 'CompletedWithErrors'."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cove-data-protection-inspector"
+      inspectorId: 76
+    liongardMetricName: "Cove Data Protection: List of Backups Completed with Errors"
+    liongardMetricId: 1193
+    liongardMetricUuid: "d94bfdc9-5131-4984-8864-52e188c16c47"
+    jmesPath: "Devices[?BackupStatus==`CompletedWithErrors`].Name"
+    resultType: "array"
+    compliantWhen: "result == []"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cove-data-protection.md"
+    dateAdded: "2026-05-26"
+
+# ── 24-Hour Compliance (Device / Agent-Based) ─────────────────────────────────
+
+  - "@id": "metrics:cove-data-protection:count-device-backup-overdue-24h"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cove Data Protection — 24-Hour Since Last Completed Device Backup Count"
+    description: "Count of agent-based (BackupManager) devices that have not completed a backup in more than 24 hours."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cove-data-protection-inspector"
+      inspectorId: 76
+    liongardMetricName: "Cove Data Protection: 24 Hours Since Last Completed Device Backup Count"
+    liongardMetricId: 1196
+    liongardMetricUuid: "d12122d1-71ed-43e6-9b03-07600a4d4fe1"
+    jmesPath: "Devices[?Type == `BackupManager` && HoursSinceLastCompletedSession_r >`24`] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "CIS-Controls-v8:11.1"
+      - "cyber-insurance-domain-backup"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    fieldGotcha: "HoursSinceLastCompletedSession_r is a resolved/computed string field — filter uses string comparison '>`24`'. BackupManager type covers agent-based Windows/Linux/Mac devices; does not include Office365 devices."
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cove-data-protection.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:cove-data-protection:list-device-backup-overdue-24h"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cove Data Protection — 24-Hour Since Last Completed Device Backup List"
+    description: "Names of agent-based (BackupManager) devices that have not completed a backup in more than 24 hours."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cove-data-protection-inspector"
+      inspectorId: 76
+    liongardMetricName: "Cove Data Protection: 24 Hours Since Last Completed Device Backup List"
+    liongardMetricId: 1197
+    liongardMetricUuid: "ec9a9fa9-04ab-4c75-a4b1-5124a40624a9"
+    jmesPath: "Devices[?Type == `BackupManager` && HoursSinceLastCompletedSession_r >`24`].Name"
+    resultType: "array"
+    compliantWhen: "result == []"
+    compliesWith:
+      - "CIS-Controls-v8:11.1"
+      - "cyber-insurance-domain-backup"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cove-data-protection.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:cove-data-protection:servers-no-backup-30d"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cove Data Protection — Servers With No Backup in 30 Days or More"
+    description: "Names of server-class devices (BackupManager, OSType=Server) that have not completed a backup in 720 hours (30 days) or more."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cove-data-protection-inspector"
+      inspectorId: 76
+    liongardMetricName: "Cove Data Protection: Servers With No Backup In 30 Days Or More"
+    liongardMetricId: 2080
+    liongardMetricUuid: "046eb549-43b9-4b30-99ee-c4ba36223f8f"
+    jmesPath: "Devices[?Type == `BackupManager` && Settings.OSType=='Server' && HoursSinceLastCompletedSession_r >`720`].Settings.ComputerName[]"
+    resultType: "array"
+    compliantWhen: "result == []"
+    compliesWith:
+      - "CIS-Controls-v8:11.1"
+      - "cyber-insurance-domain-backup"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cove-data-protection.md"
+    dateAdded: "2026-05-26"
+
+# ── 24-Hour Compliance (Microsoft 365) ───────────────────────────────────────
+
+  - "@id": "metrics:cove-data-protection:count-exchange-backup-overdue-24h"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cove Data Protection — 24-Hour Since Last Completed Exchange Backup Count"
+    description: "Count of Office365-type devices where Exchange has not completed a backup in more than 24 hours."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cove-data-protection-inspector"
+      inspectorId: 76
+    liongardMetricName: "Cove Data Protection: 24 Hours Since Last Completed Exchange Backup Count"
+    liongardMetricId: 1183
+    liongardMetricUuid: "dcfb0591-0a29-4176-b728-81efc55fb37f"
+    jmesPath: "Devices[?Type == `Office365` && HoursSinceExchangeLastCompletedSession_r >`24`] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "CIS-Controls-v8:11.1"
+      - "cyber-insurance-domain-backup"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cove-data-protection.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:cove-data-protection:list-exchange-backup-overdue-24h"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cove Data Protection — 24-Hour Since Last Completed Exchange Backup List"
+    description: "Names of Office365-type devices where Exchange has not completed a backup in more than 24 hours."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cove-data-protection-inspector"
+      inspectorId: 76
+    liongardMetricName: "Cove Data Protection: 24 Hours Since Last Completed Exchange Backup List"
+    liongardMetricId: 1184
+    liongardMetricUuid: "4aa2856a-8329-4f01-bc64-3c68b7dce1bd"
+    jmesPath: "Devices[?Type == `Office365` && HoursSinceExchangeLastCompletedSession_r >`24`].Name"
+    resultType: "array"
+    compliantWhen: "result == []"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cove-data-protection.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:cove-data-protection:count-onedrive-backup-overdue-24h"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cove Data Protection — 24-Hour Since Last Completed OneDrive Backup Count"
+    description: "Count of Office365-type devices where OneDrive has not completed a backup in more than 24 hours."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cove-data-protection-inspector"
+      inspectorId: 76
+    liongardMetricName: "Cove Data Protection: 24 Hours Since Last Completed OneDrive Backup Count"
+    liongardMetricId: 1185
+    liongardMetricUuid: "fd857803-5360-413a-8736-c65b64255f7c"
+    jmesPath: "Devices[?Type == `Office365` && HoursSinceOneDriveLastCompletedSession_r >`24`] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "CIS-Controls-v8:11.1"
+      - "cyber-insurance-domain-backup"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cove-data-protection.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:cove-data-protection:list-onedrive-backup-overdue-24h"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cove Data Protection — 24-Hour Since Last Completed OneDrive Backup List"
+    description: "Names of Office365-type devices where OneDrive has not completed a backup in more than 24 hours."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cove-data-protection-inspector"
+      inspectorId: 76
+    liongardMetricName: "Cove Data Protection: 24 Hours Since Last Completed OneDrive Backup List"
+    liongardMetricId: 1186
+    liongardMetricUuid: "f514b811-5ed3-4d80-9eb4-c5f3cc8b6211"
+    jmesPath: "Devices[?Type == `Office365` && HoursSinceOneDriveLastCompletedSession_r >`24`].Name"
+    resultType: "array"
+    compliantWhen: "result == []"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cove-data-protection.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:cove-data-protection:count-sharepoint-backup-overdue-24h"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cove Data Protection — 24-Hour Since Last Completed SharePoint Backup Count"
+    description: "Count of Office365-type devices where SharePoint has not completed a backup in more than 24 hours."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cove-data-protection-inspector"
+      inspectorId: 76
+    liongardMetricName: "Cove Data Protection: 24 Hours Since Last Completed SharePoint Backup Count"
+    liongardMetricId: 1187
+    liongardMetricUuid: "686b435c-7827-4bb0-89a6-1cff6c3746a6"
+    jmesPath: "Devices[?Type == `Office365` && HoursSinceSharePointLastCompletedSession_r >`24`] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "CIS-Controls-v8:11.1"
+      - "cyber-insurance-domain-backup"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cove-data-protection.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:cove-data-protection:list-sharepoint-backup-overdue-24h"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cove Data Protection — 24-Hour Since Last Completed SharePoint Backup List"
+    description: "Names of Office365-type devices where SharePoint has not completed a backup in more than 24 hours."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cove-data-protection-inspector"
+      inspectorId: 76
+    liongardMetricName: "Cove Data Protection: 24 Hours Since Last Completed SharePoint Backup List"
+    liongardMetricId: 1188
+    liongardMetricUuid: "bf35b140-a4ac-4fdf-ad61-5cf32888158b"
+    jmesPath: "Devices[?Type == `Office365` && HoursSinceSharePointLastCompletedSession_r >`24`].Name"
+    resultType: "array"
+    compliantWhen: "result == []"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cove-data-protection.md"
+    dateAdded: "2026-05-26"
+
+# ── Device & Storage Sync ─────────────────────────────────────────────────────
+
+  - "@id": "metrics:cove-data-protection:count-devices-not-synchronized"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cove Data Protection — Count of Devices Not Synchronized"
+    description: "Count of BackupManager devices where StorageStatus is not 'Synchronized'. Non-zero indicates storage replication lag or an error condition."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cove-data-protection-inspector"
+      inspectorId: 76
+    liongardMetricName: "Cove Data Protection: Count of Devices not Synchronized"
+    liongardMetricId: 1195
+    liongardMetricUuid: "bd341a10-de44-4214-a4e3-c9d2562e7d77"
+    jmesPath: "Devices[?StorageStatus != `Synchronized` && Type == `BackupManager`] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cove-data-protection.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:cove-data-protection:list-devices-not-synchronized"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cove Data Protection — List of Devices Not Synchronized"
+    description: "Names of BackupManager devices where StorageStatus is not 'Synchronized'."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cove-data-protection-inspector"
+      inspectorId: 76
+    liongardMetricName: "Cove Data Protection: List of Devices not Synchronized"
+    liongardMetricId: 1194
+    liongardMetricUuid: "56b4b2d3-4269-4f6b-836b-fa3f8398b455"
+    jmesPath: "Devices[?StorageStatus != `Synchronized` && Type == `BackupManager`].Name"
+    resultType: "array"
+    compliantWhen: "result == []"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cove-data-protection.md"
+    dateAdded: "2026-05-26"
+
+# ── Protected Device Inventory ────────────────────────────────────────────────
+
+  - "@id": "metrics:cove-data-protection:list-protected-servers"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cove Data Protection — List of Protected Servers"
+    description: "Computer names of all devices where Settings.OSType is 'Server'. Used as the numerator in the unprotected-servers gap analysis."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cove-data-protection-inspector"
+      inspectorId: 76
+    liongardMetricName: "Cove Data Protection: List of Protected Servers"
+    liongardMetricId: 1181
+    liongardMetricUuid: "ca639693-0243-42e6-8585-218ea37aa9f3"
+    jmesPath: "Devices[?Settings.OSType == `Server`].Settings.ComputerName"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cove-data-protection.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:cove-data-protection:list-protected-workstations"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cove Data Protection — List of Protected Workstations"
+    description: "Computer names of all devices where Settings.OSType is 'Workstation'."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cove-data-protection-inspector"
+      inspectorId: 76
+    liongardMetricName: "Cove Data Protection: List of Protected Workstations"
+    liongardMetricId: 1182
+    liongardMetricUuid: "c7595738-f4d9-445b-9ccd-7465a732e55c"
+    jmesPath: "Devices[?Settings.OSType == `Workstation`].Settings.ComputerName"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cove-data-protection.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:cove-data-protection:count-protected-m365-users"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cove Data Protection — Count of Protected Microsoft 365 Users"
+    description: "Total protected user account count across all Office365-type devices from TotalProtectedUserAccounts. Provides M365 backup seat scope."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cove-data-protection-inspector"
+      inspectorId: 76
+    liongardMetricName: "Cove Data Protection: Count of Protected Microsoft 365 Users"
+    liongardMetricId: 1189
+    liongardMetricUuid: "8c37b5ca-a22a-4173-a378-6c4d7e297de3"
+    jmesPath: "Devices[?Type == `Office365`].TotalProtectedUserAccounts"
+    resultType: "array"
+    resultUnit: "count"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cove-data-protection.md"
+    dateAdded: "2026-05-26"
+
+# ── User Administration ───────────────────────────────────────────────────────
+
+  - "@id": "metrics:cove-data-protection:total-count-of-users"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cove Data Protection — Total Count of Users"
+    description: "Total number of user accounts in the Cove tenant from Users[] | length(@)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cove-data-protection-inspector"
+      inspectorId: 76
+    liongardMetricName: "Cove Data Protection: Total count of users"
+    liongardMetricId: 1176
+    liongardMetricUuid: "b0cb45e2-8884-4301-864d-577d4ba1c936"
+    jmesPath: "Users[] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cove-data-protection.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:cove-data-protection:count-users-with-2fa"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cove Data Protection — Count of Users with 2FA Enabled"
+    description: "Count of Cove user accounts where TwoFactorAuthenticationStatus is 'Enabled'."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cove-data-protection-inspector"
+      inspectorId: 76
+    liongardMetricName: "Cove Data Protection: Count of Users with 2FA"
+    liongardMetricId: 1177
+    liongardMetricUuid: "e8fb934c-b163-40b1-8957-10cbd17fefd9"
+    jmesPath: "Users[?TwoFactorAuthenticationStatus  == `Enabled` ] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cove-data-protection.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:cove-data-protection:list-users-with-2fa"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cove Data Protection — List of Users with 2FA Enabled"
+    description: "Names of Cove user accounts where TwoFactorAuthenticationStatus is 'Enabled'."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cove-data-protection-inspector"
+      inspectorId: 76
+    liongardMetricName: "Cove Data Protection: List of Users with 2FA"
+    liongardMetricId: 1178
+    liongardMetricUuid: "cdb6b152-adc5-4dc1-8b88-322a0a0f68e4"
+    jmesPath: "Users[?TwoFactorAuthenticationStatus  == `Enabled` ].Name"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cove-data-protection.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:cove-data-protection:count-users-without-2fa"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cove Data Protection — Count of Users Without 2FA"
+    description: "Count of Cove user accounts where TwoFactorAuthenticationStatus is not 'Enabled'. Non-zero is a security concern for backup console access."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cove-data-protection-inspector"
+      inspectorId: 76
+    liongardMetricName: "Cove Data Protection: Count of Users without 2FA"
+    liongardMetricId: 1179
+    liongardMetricUuid: "cbb6aae3-ec5d-4a33-a5db-71183c9733d4"
+    jmesPath: "Users[?TwoFactorAuthenticationStatus  != `Enabled` ] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "CIS-Controls-v8:6.3"
+      - "cyber-insurance-domain-auth"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cove-data-protection.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:cove-data-protection:list-users-without-2fa"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cove Data Protection — List of Users Without 2FA"
+    description: "Names of Cove user accounts where TwoFactorAuthenticationStatus is not 'Enabled'."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cove-data-protection-inspector"
+      inspectorId: 76
+    liongardMetricName: "Cove Data Protection: List of Users without 2FA"
+    liongardMetricId: 1180
+    liongardMetricUuid: "71e448ad-650c-4be1-88b9-394b4b154277"
+    jmesPath: "Users[?TwoFactorAuthenticationStatus  != `Enabled` ].Name"
+    resultType: "array"
+    compliantWhen: "result == []"
+    compliesWith:
+      - "CIS-Controls-v8:6.3"
+      - "cyber-insurance-domain-auth"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cove-data-protection.md"
+    dateAdded: "2026-05-26"

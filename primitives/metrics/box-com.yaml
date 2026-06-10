@@ -1,0 +1,328 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+  - "@id": "metrics:box:system-info"
+    "@type": "liongard:MetricPrimitive"
+    name: "Box — System Info"
+    description: "Top-level system information object for the Box enterprise tenant."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "box-com-inspector"
+      inspectorId: 14
+    liongardMetricName: "Box: SystemInfo"
+    liongardMetricId: 438
+    liongardMetricUuid: "5611c39c-1d87-4907-a6df-1b8dc0953c73"
+    jmesPath: "SystemInfo"
+    resultType: "object"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/box.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:box:users-total-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Box — Total User Count"
+    description: "Total number of users in the Box enterprise tenant."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "box-com-inspector"
+      inspectorId: 14
+    jmesPath: "box.users.totalCount"
+    resultType: "integer"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/box.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:box:users-active-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Box — Active User Count"
+    description: "Number of active users in the Box enterprise tenant."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "box-com-inspector"
+      inspectorId: 14
+    jmesPath: "box.users.activeCount"
+    resultType: "integer"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/box.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:box:users-inactive-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Box — Inactive User Count"
+    description: "Number of inactive users in the Box enterprise tenant."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "box-com-inspector"
+      inspectorId: 14
+    jmesPath: "box.users.inactiveCount"
+    resultType: "integer"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/box.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:box:users-external-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Box — External User Count"
+    description: "Number of cross-organization invited (external) users in the Box tenant."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "box-com-inspector"
+      inspectorId: 14
+    jmesPath: "box.users.externalCount"
+    resultType: "integer"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/box.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:box:users-mfa-enabled-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Box — MFA Enabled User Count"
+    description: "Number of Box users with MFA enabled."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "box-com-inspector"
+      inspectorId: 14
+    jmesPath: "box.users.mfaEnabledCount"
+    resultType: "integer"
+    compliantWhen: "== total users"
+    compliesWith:
+      - "CIS-Controls-v8:6.3"
+      - "CIS-Controls-v8:6.5"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/box.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:box:storage-total-gb"
+    "@type": "liongard:MetricPrimitive"
+    name: "Box — Total Storage (GB)"
+    description: "Total storage capacity allocated to the Box enterprise tenant in GB."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "box-com-inspector"
+      inspectorId: 14
+    jmesPath: "box.storage.totalGB"
+    resultType: "integer"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/box.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:box:storage-used-gb"
+    "@type": "liongard:MetricPrimitive"
+    name: "Box — Used Storage (GB)"
+    description: "Storage currently used by the Box enterprise tenant in GB."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "box-com-inspector"
+      inspectorId: 14
+    jmesPath: "box.storage.usedGB"
+    resultType: "integer"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/box.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:box:storage-utilization-pct"
+    "@type": "liongard:MetricPrimitive"
+    name: "Box — Storage Utilization Percent"
+    description: "Percentage of total Box storage currently in use."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "box-com-inspector"
+      inspectorId: 14
+    jmesPath: "box.storage.utilizationPct"
+    resultType: "integer"
+    compliantWhen: "< slas.storage_utilization_pct_warn"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/box.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:box:shares-external-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Box — External Share Count"
+    description: "Number of active shares with external (non-tenant) users."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "box-com-inspector"
+      inspectorId: 14
+    jmesPath: "box.shares.externalCount"
+    resultType: "integer"
+    compliantWhen: "== 0"
+    compliesWith:
+      - "CIS-Controls-v8:3.3"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/box.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:box:shares-public-link-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Box — Public Link Count"
+    description: "Number of unauthenticated public links in the Box tenant."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "box-com-inspector"
+      inspectorId: 14
+    jmesPath: "box.shares.publicLinkCount"
+    resultType: "integer"
+    compliantWhen: "== 0"
+    compliesWith:
+      - "CIS-Controls-v8:3.3"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/box.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:box:shares-open-upload-link-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Box — Open Upload Link Count"
+    description: "Number of links allowing unauthenticated uploads (highest risk sharing mode)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "box-com-inspector"
+      inspectorId: 14
+    jmesPath: "box.shares.openLinkWithUploadCount"
+    resultType: "integer"
+    compliantWhen: "== 0"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/box.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:box:content-stale-file-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Box — Stale File Count"
+    description: "Number of files not modified within the stale_content_days_max threshold."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "box-com-inspector"
+      inspectorId: 14
+    jmesPath: "box.content.staleFileCount"
+    resultType: "integer"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/box.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:box:retention-policies-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Box — Retention Policies Count"
+    description: "Number of active retention policies configured in the Box tenant."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "box-com-inspector"
+      inspectorId: 14
+    jmesPath: "box.retention.policiesCount"
+    resultType: "integer"
+    compliantWhen: ">= 1"
+    compliesWith:
+      - "CIS-Controls-v8:3.12"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/box.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:box:licensing-seat-total"
+    "@type": "liongard:MetricPrimitive"
+    name: "Box — Licensed Seat Total"
+    description: "Total number of licensed seats in the Box subscription."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "box-com-inspector"
+      inspectorId: 14
+    jmesPath: "box.licensing.seatTotal"
+    resultType: "integer"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/box.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:box:licensing-seat-used"
+    "@type": "liongard:MetricPrimitive"
+    name: "Box — Licensed Seat Used"
+    description: "Number of licensed seats currently in use."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "box-com-inspector"
+      inspectorId: 14
+    jmesPath: "box.licensing.seatUsed"
+    resultType: "integer"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/box.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:box:licensing-utilization-pct"
+    "@type": "liongard:MetricPrimitive"
+    name: "Box — License Utilization Percent"
+    description: "Percentage of Box licensed seats currently in use."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "box-com-inspector"
+      inspectorId: 14
+    jmesPath: "box.licensing.utilizationPct"
+    resultType: "integer"
+    compliantWhen: "< slas.license_utilization_pct_warn"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/box.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:box:security-admin-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Box — Admin User Count"
+    description: "Number of users with Admin or Co-Admin roles in the Box tenant."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "box-com-inspector"
+      inspectorId: 14
+    jmesPath: "box.security.adminCount"
+    resultType: "integer"
+    compliesWith:
+      - "CIS-Controls-v8:5.4"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/box.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:box:security-app-auth-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Box — Third-Party App Authorization Count"
+    description: "Number of third-party applications authorized in the Box tenant."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "box-com-inspector"
+      inspectorId: 14
+    jmesPath: "box.security.appAuthCount"
+    resultType: "integer"
+    status: "PROPOSED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/box.md"
+    dateAdded: "2026-05-26"

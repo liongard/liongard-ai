@@ -1,0 +1,119 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+# Syncro (Inspector ID 86)
+# Eval sweep 2026-05-28 findings:
+# Top-level keys: Companies, Users, Contracts, Products, Discovered, Name
+# Parent/child inspector: Demo shows "Demo - Parent" and "Demo - Child" naming.
+# This system is the MSP-level parent showing the customer roster and tech users.
+# Per-customer ticket/device/patch data lives in child launchpoints.
+# CONFIRMED DATA GAPS: No Tickets, no Devices/RMM, no Patches, no SLA metrics,
+# no invoice detail. All prior primitives used fabricated nested paths
+# (syncro.tickets.X, syncro.devices.X etc.) — those paths do not exist at this level.
+# Companies[].disabled is BOOLEAN. Users[]."admin?" is BOOLEAN (JMESPath requires
+# double-quoting: "admin?"). Contracts[].status is lowercase STRING.
+
+primitives:
+
+  - "@id": "metrics:syncro-inspector:companies-total-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Syncro — Total Company Count"
+    description: "Total number of customer companies/contacts in the Syncro tenant."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "syncro-inspector"
+      inspectorId: 86
+    jmesPath: "length(Companies)"
+    resultType: "integer"
+    compliesWith:
+      - "CIS-Controls-v8:1.1"
+    fieldGotcha: "Companies[] is the customer/contact roster. Fields include: id, business_name, firstname, lastname, email, phone, disabled (boolean), location_name, contacts, DaysSinceCreated_r (Liongard-computed integer)."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "System D (inspected 2026-05-28)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/syncro.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:syncro-inspector:companies-active-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Syncro — Active Company Count"
+    description: "Number of non-disabled customer companies in the Syncro tenant."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "syncro-inspector"
+      inspectorId: 86
+    jmesPath: "length(Companies[?disabled == `false`])"
+    resultType: "integer"
+    fieldGotcha: "Companies[].disabled is BOOLEAN (false = active, true = disabled). Use backtick-quoted boolean literal."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "System D (inspected 2026-05-28)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/syncro.md"
+    dateAdded: "2026-05-28"
+
+  - "@id": "metrics:syncro-inspector:users-total-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Syncro — Total Technician User Count"
+    description: "Total number of Syncro technician/staff user accounts."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "syncro-inspector"
+      inspectorId: 86
+    jmesPath: "length(Users)"
+    resultType: "integer"
+    fieldGotcha: "Users[] contains technician accounts (not customer contacts). Fields include: id, email, full_name, group, admin? (boolean — JMESPath requires double-quoting), color, DaysSinceCreated_r."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "System D (inspected 2026-05-28)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/syncro.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:syncro-inspector:users-admin-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Syncro — Admin Technician Count"
+    description: "Number of Syncro technician accounts with admin privileges."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "syncro-inspector"
+      inspectorId: 86
+    jmesPath: "length(Users[?\"admin?\" == `true`])"
+    resultType: "integer"
+    fieldGotcha: "The field name is literally 'admin?' (with a question mark). JMESPath requires double-quoting special-character field names: Users[?\"admin?\" == `true`]. The field is BOOLEAN."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "System D (inspected 2026-05-28)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/syncro.md"
+    dateAdded: "2026-05-28"
+
+  - "@id": "metrics:syncro-inspector:contracts-total-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Syncro — Total Contract Count"
+    description: "Total number of contracts in the Syncro tenant."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "syncro-inspector"
+      inspectorId: 86
+    jmesPath: "length(Contracts)"
+    resultType: "integer"
+    fieldGotcha: "Contracts[].status is LOWERCASE string (e.g. 'Opportunity', 'Active'). Fields include: id, name, description, customer_id, contract_amount, start_date, end_date, status, sla_id, DaysUntilExpiration_r, DaysSinceCreated_r."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "System D (inspected 2026-05-28)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/syncro.md"
+    dateAdded: "2026-05-28"
+
+  - '@id': metrics:syncro-inspector:products-count
+    '@type': liongard:MetricPrimitive
+    name: Syncro — Products Count
+    description: Count of catalog products.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: syncro-inspector
+      inspectorId: 86
+    jmesPath: length(Products)
+    resultType: integer
+    resultUnit: count
+    status: VALIDATED
+    validatedOn: '2026-05-29'
+    validatedSystemReference: System C — dev environment (inspected 2026-05-29)
+    sourceRecipe: recipes/single-system-analysis/by-inspector/syncro.md
+    dateAdded: '2026-05-29'

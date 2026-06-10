@@ -1,0 +1,103 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+# Dark Web Monitoring (Inspector ID 4)
+# Eval sweep 2026-05-28 findings:
+# Single-tenant inspector. Validated on active system (inspected 2026-05-29 — today).
+# Dataprint root keys: NumberOfUsersWithDataBreach, NumberOfTotalBreaches,
+#   UniqueCompositeKey, Name, Description, Primary, Users.
+# DATA GAPS confirmed: ALL 4 PROPOSED paths used fabricated 'dark-web.exposures.*' namespace.
+#   No exposures/recentCount/privilegedAccountMatches/sharedAccountMatches/passwordPlaintextCount
+#   keys exist in the dataprint. 4 primitives removed.
+# NOTE: Recent-exposure date filtering requires JMESPath date math (not supported).
+#   Privileged/shared account cross-referencing requires external identity data (not in dataprint).
+
+primitives:
+
+- '@id': metrics:dark-web-inspector:users-with-data-breach-count
+  '@type': liongard:MetricPrimitive
+  name: Dark Web Monitoring — Users With Data Breach Count
+  description: Count of unique email addresses found in the breach corpus for the
+    monitored domain.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: dark-web-inspector
+    inspectorId: 4
+  jmesPath: NumberOfUsersWithDataBreach
+  resultType: integer
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/dark-web-monitoring.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:dark-web-inspector:total-breaches-count
+  '@type': liongard:MetricPrimitive
+  name: Dark Web Monitoring — Total Breaches Count
+  description: Total breach records across all monitored users — sum of all breach-corpus
+    matches.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: dark-web-inspector
+    inspectorId: 4
+  jmesPath: NumberOfTotalBreaches
+  resultType: integer
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/dark-web-monitoring.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:dark-web-inspector:users-breach-list
+  '@type': liongard:MetricPrimitive
+  name: Dark Web Monitoring — Users Breach List
+  description: Array of monitored users with their associated breach records. Each
+    entry has Email and Breaches array.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: dark-web-inspector
+    inspectorId: 4
+  jmesPath: 'Users[*].{Email: Email, Breaches: Breaches}'
+  resultType: array
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/dark-web-monitoring.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:dark-web-inspector:users-email-list
+  '@type': liongard:MetricPrimitive
+  name: Dark Web Monitoring — Monitored Email List
+  description: 'Array of monitored email address strings (PascalCase field name: Email).'
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: dark-web-inspector
+    inspectorId: 4
+  jmesPath: Users[*].Email
+  resultType: array
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/dark-web-monitoring.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:dark-web-inspector:breach-details
+  '@type': liongard:MetricPrimitive
+  name: Dark Web Monitoring — Breach Detail Records
+  description: 'Flat array of all breach objects across all users. Each breach includes:
+    Name, Title, Domain, BreachDate, AddedDate, PwnCount, DataClasses, IsVerified,
+    IsSpamList, IsMalware, IsStealerLog, IsSubscriptionFree.'
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: dark-web-inspector
+    inspectorId: 4
+  jmesPath: 'Users[*].Breaches[*].{Name: Name, Title: Title, Domain: Domain, BreachDate:
+    BreachDate, AddedDate: AddedDate, PwnCount: PwnCount, DataClasses: DataClasses,
+    IsVerified: IsVerified, IsSpamList: IsSpamList, IsMalware: IsMalware, IsStealerLog:
+    IsStealerLog, IsSubscriptionFree: IsSubscriptionFree}'
+  resultType: array
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/dark-web-monitoring.md
+  dateAdded: '2026-05-26'
+

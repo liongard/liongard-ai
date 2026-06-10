@@ -1,0 +1,388 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+  # ── Password Policy ─────────────────────────────────────────────────────────
+
+  - "@id": "metrics:active-directory:min-password-length"
+    "@type": "liongard:MetricPrimitive"
+    name: "Active Directory — Account Minimum Password Length"
+    description: "Minimum number of characters required for domain user passwords."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "active-directory-inspector"
+      inspectorId: 13
+    liongardMetricName: "Active Directory: Account Minimum Password Length"
+    liongardMetricId: 792
+    liongardMetricUuid: "7e3d321c-7c72-4f1d-9262-03572d65ee40"
+    jmesPath: "AccountPolicy.MinPasswordLength"
+    resultType: "integer"
+    resultUnit: "characters"
+    status: "VALIDATED"
+    validatedOn: "2026-05-07"
+    validatedSystemReference: "System A — Windows Server 2025 DC"
+    compliesWith:
+      - "CIS-Controls-v8:5.2"
+      - "cyber-insurance-domain-auth"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/active-directory.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:active-directory:password-complexity-enabled"
+    "@type": "liongard:MetricPrimitive"
+    name: "Active Directory — Password Complexity Enabled"
+    description: "Whether domain password complexity requirements are enforced (boolean)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "active-directory-inspector"
+      inspectorId: 13
+    liongardMetricName: "Active Directory: Account Password Complexity"
+    liongardMetricId: 793
+    liongardMetricUuid: "ded38e56-cb10-404a-944b-65cb73dd3299"
+    jmesPath: "AccountPolicy.PasswordComplexity"
+    resultType: "boolean"
+    status: "VALIDATED"
+    validatedOn: "2026-05-07"
+    validatedSystemReference: "System A — Windows Server 2025 DC"
+    compliesWith:
+      - "CIS-Controls-v8:5.2"
+      - "cyber-insurance-domain-auth"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/active-directory.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:active-directory:max-password-age-days"
+    "@type": "liongard:MetricPrimitive"
+    name: "Active Directory — Maximum Password Age"
+    description: "Maximum number of days before a domain user password must be changed."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "active-directory-inspector"
+      inspectorId: 13
+    liongardMetricName: "Active Directory: Maximum Password Age"
+    liongardMetricId: 748
+    liongardMetricUuid: "02a64ef0-090e-48a9-b582-1aba3d423e5b"
+    jmesPath: "AccountPolicy.MaxPasswordAge"
+    resultType: "integer"
+    resultUnit: "days"
+    status: "VALIDATED"
+    validatedOn: "2026-05-07"
+    validatedSystemReference: "System A — Windows Server 2025 DC"
+    compliesWith:
+      - "CIS-Controls-v8:5.2"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/active-directory.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:active-directory:password-history-length"
+    "@type": "liongard:MetricPrimitive"
+    name: "Active Directory — Password History Length"
+    description: "Number of unique previous passwords remembered to prevent reuse."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "active-directory-inspector"
+      inspectorId: 13
+    liongardMetricName: "Active Directory: Password History Length"
+    liongardMetricId: 2022
+    liongardMetricUuid: "01e71458-4e0b-4aeb-9267-431e4758eda4"
+    jmesPath: "AccountPolicy.pwdHistoryLength"
+    resultType: "integer"
+    resultUnit: "count"
+    status: "VALIDATED"
+    validatedOn: "2026-05-07"
+    validatedSystemReference: "System A — Windows Server 2025 DC"
+    compliesWith:
+      - "CIS-Controls-v8:5.2"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/active-directory.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:active-directory:password-reversible-encryption"
+    "@type": "liongard:MetricPrimitive"
+    name: "Active Directory — Store Passwords With Reversible Encryption"
+    description: >
+      Whether domain accounts store passwords using reversible encryption.
+      Should always be false — true means passwords can be decrypted in plaintext.
+      No matching Global metric; custom primitive.
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "active-directory-inspector"
+      inspectorId: 13
+    jmesPath: "AccountPolicy.PasswordReversible"
+    resultType: "boolean"
+    status: "VALIDATED"
+    validatedOn: "2026-05-07"
+    validatedSystemReference: "System A — Windows Server 2025 DC"
+    compliesWith:
+      - "CIS-Controls-v8:5.2"
+      - "cyber-insurance-domain-auth"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/active-directory.md"
+    dateAdded: "2026-05-26"
+
+  # ── Account Lockout Policy ───────────────────────────────────────────────────
+
+  - "@id": "metrics:active-directory:lockout-threshold"
+    "@type": "liongard:MetricPrimitive"
+    name: "Active Directory — Account Lockout Threshold"
+    description: >
+      Number of failed logon attempts before an account is locked out.
+      0 means lockout is disabled — never interpret 0 as "zero attempts".
+      Pair with lockout-duration-hours and lockout-observation-window-hours.
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "active-directory-inspector"
+      inspectorId: 13
+    liongardMetricName: "Active Directory: Account Lockout Threshold"
+    liongardMetricId: 794
+    liongardMetricUuid: "c013da01-bcd1-46b1-9eb4-13012ede188c"
+    jmesPath: "AccountPolicy.lockoutThreshold"
+    resultType: "integer"
+    resultUnit: "attempts"
+    status: "VALIDATED"
+    validatedOn: "2026-05-07"
+    validatedSystemReference: "System A — Windows Server 2025 DC"
+    fieldGotcha: "0 = no lockout enforced. Validated: System A returned 0 (lockout disabled)."
+    compliesWith:
+      - "CIS-Controls-v8:6.2"
+      - "cyber-insurance-domain-auth"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/active-directory.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:active-directory:lockout-duration-hours"
+    "@type": "liongard:MetricPrimitive"
+    name: "Active Directory — Account Lockout Duration"
+    description: >
+      How long (in hours) an account remains locked after exceeding the lockout
+      threshold. Stored as a float — 0.25 = 15 minutes, 0.5 = 30 minutes.
+      Unit is hours, NOT minutes.
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "active-directory-inspector"
+      inspectorId: 13
+    liongardMetricName: "Active Directory: Account Lockout Duration"
+    liongardMetricId: 796
+    liongardMetricUuid: "ff9913f8-df23-4f06-935f-c1c79e52be55"
+    jmesPath: "AccountPolicy.AccountLockoutDuration"
+    resultType: "integer"
+    resultUnit: "hours"
+    status: "VALIDATED"
+    validatedOn: "2026-05-07"
+    validatedSystemReference: "System A (0.1666… = 10 min), System B (0.5 = 30 min)"
+    fieldGotcha: "Unit is hours as a float. 0.25 = 15 min, 0.5 = 30 min. Do NOT interpret as minutes."
+    compliesWith:
+      - "CIS-Controls-v8:6.2"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/active-directory.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:active-directory:lockout-observation-window-hours"
+    "@type": "liongard:MetricPrimitive"
+    name: "Active Directory — Account Lockout Observation Window"
+    description: >
+      Time window (in hours) during which failed logon attempts count toward the
+      lockout threshold. Float — same unit and precision as lockout-duration-hours.
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "active-directory-inspector"
+      inspectorId: 13
+    liongardMetricName: "Active Directory: Account Lockout Observation Window"
+    liongardMetricId: 795
+    liongardMetricUuid: "664f1bfd-e5b2-4ec1-a68c-e69e4bd42199"
+    jmesPath: "AccountPolicy.AccountLockoutObservationWindow"
+    resultType: "integer"
+    resultUnit: "hours"
+    status: "VALIDATED"
+    validatedOn: "2026-05-07"
+    validatedSystemReference: "System A — 0.1666… (10 min)"
+    fieldGotcha: "Unit is hours as a float, same as AccountLockoutDuration."
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/active-directory.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:active-directory:lockout-threshold-string"
+    "@type": "liongard:MetricPrimitive"
+    name: "Active Directory — Lockout Threshold Description"
+    description: >
+      Human-readable string describing the lockout threshold
+      (e.g. "Infinite Bad Logins Allowed" when threshold = 0).
+      Different field from lockout-threshold (numeric). No matching Global metric;
+      custom primitive used for display in reports.
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "active-directory-inspector"
+      inspectorId: 13
+    jmesPath: "AccountPolicy.AccountLockoutThreshold"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-07"
+    validatedSystemReference: "System A — 'Infinite Bad Logins Allowed'"
+    fieldGotcha: >
+      Distinct from AccountPolicy.lockoutThreshold (integer). This is a display string.
+      When lockoutThreshold = 0 this returns 'Infinite Bad Logins Allowed'.
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/active-directory.md"
+    dateAdded: "2026-05-26"
+
+  # ── Privileged Users ─────────────────────────────────────────────────────────
+
+  - "@id": "metrics:active-directory:privileged-users-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Active Directory — Privileged Users Count"
+    description: "Count of users flagged as privileged in this Active Directory domain."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "active-directory-inspector"
+      inspectorId: 13
+    liongardMetricName: "Active Directory: Privileged Users Count"
+    liongardMetricId: 23
+    liongardMetricUuid: "815d1d8e-b13f-4210-ba9a-f670718a3efe"
+    jmesPath: "SystemInfo.NumPrivilegedUsers"
+    resultType: "integer"
+    resultUnit: "count"
+    status: "VALIDATED"
+    validatedOn: "2026-05-07"
+    validatedSystemReference: "System A — 1 (Administrator)"
+    compliesWith:
+      - "CIS-Controls-v8:5.1"
+      - "cyber-insurance-domain-auth"
+    answersQuestion:
+      - "cyber-insurance:privileged-account-inventory"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/active-directory.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:active-directory:privileged-users-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Active Directory — Privileged Users List (string)"
+    description: "Comma-separated string of privileged user names in this AD domain."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "active-directory-inspector"
+      inspectorId: 13
+    liongardMetricName: "Active Directory: Privileged Users List"
+    liongardMetricId: 76
+    liongardMetricUuid: "3353c2ad-1bd5-45c3-91a6-61b645244d3b"
+    jmesPath: "SystemInfo.PrivilegedUsersStr"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-07"
+    validatedSystemReference: "System A — 'Administrator'"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/active-directory.md"
+    dateAdded: "2026-05-26"
+
+  # ── User Activity & Status ───────────────────────────────────────────────────
+
+  - "@id": "metrics:active-directory:stale-users-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Active Directory — Stale Active User Accounts Count"
+    description: >
+      Count of non-default, enabled users whose activity is Stale.
+      Excludes default system accounts (DefaultSystemUser = false).
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "active-directory-inspector"
+      inspectorId: 13
+    liongardMetricName: "Active Directory: Stale User Accounts Count"
+    liongardMetricId: 773
+    liongardMetricUuid: "06e99537-6d00-4470-aedc-3d36b30e29de"
+    jmesPath: "Users[?UserActivity==`Stale` && DefaultSystemUser==`false` && Enabled == `true`] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    status: "VALIDATED"
+    validatedOn: "2026-05-07"
+    validatedSystemReference: "System A — 0 (no stale non-default users)"
+    compliesWith:
+      - "CIS-Controls-v8:5.3"
+      - "cyber-insurance-domain-auth"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/active-directory.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:active-directory:never-used-users-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Active Directory — Never-Used Active User Accounts Count"
+    description: >
+      Count of non-default, enabled users who have never logged in
+      (LastLogonDate is null). Indicates provisioned-but-unused accounts.
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "active-directory-inspector"
+      inspectorId: 13
+    liongardMetricName: "Active Directory: Never Used User Accounts Count"
+    liongardMetricId: 775
+    liongardMetricUuid: "833aba1d-da72-4921-86bb-c705338edff5"
+    jmesPath: "Users[?LastLogonDate == `null` && DefaultSystemUser == `false` && Enabled == `true`] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    status: "VALIDATED"
+    validatedOn: "2026-05-07"
+    validatedSystemReference: "System A — 0"
+    compliesWith:
+      - "CIS-Controls-v8:5.3"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/active-directory.md"
+    dateAdded: "2026-05-26"
+
+  # ── Default Accounts ─────────────────────────────────────────────────────────
+
+  - "@id": "metrics:active-directory:guest-account-enabled"
+    "@type": "liongard:MetricPrimitive"
+    name: "Active Directory — Default Guest Account Enabled"
+    description: "Whether the built-in Guest account is enabled. Should be false."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "active-directory-inspector"
+      inspectorId: 13
+    liongardMetricName: "Active Directory: Default Guest Account Enabled"
+    liongardMetricId: 780
+    liongardMetricUuid: "4fa30dbd-6b99-46c9-802b-14f8b49864cb"
+    jmesPath: "DefaultGuestAccountEnabled"
+    resultType: "boolean"
+    status: "VALIDATED"
+    validatedOn: "2026-05-07"
+    validatedSystemReference: "System A — false"
+    compliesWith:
+      - "CIS-Controls-v8:4.7"
+      - "cyber-insurance-domain-auth"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/active-directory.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:active-directory:guest-members-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Active Directory — Guest Members Count"
+    description: >
+      Count of members in the GuestMembers array. Used alongside
+      guest-account-enabled to confirm no accounts are operating as guests.
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "active-directory-inspector"
+      inspectorId: 13
+    liongardMetricName: "Active Directory: Default Guest Account Enabled Count"
+    liongardMetricId: 781
+    liongardMetricUuid: "e5856aa1-7b4d-412b-b3ab-06056896d1c7"
+    jmesPath: "GuestMembers | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    status: "VALIDATED"
+    validatedOn: "2026-05-07"
+    validatedSystemReference: "System A — 1 (Guest account present)"
+    fieldGotcha: >
+      Recipe uses length(GuestMembers) — equivalent to GuestMembers | length(@).
+      Global metric id=781 uses the pipe form; both evaluate identically.
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/active-directory.md"
+    dateAdded: "2026-05-26"
+
+  # ── DHCP ─────────────────────────────────────────────────────────────────────
+
+  - "@id": "metrics:active-directory:dhcp-scopes"
+    "@type": "liongard:MetricPrimitive"
+    name: "Active Directory — DHCP Server Scopes"
+    description: >
+      Array of DHCPv4 scopes when AD is also acting as a DHCP server.
+      Only populated when the DC hosts the DHCP role — null otherwise.
+      Related Global metric (id=1758) returns only scopes ≥80% utilisation.
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "active-directory-inspector"
+      inspectorId: 13
+    jmesPath: "DHCP.Serverv4Scopes"
+    resultType: "array"
+    status: "SCHEMA_CONFIRMED"
+    validatedOn: "2026-05-07"
+    validatedSystemReference: "Systems A, B, and two others — null (DHCP not on DC in lab)"
+    fieldGotcha: >
+      Returns null when DC does not host the DHCP role. Check for null before
+      attempting array operations. DHCP.Serverv4Scopes[0] confirmed null on
+      4 test systems — field exists in schema but requires DHCP role on DC.
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/active-directory.md"
+    dateAdded: "2026-05-26"

@@ -1,0 +1,212 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+  - '@id': metrics:google-workspace:twostep-enforced-count
+    '@type': liongard:MetricPrimitive
+    compliesWith:
+    - CIS-Controls-v8:6.3
+    - CIS-Controls-v8:6.4
+    - CIS-Controls-v8:6.5
+    dateAdded: '2026-05-26'
+    description: Number of users with 2-Step Verification enforced in the GWS tenant.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorId: 61
+      inspectorSlug: google-workspace-inspector
+    jmesPath: length(Users[?isEnforcedIn2Sv == `true`])
+    name: Google Workspace — 2-Step Verification Enforced Count
+    notes: 'isEnforcedIn2Sv is boolean. Also available: isEnrolledIn2Sv (enrolled but
+      not necessarily enforced). For enforcement gap: length(Users[?isEnforcedIn2Sv
+      == `false` && suspended != `true`]).'
+    resultType: integer
+    sourceRecipe: recipes/single-system-analysis/by-inspector/google-workspace.md
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: 'System A (env: WidgetCo, inspected 2026-04-30) — returned
+      5 of 8 users'
+
+  - '@id': metrics:google-workspace:twostep-coverage-pct
+    '@type': liongard:MetricPrimitive
+    compliesWith:
+    - CIS-Controls-v8:6.3
+    - CIS-Controls-v8:6.4
+    - CIS-Controls-v8:6.5
+    dateAdded: '2026-05-26'
+    description: Percentage of users enrolled in 2-Step Verification.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorId: 61
+      inspectorSlug: google-workspace-inspector
+    jmesPath: N/A
+    name: Google Workspace — 2-Step Verification Coverage Percent
+    notes: 'DATA GAP: JMESPath cannot compute percentages natively. Use length(Users[?isEnforcedIn2Sv
+      == `true`]) for raw count and compute pct in agent logic. No _r coverage-pct field
+      exists in the dataprint.'
+    resultType: integer
+    sourceRecipe: recipes/single-system-analysis/by-inspector/google-workspace.md
+    status: PROPOSED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: 'System A (env: WidgetCo, inspected 2026-04-30) — no computed
+      pct field; enforced count = 5 of 8'
+
+  - '@id': metrics:google-workspace:super-admin-count
+    '@type': liongard:MetricPrimitive
+    compliesWith:
+    - CIS-Controls-v8:5.4
+    dateAdded: '2026-05-26'
+    description: Number of super admin accounts in the GWS tenant.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorId: 61
+      inspectorSlug: google-workspace-inspector
+    jmesPath: length(Users[?isAdmin == `true`])
+    name: Google Workspace — Super Admin Count
+    notes: isAdmin is boolean. isDelegatedAdmin also available for delegated admin sub-count.
+    resultType: integer
+    sourceRecipe: recipes/single-system-analysis/by-inspector/google-workspace.md
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: 'System A (env: WidgetCo, inspected 2026-04-30) — returned
+      3'
+
+  - '@id': metrics:google-workspace:super-admin-list
+    '@type': liongard:MetricPrimitive
+    compliesWith:
+    - CIS-Controls-v8:5.4
+    dateAdded: '2026-05-26'
+    description: List of super admin accounts for privileged-role audit.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorId: 61
+      inspectorSlug: google-workspace-inspector
+    jmesPath: Users[?isAdmin == `true`].primaryEmail
+    name: Google Workspace — Super Admin List
+    resultType: array
+    sourceRecipe: recipes/single-system-analysis/by-inspector/google-workspace.md
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: 'System A (env: WidgetCo, inspected 2026-04-30) — returned
+      array of 3 email strings'
+
+  - '@id': metrics:google-workspace:users-total-count
+    '@type': liongard:MetricPrimitive
+    compliesWith:
+    - CIS-Controls-v8:5.1
+    dateAdded: '2026-05-26'
+    description: Total number of users in the GWS tenant.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorId: 61
+      inspectorSlug: google-workspace-inspector
+    jmesPath: length(Users)
+    name: Google Workspace — Total User Count
+    resultType: integer
+    sourceRecipe: recipes/single-system-analysis/by-inspector/google-workspace.md
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: 'System A (env: WidgetCo, inspected 2026-04-30) — returned
+      8'
+
+  - '@id': metrics:google-workspace:users-stale-count
+    '@type': liongard:MetricPrimitive
+    compliesWith:
+    - CIS-Controls-v8:5.3
+    dateAdded: '2026-05-26'
+    description: Number of users with no login activity beyond the stale threshold (slas.stale_user_days_max).
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorId: 61
+      inspectorSlug: google-workspace-inspector
+    jmesPath: length(Users[?DaysSinceLastLogin_r > `90`])
+    name: Google Workspace — Stale User Count
+    notes: 'DaysSinceLastLogin_r is a Liongard-computed integer field (days since last
+      login). Threshold of `90` is the default SLA; adjust per customer. Suspended/archived
+      users may have high DaysSinceLastLogin_r — consider filtering: Users[?DaysSinceLastLogin_r
+      > `90` && suspended != `true` && archived != `true`].'
+    resultType: integer
+    sourceRecipe: recipes/single-system-analysis/by-inspector/google-workspace.md
+    status: VALIDATED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: 'System A (env: WidgetCo, inspected 2026-04-30) — returned
+      0 (PASS)'
+
+  - '@id': metrics:google-workspace:third-party-apps-unverified-count
+    '@type': liongard:MetricPrimitive
+    dateAdded: '2026-05-26'
+    description: Number of unverified third-party apps authorized in the GWS tenant.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorId: 61
+      inspectorSlug: google-workspace-inspector
+    jmesPath: N/A
+    name: Google Workspace — Unverified Third-Party App Count
+    notes: 'DATA GAP: GWS dataprint does not include OAuth app authorizations or third-party
+      app inventory.'
+    resultType: integer
+    sourceRecipe: recipes/single-system-analysis/by-inspector/google-workspace.md
+    status: PROPOSED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: 'System A (env: WidgetCo, inspected 2026-04-30) — no third-party
+      OAuth app data in dataprint'
+
+  - '@id': metrics:google-workspace:less-secure-app-access-enabled
+    '@type': liongard:MetricPrimitive
+    dateAdded: '2026-05-26'
+    description: Whether the deprecated Less Secure App Access setting is enabled in
+      the GWS tenant.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorId: 61
+      inspectorSlug: google-workspace-inspector
+    jmesPath: N/A
+    name: Google Workspace — Less Secure App Access Enabled
+    notes: 'DATA GAP: GWS dataprint does not expose the Less Secure App Access tenant
+      setting.'
+    resultType: boolean
+    sourceRecipe: recipes/single-system-analysis/by-inspector/google-workspace.md
+    status: PROPOSED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: 'System A (env: WidgetCo, inspected 2026-04-30) — no security
+      settings object in dataprint'
+
+  - '@id': metrics:google-workspace:groups-open-membership-count
+    '@type': liongard:MetricPrimitive
+    dateAdded: '2026-05-26'
+    description: Number of groups with open membership (anyone in domain can join).
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorId: 61
+      inspectorSlug: google-workspace-inspector
+    jmesPath: N/A
+    name: Google Workspace — Open-Membership Group Count
+    notes: 'DATA GAP: Groups[] has adminCreated, directMembersCount, email, name, id,
+      kind but NOT whoCanJoin or access-control settings.'
+    resultType: integer
+    sourceRecipe: recipes/single-system-analysis/by-inspector/google-workspace.md
+    status: PROPOSED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: 'System A (env: WidgetCo, inspected 2026-04-30) — Groups[]
+      does not include whoCanJoin field'
+
+  - '@id': metrics:google-workspace:licensing-utilization-pct
+    '@type': liongard:MetricPrimitive
+    dateAdded: '2026-05-26'
+    description: Percentage of purchased GWS licenses currently assigned.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorId: 61
+      inspectorSlug: google-workspace-inspector
+    jmesPath: N/A
+    name: Google Workspace — License Utilization Percent
+    notes: 'DATA GAP: Subscriptions[].seats.licensedNumberOfSeats and seats.numberOfSeats
+      are available but JMESPath cannot compute a percentage. Use Subscriptions[*].{sku:
+      skuName, licensed: seats.licensedNumberOfSeats, total: seats.numberOfSeats, status:
+      status} for a licensing inventory table.'
+    resultType: integer
+    sourceRecipe: recipes/single-system-analysis/by-inspector/google-workspace.md
+    status: PROPOSED
+    validatedOn: '2026-05-28'
+    validatedSystemReference: 'System A (env: WidgetCo, inspected 2026-04-30) — Subscriptions[]
+      exists but no direct utilization pct field'
+

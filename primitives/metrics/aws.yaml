@@ -1,0 +1,358 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+# NOTE: The aws.md recipe uses proposed metric paths (aws.iam.*, aws.s3.*, etc.)
+# that do not yet exist in the Liongard Global metric catalog. The entries below
+# cover only the metrics confirmed in the catalog as of 2026-05-26.
+# All other fields in the recipe are marked PROPOSED and omitted here until
+# catalog IDs are assigned.
+
+primitives:
+
+  - "@id": "metrics:aws:iam-users-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "AWS — IAM Users Count"
+    description: "Total number of IAM users in this AWS account. JMESPath: SystemInfo.NumIAMUsers"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "aws-inspector"
+      inspectorId: 1
+    liongardMetricName: "Amazon Web Services: IAM Users Count"
+    liongardMetricId: 488
+    liongardMetricUuid: "dd4a3db5-5a6e-4c81-ae77-5cc79232a3b2"
+    jmesPath: "SystemInfo.NumIAMUsers"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/aws.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:aws:iam-users-mfa-enabled-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "AWS — IAM Users with MFA Enabled Count"
+    description: "Number of IAM users with MFA enabled. JMESPath: SystemInfo.NumIAMUsersMFAEnabled"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "aws-inspector"
+      inspectorId: 1
+    liongardMetricName: "Amazon Web Services: Num IAM Users MFA Enabled"
+    liongardMetricId: 492
+    liongardMetricUuid: "125283ec-89c2-47e2-b214-3ec80e46069c"
+    jmesPath: "SystemInfo.NumIAMUsersMFAEnabled"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/aws.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:aws:users-without-mfa-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "AWS — IAM Users without MFA Enabled List"
+    description: "List of IAM usernames that do not have MFA enabled. JMESPath: Users[?MFAEnabled==`false`].UserName"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "aws-inspector"
+      inspectorId: 1
+    liongardMetricName: "Amazon Web Services: Users without MFA Enabled List"
+    liongardMetricId: 682
+    liongardMetricUuid: "0c9298e6-159d-4686-a4da-6a8b79736d09"
+    jmesPath: "Users[?MFAEnabled==`false`].UserName | join(`, `, @)"
+    resultType: "string"
+    compliantWhen: "result == null || result == ''"
+    compliesWith:
+      - "CIS-Controls-v8:6.3"
+      - "CIS-Controls-v8:6.5"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/aws.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:aws:root-account-mfa-enabled"
+    "@type": "liongard:MetricPrimitive"
+    name: "AWS — Root Account MFA Enabled"
+    description: "Boolean indicating whether MFA is enabled on the AWS root account. JMESPath: SystemInfo.RootAccountMFAEnabled"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "aws-inspector"
+      inspectorId: 1
+    liongardMetricName: "Amazon Web Services: Root Account MFA Enabled"
+    liongardMetricId: 493
+    liongardMetricUuid: "98a904fd-c7e5-424a-91ec-947976f187fd"
+    jmesPath: "SystemInfo.RootAccountMFAEnabled"
+    resultType: "boolean"
+    compliantWhen: "result == true"
+    compliesWith:
+      - "CIS-Controls-v8:6.5"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/aws.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:aws:root-access-keys"
+    "@type": "liongard:MetricPrimitive"
+    name: "AWS — Root Access Keys"
+    description: "Root account access key inventory. Any value present is a critical finding — root must not have programmatic credentials. JMESPath: RootAccessKeys"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "aws-inspector"
+      inspectorId: 1
+    liongardMetricName: "Amazon Web Services: Root Access Keys"
+    liongardMetricId: 680
+    liongardMetricUuid: "afd007ef-6c5d-443d-8505-de3c705e63ab"
+    jmesPath: "RootAccessKeys"
+    resultType: "array"
+    compliantWhen: "result == null || length(result) == 0"
+    compliesWith:
+      - "CIS-Controls-v8:5.4"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/aws.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:aws:strong-password-policy-enabled"
+    "@type": "liongard:MetricPrimitive"
+    name: "AWS — Strong Password Policy Enabled"
+    description: "Whether a strong IAM password policy is configured. JMESPath: StrongPasswordPolicy"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "aws-inspector"
+      inspectorId: 1
+    liongardMetricName: "Amazon Web Services: Strong Password Policy Enabled"
+    liongardMetricId: 679
+    liongardMetricUuid: "6b09427c-492d-4409-a78f-3c8fabdd2f54"
+    jmesPath: "StrongPasswordPolicy"
+    resultType: "boolean"
+    compliantWhen: "result == true"
+    compliesWith:
+      - "CIS-Controls-v8:5.2"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/aws.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:aws:cloudtrails-enabled"
+    "@type": "liongard:MetricPrimitive"
+    name: "AWS — CloudTrails Enabled"
+    description: "Indicates whether CloudTrail is activated in this AWS account. JMESPath: CloudTrailsActivated"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "aws-inspector"
+      inspectorId: 1
+    liongardMetricName: "Amazon Web Services: CloudTrails Enabled"
+    liongardMetricId: 678
+    liongardMetricUuid: "0598e83e-3563-467b-ab75-38cef314b349"
+    jmesPath: "CloudTrailsActivated"
+    resultType: "boolean"
+    compliantWhen: "result == true"
+    compliesWith:
+      - "CIS-Controls-v8:8.2"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/aws.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:aws:s3-buckets-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "AWS — S3 Buckets Count"
+    description: "Total number of S3 buckets in this AWS account. JMESPath: SystemInfo.NumS3Buckets"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "aws-inspector"
+      inspectorId: 1
+    liongardMetricName: "Amazon Web Services: S3 Buckets Count"
+    liongardMetricId: 489
+    liongardMetricUuid: "9867c3c5-c9f2-4d57-9e6c-c3ccca22abc9"
+    jmesPath: "SystemInfo.NumS3Buckets"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/aws.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:aws:s3-publicly-accessible-bucket-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "AWS — Publicly Accessible S3 Bucket Count"
+    description: "Number of S3 buckets with public access enabled — any value above 0 is a critical finding. JMESPath: SystemInfo.NumS3PubliclyAccessibleBuckets"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "aws-inspector"
+      inspectorId: 1
+    liongardMetricName: "Amazon Web Services: Publicly Accessible S3 Bucket Count"
+    liongardMetricId: 11
+    liongardMetricUuid: "192a6997-1b53-48f4-85cc-1e5e710a7101"
+    jmesPath: "SystemInfo.NumS3PubliclyAccessibleBuckets"
+    resultType: "integer"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "CIS-Controls-v8:3.3"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/aws.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:aws:s3-buckets-without-default-encryption-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "AWS — S3 Buckets Without Default Encryption Count"
+    description: "Count of S3 buckets that lack a default server-side encryption configuration. JMESPath: length(Buckets[?ServerSideEncryption == null])"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "aws-inspector"
+      inspectorId: 1
+    liongardMetricName: "Amazon Web Services: S3 Buckets Without Default Encryption Count"
+    jmesPath: "length(Buckets[?ServerSideEncryption == null])"
+    resultType: "integer"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "CIS-Controls-v8:3.11"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/aws.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:aws:s3-buckets-without-default-encryption-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "AWS — S3 Buckets Without Default Encryption List"
+    description: "List of S3 bucket details (name, creation date, versioning status) for buckets lacking default server-side encryption."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "aws-inspector"
+      inspectorId: 1
+    liongardMetricName: "Amazon Web Services: S3 Buckets Without Default Encryption List"
+    jmesPath: "Buckets[?ServerSideEncryption == null].{Name: Name, CreationDate: CreationDate, VersioningStatus: VersioningStatus}"
+    resultType: "array"
+    compliantWhen: "result == null || length(result) == 0"
+    compliesWith:
+      - "CIS-Controls-v8:3.11"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/aws.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:aws:security-groups-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "AWS — Security Groups Count"
+    description: "Total number of security groups in this AWS account. JMESPath: SystemInfo.NumSecurityGroups"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "aws-inspector"
+      inspectorId: 1
+    liongardMetricName: "Amazon Web Services: Security Groups Count"
+    liongardMetricId: 490
+    liongardMetricUuid: "45a9f657-2f21-4ed3-b6ad-a62393787b2c"
+    jmesPath: "SystemInfo.NumSecurityGroups"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/aws.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:aws:running-ec2-instances-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "AWS — Running EC2 Instances Count"
+    description: "Number of currently running EC2 instances in this AWS account. JMESPath: SystemInfo.NumRunningEC2Instances"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "aws-inspector"
+      inspectorId: 1
+    liongardMetricName: "Amazon Web Services: Running EC2 Instances Count"
+    liongardMetricId: 494
+    liongardMetricUuid: "35ce1643-7a06-48a8-bd51-b2b34ca83d8f"
+    jmesPath: "SystemInfo.NumRunningEC2Instances"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/aws.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:aws:unencrypted-ebs-volumes-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "AWS — Unencrypted EBS Volumes Count"
+    description: "Count of EBS volumes that are not encrypted at rest. JMESPath: length(Volumes[?Encrypted == `false`])"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "aws-inspector"
+      inspectorId: 1
+    liongardMetricName: "Amazon Web Services: Unencrypted EBS Volumes Count"
+    jmesPath: "length(Volumes[?Encrypted == `false`])"
+    resultType: "integer"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "CIS-Controls-v8:3.11"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/aws.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:aws:unencrypted-ebs-volumes-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "AWS — Unencrypted EBS Volumes List"
+    description: "Details of EBS volumes not encrypted at rest (VolumeId, Size, State, VolumeType, AvailabilityZone, CreateTime)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "aws-inspector"
+      inspectorId: 1
+    liongardMetricName: "Amazon Web Services: Unencrypted EBS Volumes List"
+    jmesPath: "Volumes[?Encrypted == `false`].{VolumeId: VolumeId, Size: Size, State: State, VolumeType: VolumeType, AvailabilityZone: AvailabilityZone, CreateTime: CreateTime}"
+    resultType: "array"
+    compliantWhen: "result == null || length(result) == 0"
+    compliesWith:
+      - "CIS-Controls-v8:3.11"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/aws.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:aws:rds-backup-older-than-15d-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "AWS — RDS Instances with Recoverable Backup Older Than 15 Days Count"
+    description: "Count of RDS instances whose most recent recoverable backup is older than 15 days. JMESPath: DBInstances[?daysSinceRecoverableBackup_r > `15`] | length(@)"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "aws-inspector"
+      inspectorId: 1
+    liongardMetricName: "Amazon Web Services: RDS Instances with Recoverable Backup Older Than 15 Days Count"
+    liongardMetricId: 875
+    liongardMetricUuid: "9a635e92-8937-44e5-9349-ab9deff40606"
+    jmesPath: "DBInstances[?daysSinceRecoverableBackup_r > `15`] | length(@)"
+    resultType: "integer"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "CIS-Controls-v8:11.2"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/aws.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:aws:ec2-instances-with-status-alerts-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "AWS — EC2 Instances with Status Alerts Count"
+    description: "Count of EC2 instances currently showing status alerts or scheduled events. JMESPath: InstanceStatuses[?Events] | length(@)"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "aws-inspector"
+      inspectorId: 1
+    liongardMetricName: "Amazon Web Services: EC2 Instances with Status Alerts Count"
+    liongardMetricId: 877
+    liongardMetricUuid: "71b710f7-bd95-4a88-8df8-8fbbc05fcab4"
+    jmesPath: "InstanceStatuses[?Events] | length(@)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/aws.md"
+    dateAdded: "2026-05-26"

@@ -1,0 +1,215 @@
+# Liongard Prompt Library — MSP Configuration (tracked defaults)
+#
+# This file is the single source of truth for MSP-wide static values
+# that every recipe inherits. The MSP fills out their values once here,
+# and every recipe in `/recipes/` references this config — no per-recipe
+# find-and-replace required.
+#
+# ┌─────────────────────────────────────────────────────────────────────┐
+# │ Two-file pattern                                                    │
+# ├─────────────────────────────────────────────────────────────────────┤
+# │ /config/msp-config.yaml         — TRACKED. The default template.   │
+# │                                   Lives in git; placeholder values.│
+# │ /config/msp-config.local.yaml   — GITIGNORED. The MSP's actual    │
+# │                                   values. Override only what you  │
+# │                                   need; the rest inherits from    │
+# │                                   the tracked defaults.           │
+# └─────────────────────────────────────────────────────────────────────┘
+#
+# Recipes reference values as `${config.brand.company_name}` (or
+# equivalent). At runtime, agents resolve local-then-default:
+#   1. Read msp-config.local.yaml if it exists
+#   2. Fall back to msp-config.yaml for any unset value
+#   3. Fall back to recipe-inline override if the recipe specifies one
+#
+# To adopt the library for your MSP:
+#   cp config/msp-config.local.yaml.example config/msp-config.local.yaml
+#   # edit the local file with your real values
+#
+# Do NOT edit msp-config.yaml with your real values — that file ships
+# with the library; your real values belong in the gitignored local
+# file.
+
+# ────────────────────────────────────────────────────────────────────
+# 1. Brand identity
+# ────────────────────────────────────────────────────────────────────
+
+brand:
+  company_name: "<Your MSP Name>"
+  primary_color: "#1F4E79"
+  secondary_color: "#FFFFFF"
+  accent_color: ""                         # optional tertiary color
+  logo_path: ""                            # e.g. "config/logo.png"
+  letterhead_path: ""                      # e.g. "config/letterhead.docx" (for word output)
+  cover_image_path: ""                     # e.g. "config/cover.png" (for pptx)
+  font_family_heading: ""                  # optional override; recipes default to skill-rendered
+  font_family_body: ""
+
+# ────────────────────────────────────────────────────────────────────
+# 2. Output defaults
+# ────────────────────────────────────────────────────────────────────
+
+defaults:
+  audience_tone: "balanced"                # technical | balanced | executive
+                                           # Each recipe can override; this is the library-wide fallback.
+  output_format: "markdown"                # markdown | word | pptx | xlsx
+                                           # Each recipe can override based on its primary use case.
+  filename_prefix: ""                      # optional MSP-specific prefix on filenames
+  date_format: "YYYY-MM-DD"
+
+# ────────────────────────────────────────────────────────────────────
+# 3. Preferred vendor stack
+#    The MSP's standard tools. Recipes use these in "expected vs deployed"
+#    findings (onboarding intake), service-alignment narratives
+#    (pre-sales discovery), and roadmap "replacement preference" hints.
+# ────────────────────────────────────────────────────────────────────
+
+preferred_stack:
+  # Identity & MFA
+  identity_primary: ""                     # microsoft-365 | jumpcloud | onelogin | etc.
+  identity_secondary: ""                   # active-directory if hybrid
+  mfa_layer: ""                            # duo | (built-in to identity_primary)
+
+  # Endpoint security
+  edr: ""                                  # sentinelone | huntress | sophos-central | bitdefender | crowdstrike | etc.
+  dns_filtering: "cisco-umbrella"
+
+  # Awareness training
+  awareness_training: "knowbe4"
+
+  # Backup / DR
+  backup_workstation: ""                   # cove | datto-bcdr | acronis | axcient | veeam | etc.
+  backup_server: ""
+  backup_m365: ""                          # cove | acronis | etc.
+
+  # Network
+  firewall: ""                             # fortinet-fortigate | sonicwall | sophos-firewall | cisco-asa | meraki | etc.
+  switch: ""
+  wireless: ""
+
+  # Operations
+  rmm: ""                                  # ninjaone | datto-rmm | kaseya-vsa | n-central | connectwise-automate
+  psa: ""                                  # connectwise-manage | autotask | halopsa | kaseya-bms | syncro
+  documentation: "itglue"
+
+  # Hardware refresh preferences (used by roadmap recipe)
+  workstation_oem: ""                      # e.g. "Dell" / "HP" / "Lenovo" / "Apple"
+  laptop_oem: ""
+  server_oem: ""
+
+  # Domain / certificates
+  domain_registrar: ""
+  ssl_certificate_authority: ""
+
+# ────────────────────────────────────────────────────────────────────
+# 4. MSP-standard SLAs (library-wide baselines)
+#    Recipes inherit from here; per-recipe overrides happen in the
+#    recipe's own customization block when a deliverable needs a
+#    stricter or looser threshold.
+# ────────────────────────────────────────────────────────────────────
+
+slas:
+  # Identity
+  mfa_coverage_pct_min: 95
+  privileged_mfa_required: true            # 100% — non-negotiable
+  stale_user_days_max: 90
+  shared_account_max: 0
+  password_min_length: 14
+  password_complexity_required: true
+  password_max_age_days: 365
+  password_reuse_prohibited_count: 24
+
+  # Endpoint
+  edr_coverage_pct_min: 95
+  unprotected_servers_max: 0
+  patch_age_days_max: 30
+  critical_patches_pending_max: 0
+  supported_os_only: true
+  bitlocker_required_on: ["laptop"]
+
+  # Network
+  firewall_firmware_age_days_max: 180
+  open_rdp_to_internet_allowed: false
+  default_deny_outbound: false             # set true if MSP standard
+  high_availability_required: false        # set true if MSP standard
+
+  # Backup
+  server_backup_coverage_pct_min: 100
+  successful_backup_recency_days_max: 7
+  offsite_replication_required: true
+  backup_encryption_at_rest_required: true
+  backup_encryption_in_transit_required: true
+
+  # Domain
+  registrar_lock_required: true
+  domain_expiration_warn_days: 60
+
+  # Email authentication (new — replaces legacy dmarc_health_required)
+  #   dmarc_health_required was removed: "pass" was not a valid DMARC policy value.
+  #   Use dmarc_policy_minimum and dmarc_policy_target instead.
+  spf_required: true                        # domain must have an SPF record
+  spf_all_qualifier_required: "-all"        # -all | ~all — MSP standard for hard fail
+  dkim_required: true                       # at least one selector must return a valid key
+  dkim_min_key_bits: 1024                   # 1024 minimum; 2048 recommended
+  dkim_selectors_all_in_spf: true           # sending platforms must be covered by SPF
+  dmarc_policy_minimum: "quarantine"        # none | quarantine | reject — minimum acceptable
+  dmarc_policy_target: "reject"             # goal posture for aligned environments
+  dmarc_rua_required: true                  # aggregate reporting address required
+  dmarc_ruf_recommended: true               # forensic reporting address recommended
+
+  # TLS / SSL
+  min_tls_version: "TLSv1.2"               # TLSv1.2 | TLSv1.3 — minimum acceptable
+  prohibited_tls_protocols: ["TLSv1.0", "TLSv1.1", "SSLv3"]
+  hsts_required: true                       # HTTP Strict Transport Security required
+  http_to_https_redirect_required: true     # HTTP must redirect to HTTPS
+  ssl_cert_expiration_warn_days: 45         # warn when cert expires within N days
+  ssl_cert_expiration_critical_days: 14     # critical when cert expires within N days
+
+  # Dark web / credential exposure
+  credential_exposure_pct_max: 5            # % of total identities in breach corpus before Critical
+  privileged_account_exposed_max: 0         # any privileged account exposed = Critical
+  shared_account_exposed_max: 0             # any shared/generic account exposed = Critical
+  recent_exposure_days: 90                  # "recent" breach window for alerting
+
+  # Inspector freshness
+  inspector_lastseen_days_max: 7
+
+  # Renewal calendar
+  license_expiration_warn_days: 60
+  ssl_cert_expiration_warn_days: 45
+
+  # Operational
+  alert_resolution_target_hours: 24
+
+# ────────────────────────────────────────────────────────────────────
+# 5. Privacy + scrub policy
+# ────────────────────────────────────────────────────────────────────
+
+privacy:
+  # redact_individual_users_in: list of output modes where individual user names / accounts
+  # must be suppressed (aggregate counts only). Recipes may narrow this list per-deliverable.
+  # Common modes: markdown | word | pptx | xlsx | executive-tone-output
+  redact_individual_users_in: ["pptx", "executive-tone-output"]
+
+  redact_passwords_in_output: true         # NEVER include plaintext passwords or hashes — always true
+  redact_serial_numbers_in_executive_output: false
+  redact_internal_ips_in_executive_output: false
+
+scrub_patterns_path: ".scrub-patterns"     # gitignored file containing partner / customer names to never leak
+
+# ────────────────────────────────────────────────────────────────────
+# 6. Cost estimates (optional)
+#    Recipes that produce budget narratives (roadmap, refresh) can
+#    pull rough dollar figures from here. Leave empty to omit dollar
+#    columns from output. MSP-specific; populate only if your audience
+#    expects budget figures.
+# ────────────────────────────────────────────────────────────────────
+
+cost_estimates:
+  workstation_replacement_avg: 0
+  laptop_replacement_avg: 0
+  server_replacement_avg: 0
+  firewall_replacement_avg: 0
+  m365_seat_avg_monthly: 0
+  edr_seat_avg_annual: 0
+  backup_seat_avg_annual: 0

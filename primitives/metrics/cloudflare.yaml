@@ -1,0 +1,304 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+# Cloudflare (Inspector ID 82)
+# Eval sweep 2026-05-28 findings:
+# This is a PARENT/CHILD inspector:
+#   Parent keys: Name, Zones, APIInfo, Accounts[], Discovered
+#   Child keys: Name, Roles, Zones, APIInfo, Members, AuditLogs, AccessRules, AccountInfo, Subscriptions
+# Primitives below target the CHILD inspector (per-account detail view).
+# CONFIRMED DATA GAPS: DNSSEC, WAF, SSL zone settings, Workers, Zero Trust, Pages, Page Rules,
+#   Rate Limiting, Bot Management — NONE exist in the confirmed dataprint structure.
+#   All prior 28 primitives used fabricated nested paths (cloudflare.account.X, cloudflare.zones.X etc.)
+#   — those paths do not exist.
+# GOTCHA: Zones[].status is STRING ("pending"/"active"/"paused"/"deleted"). Demo zone = "pending".
+#   Filter Zones[?status == 'active'] correctly returns 0 on demo — expect non-zero on real zones.
+# GOTCHA: Zones[].paused is BOOLEAN (false = Cloudflare protection active, true = bypassed).
+# GOTCHA: AccountInfo.settings.enforce_twofactor is BOOLEAN (false = account-level MFA not required).
+# GOTCHA: Members[].status is STRING ("accepted"/"pending" — not a boolean).
+
+primitives:
+
+  - "@id": "metrics:cloudflare-inspector:zones-total-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cloudflare — Total Zone Count"
+    description: "Total number of zones (domains) managed in this Cloudflare account."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cloudflare-inspector"
+      inspectorId: 82
+    jmesPath: "length(Zones)"
+    resultType: "integer"
+    fieldGotcha: "Zones[] fields include: id, meta, name, plan, type, owner, paused (boolean), status (string: 'pending'/'active'/'paused'/'deleted'), account, created_on, modified_on, activated_on, name_servers, development_mode, original_dnshost, original_registrar, original_name_servers."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Demo Child system (inspected 2025-12-02)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cloudflare.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:cloudflare-inspector:zones-active-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cloudflare — Active Zone Count"
+    description: "Number of zones with status 'active' (nameservers updated, Cloudflare fully onboarded)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cloudflare-inspector"
+      inspectorId: 82
+    jmesPath: "length(Zones[?status == 'active'])"
+    resultType: "integer"
+    fieldGotcha: "Zones[].status is STRING. Values: 'active' (fully onboarded), 'pending' (nameservers not yet updated), 'paused' (Cloudflare disabled), 'deleted'. Demo zone has status='pending' so this query returns 0 on demo — expected behavior. On real customer zones should return the active zone count."
+    status: "SCHEMA_CONFIRMED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Demo Child system — zone has status='pending' so active count = 0 (confirms filter logic; path is correct)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cloudflare.md"
+    dateAdded: "2026-05-28"
+
+  - "@id": "metrics:cloudflare-inspector:zones-paused-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cloudflare — Paused Zone Count"
+    description: "Number of zones with paused=true — Cloudflare protection is disabled for paused zones."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cloudflare-inspector"
+      inspectorId: 82
+    jmesPath: "length(Zones[?paused == `true`])"
+    resultType: "integer"
+    fieldGotcha: "Zones[].paused is BOOLEAN (true = Cloudflare protection bypassed, false = protection active). Use backtick-quoted boolean literal. Distinct from status='paused' — a zone can be active (status) but paused (protection off)."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Demo Child system (inspected 2025-12-02)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cloudflare.md"
+    dateAdded: "2026-05-28"
+
+  - "@id": "metrics:cloudflare-inspector:account-mfa-enforced"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cloudflare — Account-Level MFA Enforcement"
+    description: "Whether two-factor authentication is enforced for all account members at the account level."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cloudflare-inspector"
+      inspectorId: 82
+    jmesPath: "AccountInfo.settings.enforce_twofactor"
+    resultType: "boolean"
+    compliesWith:
+      - "CIS-Controls-v8:6.3"
+    fieldGotcha: "AccountInfo.settings.enforce_twofactor is BOOLEAN. false = MFA not required at account level. AccountInfo fields: id, name, type, settings (enforce_twofactor, access_approval_expiry, use_account_custom_ns_by_default), created_on, legacy_flags."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Demo Child system (inspected 2025-12-02)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cloudflare.md"
+    dateAdded: "2026-05-28"
+
+  - "@id": "metrics:cloudflare-inspector:members-total-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cloudflare — Total Account Member Count"
+    description: "Total number of members with access to this Cloudflare account."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cloudflare-inspector"
+      inspectorId: 82
+    jmesPath: "length(Members)"
+    resultType: "integer"
+    fieldGotcha: "Members[] fields include: id, user (object with email, first_name, last_name, two_factor_authentication_enabled), roles (array of role objects), status (string: 'accepted'/'pending')."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Demo Child system (inspected 2025-12-02)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cloudflare.md"
+    dateAdded: "2026-05-28"
+
+  - "@id": "metrics:cloudflare-inspector:members-accepted-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cloudflare — Accepted Account Members Count"
+    description: "Number of account members who have accepted their invitation (status = 'accepted')."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cloudflare-inspector"
+      inspectorId: 82
+    jmesPath: "length(Members[?status == 'accepted'])"
+    resultType: "integer"
+    fieldGotcha: "Members[].status is STRING ('accepted'/'pending'). Do not use boolean. Pending members have not yet accepted their invitation to the account."
+    status: "SCHEMA_CONFIRMED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Demo Child system — Members[0].status = 'accepted' confirmed; filter not directly EVALUATE-tested"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cloudflare.md"
+    dateAdded: "2026-05-28"
+
+  - "@id": "metrics:cloudflare-inspector:audit-logs-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cloudflare — Audit Log Entry Count"
+    description: "Total number of audit log entries captured in the Cloudflare dataprint."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cloudflare-inspector"
+      inspectorId: 82
+    jmesPath: "length(AuditLogs)"
+    resultType: "integer"
+    fieldGotcha: "AuditLogs[] fields include: id, when, actor, owner, action, metadata, newValue, oldValue, resource, interface. Count reflects the inspector's capture window — not all-time history."
+    status: "SCHEMA_CONFIRMED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Demo Child system structure — Array(12) observed in GET_OVERVIEW; count query not directly EVALUATE-tested"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cloudflare.md"
+    dateAdded: "2026-05-28"
+
+  - "@id": "metrics:cloudflare-inspector:roles-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cloudflare — Role Count"
+    description: "Total number of roles defined in this Cloudflare account."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cloudflare-inspector"
+      inspectorId: 82
+    jmesPath: "length(Roles)"
+    resultType: "integer"
+    fieldGotcha: "Roles[] fields include: id, name, description, permissions. These are account-level role definitions, not per-zone roles."
+    status: "SCHEMA_CONFIRMED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Demo Child system structure — Array(1) observed in GET_OVERVIEW; count query not directly EVALUATE-tested"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cloudflare.md"
+    dateAdded: "2026-05-28"
+
+  - '@id': metrics:cloudflare-inspector:account-id
+    '@type': liongard:MetricPrimitive
+    name: Cloudflare — Account ID
+    description: Cloudflare account identifier (hex string).
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: cloudflare-inspector
+      inspectorId: 82
+    jmesPath: AccountInfo.id
+    resultType: string
+    status: VALIDATED
+    validatedOn: '2026-05-29'
+    validatedSystemReference: System A — dev environment (cloudflare child, inspected 2026-03-13)
+    sourceRecipe: recipes/single-system-analysis/by-inspector/cloudflare.md
+    dateAdded: '2026-05-29'
+
+  - '@id': metrics:cloudflare-inspector:account-name
+    '@type': liongard:MetricPrimitive
+    name: Cloudflare — Account Name
+    description: Human-readable Cloudflare account name.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: cloudflare-inspector
+      inspectorId: 82
+    jmesPath: AccountInfo.name
+    resultType: string
+    status: VALIDATED
+    validatedOn: '2026-05-29'
+    validatedSystemReference: System A — dev environment (cloudflare child, inspected 2026-03-13)
+    sourceRecipe: recipes/single-system-analysis/by-inspector/cloudflare.md
+    dateAdded: '2026-05-29'
+
+  - '@id': metrics:cloudflare-inspector:account-type
+    '@type': liongard:MetricPrimitive
+    name: Cloudflare — Account Type
+    description: Account tier/type (e.g., standard, enterprise).
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: cloudflare-inspector
+      inspectorId: 82
+    jmesPath: AccountInfo.type
+    resultType: string
+    status: VALIDATED
+    validatedOn: '2026-05-29'
+    validatedSystemReference: System A — dev environment (cloudflare child, inspected 2026-03-13)
+    sourceRecipe: recipes/single-system-analysis/by-inspector/cloudflare.md
+    dateAdded: '2026-05-29'
+
+  - '@id': metrics:cloudflare-inspector:members-super-admin-count
+    '@type': liongard:MetricPrimitive
+    name: Cloudflare — Super Administrator Members Count
+    description: Count of members holding a Super Administrator role. Least-privilege signal.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: cloudflare-inspector
+      inspectorId: 82
+    jmesPath: length(Members[?roles[?contains(name, 'Super Administrator')]])
+    resultType: integer
+    resultUnit: count
+    status: VALIDATED
+    validatedOn: '2026-05-29'
+    validatedSystemReference: System A — dev environment (cloudflare child, inspected 2026-03-13)
+    compliesWith:
+    - CIS-Controls-v8:6.8
+    sourceRecipe: recipes/single-system-analysis/by-inspector/cloudflare.md
+    dateAdded: '2026-05-29'
+
+  - '@id': metrics:cloudflare-inspector:zones-list
+    '@type': liongard:MetricPrimitive
+    name: Cloudflare — Zones List
+    description: Per-zone name, status, and plan name.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: cloudflare-inspector
+      inspectorId: 82
+    jmesPath: 'Zones[].{name: name, status: status, plan: plan.name}'
+    resultType: array
+    status: VALIDATED
+    validatedOn: '2026-05-29'
+    validatedSystemReference: System A — dev environment (cloudflare child, inspected 2026-03-13)
+    sourceRecipe: recipes/single-system-analysis/by-inspector/cloudflare.md
+    dateAdded: '2026-05-29'
+
+  - '@id': metrics:cloudflare-inspector:api-token-status
+    '@type': liongard:MetricPrimitive
+    name: Cloudflare — API Token Status
+    description: Status of the inspecting API token (e.g., active).
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: cloudflare-inspector
+      inspectorId: 82
+    jmesPath: APIInfo.status
+    resultType: string
+    status: VALIDATED
+    validatedOn: '2026-05-29'
+    validatedSystemReference: System A — dev environment (cloudflare child, inspected 2026-03-13)
+    sourceRecipe: recipes/single-system-analysis/by-inspector/cloudflare.md
+    dateAdded: '2026-05-29'
+
+  - '@id': metrics:cloudflare-inspector:api-token-expiry
+    '@type': liongard:MetricPrimitive
+    name: Cloudflare — API Token Expiry
+    description: Expiration timestamp of the inspecting API token (ISO 8601).
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: cloudflare-inspector
+      inspectorId: 82
+    jmesPath: APIInfo.expires_on
+    resultType: string
+    status: VALIDATED
+    validatedOn: '2026-05-29'
+    validatedSystemReference: System A — dev environment (cloudflare child, inspected 2026-03-13)
+    compliesWith:
+    - CIS-Controls-v8:5.3
+    sourceRecipe: recipes/single-system-analysis/by-inspector/cloudflare.md
+    dateAdded: '2026-05-29'
+
+  - '@id': metrics:cloudflare-inspector:subscriptions-count
+    '@type': liongard:MetricPrimitive
+    name: Cloudflare — Subscriptions Count
+    description: Count of account subscriptions. Empty on free/demo accounts.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: cloudflare-inspector
+      inspectorId: 82
+    jmesPath: length(Subscriptions)
+    resultType: integer
+    resultUnit: count
+    status: SCHEMA_CONFIRMED
+    sourceRecipe: recipes/single-system-analysis/by-inspector/cloudflare.md
+    dateAdded: '2026-05-29'
+
+  - '@id': metrics:cloudflare-inspector:access-rules-count
+    '@type': liongard:MetricPrimitive
+    name: Cloudflare — Account Access Rules Count
+    description: Count of account-level access rules. Empty on demo account.
+    evaluates:
+      '@type': liongard:Inspector
+      inspectorSlug: cloudflare-inspector
+      inspectorId: 82
+    jmesPath: length(AccessRules)
+    resultType: integer
+    resultUnit: count
+    status: SCHEMA_CONFIRMED
+    sourceRecipe: recipes/single-system-analysis/by-inspector/cloudflare.md
+    dateAdded: '2026-05-29'

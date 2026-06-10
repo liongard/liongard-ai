@@ -1,0 +1,116 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+# ── Backup Repositories ───────────────────────────────────────────────────────
+
+  - "@id": "metrics:veeam-availability-console:unhealthy-repositories-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Veeam Availability Console — Unhealthy Backup Repositories Count"
+    description: "Count of backup repositories where healthState is not 'OK'. Non-zero indicates a storage or connectivity issue requiring immediate investigation."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "veeam-availability-console-inspector"
+      inspectorId: 35
+    liongardMetricName: "Veeam Availability Console: Unhealthy Backup Repositories Count"
+    liongardMetricId: 209
+    liongardMetricUuid: "be62c2ff-230f-4464-ac94-26f279db6b41"
+    jmesPath: "BackupRepositories[?healthState != `OK`].name | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "CIS-Controls-v8:11.1"
+      - "cyber-insurance-domain-backup"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/veeam-availability-console.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:veeam-availability-console:unhealthy-repositories-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Veeam Availability Console — Unhealthy Backup Repositories List"
+    description: "Comma-joined names of backup repositories where healthState is not 'OK'. Companion list for the unhealthy repository count metric."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "veeam-availability-console-inspector"
+      inspectorId: 35
+    liongardMetricName: "Veeam Availability Console: Unhealthy Backup Repositories List"
+    liongardMetricId: 210
+    liongardMetricUuid: "3e4be300-7a95-4e6f-9b76-59e2fdf8f3c1"
+    jmesPath: "BackupRepositories[?healthState != `OK`].name | join(`, ` @)"
+    resultType: "string"
+    compliantWhen: "result == null || result == ''"
+    compliesWith:
+      - "CIS-Controls-v8:11.1"
+      - "cyber-insurance-domain-backup"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/veeam-availability-console.md"
+    dateAdded: "2026-05-26"
+
+# ── Administration ────────────────────────────────────────────────────────────
+
+  - "@id": "metrics:veeam-availability-console:portal-administrator-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Veeam Availability Console — Portal Administrator List"
+    description: "Comma-joined usernames of users assigned the Portal Administrator role. Used for privileged-access audit of the VAC management console."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "veeam-availability-console-inspector"
+      inspectorId: 35
+    liongardMetricName: "Veeam Availability Console: Portal Administrator List"
+    liongardMetricId: 211
+    liongardMetricUuid: "036b8def-44df-4c40-a3e5-f002702c7b41"
+    jmesPath: "Users[?role == `Portal Administrator`].userName | join(`, `, @)"
+    resultType: "string"
+    compliesWith:
+      - "CIS-Controls-v8:5.4"
+      - "cyber-insurance-domain-auth"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/veeam-availability-console.md"
+    dateAdded: "2026-05-26"
+
+# ── Licensing ─────────────────────────────────────────────────────────────────
+
+  - "@id": "metrics:veeam-availability-console:license-expiration-date"
+    "@type": "liongard:MetricPrimitive"
+    name: "Veeam Availability Console — License Expiration Date"
+    description: "VAC product license expiration date from LicenseSettings.expirationDate. Alert when within 60 days of expiration."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "veeam-availability-console-inspector"
+      inspectorId: 35
+    liongardMetricName: "Veeam Availability Console: License Expiration Date"
+    liongardMetricId: 213
+    liongardMetricUuid: "de27891c-85df-49b0-8274-5e766ed5a5e9"
+    jmesPath: "LicenseSettings.expirationDate"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/veeam-availability-console.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:veeam-availability-console:backup-server-license-expiration-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Veeam Availability Console — Backup Server License Expiration List"
+    description: "Formatted list of backup server names and their associated license expiration dates from BackupServerLicenses. Use to track per-server license renewal deadlines."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "veeam-availability-console-inspector"
+      inspectorId: 35
+    liongardMetricName: "Veeam Availability Console: Backup Server License Expiration List"
+    liongardMetricId: 212
+    liongardMetricUuid: "a8470ed6-8a1c-4738-a500-360a517f5d84"
+    jmesPath: "BackupServerLicenses[].join(`: `, [backupServerName, licenseExpirationDate]) | join(`, ` @)"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/veeam-availability-console.md"
+    dateAdded: "2026-05-26"

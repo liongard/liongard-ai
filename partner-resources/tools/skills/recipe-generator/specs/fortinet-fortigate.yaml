@@ -1,0 +1,169 @@
+inspector:
+  slug: fortinet-fortigate-inspector
+  id: 33
+  display_name: Fortinet FortiGate
+  category: Network
+  target_system_type: Firewall
+  parent_child: false
+  identifier_jmespath: SystemInfo.Hostname
+
+recipe:
+  family: single-system-analysis
+  scope_summary: >
+    Use this skill when the user wants a single-firewall analysis of a
+    Fortinet FortiGate — Periodic Business Review, firmware audit,
+    license / security-services expiration, firewall policy summary,
+    LAN-interface inventory, IPSec VPN tunnel review, default-credential
+    audit. Trigger phrases include "FortiGate PBR", "pull FortiGate
+    data", "FGT firewall review", "FortiGate license check".
+  trigger_phrases:
+    - "FortiGate PBR"
+    - "pull FortiGate data"
+    - "FGT firewall review"
+    - "FortiGate license check"
+    - "Fortinet review"
+    - "FortiGate firmware audit"
+  personas:
+    - noc
+    - soc
+    - vcio-account-manager
+    - technical-alignment-manager
+  output_formats:
+    - markdown
+    - word
+    - pptx
+
+aliases:
+  user_facing:
+    - FortiGate
+    - Fortinet
+    - FGT
+    - Forti
+
+slas:
+  inspector_lastseen_days_max: 1
+  license_expiration_warn_days: 60
+  firmware_age_months_max: 12
+
+metrics:
+  - id: 626
+    name: "Fortinet FortiGate: Hostname"
+    jmes_path: SystemInfo.Hostname
+    purpose: Firewall identifier
+    result_shape: <string>
+
+  - id: 223
+    name: "Fortinet FortiGate: Model Number"
+    jmes_path: SystemInfo.Model
+    purpose: Hardware model
+    result_shape: <string>
+
+  - id: 224
+    name: "Fortinet FortiGate: Firmware Version"
+    jmes_path: SystemInfo.FirmwareVersion
+    purpose: Firmware version + age check
+    result_shape: <string>
+
+  - id: 627
+    name: "Fortinet FortiGate: User Summary"
+    jmes_path: AdminUsers[*]
+    purpose: Admin / privileged user audit
+    result_shape: <array>
+
+  - id: 631
+    name: "Fortinet FortiGate: Firewall Policy Summary"
+    jmes_path: FirewallPolicy[*]
+    purpose: Firewall rule enumeration
+    result_shape: <array>
+
+  - id: "[PROPOSED]"
+    name: "Fortinet FortiGate: LAN Interfaces"
+    jmes_path: Interfaces[?role == 'lan']
+    purpose: Internal interface inventory
+
+  - id: "[PROPOSED]"
+    name: "Fortinet FortiGate: WAN Interface Allow-Access (HTTPS, SSH, Ping)"
+    jmes_path: Interfaces[?role == 'wan'].{name, allowAccess}
+    purpose: WAN-side management exposure audit
+
+  - id: "[PROPOSED]"
+    name: "Fortinet FortiGate: Security License Expiry"
+    jmes_path: Licenses[*].{name, expiration, daysToExpiry}
+    purpose: Per-service license expiration (FortiGuard AV, IPS, Web Filter, etc.)
+
+  - id: "[PROPOSED]"
+    name: "Fortinet FortiGate: Security License Status"
+    jmes_path: Licenses[*].status
+    purpose: Per-service license active status
+
+  - id: "[PROPOSED]"
+    name: "Fortinet FortiGate: DHCP Server Summary"
+    jmes_path: DhcpServers[*]
+    purpose: DHCP scope detail
+
+  - id: "[PROPOSED]"
+    name: "Fortinet FortiGate: IPSec VPN Phase 1 Tunnels"
+    jmes_path: IpsecVpnPhase1[*].{name, remoteGateway, status, peer}
+    purpose: Site-to-site IPSec tunnel inventory + status
+
+cross_check:
+  asset_type: device
+  filter_pattern: 'inspectors contains "fortinet-fortigate-inspector"'
+  coverage_question: >
+    Network devices behind the FortiGate that Liongard sees from other
+    inspectors but FortiGate doesn't directly enumerate (FortiGate
+    primarily reports its own configuration, not connected device
+    inventory).
+
+proposed_metric_gaps:
+  - field: "Per-interface LAN/WAN role classification"
+    fallback: "Manual review of Interfaces array; client-side filter"
+    jira_ticket:
+  - field: "WAN management exposure detail"
+    fallback: "Manual review of Interfaces[*].allowAccess"
+    jira_ticket:
+  - field: "Per-service license expiration (FortiGuard AV, IPS, Web Filter)"
+    fallback: "Manual review in FortiGate UI"
+    jira_ticket:
+  - field: "DHCP server scope detail"
+    fallback: "Manual review in FortiGate UI"
+    jira_ticket:
+  - field: "IPSec Phase 1 tunnel inventory + status"
+    fallback: "Manual review in FortiGate UI"
+    jira_ticket:
+
+trigger_keyword: fortinet
+
+dataprint_keys:
+  - key: SystemInfo
+    description: Firewall identity — hostname, model, firmware, serial
+  - key: Interfaces
+    description: Physical / VLAN interface inventory with IP, zone, role
+  - key: FirewallPolicy
+    description: Per-policy rule definition (source/dest, action, services, NAT, profiles)
+  - key: AdminUsers
+    description: GUI / API admin accounts with role + access profile
+  - key: IpsecVpnPhase1
+    description: Site-to-site IPSec phase-1 configuration (per-tunnel)
+  - key: Licenses
+    description: Per-service license status (FortiGuard AV, IPS, Web Filter, etc.)
+  - key: DhcpServers
+    description: Per-interface DHCP server scopes
+
+field_gotchas:
+  - field: "FirmwareVersion"
+    note: "FortiGate firmware uses a 4-part version (e.g. '7.4.1') — major version 6.x is end-of-engineering-support; major 7.x is current. The recipe flags 6.x firmware as a critical lifecycle gap."
+  - field: "Interfaces[*].allowAccess"
+    note: "On WAN-role interfaces, presence of HTTPS / SSH / PING in allowAccess = management interface exposed to the internet. Strong recommendation: restrict to admin VLAN or remove entirely."
+
+large_arrays:
+  - field: FirewallPolicy
+    typical_size: "100s on production firewalls — use length() and per-policy filters rather than dumping the full array"
+
+time_series_supported: true
+
+vendor_console_url_pattern: https://www.fortinet.com/support
+
+related_recipes:
+  - path: recipes/system-type-assessment/all-firewalls.md
+    relationship: rollup

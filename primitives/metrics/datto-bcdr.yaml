@@ -1,0 +1,266 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+# ── Appliance Identity ────────────────────────────────────────────────────────
+
+  - "@id": "metrics:datto-bcdr:appliance-model"
+    "@type": "liongard:MetricPrimitive"
+    name: "Datto BCDR — Appliance Model"
+    description: "Hardware model of the Datto BCDR appliance from SystemInfo.model."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "datto-bcdr-inspector"
+      inspectorId: 38
+    liongardMetricName: "Datto BCDR: Appliance Model"
+    liongardMetricId: 218
+    liongardMetricUuid: "339f34e1-546f-4354-8077-7851edcb49dd"
+    jmesPath: "SystemInfo.model"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/datto-bcdr.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:datto-bcdr:appliance-serial"
+    "@type": "liongard:MetricPrimitive"
+    name: "Datto BCDR — Appliance Serial Number"
+    description: "Hardware serial number of the Datto BCDR appliance from SystemInfo.serialNumber."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "datto-bcdr-inspector"
+      inspectorId: 38
+    liongardMetricName: "Datto BCDR: Appliance Serial Number"
+    liongardMetricId: 217
+    liongardMetricUuid: "b872ac05-0b4e-4629-8dd1-2eb6d50f3c3d"
+    jmesPath: "SystemInfo.serialNumber"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/datto-bcdr.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:datto-bcdr:assets-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Datto BCDR — Protected Assets Count"
+    description: "Total count of protected assets (devices) from length(Assets)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "datto-bcdr-inspector"
+      inspectorId: 38
+    liongardMetricName: "Datto BCDR: Assets Count"
+    liongardMetricId: 219
+    liongardMetricUuid: "54f48a84-b85f-4ac6-8c23-37d19dfda035"
+    jmesPath: "length(Assets)"
+    resultType: "integer"
+    resultUnit: "count"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/datto-bcdr.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:datto-bcdr:associated-device-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Datto BCDR — Associated Device Names"
+    description: "Comma-joined list of all protected device names from Assets[].name."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "datto-bcdr-inspector"
+      inspectorId: 38
+    liongardMetricName: "Datto BCDR: Associated Device List"
+    liongardMetricId: 216
+    liongardMetricUuid: "524dd75f-2f88-48a6-9534-6111f273cfb2"
+    jmesPath: "Assets[].name | join(`, ` @)"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/datto-bcdr.md"
+    dateAdded: "2026-05-26"
+
+# ── Backup Health ─────────────────────────────────────────────────────────────
+
+  - "@id": "metrics:datto-bcdr:backups-failed-recent-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Datto BCDR — Recent Backup Failures (Most Recent Job)"
+    description: "Names of non-archived assets whose most recent backup job status is 'failure' from Assets[?isArchived != 'true' && backups[0].backup.status=='failure'].name."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "datto-bcdr-inspector"
+      inspectorId: 38
+    liongardMetricName: "Datto: Recent Datto Backup Failed List"
+    liongardMetricId: 757
+    liongardMetricUuid: "3487e0a3-af92-4200-bc2e-864969a7e51a"
+    jmesPath: "Assets[?isArchived != `true` && backups[0].backup.status=='failure'].name"
+    resultType: "array"
+    compliantWhen: "result == []"
+    compliesWith:
+      - "cyber-insurance-domain-backup"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    fieldGotcha: "isArchived is tested as string 'true' in the Global metric (isArchived != `true`), not boolean. backups[0] references the most recent backup job entry. Both assumptions are baked into the Global metric query."
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/datto-bcdr.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:datto-bcdr:backups-overdue-24h-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Datto BCDR — Backups Not Completed in Last 24 Hours Count"
+    description: "Count of active (non-archived, non-99999) assets that have not completed a successful backup in 24+ hours. HoursSinceLastSuccessfulBackup_r is a Liongard-computed field."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "datto-bcdr-inspector"
+      inspectorId: 38
+    liongardMetricName: "Datto: Datto Backups Not Completed in the Last 24 Hours Count"
+    liongardMetricId: 760
+    liongardMetricUuid: "208cd654-10e0-4986-8fcb-b6afd2522a22"
+    jmesPath: "Assets[?isArchived == `false` && HoursSinceLastSuccessfulBackup_r != `99999` && HoursSinceLastSuccessfulBackup_r > `24`] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "cyber-insurance-domain-backup"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    fieldGotcha: "HoursSinceLastSuccessfulBackup_r is a Liongard-computed (_r suffix) field, not a native Datto field. A value of 99999 means 'never backed up' or data unavailable — exclude it to avoid counting unprovisioned slots. isArchived is boolean false here (compare with id=757 which uses the string 'true')."
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/datto-bcdr.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:datto-bcdr:backups-overdue-24h-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "Datto BCDR — Backups Not Completed in Last 24 Hours Summary"
+    description: "Summary string of assets overdue for backup, including device name and last successful backup timestamp."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "datto-bcdr-inspector"
+      inspectorId: 38
+    liongardMetricName: "Datto: Datto Backups Not Completed in the Last 24 Hours Summary"
+    liongardMetricId: 759
+    liongardMetricUuid: "e25b98fb-45b7-4749-ba27-630cd2267cf8"
+    jmesPath: "Assets[?isArchived == `false` && HoursSinceLastSuccessfulBackup_r != `99999` && HoursSinceLastSuccessfulBackup_r > `24`].[name,  join(' ',['Latest Successful Backup:' ,latestSuccessfulBackup_r])][] | join (' | ', @)"
+    resultType: "string"
+    compliantWhen: "result == null || result == ''"
+    compliesWith:
+      - "cyber-insurance-domain-backup"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/datto-bcdr.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:datto-bcdr:backups-older-than-30d-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Datto BCDR — Assets With No Successful Backup in 30+ Days"
+    description: "Names of active assets with no successful backup in 720+ hours (30 days). Strong indicator of unmanaged or stale devices."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "datto-bcdr-inspector"
+      inspectorId: 38
+    liongardMetricName: "Datto BCDR: Datto Backups Older Than One Month"
+    liongardMetricId: 2078
+    liongardMetricUuid: "b2fee590-9284-4bf5-90d1-6d9b56c3eace"
+    jmesPath: "Assets[?isArchived == `false` && HoursSinceLastSuccessfulBackup_r != `99999` && HoursSinceLastSuccessfulBackup_r > `720`].name[]"
+    resultType: "array"
+    compliantWhen: "result == []"
+    compliesWith:
+      - "cyber-insurance-domain-backup"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/datto-bcdr.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:datto-bcdr:agent-backups-without-screenshot-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Datto BCDR — Agent Backups Without Screenshot Verification"
+    description: "Names of active agent-type assets that have never had a screenshot verification attempt (lastScreenshotAttempt is null/absent). Screenshot verification confirms backup recoverability."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "datto-bcdr-inspector"
+      inspectorId: 38
+    liongardMetricName: "Datto BCDR: Active Agent Backups Without Verification"
+    liongardMetricId: 2079
+    liongardMetricUuid: "02fdf39b-f67a-4341-82ec-eab26754cff9"
+    jmesPath: "Assets[?!isArchived && type=='agent' &&!lastScreenshotAttempt].name[]"
+    resultType: "array"
+    compliantWhen: "result == []"
+    compliesWith:
+      - "cyber-insurance-domain-backup"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    fieldGotcha: "!isArchived uses boolean negation here — confirming isArchived is stored as boolean on the Assets[] objects. The older metrics (ids 757, 759, 760) use string or boolean comparisons inconsistently; this id=2079 form uses boolean. Use the boolean form for any new/proposed metrics."
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/datto-bcdr.md"
+    dateAdded: "2026-05-26"
+
+# ── Storage & Service Health ───────────────────────────────────────────────────
+
+  - "@id": "metrics:datto-bcdr:local-storage-free-pct"
+    "@type": "liongard:MetricPrimitive"
+    name: "Datto BCDR — Percent Local Storage Free"
+    description: "Percentage of local storage that is free from SystemInfo.PercentLocalStorageFree. Alert when below 20%."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "datto-bcdr-inspector"
+      inspectorId: 38
+    liongardMetricName: "Datto BCDR: Percent Local Storage Free"
+    liongardMetricId: 833
+    liongardMetricUuid: "b7c0036a-f0d9-4e52-b60b-cc431a08f820"
+    jmesPath: "SystemInfo.PercentLocalStorageFree"
+    resultType: "integer"
+    resultUnit: "percent"
+    compliantWhen: "result >= 20"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/datto-bcdr.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:datto-bcdr:days-until-warranty-expiry"
+    "@type": "liongard:MetricPrimitive"
+    name: "Datto BCDR — Days Until Warranty Expiration"
+    description: "Days until appliance warranty expires from SystemInfo.NumDaysTillWarrantyExpiration."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "datto-bcdr-inspector"
+      inspectorId: 38
+    liongardMetricName: "Datto BCDR: Days Until Warranty Expiration"
+    liongardMetricId: 976
+    liongardMetricUuid: "4b6aca28-41dd-4d3f-ba1b-1153def07297"
+    jmesPath: "SystemInfo.NumDaysTillWarrantyExpiration"
+    resultType: "integer"
+    resultUnit: "days"
+    compliantWhen: "result > 30"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/datto-bcdr.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:datto-bcdr:days-until-service-expiry"
+    "@type": "liongard:MetricPrimitive"
+    name: "Datto BCDR — Days Until Service Expiration"
+    description: "Days until Datto service subscription expires from SystemInfo.NumDaysTillServiceExpiration_r (Liongard-computed field)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "datto-bcdr-inspector"
+      inspectorId: 38
+    liongardMetricName: "Datto BCDR: Days until Service Expiration"
+    liongardMetricId: 1000
+    liongardMetricUuid: "bbe5b712-599a-48c8-9f39-6c8cfc9da501"
+    jmesPath: "SystemInfo.NumDaysTillServiceExpiration_r"
+    resultType: "integer"
+    resultUnit: "days"
+    compliantWhen: "result > 30"
+    compliesWith:
+      - "cyber-insurance-domain-backup"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    fieldGotcha: "NumDaysTillServiceExpiration_r uses the _r suffix — this is a Liongard-computed derived field, not a raw Datto API field."
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/datto-bcdr.md"
+    dateAdded: "2026-05-26"

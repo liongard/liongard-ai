@@ -1,0 +1,236 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+# ── Device Identity ───────────────────────────────────────────────────────────
+
+  - "@id": "metrics:palo-alto-panos:software-version"
+    "@type": "liongard:MetricPrimitive"
+    name: "Palo Alto PAN-OS — Software Version"
+    description: "Running PAN-OS version string from SystemInfo.sw-version. Used for firmware currency checks and CVE cross-reference. Key field for lifecycle review."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "palo-alto-panos-inspector"
+      inspectorId: 49
+    liongardMetricName: "Palo Alto: Software Version"
+    liongardMetricId: 76068
+    liongardMetricUuid: "3a6ab4bd-cbeb-46ef-a96a-d24b349f2c28"
+    jmesPath: "SystemInfo.\"sw-version\""
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    fieldGotcha: "The key is hyphenated — JMESPath requires quoting: SystemInfo.\"sw-version\". Without quotes the hyphen is interpreted as subtraction and the query returns null."
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/palo-alto-panos.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:palo-alto-panos:device-admins"
+    "@type": "liongard:MetricPrimitive"
+    name: "Palo Alto PAN-OS — Device Administrator List"
+    description: "Array of admin usernames from AdminUsers[].admin. Use to audit for the default 'admin' account and excess privileged users."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "palo-alto-panos-inspector"
+      inspectorId: 49
+    liongardMetricName: "Palo Alto: Device Admins"
+    liongardMetricId: 76070
+    liongardMetricUuid: "6f12a212-9ff2-4571-b0fd-b85a1af355cb"
+    jmesPath: "AdminUsers[].admin"
+    resultType: "array"
+    compliesWith:
+      - "CIS-Controls-v8:5.2"
+      - "cyber-insurance-domain-auth"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/palo-alto-panos.md"
+    dateAdded: "2026-05-26"
+
+# ── Configuration State ───────────────────────────────────────────────────────
+
+  - "@id": "metrics:palo-alto-panos:config-changes-pending"
+    "@type": "liongard:MetricPrimitive"
+    name: "Palo Alto PAN-OS — Configuration Changes Pending"
+    description: "Whether uncommitted configuration changes exist from Configuration.pending-changes-exist. Pending changes mean the running config does not match the candidate config — critical for audits."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "palo-alto-panos-inspector"
+      inspectorId: 49
+    liongardMetricName: "Palo Alto: Configuration changes pending"
+    liongardMetricId: 76069
+    liongardMetricUuid: "e237568e-0eb8-4450-a16d-b29967e809b5"
+    jmesPath: "Configuration.\"pending-changes-exist\""
+    resultType: "boolean"
+    compliantWhen: "result == false"
+    compliesWith:
+      - "CIS-Controls-v8:4.4"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    fieldGotcha: "Key is hyphenated — JMESPath requires quoting: Configuration.\"pending-changes-exist\"."
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/palo-alto-panos.md"
+    dateAdded: "2026-05-26"
+
+# ── Certificates ──────────────────────────────────────────────────────────────
+
+  - "@id": "metrics:palo-alto-panos:certificate-expiration"
+    "@type": "liongard:MetricPrimitive"
+    name: "Palo Alto PAN-OS — Certificate Expiration Summary"
+    description: "Formatted list of shared certificates with common name and not-valid-after date. Used to flag certificates approaching expiration."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "palo-alto-panos-inspector"
+      inspectorId: 49
+    liongardMetricName: "Palo Alto: Certificate Expiration"
+    liongardMetricId: 76072
+    liongardMetricUuid: "0b36d5e3-9fbf-4599-afd0-f0816cfee138"
+    jmesPath: "Configuration.shared.certificate[].join(`, `, [join(`: `, ['Name', \"common-name\"]), join(`: `, ['Expiration Date', \"not-valid-after\"])])"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/palo-alto-panos.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:palo-alto-panos:expired-device-certificates"
+    "@type": "liongard:MetricPrimitive"
+    name: "Palo Alto PAN-OS — Expired Device Certificates (Boolean)"
+    description: "Returns true if any system certificates are past their expiration date. Uses time_until() to check days remaining < 0."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "palo-alto-panos-inspector"
+      inspectorId: 49
+    liongardMetricName: "Palo Alto: Expired Device Certificates"
+    liongardMetricId: 76071
+    liongardMetricUuid: "33f53598-1fcc-45f7-bdee-f5b379999a60"
+    jmesPath: "SystemInfo.certificates.info[?time_until(expirationDate, 'days') < '0'] | length(@) > '0'"
+    resultType: "boolean"
+    compliantWhen: "result == false"
+    compliesWith:
+      - "CIS-Controls-v8:4.4"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/palo-alto-panos.md"
+    dateAdded: "2026-05-26"
+
+# ── DHCP ──────────────────────────────────────────────────────────────────────
+
+  - "@id": "metrics:palo-alto-panos:dhcp-lease-monitoring"
+    "@type": "liongard:MetricPrimitive"
+    name: "Palo Alto PAN-OS — DHCP Active Lease Count"
+    description: "Count of active DHCP leases across all interfaces from length(Interfaces[].dhcp.lease.leases[]). Provides scope for DHCP server load."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "palo-alto-panos-inspector"
+      inspectorId: 49
+    liongardMetricName: "Palo Alto: DHCP Lease Monitoring"
+    liongardMetricId: 76073
+    liongardMetricUuid: "5ef50711-dcaf-4766-bc5f-87fc53a441e3"
+    jmesPath: "length(Interfaces[].dhcp.lease.leases[])"
+    resultType: "integer"
+    resultUnit: "count"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/palo-alto-panos.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:palo-alto-panos:dhcp-expiration"
+    "@type": "liongard:MetricPrimitive"
+    name: "Palo Alto PAN-OS — DHCP Lease Expiration Summary"
+    description: "Formatted list of DHCP leases with IP and lease-end timestamp from Interfaces[].dhcp.lease.leases[]."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "palo-alto-panos-inspector"
+      inspectorId: 49
+    liongardMetricName: "Palo Alto: DHCP Expiration"
+    liongardMetricId: 76074
+    liongardMetricUuid: "1fad9a28-b4e2-4d62-a755-0fb310e72f36"
+    jmesPath: "Interfaces[].dhcp.lease.leases[?\"lease-end\"].join(`, `, [join(`: `, ['IP', \"ip\"]), join(`: `, ['Lease End', \"lease-end\"])])[]"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/palo-alto-panos.md"
+    dateAdded: "2026-05-26"
+
+# ── Performance & Resources ───────────────────────────────────────────────────
+
+  - "@id": "metrics:palo-alto-panos:check-device-resources"
+    "@type": "liongard:MetricPrimitive"
+    name: "Palo Alto PAN-OS — Device Resource Utilization (CPU & Memory)"
+    description: "Formatted summary of CPU and memory utilization percentages from SystemResources. Used for capacity and performance monitoring."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "palo-alto-panos-inspector"
+      inspectorId: 49
+    liongardMetricName: "Palo Alto: Check Device Resources"
+    liongardMetricId: 76075
+    liongardMetricUuid: "3650eb60-55ed-4892-9daa-0161f85b591e"
+    jmesPath: "SystemResources.join(`, `, [join(`: `, ['CPU Utilization', to_string(CPU.UsagePercentage)]), join(`: `, ['Memory Utilization', to_string(Memory.UsagePercentage)])])"
+    resultType: "object"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/palo-alto-panos.md"
+    dateAdded: "2026-05-26"
+
+# ── Network & Routing ─────────────────────────────────────────────────────────
+
+  - "@id": "metrics:palo-alto-panos:policy-based-forwarding-ips"
+    "@type": "liongard:MetricPrimitive"
+    name: "Palo Alto PAN-OS — Policy Based Forwarding IP Addresses"
+    description: "Formatted list of policy-based forwarding (PBF) rules with rule name and forwarding nexthop IP across all applicable interfaces."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "palo-alto-panos-inspector"
+      inspectorId: 49
+    liongardMetricName: "Palo Alto: Policy Based Forwarding IP Addresses"
+    liongardMetricId: 76076
+    liongardMetricUuid: "72fa864e-64e7-495a-8d03-c3d7b365245f"
+    jmesPath: "Interfaces[?pbfRules[].nexthop].pbfRules[].join(`, `, [join(`: `, ['Rule', \"name\"]), join(`: `, ['Forwarding IP', nexthop])])"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/palo-alto-panos.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:palo-alto-panos:interface-packets-received"
+    "@type": "liongard:MetricPrimitive"
+    name: "Palo Alto PAN-OS — Interface Packets Received Summary"
+    description: "Formatted summary of received packet counts per interface. Used for traffic load and capacity review."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "palo-alto-panos-inspector"
+      inspectorId: 49
+    liongardMetricName: "Palo Alto: Interface Packets Received"
+    liongardMetricId: 76077
+    liongardMetricUuid: "2ced9178-3525-41b4-93fd-a8acc8bb9283"
+    jmesPath: "Interfaces[].join(`, `, [join(`: `, ['Interface', name]), join(`: `, ['Received Packets', to_string(status.\"received-packets\")])])"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/palo-alto-panos.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:palo-alto-panos:interface-packets-transmitted"
+    "@type": "liongard:MetricPrimitive"
+    name: "Palo Alto PAN-OS — Interface Packets Transmitted Summary"
+    description: "Formatted summary of transmitted packet counts per interface. Used for traffic load and capacity review."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "palo-alto-panos-inspector"
+      inspectorId: 49
+    liongardMetricName: "Palo Alto: Interface Packets Transmitted"
+    liongardMetricId: 76078
+    liongardMetricUuid: "4b146990-6dce-4d45-ba07-d25d115deb72"
+    jmesPath: "Interfaces[].join(`, `, [join(`: `, ['Interface', name]), join(`: `, ['Transmitted Packets', to_string(status.\"transmitted-packets\")])])"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/palo-alto-panos.md"
+    dateAdded: "2026-05-26"

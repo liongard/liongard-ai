@@ -1,0 +1,155 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+  - "@id": "metrics:nable-rmm:sites-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "N-able RMM — Sites Count"
+    description: "Total number of client sites in the N-able RMM account"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "nable-rmm-inspector"
+      inspectorId: 87
+    liongardMetricName: "N-Able: Sites Count"
+    liongardMetricId: 1449
+    liongardMetricUuid: "83946e36-9274-43de-ba22-d40424156120"
+    jmesPath: "length(Sites)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/nable-rmm.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:nable-rmm:sites-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "N-able RMM — Sites List"
+    description: "Returns the names of all client sites in the N-able RMM account"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "nable-rmm-inspector"
+      inspectorId: 87
+    liongardMetricName: "N-Able: Sites List"
+    liongardMetricId: 1448
+    liongardMetricUuid: "eaff7f0c-e450-4674-a5c0-ad80f7659a05"
+    jmesPath: "Sites[].name"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/nable-rmm.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:nable-rmm:server-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "N-able RMM — Server Count"
+    description: "Total number of servers managed by the N-able RMM account"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "nable-rmm-inspector"
+      inspectorId: 87
+    liongardMetricName: "N-Able: Server Count"
+    liongardMetricId: 1446
+    liongardMetricUuid: "b6a45ac2-4d0e-4059-83c5-2d4ebcfd2512"
+    jmesPath: "length(Servers)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/nable-rmm.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:nable-rmm:server-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "N-able RMM — Server List"
+    description: "Returns the names of all servers managed by the N-able RMM account"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "nable-rmm-inspector"
+      inspectorId: 87
+    liongardMetricName: "N-Able: Server List"
+    liongardMetricId: 1445
+    liongardMetricUuid: "27ea237b-ceb3-45bc-b88f-3e186ea6c24c"
+    jmesPath: "Servers[].name"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/nable-rmm.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:nable-rmm:server-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "N-able RMM — Server Summary"
+    description: "Returns detailed identity and OS information for each server managed by the N-able RMM account"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "nable-rmm-inspector"
+      inspectorId: 87
+    liongardMetricName: "N-Able: Server Summary"
+    liongardMetricId: 1451
+    liongardMetricUuid: "d1e4bf26-d5e1-4b26-9b34-aa0439b116d3"
+    jmesPath: "Servers[].[name, {Name: name, OS: os, Model: model, Domain: domain, WinName: wins_name, Description: description, Site: Site_Name_r, IP: ip}]"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/nable-rmm.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:nable-rmm:workstation-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "N-able RMM — Workstation Count"
+    description: "Total number of workstations managed by the N-able RMM account"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "nable-rmm-inspector"
+      inspectorId: 87
+    liongardMetricName: "N-Able: Workstation Count"
+    liongardMetricId: 1447
+    liongardMetricUuid: "f9040ec4-2888-4131-b378-0bececa837b5"
+    jmesPath: "length(Workstations)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/nable-rmm.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:nable-rmm:workstation-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "N-able RMM — Workstation Summary"
+    description: "Returns detailed identity and OS information for each workstation managed by the N-able RMM account"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "nable-rmm-inspector"
+      inspectorId: 87
+    liongardMetricName: "N-Able: Workstation Summary"
+    liongardMetricId: 1452
+    liongardMetricUuid: "676b2fd7-464e-4018-a20a-c8e40e6815f3"
+    jmesPath: "Workstations[].[name, {Name: name, OS: os, Model: model, Domain: domain, WinName: wins_name, Description: description, Site: Site_Name_r, IP: ip}]"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/nable-rmm.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:nable-rmm:inactive-mobile-devices"
+    "@type": "liongard:MetricPrimitive"
+    name: "N-able RMM — Inactive Mobile Devices"
+    description: "Returns the names of all mobile devices with inactive status in the N-able RMM account"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "nable-rmm-inspector"
+      inspectorId: 87
+    liongardMetricName: "N-Able: Inactive Mobile Devices"
+    liongardMetricId: 1450
+    liongardMetricUuid: "2d1f2d96-0234-47a5-b810-1d307de46b1c"
+    jmesPath: "MobileDevices[].device[?contains(status, `inactive`)].name"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/nable-rmm.md"
+    dateAdded: "2026-05-26"

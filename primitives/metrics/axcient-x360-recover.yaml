@@ -1,0 +1,669 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+# ── Appliance Health ──────────────────────────────────────────────────────────
+
+  - "@id": "metrics:axcient-x360-recover:appliance-health-status"
+    "@type": "liongard:MetricPrimitive"
+    name: "Axcient x360 Recover — Appliance Health Status"
+    description: "Health status for each Axcient appliance from Appliances[].health_status. Every entry should be 'healthy'. Non-healthy appliances require immediate escalation."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "axcient-x360-recover-inspector"
+      inspectorId: 100
+    liongardMetricName: "Axcient: Appliance Health Status"
+    liongardMetricId: 78701
+    liongardMetricUuid: "af12aae4-d40a-4e4d-8124-9c5289d9d30b"
+    jmesPath: "Appliances[].health_status"
+    resultType: "array"
+    compliantWhen: "all entries == 'healthy'"
+    compliesWith:
+      - "CIS-Controls-v8:11.1"
+      - "cyber-insurance-domain-backup"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    fieldGotcha: "Catalog inspector slug is 'axcient-x360recover-inspector' (no hyphen before 'recover') but the recipe references 'axcient-x360-recover-inspector'. Confirm the slug in liongard_launchpoint LIST before use."
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/axcient-x360-recover.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:axcient-x360-recover:appliance-health-status-reason"
+    "@type": "liongard:MetricPrimitive"
+    name: "Axcient x360 Recover — Appliance Health Status Reason"
+    description: "Reason codes for appliance health status from Appliances[].health_status_reason. Provides context when health_status is not 'healthy'."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "axcient-x360-recover-inspector"
+      inspectorId: 100
+    liongardMetricName: "Axcient: Appliance Health Status Reason"
+    liongardMetricId: 78702
+    liongardMetricUuid: "8a1488a9-12a3-4d22-9691-08850d07f4c3"
+    jmesPath: "Appliances[].health_status_reason"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/axcient-x360-recover.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:axcient-x360-recover:appliance-drive-usage-percent"
+    "@type": "liongard:MetricPrimitive"
+    name: "Axcient x360 Recover — Appliance Drive Usage Percent"
+    description: "Calculated drive utilization percentage per appliance using percent_of(storage_details.used_size, storage_details.drive_size). May be null when drive_size is not populated."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "axcient-x360-recover-inspector"
+      inspectorId: 100
+    liongardMetricName: "Axcient: Appliance Drive Usage Percent"
+    liongardMetricId: 78709
+    liongardMetricUuid: "b210e85d-4919-4486-b0e5-f093824f2f2f"
+    jmesPath: "map(&percent_of(storage_details.used_size, storage_details.drive_size), Appliances)"
+    resultType: "array"
+    resultUnit: "percent"
+    fieldGotcha: "Returns null entries when storage_details.drive_size is not populated on a given appliance — common for some deployment types. Manual confirmation in the Axcient portal is required when drive_size is null."
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/axcient-x360-recover.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:axcient-x360-recover:appliance-tunnel-status"
+    "@type": "liongard:MetricPrimitive"
+    name: "Axcient x360 Recover — Appliance Tunnel Status"
+    description: "Cloud tunnel connection status for each appliance from Appliances[].tunnel_status."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "axcient-x360-recover-inspector"
+      inspectorId: 100
+    liongardMetricName: "Axcient: Appliance Tunnel Status"
+    liongardMetricId: 78705
+    liongardMetricUuid: "9e655dca-e131-4450-b1dd-8b291061b0b6"
+    jmesPath: "Appliances[].tunnel_status"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/axcient-x360-recover.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:axcient-x360-recover:appliance-last-tunnel-up"
+    "@type": "liongard:MetricPrimitive"
+    name: "Axcient x360 Recover — Appliance Last Tunnel Up Timestamp"
+    description: "Timestamp of the last successful cloud tunnel connection per appliance from Appliances[].last_tunnel_up. Used to detect appliances that have lost cloud connectivity."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "axcient-x360-recover-inspector"
+      inspectorId: 100
+    liongardMetricName: "Axcient: Appliance Last Tunnel Up"
+    liongardMetricId: 78706
+    liongardMetricUuid: "407fa049-82fa-4c0b-a415-c3ffe56665e6"
+    jmesPath: "Appliances[].last_tunnel_up"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/axcient-x360-recover.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:axcient-x360-recover:appliance-software-version"
+    "@type": "liongard:MetricPrimitive"
+    name: "Axcient x360 Recover — Appliance Software Version"
+    description: "Software version installed on each appliance from Appliances[].software_version.version. Used for firmware currency tracking."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "axcient-x360-recover-inspector"
+      inspectorId: 100
+    liongardMetricName: "Axcient: Appliance Software Version"
+    liongardMetricId: 78700
+    liongardMetricUuid: "b32f8c7a-59c3-4227-af92-65ceec06ef8f"
+    jmesPath: "Appliances[].software_version.version"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/axcient-x360-recover.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:axcient-x360-recover:appliance-model"
+    "@type": "liongard:MetricPrimitive"
+    name: "Axcient x360 Recover — Appliance Model"
+    description: "Hardware model name for each appliance from Appliances[].model.name."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "axcient-x360-recover-inspector"
+      inspectorId: 100
+    liongardMetricName: "Axcient: Appliance Model"
+    liongardMetricId: 78707
+    liongardMetricUuid: "6ee12462-249f-4976-b516-36b0e6032dc7"
+    jmesPath: "Appliances[].model.name"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/axcient-x360-recover.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:axcient-x360-recover:appliance-ip-address"
+    "@type": "liongard:MetricPrimitive"
+    name: "Axcient x360 Recover — Appliance IP Address"
+    description: "IP address of each Axcient appliance from Appliances[].ip_address. Used for network asset correlation."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "axcient-x360-recover-inspector"
+      inspectorId: 100
+    liongardMetricName: "Axcient: Appliance IP Address"
+    liongardMetricId: 78708
+    liongardMetricUuid: "6827ba69-99d7-45d7-8841-66efa6a492af"
+    jmesPath: "Appliances[].ip_address"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/axcient-x360-recover.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:axcient-x360-recover:appliance-tunnel-info"
+    "@type": "liongard:MetricPrimitive"
+    name: "Axcient x360 Recover — Appliance Tunnel Info Summary"
+    description: "Formatted summary of appliance tunnel information including appliance name, tunnel status, and last tunnel up timestamp."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "axcient-x360-recover-inspector"
+      inspectorId: 100
+    liongardMetricName: "Axcient: Appliance Tunnel Info"
+    liongardMetricId: 78704
+    liongardMetricUuid: "ecbf7e4a-fc19-45f3-b94c-c654ddddc54d"
+    jmesPath: "Appliances[].join(`, `, [join(`: `, ['Appliance Name', alias]), join(`: `, ['Tunnel Status', tunnel_status]), join(`: `, ['Last Tunnel Up', last_tunnel_up])])"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/axcient-x360-recover.md"
+    dateAdded: "2026-05-26"
+
+# ── Vault Health ──────────────────────────────────────────────────────────────
+
+  - "@id": "metrics:axcient-x360-recover:vault-health-status"
+    "@type": "liongard:MetricPrimitive"
+    name: "Axcient x360 Recover — Vault Health Status"
+    description: "Health status for each backup vault from Vaults[].health_status. Every entry should be 'healthy'. Non-healthy vaults require immediate escalation."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "axcient-x360-recover-inspector"
+      inspectorId: 100
+    liongardMetricName: "Axcient: Vault Health Status"
+    liongardMetricId: 78647
+    liongardMetricUuid: "5115463a-c5d5-49ff-8ec8-dce45dbb277c"
+    jmesPath: "Vaults[].health_status"
+    resultType: "array"
+    compliantWhen: "all entries == 'healthy'"
+    compliesWith:
+      - "CIS-Controls-v8:11.1"
+      - "cyber-insurance-domain-backup"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/axcient-x360-recover.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:axcient-x360-recover:vault-health-status-reason"
+    "@type": "liongard:MetricPrimitive"
+    name: "Axcient x360 Recover — Vault Health Status Reason"
+    description: "Reason codes for vault health status from Vaults[].health_status_reason."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "axcient-x360-recover-inspector"
+      inspectorId: 100
+    liongardMetricName: "Axcient: Vault Health Status Reason"
+    liongardMetricId: 78648
+    liongardMetricUuid: "1e6b04ed-d4fe-47f1-b95f-42bef26dac6f"
+    jmesPath: "Vaults[].health_status_reason"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/axcient-x360-recover.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:axcient-x360-recover:vault-drive-storage-used-size"
+    "@type": "liongard:MetricPrimitive"
+    name: "Axcient x360 Recover — Vault Drive Storage Used Size"
+    description: "Used storage size for each vault from Vaults[].storage_details.used_size. Used for capacity planning."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "axcient-x360-recover-inspector"
+      inspectorId: 100
+    liongardMetricName: "Axcient: Vault Drive Storage details - Used Size"
+    liongardMetricId: 78644
+    liongardMetricUuid: "c8ab598a-4821-497a-a3b8-18586fe8cb52"
+    jmesPath: "Vaults[].storage_details.used_size"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/axcient-x360-recover.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:axcient-x360-recover:vault-drive-storage-drive-size"
+    "@type": "liongard:MetricPrimitive"
+    name: "Axcient x360 Recover — Vault Drive Storage Total Drive Size"
+    description: "Total drive size for each vault from Vaults[].storage_details.drive_size. May be null on some deployment types — required for drive usage percent calculation."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "axcient-x360-recover-inspector"
+      inspectorId: 100
+    liongardMetricName: "Axcient: Vault Drive Storage Details - Drive Size"
+    liongardMetricId: 78643
+    liongardMetricUuid: "454c79b6-254c-43de-bc7d-797af9fa5d2b"
+    jmesPath: "Vaults[].storage_details.drive_size"
+    resultType: "array"
+    fieldGotcha: "drive_size may be null in some dataprints. When null, the Appliance Drive Usage Percent metric (id=78709) cannot be calculated — manual capacity confirm in the Axcient portal is required."
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/axcient-x360-recover.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:axcient-x360-recover:vault-latest-restore-point"
+    "@type": "liongard:MetricPrimitive"
+    name: "Axcient x360 Recover — Vault Latest Restore Point"
+    description: "Latest restore point timestamp per vault from Vaults[].devices[].latest_vault_rp. Used to confirm vault data currency."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "axcient-x360-recover-inspector"
+      inspectorId: 100
+    liongardMetricName: "Axcient: Vault Latest Restore Point"
+    liongardMetricId: 78640
+    liongardMetricUuid: "778759eb-7871-4e21-b2a8-e87b0af6b0ee"
+    jmesPath: "Vaults[].devices[].latest_vault_rp"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/axcient-x360-recover.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:axcient-x360-recover:vault-days-since-latest-restore-point"
+    "@type": "liongard:MetricPrimitive"
+    name: "Axcient x360 Recover — Days Since Vault Latest Restore Point"
+    description: "Number of days since the latest vault restore point per vault using time_since(). Used for SLA compliance checks."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "axcient-x360-recover-inspector"
+      inspectorId: 100
+    liongardMetricName: "Axcient: Days Since Vault Latest Restore Point"
+    liongardMetricId: 78641
+    liongardMetricUuid: "6be0803b-ed9d-44a8-9fe8-2a94c29eb435"
+    jmesPath: "map(&time_since(latest_vault_rp, 'days'),  Vaults[])"
+    resultType: "array"
+    resultUnit: "days"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/axcient-x360-recover.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:axcient-x360-recover:vault-tunnel-status"
+    "@type": "liongard:MetricPrimitive"
+    name: "Axcient x360 Recover — Vault Tunnel Status"
+    description: "Cloud tunnel connection status for each vault from Vaults[].tunnel_status."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "axcient-x360-recover-inspector"
+      inspectorId: 100
+    liongardMetricName: "Axcient: Vault Tunnel Status"
+    liongardMetricId: 78649
+    liongardMetricUuid: "3fd736f9-5e24-4b03-ac31-b2e351c2d130"
+    jmesPath: "Vaults[].tunnel_status"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/axcient-x360-recover.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:axcient-x360-recover:vault-last-tunnel-up"
+    "@type": "liongard:MetricPrimitive"
+    name: "Axcient x360 Recover — Vault Last Tunnel Up Timestamp"
+    description: "Timestamp of the last successful cloud tunnel connection per vault from Vaults[].last_tunnel_up."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "axcient-x360-recover-inspector"
+      inspectorId: 100
+    liongardMetricName: "Axcient: Vault Last Tunnel Up"
+    liongardMetricId: 78650
+    liongardMetricUuid: "e7d33b56-b52d-436b-8a52-f8d80e525900"
+    jmesPath: "Vaults[].last_tunnel_up"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/axcient-x360-recover.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:axcient-x360-recover:vault-connectivity-threshold"
+    "@type": "liongard:MetricPrimitive"
+    name: "Axcient x360 Recover — Vault Connectivity Threshold"
+    description: "Connectivity threshold configuration per vault from Vaults[].vault_thresholds.connectivity_threshold."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "axcient-x360-recover-inspector"
+      inspectorId: 100
+    liongardMetricName: "Axcient: Vault Connectivity Threshold"
+    liongardMetricId: 78645
+    liongardMetricUuid: "802b76fc-8e8a-409d-bb82-9affcee7f6ca"
+    jmesPath: "Vaults[].vault_thresholds.connectivity_threshold"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/axcient-x360-recover.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:axcient-x360-recover:vault-software-version"
+    "@type": "liongard:MetricPrimitive"
+    name: "Axcient x360 Recover — Vault Software Version"
+    description: "Software version running on each vault from Vaults[].software_version.version."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "axcient-x360-recover-inspector"
+      inspectorId: 100
+    liongardMetricName: "Axcient: Vault Software Version"
+    liongardMetricId: 78646
+    liongardMetricUuid: "a997bf5d-ccae-48b4-8dc8-a7cb69371e2f"
+    jmesPath: "Vaults[].software_version.version"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/axcient-x360-recover.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:axcient-x360-recover:vault-ip-address"
+    "@type": "liongard:MetricPrimitive"
+    name: "Axcient x360 Recover — Vault IP Address"
+    description: "IP address of each Axcient vault from Vaults[].ip_address."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "axcient-x360-recover-inspector"
+      inspectorId: 100
+    liongardMetricName: "Axcient: Vault IP Address"
+    liongardMetricId: 78642
+    liongardMetricUuid: "7d76f626-fba9-41cf-a63c-98e5293751a0"
+    jmesPath: "Vaults[].ip_address"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/axcient-x360-recover.md"
+    dateAdded: "2026-05-26"
+
+# ── Device / Job Health ───────────────────────────────────────────────────────
+
+  - "@id": "metrics:axcient-x360-recover:device-job-health-status"
+    "@type": "liongard:MetricPrimitive"
+    name: "Axcient x360 Recover — Device Job Health Status"
+    description: "Health status for each backup job on each protected device from Devices[].jobs[].health_status. Every entry should be 'healthy'."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "axcient-x360-recover-inspector"
+      inspectorId: 100
+    liongardMetricName: "Axcient: Device Job Health Status"
+    liongardMetricId: 78656
+    liongardMetricUuid: "2a1f9d73-9a06-44c9-b431-3853a8ca8249"
+    jmesPath: "Devices[].jobs[].health_status"
+    resultType: "array"
+    compliantWhen: "all entries == 'healthy'"
+    compliesWith:
+      - "CIS-Controls-v8:11.1"
+      - "cyber-insurance-domain-backup"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/axcient-x360-recover.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:axcient-x360-recover:job-health-status"
+    "@type": "liongard:MetricPrimitive"
+    name: "Axcient x360 Recover — Job Health Status"
+    description: "Health status for all jobs from Jobs[].health_status. Evaluated against the child/customer dataprint."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "axcient-x360-recover-inspector"
+      inspectorId: 100
+    liongardMetricName: "Axcient: Job Health Status"
+    liongardMetricId: 78676
+    liongardMetricUuid: "6eefd0e2-8357-4b54-a35f-4f4fe674816b"
+    jmesPath: "Jobs[].health_status"
+    resultType: "array"
+    compliantWhen: "all entries == 'healthy'"
+    compliesWith:
+      - "CIS-Controls-v8:11.1"
+      - "cyber-insurance-domain-backup"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/axcient-x360-recover.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:axcient-x360-recover:device-job-latest-restore-point"
+    "@type": "liongard:MetricPrimitive"
+    name: "Axcient x360 Recover — Device Job Latest Restore Point"
+    description: "Most recent restore point timestamp per backup job per device from Devices[].jobs[].latest_rp. Primary field for the all-backups.md join."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "axcient-x360-recover-inspector"
+      inspectorId: 100
+    liongardMetricName: "Axcient: Device Job Latest Restore Point"
+    liongardMetricId: 78655
+    liongardMetricUuid: "510fd706-97d7-4afa-ad62-41f6c55afd4e"
+    jmesPath: "Devices[].jobs[].latest_rp"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/axcient-x360-recover.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:axcient-x360-recover:device-latest-local-restore-point"
+    "@type": "liongard:MetricPrimitive"
+    name: "Axcient x360 Recover — Device Latest Local Restore Point"
+    description: "Most recent local restore point per device from Devices[].latest_local_rp."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "axcient-x360-recover-inspector"
+      inspectorId: 100
+    liongardMetricName: "Axcient: Device Latest Local Restore Point"
+    liongardMetricId: 78667
+    liongardMetricUuid: "593f0b23-15b3-4190-b5f2-66cf7e719652"
+    jmesPath: "Devices[].latest_local_rp"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/axcient-x360-recover.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:axcient-x360-recover:device-latest-cloud-restore-point"
+    "@type": "liongard:MetricPrimitive"
+    name: "Axcient x360 Recover — Device Latest Cloud Restore Point"
+    description: "Most recent cloud restore point per device from Devices[].latest_cloud_rp."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "axcient-x360-recover-inspector"
+      inspectorId: 100
+    liongardMetricName: "Axcient: Device Latest Cloud Restore Point"
+    liongardMetricId: 78668
+    liongardMetricUuid: "c1f7ac32-9168-4f9d-93da-cb7bc583bc63"
+    jmesPath: "Devices[].latest_cloud_rp"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/axcient-x360-recover.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:axcient-x360-recover:device-vault-latest-restore-point"
+    "@type": "liongard:MetricPrimitive"
+    name: "Axcient x360 Recover — Device Vault Latest Restore Point"
+    description: "Most recent vault restore point per device-vault relationship from Devices[].vaults[].latest_vault_rp."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "axcient-x360-recover-inspector"
+      inspectorId: 100
+    liongardMetricName: "Axcient: Device Vault Latest Restore Point"
+    liongardMetricId: 78659
+    liongardMetricUuid: "dfc73dc7-0df5-4e41-9d28-26e975c3fd91"
+    jmesPath: "Devices[].vaults[].latest_vault_rp"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/axcient-x360-recover.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:axcient-x360-recover:device-ip-address"
+    "@type": "liongard:MetricPrimitive"
+    name: "Axcient x360 Recover — Device IP Address"
+    description: "IP address of each protected device from Devices[].ip_address. Used for device inventory cross-check."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "axcient-x360-recover-inspector"
+      inspectorId: 100
+    liongardMetricName: "Axcient: Device IP Address"
+    liongardMetricId: 78651
+    liongardMetricUuid: "2662c3ba-52d0-4bd3-992d-9d9e627c6a54"
+    jmesPath: "Devices[].ip_address"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/axcient-x360-recover.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:axcient-x360-recover:device-agent-version"
+    "@type": "liongard:MetricPrimitive"
+    name: "Axcient x360 Recover — Device Agent Version"
+    description: "Agent software version installed on each protected device from Devices[].agent_version."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "axcient-x360-recover-inspector"
+      inspectorId: 100
+    liongardMetricName: "Axcient: Device Agent Version"
+    liongardMetricId: 78652
+    liongardMetricUuid: "818eacf9-c010-4ce6-b3a3-d1a0b9c8af04"
+    jmesPath: "Devices[].agent_version"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/axcient-x360-recover.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:axcient-x360-recover:device-type"
+    "@type": "liongard:MetricPrimitive"
+    name: "Axcient x360 Recover — Device Type"
+    description: "Protection type classification for each device from Devices[].type (e.g., appliance_based, d2c, cloud_archive)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "axcient-x360-recover-inspector"
+      inspectorId: 100
+    liongardMetricName: "Axcient: Device Type"
+    liongardMetricId: 78661
+    liongardMetricUuid: "8d0a00af-db60-40c7-a978-85c3f9ccd42c"
+    jmesPath: "Devices[].type"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/axcient-x360-recover.md"
+    dateAdded: "2026-05-26"
+
+# ── Organization & Client Inventory ──────────────────────────────────────────
+
+  - "@id": "metrics:axcient-x360-recover:organization-server-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Axcient x360 Recover — Organization Server Count"
+    description: "Total server count at the organization level from Organization.server_count. Parent-level scoping metric only — do not use as per-client evidence."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "axcient-x360-recover-inspector"
+      inspectorId: 100
+    liongardMetricName: "Axcient: Server Count"
+    liongardMetricId: 78637
+    liongardMetricUuid: "00e87324-2fc1-42bb-80dd-d1944a624aae"
+    jmesPath: "Organization.server_count"
+    resultType: "integer"
+    resultUnit: "count"
+    fieldGotcha: "Parent-level metric only. Evaluate against the parent launchpoint, not the child/customer dataprint."
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/axcient-x360-recover.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:axcient-x360-recover:organization-workstation-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Axcient x360 Recover — Organization Workstation Count"
+    description: "Total workstation count at the organization level from Organization.workstation_count. Parent-level scoping metric only."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "axcient-x360-recover-inspector"
+      inspectorId: 100
+    liongardMetricName: "Axcient: Workstation Count"
+    liongardMetricId: 78638
+    liongardMetricUuid: "c770480e-cb0b-4e1d-953e-d8b1be4bccc8"
+    jmesPath: "Organization.workstation_count"
+    resultType: "integer"
+    resultUnit: "count"
+    fieldGotcha: "Parent-level metric only. Evaluate against the parent launchpoint, not the child/customer dataprint."
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/axcient-x360-recover.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:axcient-x360-recover:client-name"
+    "@type": "liongard:MetricPrimitive"
+    name: "Axcient x360 Recover — Client Names"
+    description: "Array of client/customer names managed by this Axcient organization from Clients[].name. Parent-level scoping metric."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "axcient-x360-recover-inspector"
+      inspectorId: 100
+    liongardMetricName: "Axcient: Client Name"
+    liongardMetricId: 78693
+    liongardMetricUuid: "25c7e3eb-48a1-49d4-bbd0-b3ca85547901"
+    jmesPath: "Clients[].name"
+    resultType: "array"
+    fieldGotcha: "Parent-level metric only. Evaluate against the parent launchpoint for client discovery."
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/axcient-x360-recover.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:axcient-x360-recover:unprotected-client-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Axcient x360 Recover — Unprotected Client Count"
+    description: "Count of clients with health_status == 'UNPROTECTED' from Clients. Should be 0."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "axcient-x360-recover-inspector"
+      inspectorId: 100
+    liongardMetricName: "Axcient: Unprotected Client Count"
+    liongardMetricId: 78639
+    liongardMetricUuid: "3d889653-3d03-424b-a5c9-691664b362c9"
+    jmesPath: "Clients[?health_status == 'UNPROTECTED'] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "CIS-Controls-v8:11.1"
+      - "cyber-insurance-domain-backup"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/axcient-x360-recover.md"
+    dateAdded: "2026-05-26"

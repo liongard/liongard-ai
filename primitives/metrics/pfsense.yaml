@@ -1,0 +1,358 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+# ── Device Identity ───────────────────────────────────────────────────────────
+
+  - "@id": "metrics:pfsense:software-version"
+    "@type": "liongard:MetricPrimitive"
+    name: "pfSense — Software Version"
+    description: "Running pfSense version number from SystemInfo.version (float, e.g. 19.1). Distinguishes Community Edition from pfSense Plus and tracks firmware currency."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "pfsense-inspector"
+      inspectorId: 37
+    liongardMetricName: "pfSense: Software Version"
+    liongardMetricId: 231
+    liongardMetricUuid: "cd99511b-94c3-4f8e-83dd-eb04fd0644ea"
+    jmesPath: "SystemInfo.version"
+    resultType: "float"
+    fieldGotcha: "SystemInfo.version is a FLOAT (e.g., 19.1), not a string. Prior resultType 'string' was incorrect. Do not use string comparison on this field."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "System R (inspected 2026-03-13) — 19.1 (float)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/pfsense.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:pfsense:time-servers"
+    "@type": "liongard:MetricPrimitive"
+    name: "pfSense — Configured Time Servers (NTP)"
+    description: "NTP time server addresses configured on the appliance from SystemInfo.timeservers. Accurate time is required for VPN, certificates, and log correlation."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "pfsense-inspector"
+      inspectorId: 37
+    liongardMetricName: "pfSense: Time Servers"
+    liongardMetricId: 230
+    liongardMetricUuid: "7f057ad5-ea64-438f-8f75-1d5a53ea928e"
+    jmesPath: "SystemInfo.timeservers"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/pfsense.md"
+    dateAdded: "2026-05-26"
+
+# ── Users ─────────────────────────────────────────────────────────────────────
+
+  - "@id": "metrics:pfsense:user-list-with-scope"
+    "@type": "liongard:MetricPrimitive"
+    name: "pfSense — User List with Scope"
+    description: "Array of [username, scope] pairs for all local users. Scope distinguishes local from remote/LDAP accounts."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "pfsense-inspector"
+      inspectorId: 37
+    liongardMetricName: "pfSense: User List with Scope"
+    liongardMetricId: 229
+    liongardMetricUuid: "f25e9332-2098-4239-bb43-b879a5289806"
+    jmesPath: "users[].[name, scope]"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/pfsense.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:pfsense:users-added-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "pfSense — Users Added Summary"
+    description: "Formatted summary of all user accounts including name and scope."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "pfsense-inspector"
+      inspectorId: 37
+    liongardMetricName: "pfSense: Users Added Summary"
+    liongardMetricId: 661
+    liongardMetricUuid: "bdca410f-f67a-4d41-bcd9-e9afcf451728"
+    jmesPath: "users[].join( `, `, [join(`: `, [`Name`, to_string(name)]), join(`: `, [`Scope`, to_string(scope)])]) | sort(@)"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/pfsense.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:pfsense:groups-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "pfSense — Groups Summary"
+    description: "Formatted summary of all groups including name, description, privileges, and scope."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "pfsense-inspector"
+      inspectorId: 37
+    liongardMetricName: "pfSense: Groups Summary"
+    liongardMetricId: 662
+    liongardMetricUuid: "ff7e29a6-af20-46e2-9090-b5abfbaf80b2"
+    jmesPath: "groups[].join( `, `, [join(`: `, [`Name`, to_string(name)]), join(`: `, [`Description`,to_string(description)]) join(`: `, [`Privileges`,to_string(priv)]), join(`: `, [`Scope`,to_string(scope)])]) | sort(@)"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/pfsense.md"
+    dateAdded: "2026-05-26"
+
+# ── Network & Interfaces ──────────────────────────────────────────────────────
+
+  - "@id": "metrics:pfsense:interface-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "pfSense — Interface Summary"
+    description: "Formatted summary of all network interfaces including physical interface, description, IP address, subnet, and gateway."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "pfsense-inspector"
+      inspectorId: 37
+    liongardMetricName: "pfSense: Interface Summary"
+    liongardMetricId: 666
+    liongardMetricUuid: "3d5d74b2-41b5-4511-85a8-6f862ebbbb47"
+    jmesPath: "interfaces[].join( `, `, [join(`: `, [`Interface`, to_string(if)]), join(`: `, [`Description`,to_string(descr)]), join(`: `, [`IP Address`,to_string(ipaddr)]), join(`: `, [`Subnet`,to_string(subnet)]), join(`: `, [`Gateway`,to_string(gateway)])]) | sort(@)"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/pfsense.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:pfsense:vlan-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "pfSense — VLAN Summary"
+    description: "Formatted summary of configured VLANs including description, tag, and virtual interface."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "pfsense-inspector"
+      inspectorId: 37
+    liongardMetricName: "pfSense: VLAN Summary"
+    liongardMetricId: 659
+    liongardMetricUuid: "48fd9bb3-f8c9-415e-a9d7-f12154ea9301"
+    jmesPath: "vlans[].join( `, `, [join(`: `, [`Description`, to_string(descr)]), join(`: `, [`Tag`,to_string(tag)]), join(`: `, [`Interface`, to_string(vlanif)])]) | sort(@)"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/pfsense.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:pfsense:virtual-ip-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "pfSense — Virtual IP Summary"
+    description: "Formatted summary of virtual IPs (CARP, IP Alias, etc.) including mode, type, description, subnet, subnet bits, and interface."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "pfsense-inspector"
+      inspectorId: 37
+    liongardMetricName: "pfSense: Virtual IP Summary"
+    liongardMetricId: 664
+    liongardMetricUuid: "b6673cf4-bc9d-4078-9501-18ab07574f5c"
+    jmesPath: "virtualip.vip[].join( `, `, [join(`: `, [`Mode`, to_string(mode)]), join(`: `, [`Type`,to_string(type)]), join(`: `, [`Description`,to_string(descr)]) , join(`: `, [`Subnet`,to_string(subnet)]) , join(`: `, [`Subnet Bits`,to_string(subnet_bits)]), join(`: `, [`Interface`,to_string(interface)]) ]) | sort(@)"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/pfsense.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:pfsense:alias-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "pfSense — Alias Summary"
+    description: "Formatted summary of firewall aliases including name, type, description, detail, and address."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "pfsense-inspector"
+      inspectorId: 37
+    liongardMetricName: "pfSense: Alias Summary"
+    liongardMetricId: 663
+    liongardMetricUuid: "fd990290-f726-4a62-9cec-a9e41a644758"
+    jmesPath: "aliases[].join( `, `, [join(`: `, [`Name`,to_string(name)]), join(`: `, [`type`,to_string(type)]), join(`: `, [`Description`,to_string(descr)]), join(`: `, [`Detail`,to_string(detail)]), join(`: `, [`Address`,to_string(address)])]) | sort(@)"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/pfsense.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:pfsense:switchport-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "pfSense — Switchport Summary"
+    description: "Formatted summary of managed switch ports including port number and state (applies to hardware with embedded switch, e.g., SG-3100)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "pfsense-inspector"
+      inspectorId: 37
+    liongardMetricName: "pfSense: Switchport Summary"
+    liongardMetricId: 665
+    liongardMetricUuid: "73301f7f-0368-430f-a97f-69d4c24e737a"
+    jmesPath: "switches.switch.swports.swport[].join( `, `, [join(`: `, [`Port`, to_string(port)]), join(`: `, [`State`,to_string(state)]) ]) | sort(@)"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/pfsense.md"
+    dateAdded: "2026-05-26"
+
+# ── Firewall & NAT Rules ──────────────────────────────────────────────────────
+
+  - "@id": "metrics:pfsense:firewall-rule-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "pfSense — Firewall Rule Summary"
+    description: "Formatted summary of all firewall rules including description, type, source, interface, and destination."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "pfsense-inspector"
+      inspectorId: 37
+    liongardMetricName: "pfSense: Firewall Rule Summary"
+    liongardMetricId: 660
+    liongardMetricUuid: "0c46975d-155d-4eae-890a-e812b0d2902e"
+    jmesPath: "filter[?type != `null`].join( `, `, [join(`: `, [`Description`, to_string(descr)]), join(`: `, [`Type`,to_string(type)]), join(`: `, [`Source`, to_string(source)]) , join(`: `, [`Interface`,to_string(interface)]), join(`: `, [`Destination`,to_string(destination)])]) | sort(@)"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/pfsense.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:pfsense:port-forwarding-rule-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "pfSense — Port Forwarding Rule Summary"
+    description: "Formatted summary of port forwarding (inbound NAT) rules including description, target, protocol, interface, local port, and destination."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "pfsense-inspector"
+      inspectorId: 37
+    liongardMetricName: "pfSense: Port Forwarding Rule Summary"
+    liongardMetricId: 652
+    liongardMetricUuid: "c31e4995-3838-42d4-9004-889d97075000"
+    jmesPath: "nat.rule[].join( `, `, [join(`: `, [`Description`, to_string(descr)]), join(`: `, [`Target`, to_string(target) ]) , join(`: `, [`Protocol`, to_string(protocol) ]), join(`: `, [`Interface`, to_string(interface) ]) , join(`: `, [`Local-Port`, to_string(\"local-port\") ]) , join(`: `, [`Destination[Port,Network]`, to_string(destination)])]) | sort(@)"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/pfsense.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:pfsense:outbound-nat-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "pfSense — Outbound NAT Configuration"
+    description: "Outbound NAT configuration object from nat.outbound. Use to confirm outbound NAT mode (automatic/hybrid/manual)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "pfsense-inspector"
+      inspectorId: 37
+    liongardMetricName: "pfSense: Outbound NAT List"
+    liongardMetricId: 653
+    liongardMetricUuid: "d61d16c1-faa3-4945-9deb-34676b974349"
+    jmesPath: "nat.outbound"
+    resultType: "object"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/pfsense.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:pfsense:nat-1to1-rule-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "pfSense — NAT 1:1 Rule Summary"
+    description: "Formatted summary of 1:1 NAT rules including description, source address, external address, interface, and destination."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "pfsense-inspector"
+      inspectorId: 37
+    liongardMetricName: "pfSense: NAT 1:1 Rule Summary"
+    liongardMetricId: 654
+    liongardMetricUuid: "22e02137-2496-41ba-ae60-808042d88218"
+    jmesPath: "nat.onetoone[].join( `, `, [join(`: `, [`Description`, descr]), join(`: `, [`Source Address`, source.address]), join(`: `, [`External Address`, to_string(external)]), join(`: `, [`Interface`, to_string(interface)]), join(`: `, [`Destination`, to_string(destination)])]) | sort(@)"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/pfsense.md"
+    dateAdded: "2026-05-26"
+
+# ── Certificates ──────────────────────────────────────────────────────────────
+
+  - "@id": "metrics:pfsense:ca-certificate-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "pfSense — CA Certificate Summary"
+    description: "Formatted summary of Certificate Authority entries including serial and description. Used to audit PKI configuration."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "pfsense-inspector"
+      inspectorId: 37
+    liongardMetricName: "pfSense: CA Certificate Summary"
+    liongardMetricId: 656
+    liongardMetricUuid: "92748301-9199-4a2b-b734-2419339da0c4"
+    jmesPath: "ca[].join( `, `, [join(`: `, [`Serial`, to_string(serial)]), join(`: `, [`Description`, to_string(descr)])]) | sort(@)"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/pfsense.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:pfsense:user-server-certificate-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "pfSense — User and Server Certificate Summary"
+    description: "Formatted summary of user and server certificates including type and description."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "pfsense-inspector"
+      inspectorId: 37
+    liongardMetricName: "pfSense: User & Server Certificate Summary"
+    liongardMetricId: 655
+    liongardMetricUuid: "7d75be1a-f631-458f-88be-6be51bd964e8"
+    jmesPath: "certificate_keys[].join( `, `, [join(`: `, [`Type`, to_string(type)]), join(`: `, [`Description`, to_string(descr)])]) | sort(@)"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/pfsense.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:pfsense:certificate-revocation-list-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "pfSense — Certificate Revocation List Summary"
+    description: "Formatted summary of Certificate Revocation Lists including description, method, serial, and lifetime."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "pfsense-inspector"
+      inspectorId: 37
+    liongardMetricName: "pfSense: Certificate Revocation List Summary"
+    liongardMetricId: 657
+    liongardMetricUuid: "5acd8624-6c8a-4dcb-a209-5bac582116ab"
+    jmesPath: "crl[].join( `, `, [join(`: `, [`Description`, to_string(descr)]), join(`: `, [`Method`,to_string(method)]) , join(`: `, [`Serial`,to_string(serial)]), join(`: `, [`Lifetime`,to_string(lifetime)])])"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/pfsense.md"
+    dateAdded: "2026-05-26"
+
+# ── Scheduled Tasks ───────────────────────────────────────────────────────────
+
+  - "@id": "metrics:pfsense:cron-job-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "pfSense — Cron Job Summary"
+    description: "Formatted summary of scheduled cron jobs including who, hour, day of month, day of week, month, minute, and command. Use to detect unauthorized scheduled tasks."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "pfsense-inspector"
+      inspectorId: 37
+    liongardMetricName: "pfSense: cron Job Summary"
+    liongardMetricId: 658
+    liongardMetricUuid: "386fc830-4ca2-4c19-901c-33fc79a58c6f"
+    jmesPath: "cron[].join( `, `, [join(`: `, [`Who`, to_string(who)]), join(`: `, [`Hour`,to_string(hour)]), join(`: `, [`Day of the Month`, to_string(mday)]), join(`: `, [`Day of the week`, to_string(wday)]), join(`: `, [`Month`, to_string(month)]), join(`: `, [`Minute`, to_string(minute)]) , join(`: `, [`Command`, to_string(command)])]) | sort(@)"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/pfsense.md"
+    dateAdded: "2026-05-26"

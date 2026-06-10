@@ -1,0 +1,104 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+# NOTE: The cisco-ios.md recipe uses proposed metric paths (cisco-ios.system.*, cisco-ios.interfaces.*, etc.)
+# that do not yet exist in the Liongard Global metric catalog as of 2026-05-26.
+# Only three metrics for this inspector are confirmed in the catalog.
+# All other recipe fields are PROPOSED and omitted here until catalog IDs are assigned.
+
+primitives:
+
+  - "@id": "metrics:cisco-ios:model"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cisco IOS — Model"
+    description: "Hardware platform / model family of the Cisco IOS / IOS-XE device (e.g., 'C2960X'). From SystemInfo.Platform."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cisco-ios-inspector"
+      inspectorId: 30
+    liongardMetricName: "Cisco IOS: Model"
+    liongardMetricId: 225
+    liongardMetricUuid: "d71acbbe-76f0-422c-abb4-9983a97077a5"
+    jmesPath: "SystemInfo.Platform"
+    resultType: "string"
+    fieldGotcha: "SystemInfo.Model does NOT exist in the Cisco IOS dataprint — returns null. The correct path for device model/platform is SystemInfo.Platform (e.g., 'C2960X'). Prior path was wrong."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "System S (inspected 2026-03-13) — 'C2960X'"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cisco-ios.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:cisco-ios:software-version"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cisco IOS — Software Version"
+    description: "IOS / IOS-XE software version string running on this device. JMESPath: SystemInfo.SoftwareVersion"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cisco-ios-inspector"
+      inspectorId: 30
+    liongardMetricName: "Cisco IOS: Software Version"
+    liongardMetricId: 226
+    liongardMetricUuid: "418e8f55-72cd-40b2-98a9-71cd6298fa7e"
+    jmesPath: "SystemInfo.SoftwareVersion"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cisco-ios.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:cisco-ios:software-type"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cisco IOS — Software Type"
+    description: "IOS software type identifier (e.g., IOS, IOS XE, NX-OS). JMESPath: SystemInfo.SoftwareType"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cisco-ios-inspector"
+      inspectorId: 30
+    liongardMetricName: "Cisco IOS: Software Type"
+    liongardMetricId: 227
+    liongardMetricUuid: "b48ceee6-c6aa-4a73-af70-8113a181be39"
+    jmesPath: "SystemInfo.SoftwareType"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cisco-ios.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:cisco-ios:admin-disabled-interfaces-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cisco IOS — Admin Disabled Interfaces List"
+    description: "Comma-separated list of interface names that are administratively shut down. JMESPath: Interfaces[?ConfigStatus == `down`].Name | join(`, `, @)"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cisco-ios-inspector"
+      inspectorId: 30
+    liongardMetricName: "Cisco IOS: Admin Disabled Interfaces List"
+    liongardMetricId: 228
+    liongardMetricUuid: "612bb125-5954-4677-aca1-8fe71d5895f5"
+    jmesPath: "Interfaces[?ConfigStatus == `down`].Name | join(`, `, @)"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cisco-ios.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:cisco-ios:running-configuration"
+    "@type": "liongard:MetricPrimitive"
+    name: "Cisco IOS — Running Configuration"
+    description: "Full running configuration text of the Cisco IOS device. JMESPath: RunningConfig"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "cisco-ios-inspector"
+      inspectorId: 30
+    liongardMetricName: "Cisco IOS: Running Configuration"
+    liongardMetricId: 523
+    liongardMetricUuid: "d901c831-00df-404a-950a-d5f490aa63cb"
+    jmesPath: "RunningConfig"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/cisco-ios.md"
+    dateAdded: "2026-05-26"

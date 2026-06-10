@@ -1,0 +1,216 @@
+inspector:
+  slug: sonicwall-inspector
+  id: 7
+  display_name: SonicWall
+  category: Network
+  target_system_type: Firewall
+  parent_child: false
+  identifier_jmespath: SystemInfo.Name
+
+recipe:
+  family: single-system-analysis
+  scope_summary: >
+    Use this skill when the user wants a single-firewall analysis of a
+    SonicWall (SonicOS 6 or SonicOS 7 / Gen7) — Periodic Business Review,
+    firewall configuration audit, license expiration, firmware audit,
+    security-services posture (Gateway AV, IPS, Anti-Spyware, Botnet),
+    DHCP scope review, site-to-site VPN policy review.
+  trigger_phrases:
+    - "SonicWall PBR"
+    - "pull SonicWall data"
+    - "SW firewall review"
+    - "SonicWall Gen7 review"
+    - "SonicOS license audit"
+    - "SonicWall firmware audit"
+  personas:
+    - noc
+    - soc
+    - vcio-account-manager
+    - technical-alignment-manager
+  output_formats:
+    - markdown
+    - word
+    - pptx
+
+aliases:
+  user_facing:
+    - SonicWall
+    - SW
+    - SonicOS
+    - "SonicWall NSa"
+    - "SonicWall TZ"
+
+slas:
+  inspector_lastseen_days_max: 1
+  license_expiration_warn_days: 60
+  firmware_age_months_max: 12
+  default_local_users_max: 1     # any extra default-named local accounts = flag
+
+metrics:
+  - id: 1998
+    name: "SonicWall: Hostname"
+    jmes_path: SystemInfo.Hostname
+    purpose: Firewall identifier
+    result_shape: <string>
+
+  - id: 1703
+    name: "SonicWall SonicOS: Model Number"
+    jmes_path: SystemInfo.Model
+    purpose: Hardware model (NSa, TZ, etc.)
+    result_shape: <string>
+
+  - id: 1705
+    name: "SonicWall SonicOS: Firmware Version"
+    jmes_path: SystemInfo.FirmwareVersion
+    purpose: Firmware version + age check
+    result_shape: <string>
+
+  - id: 1713
+    name: "SonicWall SonicOS: Management Interfaces"
+    jmes_path: ManagementInterfaces
+    purpose: WAN/SSH management exposure audit
+    result_shape: <array>
+
+  - id: 1715
+    name: "SonicWall SonicOS: Local Users"
+    jmes_path: LocalUsers[*]
+    purpose: Default credential / local user audit
+    result_shape: <array>
+
+  - id: 96703
+    name: "SonicWall: LAN IP (X0)"
+    jmes_path: Interfaces.X0.IPAddress
+    purpose: Management LAN IP
+    result_shape: <string>
+
+  - id: 539
+    name: "SonicWall: Primary DNS Server"
+    jmes_path: DNSConfig.PrimaryDNS
+    purpose: Primary DNS configured on the firewall
+    result_shape: <string>
+
+  - id: 591
+    name: "SonicWall: VPN Site-to-Site Policy Summary"
+    jmes_path: VpnPolicies[*]
+    purpose: Site-to-site VPN policy enumeration
+    result_shape: <array>
+
+  - id: 200006
+    name: "SonicWall: SSL-VPN RADIUS Authentication Enabled"
+    jmes_path: SslVpn.SslVpnServer.UseRadius
+    purpose: SSL-VPN MFA enforcement (via RADIUS)
+    result_shape: <bool>
+    compliant_when: true
+
+  - id: "[PROPOSED]"
+    name: "SonicWall: Security Services License Statuses"
+    jmes_path: SecurityServices[*].{name, status, daysToExpiry}
+    purpose: Per-service license + expiration (Gateway AV, IPS, Anti-Spyware, Botnet, etc.)
+
+  - id: "[PROPOSED]"
+    name: "SonicWall: Secondary DNS Server"
+    jmes_path: DNSConfig.SecondaryDNS
+    purpose: Secondary DNS configured on the firewall
+
+  - id: "[PROPOSED]"
+    name: "SonicWall: Tertiary DNS Server"
+    jmes_path: DNSConfig.TertiaryDNS
+    purpose: Tertiary DNS configured on the firewall
+
+  - id: "[PROPOSED]"
+    name: "SonicWall: DHCP Scope Summary"
+    jmes_path: DhcpScopes[*].{name, range, leaseTime, dnsServers, reservations}
+    purpose: DHCP scope detail (range, lease time, DNS, reservations)
+
+  - id: "[PROPOSED]"
+    name: "SonicWall: Zones with Gateway AV Enabled"
+    jmes_path: Zones[?GatewayAVEnabled]
+    purpose: Per-zone Gateway AV posture
+
+  - id: "[PROPOSED]"
+    name: "SonicWall: Zones without Intrusion Prevention List"
+    jmes_path: Zones[?!IPSEnabled]
+    purpose: Per-zone IPS gap detection
+
+  - id: "[PROPOSED]"
+    name: "SonicWall: Zones with Anti-Spyware Enabled"
+    jmes_path: Zones[?AntiSpywareEnabled]
+    purpose: Per-zone Anti-Spyware posture
+
+  - id: "[PROPOSED]"
+    name: "SonicWall: Cloud Backup Enabled (Gen7)"
+    jmes_path: SystemInfo.CloudBackupEnabled
+    purpose: Cloud configuration backup status (Gen7 only)
+
+  - id: "[PROPOSED]"
+    name: "SonicWall: List of Explicit Allow Any WAN to LAN Rules"
+    jmes_path: AccessRules[?action == 'allow' && source == 'any' && destination == 'any' && from == 'WAN' && to == 'LAN'].{name, services}
+    purpose: High-risk wide-open WAN→LAN rule detection
+
+cross_check:
+  asset_type: device
+  filter_pattern: 'inspectors contains "sonicwall-inspector"'
+  coverage_question: >
+    Network devices Liongard knows from other inspectors (RMM, network
+    discovery) but SonicWall doesn't see — usually devices behind the
+    firewall on a managed VLAN.
+
+proposed_metric_gaps:
+  - field: "Per-service license + expiration (Gateway AV, IPS, Anti-Spyware, Botnet)"
+    fallback: "Use existing 'Security Services Licenses w/ Statuses' aggregate metric"
+    jira_ticket:
+  - field: "Secondary / Tertiary DNS"
+    fallback: "Manual confirm in firewall UI"
+    jira_ticket:
+  - field: "DHCP scope detail"
+    fallback: "Manual confirm in firewall UI"
+    jira_ticket:
+  - field: "Per-zone security service posture (Gateway AV, IPS, Anti-Spyware)"
+    fallback: "Existing aggregate license metric — confirms purchase but not per-zone enablement"
+    jira_ticket:
+  - field: "Cloud backup enabled (Gen7)"
+    fallback: "Manual confirm in firewall UI"
+    jira_ticket:
+  - field: "Wide-open WAN→LAN allow-any rules"
+    fallback: "Manual review of access rules"
+    jira_ticket:
+
+trigger_keyword: sonicwall
+
+dataprint_keys:
+  - key: SystemInfo
+    description: Firewall identity — hostname, model, firmware, serial
+  - key: Interfaces
+    description: Per-port interface configuration (X0, X1, etc.) with IPs and zones
+  - key: ManagementInterfaces
+    description: Which interfaces allow management (WAN/HTTPS/SSH)
+  - key: SecurityServices
+    description: License + status per service (Gateway AV, IPS, Anti-Spyware, Botnet, etc.)
+  - key: AccessRules
+    description: Firewall access rule list (zone-to-zone)
+  - key: VpnPolicies
+    description: Site-to-site VPN tunnels
+  - key: SslVpn
+    description: SSL-VPN configuration (server, RADIUS, user portal)
+  - key: LocalUsers
+    description: Local user accounts with role
+  - key: Zones
+    description: Security zone definitions (LAN, WAN, DMZ, etc.) with per-zone service flags
+  - key: DhcpScopes
+    description: DHCP scopes per VLAN (Gen7 reports more detail than OS 6)
+
+field_gotchas:
+  - field: "SystemInfo.FirmwareVersion"
+    note: "Format differs between SonicOS 6 (e.g. '6.5.4.x') and Gen7 (e.g. '7.x.x'). Parse the major version to identify which version is running — many fields are only available in one or the other."
+  - field: "Interfaces.X0"
+    note: "X0 is conventionally the LAN interface on SonicWall hardware; X1 is WAN. Some firewall configurations remap these, so always check Interfaces[*].Zone to confirm."
+
+large_arrays: []
+
+time_series_supported: true
+
+vendor_console_url_pattern: https://www.mysonicwall.com
+
+related_recipes:
+  - path: recipes/system-type-assessment/all-firewalls.md
+    relationship: rollup

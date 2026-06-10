@@ -1,0 +1,174 @@
+inspector:
+  slug: cisco-asa-inspector
+  id: 22
+  display_name: Cisco ASA
+  category: Network
+  target_system_type: Firewall
+  parent_child: false
+  identifier_jmespath: SystemInfo.Hostname
+
+recipe:
+  family: single-system-analysis
+  scope_summary: >
+    Use this skill when the user wants a single-firewall analysis of a
+    Cisco ASA — Periodic Business Review, ASA software version audit,
+    license expiration check, running-vs-startup config drift detection,
+    interface inventory, ACL audit, site-to-site VPN review. Trigger
+    phrases include "ASA PBR", "Cisco ASA review", "pull ASA data",
+    "ASA license check", "ASA config drift".
+  trigger_phrases:
+    - "ASA PBR"
+    - "Cisco ASA review"
+    - "pull ASA data"
+    - "ASA license check"
+    - "ASA config drift"
+    - "ASA firewall review"
+  personas:
+    - noc
+    - soc
+    - vcio-account-manager
+    - technical-alignment-manager
+  output_formats:
+    - markdown
+    - word
+    - pptx
+
+aliases:
+  user_facing:
+    - ASA
+    - "Cisco ASA"
+    - "Cisco firewall"
+
+slas:
+  inspector_lastseen_days_max: 1
+  license_expiration_warn_days: 60
+  config_drift_allowed: false      # running ≠ startup = drift signal
+
+metrics:
+  - id: 257
+    name: "Cisco ASA: Model"
+    jmes_path: SystemInfo.Model
+    purpose: Hardware model identifier
+    result_shape: <string>
+
+  - id: 254
+    name: "Cisco ASA: ASA Software Version"
+    jmes_path: SystemInfo.ASAVersion
+    purpose: ASA OS version + age check
+    result_shape: <string>
+
+  - id: 522
+    name: "Cisco ASA: Running Configuration"
+    jmes_path: RunningConfig
+    purpose: Full running config snapshot (large; useful for site-to-site VPN review)
+    result_shape: <string>
+
+  - id: 736
+    name: "Cisco ASA: Running and Startup Configs Match"
+    jmes_path: ConfigMatch
+    purpose: Detect config drift (unsaved changes that won't survive reboot)
+    result_shape: <bool>
+    compliant_when: true
+
+  - id: 7
+    name: "Cisco ASA: Licenses Expiring within 30 Days List"
+    jmes_path: Licenses[?DaysToExpiry < `30`]
+    purpose: License expiration warning
+    result_shape: <array>
+    compliant_when: empty
+
+  - id: "[PROPOSED]"
+    name: "Cisco ASA: Hostname"
+    jmes_path: SystemInfo.Hostname
+    purpose: Firewall identifier
+
+  - id: "[PROPOSED]"
+    name: "Cisco ASA: Interface IP Summary"
+    jmes_path: Interfaces[*].{name, ip, mask, security_level, zone}
+    purpose: Per-interface IP / security-level audit
+
+  - id: "[PROPOSED]"
+    name: "Cisco ASA: Users (Local Accounts)"
+    jmes_path: LocalUsers[*]
+    purpose: Default-credential / local-account audit
+
+  - id: "[PROPOSED]"
+    name: "Cisco ASA: SSH Management Channels"
+    jmes_path: SSH.AccessRules
+    purpose: SSH management interface exposure
+
+  - id: "[PROPOSED]"
+    name: "Cisco ASA: Active License Features"
+    jmes_path: Licenses[?Active].name
+    purpose: Per-feature license status (Botnet, IPS, etc.)
+
+  - id: "[PROPOSED]"
+    name: "Cisco ASA: Inbound ACL Permit Rules"
+    jmes_path: AccessLists[?direction == 'inbound' && action == 'permit']
+    purpose: Inbound permit-rule audit (high-risk if permissive)
+
+  - id: "[PROPOSED]"
+    name: "Cisco ASA: DHCP Enabled"
+    jmes_path: DHCP.Enabled
+    purpose: DHCP enabled-on-firewall flag (uncommon for ASA but checked)
+
+cross_check:
+  asset_type: device
+  filter_pattern: 'inspectors contains "cisco-asa-inspector"'
+  coverage_question: >
+    Network devices behind the ASA that Liongard sees from other
+    inspectors but ASA doesn't enumerate (ASA primarily reports its own
+    configuration, not connected device inventory).
+
+proposed_metric_gaps:
+  - field: "Hostname (separate from Model)"
+    fallback: "Parse from RunningConfig snapshot"
+    jira_ticket:
+  - field: "Per-interface IP / security-level summary"
+    fallback: "Parse from RunningConfig snapshot"
+    jira_ticket:
+  - field: "Local user accounts"
+    fallback: "Parse from RunningConfig snapshot"
+    jira_ticket:
+  - field: "SSH management channels"
+    fallback: "Parse from RunningConfig snapshot"
+    jira_ticket:
+  - field: "Active license feature list"
+    fallback: "Existing 'Licenses Expiring within 30 Days' is partial — full feature list requires UI"
+    jira_ticket:
+  - field: "Inbound ACL permit rules"
+    fallback: "Parse from RunningConfig snapshot"
+    jira_ticket:
+  - field: "DHCP enabled flag"
+    fallback: "Parse from RunningConfig snapshot"
+    jira_ticket:
+
+trigger_keyword: cisco-asa
+
+dataprint_keys:
+  - key: SystemInfo
+    description: ASA identity — model, ASA software version, serial
+  - key: RunningConfig
+    description: Full running configuration text (CLI-exported; parse for interfaces, ACLs, users, etc.)
+  - key: ConfigMatch
+    description: Boolean — whether running config matches startup config (drift detection)
+  - key: Licenses
+    description: License feature list with expiration
+
+field_gotchas:
+  - field: "RunningConfig"
+    note: "ASA stores its full configuration as CLI text. Many fields the partner audit flagged as PROPOSED can be parsed client-side from this string (interfaces, ACLs, local users, SSH config, DHCP). Recipe should treat this as the structural source of truth until purpose-built metrics ship."
+  - field: "ConfigMatch (running vs startup)"
+    note: "ASA configuration changes are not persisted until 'write memory' or 'copy run start' is issued. ConfigMatch == false means a reboot will revert recent changes — strong signal for change-management discipline review."
+
+large_arrays:
+  - field: RunningConfig
+    typical_size: "Multi-KB CLI text — parse selectively, don't render in full to the report"
+
+time_series_supported: true        # config-drift trend, license-days trend
+
+vendor_console_url_pattern: https://www.cisco.com/c/en/us/td/docs/security/asa
+
+related_recipes:
+  - path: recipes/system-type-assessment/all-firewalls.md
+    relationship: rollup

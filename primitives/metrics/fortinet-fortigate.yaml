@@ -1,0 +1,263 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+# ── Device Identity ───────────────────────────────────────────────────────────
+
+  - "@id": "metrics:fortinet-fortigate:hostname"
+    "@type": "liongard:MetricPrimitive"
+    name: "Fortinet FortiGate — Hostname"
+    description: "Hostname of the FortiGate appliance from SystemGlobal.hostname."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "fortinet-fortigate-inspector"
+      inspectorId: 33
+    liongardMetricName: "Fortinet FortiGate: Hostname"
+    liongardMetricId: 626
+    liongardMetricUuid: "5565b215-7118-4447-a9b5-f9610413a2f4"
+    jmesPath: "SystemGlobal.hostname"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/fortinet-fortigate.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:fortinet-fortigate:model"
+    "@type": "liongard:MetricPrimitive"
+    name: "Fortinet FortiGate — Model Number"
+    description: "Hardware platform ID (model) from Firmware.current.\"platform-id\"."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "fortinet-fortigate-inspector"
+      inspectorId: 33
+    liongardMetricName: "Fortinet FortiGate: Model Number"
+    liongardMetricId: 223
+    liongardMetricUuid: "8fe5641e-6c32-4ce9-8b11-bcc09001f5e8"
+    jmesPath: "Firmware.current.\"platform-id\""
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    fieldGotcha: "Two paths exist for model/version info. id=223 uses Firmware.current.\"platform-id\" (the Fortinet API path). id=521 uses SystemInfo.Firmware.Version for the firmware string. These are complementary — use 223 for model, 224/521 for firmware version."
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/fortinet-fortigate.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:fortinet-fortigate:firmware-version"
+    "@type": "liongard:MetricPrimitive"
+    name: "Fortinet FortiGate — Firmware Version"
+    description: "Current firmware version string from Firmware.current.\"version\"."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "fortinet-fortigate-inspector"
+      inspectorId: 33
+    liongardMetricName: "Fortinet FortiGate: Firmware Version"
+    liongardMetricId: 224
+    liongardMetricUuid: "e6ed971a-3d67-4b27-86ac-fe0316b4dbee"
+    jmesPath: "Firmware.current.\"version\""
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    fieldGotcha: "Quoted key required in JMESPath because 'version' is a reserved word in some JMESPath implementations. Use Firmware.current.\"version\" not Firmware.current.version. The id=521 metric provides an alternate path SystemInfo.Firmware.Version which may differ on some firmware versions."
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/fortinet-fortigate.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:fortinet-fortigate:dns-servers"
+    "@type": "liongard:MetricPrimitive"
+    name: "Fortinet FortiGate — DNS Servers"
+    description: "Comma-joined primary and secondary DNS server addresses from DNS.[\"primary\",\"secondary\"]."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "fortinet-fortigate-inspector"
+      inspectorId: 33
+    liongardMetricName: "Fortinet FortiGate: DNS Servers"
+    liongardMetricId: 222
+    liongardMetricUuid: "5c01ef92-3ad6-4882-9cfb-9a30d967c67e"
+    jmesPath: "DNS.[\"primary\",\"secondary\"] | join(`, `, @)"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/fortinet-fortigate.md"
+    dateAdded: "2026-05-26"
+
+# ── Users & Access ────────────────────────────────────────────────────────────
+
+  - "@id": "metrics:fortinet-fortigate:user-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "Fortinet FortiGate — User Summary"
+    description: "Sorted array of user detail strings (name, vdom, type, access profile) from Users[]."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "fortinet-fortigate-inspector"
+      inspectorId: 33
+    liongardMetricName: "Fortinet FortiGate: User Summary"
+    liongardMetricId: 627
+    liongardMetricUuid: "8755d8a6-4e9a-4c7a-9ec0-86902fb8c0e2"
+    jmesPath: "Users[].join( `, `, [join(`: `, [`Name`, to_string(name)]), join(`: `, [`Vdom Name`,to_string(sort(vdom[].name))]), join(`: `, [`Type`,to_string(type_r)]), join(`: `, [`Profile`,to_string(accprofile)])]) | sort(@)"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    fieldGotcha: "Users[] contains local VPN/firewall auth accounts only — NOT admin accounts. FortiGate admin accounts (System > Administrators) are NOT present in the dataprint. AdminUsers key returns null on all validated systems. Admin account audit requires manual FortiGate GUI review."
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/fortinet-fortigate.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:fortinet-fortigate:group-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "Fortinet FortiGate — Group Summary"
+    description: "Sorted array of group detail strings (name, email, members, group type) from Groups[]."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "fortinet-fortigate-inspector"
+      inspectorId: 33
+    liongardMetricName: "Fortinet FortiGate: Group Summary"
+    liongardMetricId: 628
+    liongardMetricUuid: "51b85ff4-30ed-4233-908b-1c230191f1e3"
+    jmesPath: "Groups[].join( `, `, [join(`: `, [`Name`,to_string(name)]), join(`: `, [`Email`,to_string(email)]), join(`: `, [`Member`,to_string(sort(member[].name))]), join(`: `, [`Group Type`,to_string(\"group-type\")])]) | sort(@)"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/fortinet-fortigate.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:fortinet-fortigate:access-profiles-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "Fortinet FortiGate — Access Profiles Summary"
+    description: "Admin access profile permissions summary from UserProfiles[]. Identifies which profiles have system, network, and security configuration access."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "fortinet-fortigate-inspector"
+      inspectorId: 33
+    liongardMetricName: "Fortinet FortiGate: Access Profiles Summary"
+    liongardMetricId: 630
+    liongardMetricUuid: "d162fb94-c3f5-4088-b994-6c156c6042fa"
+    jmesPath: "UserProfiles[].join( `, `, [join(`: `, [`Name`, to_string(name)]), join(`: `, [`Scope`,to_string(scope)]) , join(`: `, [`Network Config`,to_string(netgrp)]) , join(`: `, [`System Config`,to_string(sysgrp)]) , join(`: `, [`Security Profiles`,to_string(utmgrp)]), join(`: `, [`IPsec,SSL,PPTP,L2TP VPN`,to_string(vpngrp)])])"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/fortinet-fortigate.md"
+    dateAdded: "2026-05-26"
+
+# ── Network & Interfaces ──────────────────────────────────────────────────────
+
+  - "@id": "metrics:fortinet-fortigate:interface-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "Fortinet FortiGate — Interface Summary"
+    description: "Sorted array of interface details (name, MTU, IP, role, VLAN ID, MAC) from Interfaces[]."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "fortinet-fortigate-inspector"
+      inspectorId: 33
+    liongardMetricName: "Fortinet FortiGate: Interface Summary"
+    liongardMetricId: 629
+    liongardMetricUuid: "5a516d96-f724-4a3e-b846-b7b988b85310"
+    jmesPath: "Interfaces[].join( `, `, [join(`: `, [`Name`, to_string(name)]), join(`: `, [`Vdom`,to_string(vdom)]), join(`: `, [`Type`,to_string(type)]), join(`: `, [`IP & Subnet`,to_string(ip)]), join(`: `, [`Role`,to_string(role)]), join(`: `, [`VLAN ID`,to_string(vlanid)])]) | sort(@)"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/fortinet-fortigate.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:fortinet-fortigate:routing-policy-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "Fortinet FortiGate — Routing Policy Summary"
+    description: "Sorted array of IPv4 routing entries (type, gateway, IP mask, interface) from IPV4Routing[]."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "fortinet-fortigate-inspector"
+      inspectorId: 33
+    liongardMetricName: "Fortinet FortiGate: Routing Policy Summary"
+    liongardMetricId: 633
+    liongardMetricUuid: "ec3885dc-0050-4a9b-8e14-40f7f167e018"
+    jmesPath: "IPV4Routing[].join( `, `, [join(`: `, [`Type`, to_string(type)]), join(`: `, [`Gateway`, to_string(gateway)]), join(`: `, [`IP Mask`, to_string(ip_mask)]), join(`: `, [`Interface`, to_string(interface)])]) | sort(@)"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/fortinet-fortigate.md"
+    dateAdded: "2026-05-26"
+
+# ── Firewall Policy ───────────────────────────────────────────────────────────
+
+  - "@id": "metrics:fortinet-fortigate:firewall-policy-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "Fortinet FortiGate — Firewall Policy Summary (Rich)"
+    description: "Sorted array of firewall policy detail strings (name, NAT, action, status, source/dest addresses, services) from FirewallPolicy[]."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "fortinet-fortigate-inspector"
+      inspectorId: 33
+    liongardMetricName: "Fortinet FortiGate: Firewall Policy Summary"
+    liongardMetricId: 631
+    liongardMetricUuid: "1a5ed175-9f47-48d9-9e27-58de12270e38"
+    jmesPath: "FirewallPolicy[].join( `, `, [join(`: `, [`Name`, to_string(name)]) , join(`: `, [`NAT`,to_string(nat)]), join(`: `, [`Action`,to_string(action)]), join(`: `, [`Status`,to_string(status)]), join(`: `, [`Source Address`,to_string(sort(srcaddr[].name))]), join(`: `, [`Source Interface`,to_string(sort(srcintf[].name))]), join(`: `, [`Service`,to_string(sort(service[].name))])])"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/fortinet-fortigate.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:fortinet-fortigate:firewall-policy-structured"
+    "@type": "liongard:MetricPrimitive"
+    name: "Fortinet FortiGate — Firewall Policy Summary (Structured)"
+    description: "Structured array of firewall policy objects with name, srcintf, dstintf, srcaddr, dstaddr, service, comments. Use for programmatic analysis."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "fortinet-fortigate-inspector"
+      inspectorId: 33
+    liongardMetricName: "Firewall Policy Summary [VI]"
+    liongardMetricId: 106514
+    liongardMetricUuid: "e934e601-0ec8-4097-bf74-777b3de6af8b"
+    jmesPath: "FirewallPolicy[].[name, srcintf[].name, dstintf[].name, srcaddr[].name, dstaddr[].name, service[].name, comments]"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/fortinet-fortigate.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:fortinet-fortigate:firewall-vip-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "Fortinet FortiGate — Firewall VIP Summary"
+    description: "Virtual IP (port forwarding / DNAT) entries from FirewallVIP[]. Review for exposed services and misconfigurations."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "fortinet-fortigate-inspector"
+      inspectorId: 33
+    liongardMetricName: "Fortinet FortiGate: Firewall VIP Summary"
+    liongardMetricId: 632
+    liongardMetricUuid: "8e848221-0806-4b96-a239-0d8c14fb3552"
+    jmesPath: "FirewallVIP[].join( `, `, [join(`: `, [`Name`, to_string(name)]), join(`: `, [`Type`, to_string(type)]), join(`: `, [`External IP`, to_string(extip)]), join(`: `, [`External Interface`, to_string(extintf)]), join(`: `, [`External Port`, to_string(extport)]), join(`: `, [`Mapped IP Range`, to_string(sort(mappedip[].range))]) , join(`: `, [`Mapped Port`, to_string(mappedport)])]) | sort(@)"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/fortinet-fortigate.md"
+    dateAdded: "2026-05-26"
+
+# ── Licensing ─────────────────────────────────────────────────────────────────
+
+  - "@id": "metrics:fortinet-fortigate:fortiem-status"
+    "@type": "liongard:MetricPrimitive"
+    name: "Fortinet FortiGate — FortiEMS Cloud Status"
+    description: "FortiEMS cloud licensing name and status from {Name: Name, Status: Licensing.fortiems_cloud.status}. Confirms endpoint management integration is active."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "fortinet-fortigate-inspector"
+      inspectorId: 33
+    liongardMetricName: "FortiEMS Status [VI]"
+    liongardMetricId: 106544
+    liongardMetricUuid: "a23f4675-6f5f-4d99-899b-6c3033f48f6b"
+    jmesPath: "{Name: Name, Status: Licensing.fortiems_cloud.status}"
+    resultType: "object"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/fortinet-fortigate.md"
+    dateAdded: "2026-05-26"

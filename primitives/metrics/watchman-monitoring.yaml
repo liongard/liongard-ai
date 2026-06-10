@@ -1,0 +1,137 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+# Watchman Monitoring (Inspector ID 50)
+# Eval sweep 2026-05-28 findings:
+# CRITICAL: Dataprint root is an ARRAY (not an object). ALL paths must start with [0].Configuration.
+#   Prior PROPOSED paths used top-level keys (Computers, Users, Expirations, etc.) — ALL were wrong.
+#   Correct prefix: [0].Configuration.<key>
+# GOTCHA: 'Systconnfo' is the correct key spelling (Watchman API typo — not 'SystemConfig' or 'SystemInfo').
+#   Systconnfo is a summary object: {UserCount, AdminUserCount, ComputerCount, ExpirationCount, ComputersNotReportingStr}.
+# GOTCHA: Computers[].missing = BOOLEAN (true = not reporting).
+# GOTCHA: Computers[].has_issue = BOOLEAN (true = active Watchman issue detected).
+# GOTCHA: Users[].tfa_status = BOOLEAN (true = 2FA enabled, false = disabled).
+# GOTCHA: Expirations[].daysTillExpiration = INTEGER.
+# GOTCHA: Groups[].contact_email = string or NULL (null means alert routing not configured).
+# GOTCHA: Computers[].boot_volume_usage_percent and ram_installed_in_bytes are STRINGS, not numbers.
+# Validated against active system (inspected 2025-12-19).
+
+primitives:
+
+  - "@id": "metrics:watchman-monitoring-inspector:computer-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Watchman Monitoring — Total Computer Count"
+    description: "Total count of computers managed in the Watchman Monitoring account."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "watchman-monitoring-inspector"
+      inspectorId: 50
+    jmesPath: "length([0].Configuration.Computers)"
+    resultType: "integer"
+    fieldGotcha: "CRITICAL: Dataprint root is an ARRAY. Use [0].Configuration.Computers — NOT top-level Computers (returns null). Computers[] fields include: uid, platform, computer_name, serial_number, os_version, os_version_number, has_issue (bool), missing (bool), updates_enabled (bool), agent_version, groupName (string), raw_uptime (integer seconds), minsSinceLastReport (integer)."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Active system (inspected 2025-12-19)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/watchman-monitoring.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:watchman-monitoring-inspector:missing-machines-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Watchman Monitoring — Missing Machines Count"
+    description: "Count of computers not reporting to Watchman (missing == true)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "watchman-monitoring-inspector"
+      inspectorId: 50
+    jmesPath: "length([0].Configuration.Computers[?missing == `true`])"
+    resultType: "integer"
+    fieldGotcha: "Computers[].missing is BOOLEAN. Use backtick-quoted boolean literal. CRITICAL: prefix [0].Configuration. required — top-level Computers path returns null."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Active system (inspected 2025-12-19)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/watchman-monitoring.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:watchman-monitoring-inspector:issue-machines-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Watchman Monitoring — Machines with Active Issues Count"
+    description: "Count of computers with an active Watchman issue detected (has_issue == true)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "watchman-monitoring-inspector"
+      inspectorId: 50
+    jmesPath: "length([0].Configuration.Computers[?has_issue == `true`])"
+    resultType: "integer"
+    fieldGotcha: "Computers[].has_issue is BOOLEAN. CRITICAL: prefix [0].Configuration. required."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Active system (inspected 2025-12-19)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/watchman-monitoring.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:watchman-monitoring-inspector:users-without-2fa-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Watchman Monitoring — Users Without 2FA Count"
+    description: "Count of Watchman users with two-factor authentication disabled (tfa_status == false)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "watchman-monitoring-inspector"
+      inspectorId: 50
+    jmesPath: "length([0].Configuration.Users[?tfa_status == `false`])"
+    resultType: "integer"
+    fieldGotcha: "Users[].tfa_status is BOOLEAN (true = 2FA enabled, false = disabled). Users[] additional confirmed fields: uid, role (string e.g. 'admin'), email, firstname, lastname, created_at (Unix timestamp), last_signin (Unix timestamp), can_access_billing (bool), can_edit_contact_menu (bool). CRITICAL: prefix [0].Configuration. required."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Active system (inspected 2025-12-19)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/watchman-monitoring.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:watchman-monitoring-inspector:expirations-within-30d"
+    "@type": "liongard:MetricPrimitive"
+    name: "Watchman Monitoring — Software Expirations Within 30 Days"
+    description: "Software/service expirations with daysTillExpiration <= 30; returns full expiration objects."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "watchman-monitoring-inspector"
+      inspectorId: 50
+    jmesPath: "[0].Configuration.Expirations[?daysTillExpiration <= `30`]"
+    resultType: "array"
+    fieldGotcha: "Expirations[].daysTillExpiration is INTEGER — use backtick-quoted integer literal. Expirations[] confirmed fields: uid, productName (string), manufacturerName (string), daysTillExpiration (integer), expires_at (Unix timestamp integer), renewable (boolean), description (string), license_key (string), groupName (string). CRITICAL: prefix [0].Configuration. required."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Active system (inspected 2025-12-19)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/watchman-monitoring.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:watchman-monitoring-inspector:systconnfo-account-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "Watchman Monitoring — Account Summary (Systconnfo)"
+    description: "Account-level summary object: UserCount, AdminUserCount, ComputerCount, ExpirationCount, ComputersNotReportingStr."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "watchman-monitoring-inspector"
+      inspectorId: 50
+    jmesPath: "[0].Configuration.Systconnfo"
+    resultType: "object"
+    fieldGotcha: "Key is 'Systconnfo' — Watchman API typo (NOT 'SystemConfig' or 'SystemInfo'). Confirmed object fields: UserCount (integer), AdminUserCount (integer), ComputerCount (integer), ExpirationCount (integer), AdminUsersStr (string), ComputersNotReportingStr (comma-separated string of not-reporting computer names). CRITICAL: prefix [0].Configuration. required."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Active system (inspected 2025-12-19)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/watchman-monitoring.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:watchman-monitoring-inspector:groups-without-contact-email"
+    "@type": "liongard:MetricPrimitive"
+    name: "Watchman Monitoring — Groups Without Contact Email"
+    description: "Groups where contact_email is null — alert routing not configured for those groups."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "watchman-monitoring-inspector"
+      inspectorId: 50
+    jmesPath: "[0].Configuration.Groups[?contact_email == null].name"
+    resultType: "array"
+    fieldGotcha: "Groups[].contact_email is string or NULL. Groups[] confirmed fields: uid, name (string), slug (string), hidden (boolean), contact_email (string or null), reference_email (string or null), description (string), created_at (Unix timestamp), show_contact_menu (boolean), visible_computer_count (integer), hidden_computer_count (integer). CRITICAL: prefix [0].Configuration. required."
+    status: "VALIDATED"
+    validatedOn: "2026-05-28"
+    validatedSystemReference: "Active system (inspected 2025-12-19)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/watchman-monitoring.md"
+    dateAdded: "2026-05-26"

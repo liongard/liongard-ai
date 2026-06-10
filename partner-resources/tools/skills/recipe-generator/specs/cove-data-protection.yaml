@@ -1,0 +1,146 @@
+inspector:
+  slug: cove-data-protection-inspector
+  id: 76
+  display_name: Cove Data Protection
+  category: Apps & Services
+  target_system_type: Backup / DR
+  parent_child: false
+  identifier_jmespath: SystemInfo.Name
+
+recipe:
+  family: single-system-analysis
+  scope_summary: >
+    Use this skill when the user wants a single-tenant analysis of a Cove
+    Data Protection account — backup-coverage review, failed-backup audit,
+    24-hour completion compliance, Exchange / OneDrive / file-server
+    protection state, device-level backup status. Cove is N-able's cloud
+    backup product (formerly SolarWinds Backup). Trigger phrases: "Cove
+    PBR", "Cove backup review", "pull Cove data", "Cove failed backups",
+    "N-able Cove report". Produces an artifact in the format set in the
+    customization block.
+  trigger_phrases:
+    - "Cove PBR"
+    - "Cove backup review"
+    - "pull Cove data"
+    - "Cove failed backups"
+    - "N-able Cove report"
+    - "SolarWinds Backup review"
+  personas:
+    - noc
+    - vcio-account-manager
+    - technical-alignment-manager
+  output_formats:
+    - markdown
+    - word
+    - xlsx
+
+aliases:
+  user_facing:
+    - Cove
+    - "N-able Cove"
+    - "Cove Data Protection"
+  legacy:
+    - "SolarWinds Backup"
+
+slas:
+  inspector_lastseen_days_max: 1
+  failed_backups_max: 0
+  cloud_backup_max_age_hours: 24
+  device_hours_since_last_backup_max: 24
+  exchange_hours_since_last_backup_max: 24
+  onedrive_hours_since_last_backup_max: 24
+
+metrics:
+  - id: 1190
+    name: "Cove Data Protection: Count of Failed Backups"
+    jmes_path: length(Devices[?BackupStatus == `Failed`])
+    purpose: Count of devices with most recent backup failed
+    result_shape: <integer>
+    compliant_when: "0"
+
+  - id: 1196
+    name: "Cove Data Protection: 24 Hours Since Last Completed Device Backup Count"
+    jmes_path: length(Devices[?Type == `BackupManager` && HoursSinceLastCompletedBackup > `24`])
+    purpose: Devices whose last successful backup is older than 24 hours
+    result_shape: <integer>
+    compliant_when: "0"
+
+  - id: 1183
+    name: "Cove Data Protection: 24 Hours Since Last Completed Exchange Backup Count"
+    jmes_path: length(Devices[?Type == `Office365` && HoursSinceExchangeLastCompletedBackup > `24`])
+    purpose: M365 Exchange protection state per device
+    result_shape: <integer>
+    compliant_when: "0"
+
+  - id: 1185
+    name: "Cove Data Protection: 24 Hours Since Last Completed OneDrive Backup Count"
+    jmes_path: length(Devices[?Type == `Office365` && HoursSinceOneDriveLastCompletedBackup > `24`])
+    purpose: M365 OneDrive protection state per device
+    result_shape: <integer>
+    compliant_when: "0"
+
+  - id: "[PROPOSED]"
+    name: "Cove Data Protection: Per-Device Backup Detail"
+    jmes_path: Devices[*].{name: Name, type: Type, status: BackupStatus, hoursAgo: HoursSinceLastCompletedBackup, retention: RetentionDays}
+    purpose: Per-device snapshot — used by the all-backups.md hostname join
+
+  - id: "[PROPOSED]"
+    name: "Cove Data Protection: SharePoint Protection State"
+    jmes_path: Devices[?Type == `Office365` && HoursSinceSharePointLastCompletedBackup > `24`] | length(@)
+    purpose: M365 SharePoint backup completion
+
+  - id: "[PROPOSED]"
+    name: "Cove Data Protection: Teams Protection State"
+    jmes_path: Devices[?Type == `Office365` && HoursSinceTeamsLastCompletedBackup > `24`] | length(@)
+    purpose: M365 Teams backup completion
+
+  - id: "[PROPOSED]"
+    name: "Cove Data Protection: Storage Used (per device + total)"
+    jmes_path: Devices[*].{name: Name, storageUsedGB: StorageUsedGB}
+    purpose: Per-device storage utilization for capacity / cost planning
+
+cross_check:
+  asset_type: device
+  filter_pattern: 'class == "server"'
+  coverage_question: >
+    Which servers in the device inventory match a Cove protected device
+    by hostname — and which servers have no matching Cove record.
+
+proposed_metric_gaps:
+  - field: "Per-device backup detail composite metric"
+    fallback: "Client-side parse of Devices[*]"
+    jira_ticket:
+  - field: "SharePoint / Teams protection state"
+    fallback: "Manual confirm in Cove dashboard"
+    jira_ticket:
+  - field: "Per-device storage used"
+    fallback: "Manual confirm in Cove dashboard"
+    jira_ticket:
+
+trigger_keyword: cove
+
+dataprint_keys:
+  - key: SystemInfo
+    description: Tenant identifier — Name (partner / company within Cove)
+  - key: Devices
+    description: Array of every protected device — Type (BackupManager, Office365), Name, BackupStatus, per-service Hours-Since-Last-Backup fields
+  - key: Account
+    description: Cove account metadata (license + seat counts)
+
+field_gotchas:
+  - field: "Devices[*].Type"
+    note: "Cove distinguishes 'BackupManager' (Windows/Linux/Mac/VM agent-based backups) from 'Office365' (cloud-to-cloud M365 backups) at the Type level. The HoursSince fields are specific to each Type — `HoursSinceLastCompletedBackup` for BackupManager devices, `HoursSinceExchangeLastCompletedBackup` / `HoursSinceOneDriveLastCompletedBackup` / etc. for Office365 devices."
+  - field: "BackupStatus"
+    note: "Possible values include 'Successful', 'Failed', 'InProgress', 'Idle'. The recipe should filter on 'Failed' for the headline failure count and 'Idle' for orphaned protected devices that haven't run recently."
+
+large_arrays: []
+
+time_series_supported: true
+
+vendor_console_url_pattern: https://backup.management
+
+related_recipes:
+  - path: recipes/system-type-assessment/all-backups.md
+    relationship: rollup
+  - path: recipes/compliance/cyber-insurance/domains/backup.md
+    relationship: compliance

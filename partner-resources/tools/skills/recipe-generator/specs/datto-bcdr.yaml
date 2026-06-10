@@ -1,0 +1,148 @@
+inspector:
+  slug: datto-bcdr-inspector
+  id: 38
+  display_name: Datto BCDR
+  category: Apps & Services
+  target_system_type: Backup / DR
+  parent_child: true
+  identifier_jmespath: SystemInfo.clientCompanyName
+
+recipe:
+  family: single-system-analysis
+  scope_summary: >
+    Use this skill when the user wants a single-appliance analysis of a
+    Datto BCDR (SIRIS or ALTO appliance) — protected-device coverage,
+    last-valid-backup state per device, failed-backup detection, cloud
+    sync status. Datto BCDR is appliance-based image-level backup with
+    cloud replication. Trigger phrases: "Datto BCDR review", "SIRIS PBR",
+    "ALTO appliance status", "pull Datto backup data", "Datto failed
+    backups". Produces an artifact in the format set in the
+    customization block.
+  trigger_phrases:
+    - "Datto BCDR review"
+    - "SIRIS PBR"
+    - "ALTO appliance status"
+    - "pull Datto backup data"
+    - "Datto failed backups"
+    - "Datto cloud sync status"
+  personas:
+    - noc
+    - vcio-account-manager
+    - technical-alignment-manager
+  output_formats:
+    - markdown
+    - word
+    - xlsx
+
+aliases:
+  user_facing:
+    - "Datto BCDR"
+    - SIRIS
+    - ALTO
+    - "Datto Backup"
+
+slas:
+  inspector_lastseen_days_max: 1
+  failed_backups_max: 0
+  hours_since_last_backup_max: 24
+  cloud_sync_required: true
+
+metrics:
+  - id: "[PROPOSED]"
+    name: "Datto BCDR: Recent Datto Backup Failed"
+    jmes_path: Agents[?lastBackupStatus == `Failed`] | length(@) > `0`
+    purpose: Flag for any most-recent agent backup in failed state
+    compliant_when: "false"
+
+  - id: "[PROPOSED]"
+    name: "Datto BCDR: Backups Not Completed in Last 24 Hours Count"
+    jmes_path: length(Agents[?HoursSinceLastSuccessfulBackup > `24`])
+    purpose: Count of agents whose last successful backup is older than 24h
+    compliant_when: "0"
+
+  - id: "[PROPOSED]"
+    name: "Datto BCDR: Backups Not Completed in Last 24 Hours Summary"
+    jmes_path: Agents[?HoursSinceLastSuccessfulBackup > `24`].{name: machineName, lastBackup: lastBackupTime, status: lastBackupStatus}
+    purpose: Per-agent enumeration of overdue backups
+
+  - id: "[PROPOSED]"
+    name: "Datto BCDR: Agent Inventory (parent)"
+    jmes_path: SystemInfo[*].{clientCompany: clientCompanyName, applianceModel: applianceModel, applianceHostname: applianceHostname}
+    purpose: Parent system — enumerate child appliances + customer-company mapping
+
+  - id: "[PROPOSED]"
+    name: "Datto BCDR: Per-Agent Last Backup Time"
+    jmes_path: Agents[*].{name: machineName, lastBackup: lastBackupTime, status: lastBackupStatus, sizeGB: protectedSizeGB}
+    purpose: Per-agent backup snapshot — feeds the all-backups.md hostname join (join on machineName)
+
+  - id: "[PROPOSED]"
+    name: "Datto BCDR: Cloud Sync Status"
+    jmes_path: Agents[*].{name: machineName, cloudSyncStatus: cloudSyncStatus, lastOffsiteTime: lastOffsiteSnapshotTime}
+    purpose: Per-agent offsite replication status (3-2-1 compliance)
+
+  - id: "[PROPOSED]"
+    name: "Datto BCDR: Appliance Storage Utilization"
+    jmes_path: SystemInfo.storageUsedPercent
+    purpose: Per-appliance storage utilization for capacity planning
+
+  - id: "[PROPOSED]"
+    name: "Datto BCDR: Screenshot Verification State (per agent)"
+    jmes_path: Agents[*].{name: machineName, screenshotStatus: lastScreenshotStatus, screenshotTime: lastScreenshotTime}
+    purpose: Datto's local-restore verification — confirms recoverability without a manual test restore
+
+cross_check:
+  asset_type: device
+  filter_pattern: 'class == "server"'
+  coverage_question: >
+    Servers in the device inventory not present in any Datto BCDR
+    appliance's Agents[*] array by hostname — unprotected candidates.
+
+proposed_metric_gaps:
+  - field: "Recent failed backup flag"
+    fallback: "Manual confirm in Datto Partner Portal"
+    jira_ticket:
+  - field: "24-hour overdue backup count + list"
+    fallback: "Manual confirm in Datto Partner Portal"
+    jira_ticket:
+  - field: "Per-agent last-backup composite (for the all-backups.md join)"
+    fallback: "Client-side parse of Agents[*]"
+    jira_ticket:
+  - field: "Cloud sync / offsite replication status per agent"
+    fallback: "Manual confirm in Datto Partner Portal"
+    jira_ticket:
+  - field: "Appliance storage utilization"
+    fallback: "Manual confirm in Datto Partner Portal"
+    jira_ticket:
+  - field: "Screenshot verification state per agent"
+    fallback: "Manual confirm in Datto Partner Portal"
+    jira_ticket:
+
+trigger_keyword: datto
+
+dataprint_keys:
+  - key: SystemInfo
+    description: Parent — `SystemInfo[*].clientCompanyName` enumerates client companies. Child — `SystemInfo.clientCompanyName` (singular) is this appliance's customer.
+  - key: Agents
+    description: Per-protected-machine array on the child appliance — machineName is the hostname-join key
+  - key: Account
+    description: Datto Partner Portal account metadata
+
+field_gotchas:
+  - field: "Parent vs. child distinction"
+    note: "Datto BCDR uses parent/child. Parent has `SystemInfo[*]` (array) enumerating clientCompanyName + appliance metadata across all child appliances. Child has `SystemInfo` (object) with clientCompanyName (singular) + Agents[*] for that appliance's protected machines. Always target the child for per-customer reports."
+  - field: "Agents[*].machineName"
+    note: "This is the hostname-join key for all-backups.md. May contain FQDN or short name depending on agent install configuration — apply the FQDN-stripping pattern from all-backups.md."
+  - field: "Screenshot verification"
+    note: "Datto's screenshot verification (built-in restore testing) is a unique value proposition. The all-backups.md recipe doesn't surface this — only Datto provides it. Recommend highlighting it in vCIO conversations when Datto is the chosen backup vendor."
+
+large_arrays: []
+
+time_series_supported: true
+
+vendor_console_url_pattern: https://portal.dattobackup.com
+
+related_recipes:
+  - path: recipes/system-type-assessment/all-backups.md
+    relationship: rollup
+  - path: recipes/compliance/cyber-insurance/domains/backup.md
+    relationship: compliance

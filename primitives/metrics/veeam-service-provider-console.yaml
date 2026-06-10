@@ -1,0 +1,324 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+# ── Platform Identity ─────────────────────────────────────────────────────────
+
+  - "@id": "metrics:veeam-vspc:server-version"
+    "@type": "liongard:MetricPrimitive"
+    name: "Veeam VSPC — Server Version"
+    description: "Veeam Service Provider Console server version string from About.serverVersion."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "veeam-service-provider-console-inspector"
+      inspectorId: 75
+    liongardMetricName: "Server Version"
+    liongardMetricId: 76185
+    liongardMetricUuid: "aa6595f1-83b1-4acc-9d09-f8ceb85e3e44"
+    jmesPath: "About.serverVersion"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/veeam-service-provider-console.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:veeam-vspc:enabled-tenants-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Veeam VSPC — Enabled Tenants Count"
+    description: "Count of enabled tenant accounts across all sites from Sites[].Tenants[?isEnabled==true] | length(@)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "veeam-service-provider-console-inspector"
+      inspectorId: 75
+    liongardMetricName: "Veeam SPC: Enabled Tenants Count"
+    liongardMetricId: 1198
+    liongardMetricUuid: "4c03ebe9-433b-41ff-ae4f-105edfbc1c9f"
+    jmesPath: "Sites[].Tenants[?isEnabled==`true`] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/veeam-service-provider-console.md"
+    dateAdded: "2026-05-26"
+
+# ── Backup Proxies ────────────────────────────────────────────────────────────
+
+  - "@id": "metrics:veeam-vspc:proxies-out-of-date-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Veeam VSPC — Backup Proxies Out of Date Count"
+    description: "Count of backup proxies with isOutOfDate == true. Should be 0."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "veeam-service-provider-console-inspector"
+      inspectorId: 75
+    liongardMetricName: "Veeam SPC: Backup Proxies Out of Date Count"
+    liongardMetricId: 1200
+    liongardMetricUuid: "5233288b-b53f-42d2-92ff-836be4023fdc"
+    jmesPath: "BackupProxies[?isOutOfDate==`true`] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/veeam-service-provider-console.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:veeam-vspc:proxies-out-of-date-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Veeam VSPC — Backup Proxies Out of Date List"
+    description: "Name and status of backup proxies that are out of date."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "veeam-service-provider-console-inspector"
+      inspectorId: 75
+    liongardMetricName: "Veeam SPC: Backup Proxies Out of Date List"
+    liongardMetricId: 1199
+    liongardMetricUuid: "951fef66-2693-4cf2-867e-5114c9ab6639"
+    jmesPath: "BackupProxies[?isOutOfDate==`true`].join(`: `,[name, status])"
+    resultType: "array"
+    compliantWhen: "result == []"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/veeam-service-provider-console.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:veeam-vspc:proxies-disabled-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Veeam VSPC — Backup Proxies Disabled Count"
+    description: "Count of backup proxies with isDisabled == true. Should be 0 in a healthy deployment."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "veeam-service-provider-console-inspector"
+      inspectorId: 75
+    liongardMetricName: "Veeam SPC: Backup Proxies Disabled Count"
+    liongardMetricId: 1202
+    liongardMetricUuid: "5d7c3ece-f631-4e7b-80fd-178faa6ec778"
+    jmesPath: "BackupProxies[?isDisabled==`true`] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/veeam-service-provider-console.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:veeam-vspc:proxies-disabled-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Veeam VSPC — Backup Proxies Disabled List"
+    description: "Name and status of disabled backup proxies."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "veeam-service-provider-console-inspector"
+      inspectorId: 75
+    liongardMetricName: "Veeam SPC: Backup Proxies Disabled List"
+    liongardMetricId: 1201
+    liongardMetricUuid: "1e5dce67-9bbc-4652-8f7e-1441273ecb88"
+    jmesPath: "BackupProxies[?isDisabled==`true`].join(`: `,[name, status])"
+    resultType: "array"
+    compliantWhen: "result == []"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/veeam-service-provider-console.md"
+    dateAdded: "2026-05-26"
+
+# ── Management Agents ─────────────────────────────────────────────────────────
+
+  - "@id": "metrics:veeam-vspc:agents-errors-warnings-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Veeam VSPC — Management Agents with Warnings or Errors Count"
+    description: "Count of management agents with status 'error' or 'warning' (lowercase). Should be 0."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "veeam-service-provider-console-inspector"
+      inspectorId: 75
+    liongardMetricName: "Veeam SPC: Management Agents with Warnings or Errors Count"
+    liongardMetricId: 1204
+    liongardMetricUuid: "f86a4ab9-8acc-490d-99f2-109a59a07e31"
+    jmesPath: "ManagementAgents[?status==`error` || status==`warning`] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    fieldGotcha: "This metric uses lowercase status values ('error', 'warning'). The v5 series (ids 1325-1332) uses PascalCase ('Warning', 'Failed', 'Healthy', 'Inaccessible'). Both exist in the Global catalog — use this metric (id=1204) for general error/warning counts; use the v5 Inaccessible metric for specific connectivity failures."
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/veeam-service-provider-console.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:veeam-vspc:agents-errors-warnings-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "Veeam VSPC — Management Agents with Warnings or Errors List"
+    description: "Hostname, connection status, and notes for management agents in error or warning state."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "veeam-service-provider-console-inspector"
+      inspectorId: 75
+    liongardMetricName: "Veeam SPC: Management Agents with Warnings or Errors List"
+    liongardMetricId: 1203
+    liongardMetricUuid: "ae3083cf-c4e5-4bfd-b533-a53984bc0dfc"
+    jmesPath: "ManagementAgents[?status==`error` || status==`warning`].join(`: `,[hostname,connectionStatus,customNotes])"
+    resultType: "array"
+    compliantWhen: "result == []"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    fieldGotcha: "Uses hostname (lowercase) while id=1205 uses hostName (camelCase H). Both patterns exist in the Global catalog — field name case varies across ManagementAgent queries."
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/veeam-service-provider-console.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:veeam-vspc:agents-reboot-required-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Veeam VSPC — Management Agents Requiring Reboot Count"
+    description: "Count of management agents with isRebootRequired == true. Should be 0."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "veeam-service-provider-console-inspector"
+      inspectorId: 75
+    liongardMetricName: "Veeam SPC: Management Agents Requiring a Reboot Count"
+    liongardMetricId: 1206
+    liongardMetricUuid: "49ad0574-83f6-4463-85e0-4adfda7ce7ff"
+    jmesPath: "ManagementAgents[?isRebootRequired==`true`] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/veeam-service-provider-console.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:veeam-vspc:agents-inaccessible-count-v5"
+    "@type": "liongard:MetricPrimitive"
+    name: "Veeam VSPC — Backup Agents with Inaccessible Status Count (v5)"
+    description: "Count of management agents with status 'Inaccessible' (PascalCase — VSPC v5 status format). Use alongside the error/warning count metric for full agent health coverage."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "veeam-service-provider-console-inspector"
+      inspectorId: 75
+    liongardMetricName: "Veeam SPC: Veeam SPC: Backup Agents with Inaccessible Status Count (v5)"
+    liongardMetricId: 1325
+    liongardMetricUuid: "f9c40b3d-c1f7-40c5-9069-c353a2e2f51b"
+    jmesPath: "ManagementAgents[?status==`Inaccessible`].hostName | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    fieldGotcha: "v5 status values are PascalCase: 'Inaccessible', 'Healthy', 'Warning', 'Failed'. Lowercase equivalents apply to earlier VSPC versions. This metric uses hostName (capital N) — note inconsistency with id=1203 which uses hostname."
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/veeam-service-provider-console.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:veeam-vspc:agents-inaccessible-list-v5"
+    "@type": "liongard:MetricPrimitive"
+    name: "Veeam VSPC — Backup Agents with Inaccessible Status List (v5)"
+    description: "Hostnames of management agents with status 'Inaccessible' (VSPC v5 PascalCase)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "veeam-service-provider-console-inspector"
+      inspectorId: 75
+    liongardMetricName: "Veeam SPC: Veeam SPC: Backup Agents with Inaccessible Status List (v5)"
+    liongardMetricId: 1326
+    liongardMetricUuid: "126aa224-0eaa-4fa0-b262-56a6ce3af9fb"
+    jmesPath: "ManagementAgents[?status==`Inaccessible`].hostName"
+    resultType: "array"
+    compliantWhen: "result == []"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/veeam-service-provider-console.md"
+    dateAdded: "2026-05-26"
+
+# ── Backup Jobs ───────────────────────────────────────────────────────────────
+
+  - "@id": "metrics:veeam-vspc:jobs-enabled-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "Veeam VSPC — Backup Jobs Enabled Count"
+    description: "Count of enabled backup jobs from Jobs[?isEnabled==true] | length(@)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "veeam-service-provider-console-inspector"
+      inspectorId: 75
+    liongardMetricName: "Veeam SPC: Backup Jobs Enabled Count"
+    liongardMetricId: 1207
+    liongardMetricUuid: "635cd184-2a0f-49ad-b1dd-66a52b5a9520"
+    jmesPath: "Jobs[?isEnabled==`true`] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/veeam-service-provider-console.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:veeam-vspc:jobs-failed-or-warning-count-v5"
+    "@type": "liongard:MetricPrimitive"
+    name: "Veeam VSPC — Backup Jobs with Warnings or Failures Count (v5)"
+    description: "Count of enabled jobs in 'Warning' or 'Failed' status (VSPC v5 PascalCase). Should be 0."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "veeam-service-provider-console-inspector"
+      inspectorId: 75
+    liongardMetricName: "Veeam SPC: Veeam SPC: Backup Jobs with Warnings or Failures Count (v5)"
+    liongardMetricId: 1332
+    liongardMetricUuid: "4daca6a2-738e-4b2a-8de7-5fd11b6e7ca1"
+    jmesPath: "Jobs[?isEnabled==`true` && status==`Warning` || status==`Failed`] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    compliesWith:
+      - "cyber-insurance-domain-backup"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    fieldGotcha: "Status values are PascalCase in VSPC v5: 'Warning', 'Failed', 'Success'. Note operator precedence in this JMESPath: the || binds loosely, so `isEnabled==true && status==Warning || status==Failed` evaluates as `(isEnabled==true && status==Warning) || status==Failed`. This may include disabled jobs with 'Failed' status. Matches the exact Global metric query."
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/veeam-service-provider-console.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:veeam-vspc:jobs-failed-or-warning-list-v5"
+    "@type": "liongard:MetricPrimitive"
+    name: "Veeam VSPC — Backup Jobs with Warnings or Failures List (v5)"
+    description: "Name, type, and status of backup jobs in Warning or Failed state (VSPC v5)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "veeam-service-provider-console-inspector"
+      inspectorId: 75
+    liongardMetricName: "Veeam SPC: Veeam SPC: Backup Jobs with Warnings or Failures List (v5)"
+    liongardMetricId: 1331
+    liongardMetricUuid: "699ef389-0202-4767-ab36-73cff43a0c69"
+    jmesPath: "Jobs[?isEnabled==`true` && status==`Warning` || status==`Failed`].join(' | ',[name, type, status])"
+    resultType: "array"
+    compliantWhen: "result == []"
+    compliesWith:
+      - "cyber-insurance-domain-backup"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/veeam-service-provider-console.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:veeam-vspc:jobs-success-count-v5"
+    "@type": "liongard:MetricPrimitive"
+    name: "Veeam VSPC — Backup Jobs with Success Count (v5)"
+    description: "Count of enabled jobs with status 'Success' (VSPC v5 PascalCase)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "veeam-service-provider-console-inspector"
+      inspectorId: 75
+    liongardMetricName: "Veeam SPC: Veeam SPC: Backup Jobs with Success Count (v5)"
+    liongardMetricId: 1329
+    liongardMetricUuid: "7aa4de8b-2043-436b-9b7d-d9ca9a47ad8c"
+    jmesPath: "Jobs[?isEnabled==`true` && status==`Success`].join(' | ',[name, type]) | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/veeam-service-provider-console.md"
+    dateAdded: "2026-05-26"

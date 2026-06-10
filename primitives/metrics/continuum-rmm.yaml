@@ -1,0 +1,249 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+# Continuum RMM (Inspector ID 60) — EOL product (acquired by Continuum/ConnectWise, now deprecated)
+# Eval sweep 2026-05-28 findings:
+# Single-tenant inspector. Validated on active system (inspected 2026-03-12).
+# Dataprint root keys: Devices, AgentDetails, AntivirusSummary*, AntivirusAges*, AntivirusMissing*,
+#   AntivirusDaily*, AntivirusOutdated*, AntivirusUnsupported*, BackupContinuity247*, UtilizationDaily,
+#   UtilizationDiskspace*, SoftwareInstalled, PatchesState*, PatchesSeverity*, PatchesResources*,
+#   PatchesMissing, SummaryScore, SummarySite, SnmpDevices, Systeminformation, WarrantySummary*,
+#   WarrantyDetails, Worksummary, SystemInfo, Name, UniqueCompositeKey.
+# GOTCHA: AgentDetails is a nested object {AgentDetails: [...]} but catalog-VALIDATED paths access it as
+#   a top-level array. Trust catalog paths.
+# GOTCHA: SummarySite.TemporaryFilesRemoved is a STRING ('0'), not an integer.
+# GOTCHA: SummaryScore.Scores values of -1 mean data unavailable for that category.
+# GOTCHA: AntivirusSummaryServers has 4 fields: Updated, Outdated, NotInstalled, InformationUnavailable.
+#   Prior PROPOSED path only selected 3 — updated to include all 4.
+# GOTCHA: WarrantySummaryServers.Error is NULL (not integer) when no lookup error occurred.
+# GOTCHA: Devices[].online is NOT present in EOL-era dataprints — projection returns null for that key.
+# All 7 PROPOSED paths upgraded to VALIDATED.
+
+primitives:
+
+- '@id': metrics:continuum-rmm-inspector:total-agents-count
+  '@type': liongard:MetricPrimitive
+  name: Continuum RMM — Total Agents Count
+  description: Total count of Continuum agent entries in AgentDetails
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: continuum-rmm-inspector
+    inspectorId: 60
+  liongardMetricName: 'Continuum RMM: Total Agents Count'
+  liongardMetricId: 552
+  liongardMetricUuid: "3b84ea90-263d-4940-beb4-7593496d26da"
+  jmesPath: AgentDetails | length(@)
+  resultType: integer
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/continuum-rmm.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:continuum-rmm-inspector:total-snmp-devices-count
+  '@type': liongard:MetricPrimitive
+  name: Continuum RMM — Total SNMP Devices Count
+  description: Count of SNMP-monitored devices tracked in Continuum (expected empty/0
+    on EOL systems)
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: continuum-rmm-inspector
+    inspectorId: 60
+  liongardMetricName: 'Continuum RMM: Total SNMP Devices Count'
+  liongardMetricId: 553
+  liongardMetricUuid: "aa6a2706-7964-4d2e-84e4-d52530ee6348"
+  jmesPath: SnmpDevices | length(@)
+  resultType: integer
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/continuum-rmm.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:continuum-rmm-inspector:failed-or-stale-agents-list
+  '@type': liongard:MetricPrimitive
+  name: Continuum RMM — Failed or Stale Agents List
+  description: Pipe-delimited list of agent FriendlyNames where DaysSinceLastContact
+    exceeds 30 days
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: continuum-rmm-inspector
+    inspectorId: 60
+  liongardMetricName: 'Continuum RMM: Failed or Stale Agents List'
+  liongardMetricId: 836
+  liongardMetricUuid: "253baf6a-eec4-41a5-a742-6194e198f5bd"
+  jmesPath: AgentDetails[?DaysSinceLastContact_r > `30`].FriendlyName | join( `|`
+    , @)
+  resultType: string
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/continuum-rmm.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:continuum-rmm-inspector:failed-or-stale-agents-count
+  '@type': liongard:MetricPrimitive
+  name: Continuum RMM — Failed or Stale Agents Count
+  description: Count of agents where DaysSinceLastContact exceeds 30 days
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: continuum-rmm-inspector
+    inspectorId: 60
+  liongardMetricName: 'Continuum RMM: Failed or Stale Agents Count'
+  liongardMetricId: 837
+  liongardMetricUuid: "8ec6f514-5b3b-4900-8d73-80ac77b173e0"
+  jmesPath: AgentDetails[?DaysSinceLastContact_r > `30`] | length(@)
+  resultType: integer
+  status: VALIDATED
+  validatedOn: '2026-05-26'
+  validatedSystemReference: Liongard Global metric catalog
+  sourceRecipe: recipes/single-system-analysis/by-inspector/continuum-rmm.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:continuum-rmm-inspector:device-inventory
+  '@type': liongard:MetricPrimitive
+  name: Continuum RMM — Device Inventory (Last Known State)
+  description: Device list with machineID, machineName, assetType, companyName, siteName,
+    operatingSystem, online (null on EOL), lastSeenOnline, lastReboot
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: continuum-rmm-inspector
+    inspectorId: 60
+  jmesPath: 'Devices[].{machineID: machineID, machineName: machineName, assetType:
+    assetType, companyName: companyName, siteName: siteName, operatingSystem: operatingSystem,
+    online: online, lastSeenOnline: lastSeenOnline, lastReboot: lastReboot}'
+  resultType: array
+  fieldGotcha: 'Devices[] confirmed fields: machineID, machineName, friendlyName,
+    hostName, assetType, companyId, companyName, siteId, siteName, operatingSystem,
+    lastSeenOnline, lastReboot, ipAddresses, macAddresses, cpu, memoryTotal, etc.
+    NOTE: ''online'' field is not present in older EOL-era dataprints — the projection
+    returns null for that key.'
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: Active system (inspected 2026-03-12)
+  sourceRecipe: recipes/single-system-analysis/by-inspector/continuum-rmm.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:continuum-rmm-inspector:summary-site
+  '@type': liongard:MetricPrimitive
+  name: Continuum RMM — Site Statistics Summary
+  description: SummarySite object with AntivirusMachineCount, ServerCount, DesktopCount,
+    PatchesInstalled, PatchesUnderReview, etc.
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: continuum-rmm-inspector
+    inspectorId: 60
+  jmesPath: SummarySite
+  resultType: object
+  fieldGotcha: 'SummarySite confirmed fields (all integers unless noted): AntivirusMachineCount,
+    AntivirusMachineUpdated, DesktopCount, FirewallCount, MobileDeviceCount, PatchesInstalled,
+    PatchesUnderReview, ServerCount, ServiceTicketsClosed, ServiceTicketsOpened, SwitchCount,
+    ThirdPartyPatchesInstalled. NOTE: TemporaryFilesRemoved is a STRING (e.g. ''0''),
+    not an integer.'
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: Active system (inspected 2026-03-12)
+  sourceRecipe: recipes/single-system-analysis/by-inspector/continuum-rmm.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:continuum-rmm-inspector:health-scores
+  '@type': liongard:MetricPrimitive
+  name: Continuum RMM — Health Score Summary
+  description: SummaryScore.Scores object with Overall and per-category scores (0-100;
+    -1 = data unavailable)
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: continuum-rmm-inspector
+    inspectorId: 60
+  jmesPath: SummaryScore.Scores
+  resultType: object
+  fieldGotcha: 'SummaryScore.Scores confirmed fields: DesktopAntivirus, DesktopDiskSpace,
+    DesktopPatch, DesktopTempFile, DesktopWarranty, Overall, ServerAntivirus, ServerAvailability,
+    ServerCpuUtilization, ServerDiskUtilization, ServerMemoryUtilization, ServerPatch,
+    ServerWarranty — all integers. Value -1 = data unavailable for that category.'
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: Active system (inspected 2026-03-12)
+  sourceRecipe: recipes/single-system-analysis/by-inspector/continuum-rmm.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:continuum-rmm-inspector:antivirus-summary-servers
+  '@type': liongard:MetricPrimitive
+  name: Continuum RMM — Server Antivirus Summary
+  description: AntivirusSummaryServers with Updated, Outdated, NotInstalled, InformationUnavailable
+    counts for servers
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: continuum-rmm-inspector
+    inspectorId: 60
+  jmesPath: 'AntivirusSummaryServers.{Updated: Updated, Outdated: Outdated, NotInstalled:
+    NotInstalled, InformationUnavailable: InformationUnavailable}'
+  resultType: object
+  fieldGotcha: 'AntivirusSummaryServers confirmed fields: Updated (integer), Outdated
+    (integer), NotInstalled (integer), InformationUnavailable (integer). All 4 fields
+    exist — previous PROPOSED path only included 3.'
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: Active system (inspected 2026-03-12)
+  sourceRecipe: recipes/single-system-analysis/by-inspector/continuum-rmm.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:continuum-rmm-inspector:antivirus-summary-desktops
+  '@type': liongard:MetricPrimitive
+  name: Continuum RMM — Desktop Antivirus Summary
+  description: AntivirusSummaryDesktops with Updated, Outdated, NotInstalled, InformationUnavailable
+    counts for desktops
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: continuum-rmm-inspector
+    inspectorId: 60
+  jmesPath: 'AntivirusSummaryDesktops.{Updated: Updated, Outdated: Outdated, NotInstalled:
+    NotInstalled, InformationUnavailable: InformationUnavailable}'
+  resultType: object
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: Active system (inspected 2026-03-12)
+  sourceRecipe: recipes/single-system-analysis/by-inspector/continuum-rmm.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:continuum-rmm-inspector:patch-state-servers
+  '@type': liongard:MetricPrimitive
+  name: Continuum RMM — Server Patch State Summary
+  description: PatchesStateServers with Installed, Missing, Blacklisted, MarkedForDeployment,
+    Others, UnderReview counts
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: continuum-rmm-inspector
+    inspectorId: 60
+  jmesPath: 'PatchesStateServers.{Installed: Installed, Missing: Missing, Blacklisted:
+    Blacklisted, MarkedForDeployment: MarkedForDeployment, Others: Others, UnderReview:
+    UnderReview}'
+  resultType: object
+  fieldGotcha: 'PatchesStateServers confirmed fields: Blacklisted, Installed, MarkedForDeployment,
+    Missing, Others, UnderReview — all integers.'
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: Active system (inspected 2026-03-12)
+  sourceRecipe: recipes/single-system-analysis/by-inspector/continuum-rmm.md
+  dateAdded: '2026-05-26'
+
+- '@id': metrics:continuum-rmm-inspector:warranty-summary-servers
+  '@type': liongard:MetricPrimitive
+  name: Continuum RMM — Server Warranty Summary
+  description: WarrantySummaryServers with Active, Expired, DataUnavailable, Error
+    counts for servers
+  evaluates:
+    '@type': liongard:Inspector
+    inspectorSlug: continuum-rmm-inspector
+    inspectorId: 60
+  jmesPath: 'WarrantySummaryServers.{Active: Active, Expired: Expired, DataUnavailable:
+    DataUnavailable, Error: Error}'
+  resultType: object
+  fieldGotcha: 'WarrantySummaryServers confirmed fields: Active (integer), Expired
+    (integer), DataUnavailable (integer), Error (null — not an integer). Error field
+    returns null when no warranty lookup error occurred.'
+  status: VALIDATED
+  validatedOn: '2026-05-28'
+  validatedSystemReference: Active system (inspected 2026-03-12)
+  sourceRecipe: recipes/single-system-analysis/by-inspector/continuum-rmm.md
+  dateAdded: '2026-05-26'
+

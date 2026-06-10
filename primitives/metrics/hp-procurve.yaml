@@ -1,0 +1,326 @@
+"$schema": "../../schemas/primitive.schema.json"
+
+primitives:
+
+  - "@id": "metrics:hp-procurve-inspector:firmware-version"
+    "@type": "liongard:MetricPrimitive"
+    name: "HP ProCurve — Firmware Version"
+    description: "Software version running on the HP ProCurve / Aruba switch"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "hp-procurve-inspector"
+      inspectorId: 63
+    liongardMetricName: "HP Procurve Inspector: Firmware Version"
+    liongardMetricId: 353
+    liongardMetricUuid: "56b015db-5966-4ac5-883b-f711391a1d6d"
+    jmesPath: "SystemInfo.Version"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/hp-procurve.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:hp-procurve-inspector:model-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "HP ProCurve — Model"
+    description: "Hardware model identifier of the HP ProCurve / Aruba switch"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "hp-procurve-inspector"
+      inspectorId: 63
+    liongardMetricName: "HP Procurve Inspector: Model List"
+    liongardMetricId: 352
+    liongardMetricUuid: "09ab70e4-333e-4475-8ebe-69be2da1378f"
+    jmesPath: "SystemInfo.Model"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/hp-procurve.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:hp-procurve-inspector:boot-rom-version"
+    "@type": "liongard:MetricPrimitive"
+    name: "HP ProCurve — Boot ROM Version"
+    description: "Boot ROM firmware version on the HP ProCurve switch"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "hp-procurve-inspector"
+      inspectorId: 63
+    liongardMetricName: "HP ProCurve: Boot ROM Version"
+    liongardMetricId: 354
+    liongardMetricUuid: "891e40e0-3c68-4f22-a63d-e2f8b04902f8"
+    jmesPath: "SystemInfo.BootRomVersion"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/hp-procurve.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:hp-procurve-inspector:default-gateway"
+    "@type": "liongard:MetricPrimitive"
+    name: "HP ProCurve — Default Gateway"
+    description: "Configured default gateway IP address on the switch"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "hp-procurve-inspector"
+      inspectorId: 63
+    liongardMetricName: "HP ProCurve: Default Gateway"
+    liongardMetricId: 642
+    liongardMetricUuid: "1928ea00-9855-4564-9987-a45954225d7b"
+    jmesPath: "SystemInfo.defaultGateway"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/hp-procurve.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:hp-procurve-inspector:management-ip"
+    "@type": "liongard:MetricPrimitive"
+    name: "HP ProCurve — Management IP"
+    description: "Management interface IP address of the switch"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "hp-procurve-inspector"
+      inspectorId: 63
+    liongardMetricName: "HP ProCurve: Management IP"
+    liongardMetricId: 641
+    liongardMetricUuid: "1f6b184c-2f6e-43a7-a8d8-4c582c591472"
+    jmesPath: "SystemInfo.ManagementIP"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/hp-procurve.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:hp-procurve-inspector:configuration-status"
+    "@type": "liongard:MetricPrimitive"
+    name: "HP ProCurve — Configuration Status"
+    description: "Current configuration status of the switch (e.g., running vs saved state)"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "hp-procurve-inspector"
+      inspectorId: 63
+    liongardMetricName: "HP ProCurve: Configuration Status"
+    liongardMetricId: 643
+    liongardMetricUuid: "509cf4cb-347e-4113-ae9a-ed14eaff94ea"
+    jmesPath: "SystemInfo.configurationStatus"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/hp-procurve.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:hp-procurve-inspector:default-boot"
+    "@type": "liongard:MetricPrimitive"
+    name: "HP ProCurve — Default Boot"
+    description: "Default boot image/configuration setting on the switch"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "hp-procurve-inspector"
+      inspectorId: 63
+    liongardMetricName: "HP ProCurve: Default Boot"
+    liongardMetricId: 640
+    liongardMetricUuid: "8b5c6164-1f5a-46b4-b4a0-58e2c35c882f"
+    jmesPath: "SystemInfo.DefaultBoot"
+    resultType: "string"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/hp-procurve.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:hp-procurve-inspector:interface-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "HP ProCurve — Interface Summary"
+    description: "Per-port interface summary: port, name, type, speed, enabled, tagged, status"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "hp-procurve-inspector"
+      inspectorId: 63
+    liongardMetricName: "HP ProCurve: Interface Summary"
+    liongardMetricId: 646
+    liongardMetricUuid: "752089f7-85ad-4cbd-89b2-819598aa6089"
+    jmesPath: "Interfaces[].join( `, `, [join(`: `, [`Port`, to_string(Port)]), join(`: `, [`Name`, to_string(Name)]), join(`: `, [`Type`, to_string(Type)]), join(`: `, [`Speed`, to_string(Speed)]), join(`: `, [`Enabled`, to_string(Enabled)]), join(`: `, [`Tagged`, to_string(Tagged)]) , join(`: `, [`Status`, to_string(Status)])])"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/hp-procurve.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:hp-procurve-inspector:vlan-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "HP ProCurve — VLAN Summary"
+    description: "Per-VLAN summary: ID, name, jumbo, voice, status"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "hp-procurve-inspector"
+      inspectorId: 63
+    liongardMetricName: "HP ProCurve: VLAN Summary"
+    liongardMetricId: 648
+    liongardMetricUuid: "7ed24e36-e070-48a6-9d96-2b49cd19e1e4"
+    jmesPath: "VLANs[].join( `, `, [join(`: `, [`ID`, to_string(ID)]), join(`: `, [`Name`, to_string(Name)]), join(`: `, [`Jumbo`, to_string(Jumbo)]), join(`: `, [`Voice`, to_string(Voice)]), join(`: `, [`Status`, to_string(Status)])])"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/hp-procurve.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:hp-procurve-inspector:trunk-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "HP ProCurve — Trunk Summary"
+    description: "Trunk / link-aggregation group summary: name, port, type, group, interface type"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "hp-procurve-inspector"
+      inspectorId: 63
+    liongardMetricName: "HP ProCurve: Trunk Summary"
+    liongardMetricId: 647
+    liongardMetricUuid: "bc472216-9489-41b6-801b-53bf3b535ff0"
+    jmesPath: "Trunks[].join( `, `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`Port`, to_string(Port)]), join(`: `, [`Type`, to_string(Trunk)]), join(`: `, [`Group`, to_string(Group)]), join(`: `, [`Interface Type`, to_string(InterfaceType)])])"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/hp-procurve.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:hp-procurve-inspector:lacp-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "HP ProCurve — LACP Summary"
+    description: "LACP (Link Aggregation Control Protocol) status per port and trunk group"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "hp-procurve-inspector"
+      inspectorId: 63
+    liongardMetricName: "HP ProCurve: LACP Summary"
+    liongardMetricId: 650
+    liongardMetricUuid: "29b8f769-e2e3-4b52-8a99-3707199eba4d"
+    jmesPath: "LACP[].join( `, `, [join(`: `, [`LACP Status`, to_string(LACPStatus)]), join(`: `, [`Port`, to_string(Port)]), join(`: `, [`Trunk Group`, to_string(TrunkGroup)]), join(`: `, [`LACPEnabled`, to_string(LACPEnabled)])])"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/hp-procurve.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:hp-procurve-inspector:ip-configuration-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "HP ProCurve — IP Configuration Summary"
+    description: "Per-VLAN IP configuration: VLAN, IP config type, proxy ARP, IP address, subnet mask"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "hp-procurve-inspector"
+      inspectorId: 63
+    liongardMetricName: "HP ProCurve: IP Configuration Summary"
+    liongardMetricId: 645
+    liongardMetricUuid: "e927cbc0-cc2b-48fd-8454-ac8c78982c99"
+    jmesPath: "IPConfiguration[].join( `, `, [join(`: `, [`Vlan`, to_string(VLAN)]), join(`: `, [`IP Config`, to_string(IPConfig)]), join(`: `, [`Proxy Arp`, to_string(ProxyARP)]), join(`: `, [`IP`, to_string(IPAddress)]), join(`: `, [`Subnet Mask`, to_string(SubnetMask)])])"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/hp-procurve.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:hp-procurve-inspector:access-list-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "HP ProCurve — Access List Summary"
+    description: "ACL entries with name, type, application status, protocol, sequence, source/destination IP, and action"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "hp-procurve-inspector"
+      inspectorId: 63
+    liongardMetricName: "HP ProCurve: Access List Summary"
+    liongardMetricId: 644
+    liongardMetricUuid: "caf31c44-12fb-4c99-b67d-ff1a8da9118e"
+    jmesPath: "AccessLists[].entries[].join( `, `, [join(`: `, [`ACL Name`, to_string(ACL_Name_r)]), join(`: `, [`ACL Type`, to_string(ACL_Type_r)]), join(`: `, [`Applied`, to_string(ACL_Applied_r)]), join(`: `, [`Protocol`, to_string(Proto)]), join(`: `, [`Sequence`, to_string(SEQ)]) , join(`: `, [`Source IP`, to_string(SrcIP)]), join(`: `, [`Destination IP`, to_string(DstIP)]) , join(`: `, [`Action`, to_string(Action)]), join(`: `, [`IP`, to_string(IP)])])"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/hp-procurve.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:hp-procurve-inspector:igmp-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "HP ProCurve — IGMP Summary"
+    description: "IGMP snooping configuration per VLAN: ID, name, enabled, querier allowed, querier interval"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "hp-procurve-inspector"
+      inspectorId: 63
+    liongardMetricName: "HP ProCurve: IGMP Summary"
+    liongardMetricId: 649
+    liongardMetricUuid: "710aa062-1309-4b12-b5c5-2c04bf6b087d"
+    jmesPath: "IGMP[].join( `, `, [join(`: `, [`ID`, to_string(ID)]), join(`: `, [`Name`, to_string(Name)]), join(`: `, [`Enabled`, to_string(IGMPenabled)]), join(`: `, [`Querier Allowed`, to_string(QuerierAllowed)]), join(`: `, [`Querier Interval`, to_string(QuerierInterval)])])"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/hp-procurve.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:hp-procurve-inspector:vlan-priority-summary"
+    "@type": "liongard:MetricPrimitive"
+    name: "HP ProCurve — VLAN Priority Summary"
+    description: "QoS VLAN priority settings: VLAN ID, priority level, apply rule"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "hp-procurve-inspector"
+      inspectorId: 63
+    liongardMetricName: "HP ProCurve: VLAN Priority Summary"
+    liongardMetricId: 651
+    liongardMetricUuid: "f2e4a5f6-be23-4799-9943-fd792f9669cd"
+    jmesPath: "QoS.VLANPriority[].join( `, `, [join(`: `, [`Vlan ID`, to_string(VLAN_ID)]), join(`: `, [`Priority`, to_string(Priority)]), join(`: `, [`Apply Rule`, to_string(ApplyRule)])])"
+    resultType: "array"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/hp-procurve.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:hp-procurve-inspector:loop-detection-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "HP ProCurve — Loop Detection Count"
+    description: "Count of ports where a network loop has been detected by loop protection"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "hp-procurve-inspector"
+      inspectorId: 63
+    liongardMetricName: "HP ProCurve: Loop Detection Count"
+    liongardMetricId: 912
+    liongardMetricUuid: "6aa18127-dc85-4e13-a395-a8090b405f9f"
+    jmesPath: "LoopProtect[?LoopDetected != `No`] | length(@)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/hp-procurve.md"
+    dateAdded: "2026-05-26"
+
+  - "@id": "metrics:hp-procurve-inspector:port-security-violation-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "HP ProCurve — Ports with Security Violation Detected Count"
+    description: "Count of enabled ports where a port-security intrusion alert has been triggered"
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "hp-procurve-inspector"
+      inspectorId: 63
+    liongardMetricName: "HP ProCurve: Ports with Security Violation Detected Count"
+    liongardMetricId: 913
+    liongardMetricUuid: "d2b9a12a-8e5e-4be9-ae21-fcc44d0754ee"
+    jmesPath: "Interfaces[?Enabled == `Yes` && IntrusionAlert ==`Yes`] | length(@)"
+    resultType: "integer"
+    status: "VALIDATED"
+    validatedOn: "2026-05-26"
+    validatedSystemReference: "Liongard Global metric catalog"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/hp-procurve.md"
+    dateAdded: "2026-05-26"
