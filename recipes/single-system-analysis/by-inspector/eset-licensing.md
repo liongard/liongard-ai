@@ -6,7 +6,7 @@ description: >
   product mix snapshot. Trigger phrases: "ESET license report", "ESET PBR",
   "pull ESET licensing for <CUSTOMER>". Produces an artifact in the format set
   in the customization block.
-compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, liongard_metric, liongard_asset"
+compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, liongard_metric, liongard_device"
 personas: [vcio-account-manager, technical-alignment-manager, accounting-finance]
 output_formats: [markdown, word, xlsx]
 primitives:
@@ -115,7 +115,7 @@ but the asset inventory tells you the **expected denominator** — total compute
 devices in scope:
 
 ```
-liongard_asset LIST environmentId=<ENV_ID> assetType=Device detail=full pageSize=200
+liongard_device LIST environmentId=<ENV_ID> pageSize=200
 total_compute = Devices where category == "compute" | count
 ```
 
@@ -194,5 +194,5 @@ license-utilization report — sortable and formula-driven.
 | 2 | liongard_system LIST | query="eset" envId=<ENV_ID> | array<system> | ok |
 | 3 | liongard_metric EVALUATE | metricName="ESET Licensing: Count of Active Users" sysId=<SYS_ID> envId=<ENV_ID> | <integer> | ok |
 | 4 | liongard_metric EVALUATE | metricName="ESET Licensing: License Usage Summary" sysId=<SYS_ID> envId=<ENV_ID> | <array> | ok |
-| 5 | liongard_asset LIST | envId=<ENV_ID> assetType=Device detail=full | array<device> | ok |
+| 5 | liongard_device LIST | envId=<ENV_ID> | array<device> | ok |
 ```

@@ -625,7 +625,7 @@ Group recommendations by **phase** when
 |---|---|---|
 | Inspector freshness | flagged from Step 2 | Trigger re-inspection; confirm agent / API access; coordinate credentials with customer |
 | Expected-but-missing inspector | flagged from Step 2 | Customer onboarding checklist — credentials + access |
-| Proposed-metric gaps in chained per-class recipes | flagged per-recipe | The relevant Jira metric-request ticket under ROAR-27030 |
+| Proposed-metric gaps in chained per-class recipes | flagged per-recipe | File a metric request with Liongard via the `liongard-metrics` skill |
 | Vendor portal-only data (traffic / threat analytics) | external | The relevant vendor console |
 | Restore-test history | not in dataprint | MSP runbook + customer vendor portal |
 | HA-pair config drift across vendors | not in dataprint | Manual UI compare |

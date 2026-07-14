@@ -15,9 +15,9 @@ field, renamed field, deprecated field), update this file.
 > `liongard_events` / `liongard_query` / `liongard_report` tools and the
 > 10-step pattern for time-bounded narrative reports.
 
-> **`liongard_asset` is deprecated** — do not use it in new recipes. The three
-> tools below replaced it. The deprecated alias still resolves for backwards
-> compatibility but recipes should target the dedicated tools directly.
+> **`liongard_asset` has been removed** — do not use it in recipes. The three
+> tools below replaced it, and the legacy alias no longer resolves on current
+> Liongard MCP servers. Always target the dedicated tools directly.
 >
 > **For category counts (M365 users, Windows workstations, etc.), prefer
 > `liongard_cyber_risk_dashboard`** — it exposes named metrics like

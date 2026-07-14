@@ -1,25 +1,39 @@
 ---
 name: liongard-setup-api-key
-description: Non-interactive Claude Code setup for Liongard MCP Bearer Access Token auth.
+description: Install the Liongard MCP server using Bearer Access Token auth (non-interactive path).
 argument-hint: "<instance> <token> [scope]"
 ---
 
-# Liongard MCP Setup — Bearer Token
+# Liongard MCP setup — API key
 
-Use this when the user already has an Access Token from **AI Preferences ->
-Access Tokens**.
+Non-interactive variant of `/liongard-setup` that assumes the user already has
+an Access Token from **AI Preferences -> Access Tokens**.
 
 ## Arguments
 
-1. `INSTANCE` — `acme` or `acme.app.liongard.com`.
-2. `TOKEN` — `<accessKeyId>:<accessKeySecret>`.
-3. `SCOPE` — optional; `user`, `local`, or `project`; default `user`.
+`$ARGUMENTS` should contain, in order:
 
-If required arguments are missing, fall back to `/liongard-setup`.
+1. `INSTANCE` — instance hostname, either `acme` or `acme.app.liongard.com`.
+2. `TOKEN` — combined token in the form `<accessKeyId>:<accessKeySecret>`.
+3. `SCOPE` *(optional, default `user`)* — one of `user`, `local`, `project`.
+
+If any required argument is missing, fall back to `/liongard-setup` and
+gather them interactively.
+
+## Validation
+
+Before running anything:
+
+- `INSTANCE` must not contain `://` or `/`. If only a subdomain is given,
+  append `.app.liongard.com`.
+- `TOKEN` must match `lg_mcp_<something>:<something>`. If it doesn't,
+  stop and ask the user to recreate in Liongard → AI Preferences → Access Tokens.
+- `SCOPE` must be one of `user`, `local`, `project`.
 
 ## Register
 
-Redact the token in any preview, then run:
+Preview the command with a redacted token (`Bearer lg_mcp_<id>:***`) and
+run:
 
 ```bash
 claude mcp add --scope ${SCOPE:-user} --transport http liongard \
@@ -27,7 +41,7 @@ claude mcp add --scope ${SCOPE:-user} --transport http liongard \
   --header "Authorization: Bearer ${TOKEN}"
 ```
 
-If the server exists, ask before running:
+If the server already exists, remove it first:
 
 ```bash
 claude mcp remove liongard
@@ -40,4 +54,13 @@ claude mcp list
 claude mcp get liongard
 ```
 
-Then ask the user to try: `List my Liongard environments.`
+## Smoke test
+
+Call `liongard_environment` with `{ operation: "COUNT" }` via `tools/call`.
+On success, tell the user they're good to go. On failure, route to
+`/liongard-doctor`.
+
+## Guardrails
+
+- Never print the full token back to the user.
+- Never write the token to a file that isn't the Claude Code config.

@@ -3,7 +3,7 @@
 # Managed Printer (Inspector ID 89)
 # Eval sweep 2026-05-28 findings:
 # Single-tenant inspector. Validated on Demo system (Timeout — last inspection data valid ~2025-12).
-# Contoso system (sys 7670) had stale/purged data — all paths returned null.
+# A second validation system had stale/purged data — all paths returned null.
 # Dataprint root keys: SystemInfo, Consumables, ifTable, prtMarkerTable, prtGeneralTable, and others.
 # GOTCHA: SystemInfo.ipAddress can be '127.0.0.1' (loopback) — use ifTable[?ipAdEntAddr != '127.0.0.1'].ipAdEntAddr | [0] for real IP.
 # GOTCHA: prtMarkerSuppliesPercentageRemaining_r is an INTEGER (0-100) — Liongard-computed field.

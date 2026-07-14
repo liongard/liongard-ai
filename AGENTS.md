@@ -1,6 +1,8 @@
 # AGENTS.md
 
-Guidance for AI agents working in this repository.
+Guidance for AI agents working **on** this repository (contributing, packaging,
+validating). For running recipes against a live tenant at runtime, see
+[`recipes/AGENTS.md`](recipes/AGENTS.md) instead. Repo map: [`ARCHITECTURE.md`](ARCHITECTURE.md).
 
 ## Purpose
 
@@ -11,9 +13,12 @@ skills, installers, and validation scripts.
 ## Public Source Of Truth
 
 - Public docs live in `docs/`.
-- Claude Code plugin package lives in `plugins/liongard/`.
-- Root `.claude/` is a compatibility copy for launching Claude Code from this
-  repo.
+- Claude Code plugin package lives in `plugins/liongard/` — **canonical** for
+  skills and slash commands.
+- Root `.claude/` is an **auto-generated mirror** of
+  `plugins/liongard/{skills,commands}` (so Claude Code auto-loads them when
+  launched from this repo). Never hand-edit it; regenerate with
+  `bash scripts/sync-plugin-to-claude.sh`.
 - Current MCP behavior should be checked against a live or test Liongard tenant
   using `tools/list`, `prompts/list`, and the smoke-test script. Public docs
   should describe product behavior, not implementation locations.
@@ -54,6 +59,16 @@ When context requires referencing the origin, use generic phrasing:
 The `/recipes/` and `/reference/` directories in this repo are
 customer-facing. Treat them with the same scrub discipline as the plugin
 docs.
+
+## Running Recipes
+
+When a user asks to run a Liongard recipe (assessment, QBR, compliance check, etc.),
+read `recipes/AGENTS.md` before starting. It covers recipe routing, pre-flight format/audience
+questions, HTML vs markdown rendering rules, and the session start checklist.
+
+**Generated reports** are always written to `outputs/environments/<customer-slug>/`
+(created if missing) — never to the repo root. `outputs/` is gitignored so customer
+data never commits. See `recipes/AGENTS.md` § 6.
 
 ## Validation
 

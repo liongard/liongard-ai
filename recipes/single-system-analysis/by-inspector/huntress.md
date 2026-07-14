@@ -7,7 +7,7 @@ description: >
   "Huntress PBR", "Huntress report", "pull Huntress data for <CUSTOMER>",
   "single system review of Huntress". Produces an artifact in the format set in
   the customization block (Word, PowerPoint, Markdown, Excel).
-compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, liongard_metric, liongard_asset"
+compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, liongard_metric, liongard_device"
 personas: [noc, soc, vcio-account-manager, technical-alignment-manager]
 output_formats: [markdown, word, pptx]
 primitives:
@@ -138,19 +138,19 @@ liongard_system LIST searchMode=keyword query="huntress" environmentId=<ENV_ID>
 ### Cross-inspector cross-check — asset inventory
 
 ```
-liongard_asset LIST environmentId=<ENV_ID> assetType=Device detail=full pageSize=200
+liongard_device LIST environmentId=<ENV_ID> pageSize=200
 ```
 
 ```
 # Devices Huntress reports on
-items[?contains(Inspectors, 'huntress-inspector')]
+items[?inspectors[?name=='huntress-inspector']]
 
 # Coverage gap — compute devices without Huntress
-# (requires liongard_asset LIST result — client-side filter)
-items[?!contains(Inspectors, 'huntress-inspector') && category == 'compute']
+# (requires liongard_device LIST result — client-side filter)
+items[?!inspectors[?name=='huntress-inspector'] && category == 'compute']
 
 # Devices with Huntress reporting EDR
-items[?contains(EDR, 'Huntress')]
+items[?contains(edr, 'Huntress')]
 ```
 
 Coverage % = `length(Agents) / count(asset compute devices)`.
@@ -204,8 +204,8 @@ answerable.
 | Total endpoints managed | `length(Agents)` or `Organization.agents_count` | ✅ |
 | Active in last 30 days | `length(Agents[?DaysSinceLastCheckin <= \`30\`])` | ✅ |
 | Inactive 2+ months | `length(Agents[?DaysSinceLastCheckin > \`60\`])` (metricName=`Huntress: Unresponsive agents count (60 days)`) | ✅ |
-| Not protected (coverage gap) | `liongard_asset LIST` + client filter: `items[?!contains(Inspectors, 'huntress-inspector') && category == 'compute']` | 🔍 asset cross-check |
-| Servers managed (vs. workstations) | **Not directly available from Huntress dataprint.** `liongard_asset LIST` + client filter: `items[?contains(Inspectors, 'huntress-inspector') && AccountType == 'server']` | 🔍 asset cross-check |
+| Not protected (coverage gap) | `liongard_device LIST` + client filter: `items[?!inspectors[?name=='huntress-inspector'] && category == 'compute']` | 🔍 asset cross-check |
+| Servers managed (vs. workstations) | **Not directly available from Huntress dataprint.** `liongard_device LIST` + client filter: `items[?inspectors[?name=='huntress-inspector'] && AccountType == 'server']` | 🔍 asset cross-check |
 | High alerts / threats | `Organization.incident_reports_count` (cumulative — NOT split into active/resolved) | ⚠️ partial — supplement from Huntress portal for active/resolved breakdown |
 
 > **Two limitations flagged by partner audit.** Huntress does not expose:
@@ -277,5 +277,5 @@ Markdown / Word / PowerPoint per `output.format`. See `templates/output-block-*.
 | 1 | liongard_environment LIST | filter=<name> | array<environment> | ok |
 | 2 | liongard_system LIST | query="huntress" envId=<ENV_ID> | array<system> | ok |
 | 3 | liongard_metric EVALUATE | metricName or jmesPathQuery sysId=<SYS_ID> envId=<ENV_ID> | <integer> or <array> | ok |
-| 4 | liongard_asset LIST | envId=<ENV_ID> assetType=Device detail=full | array<device> | ok |
+| 4 | liongard_device LIST | envId=<ENV_ID> | array<device> | ok |
 ```

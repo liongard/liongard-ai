@@ -72,8 +72,9 @@ This means the MCP client hasn't finished its `initialize` handshake yet.
 - Most `liongard_*` tools return a `Pagination` block with `HasMoreRows`,
   `TotalPages`, `CurrentPage`. If `HasMoreRows` is true, the agent should
   keep paging — ask it to "load all pages" or "give me an exact count".
-- Aggregation queries (`aggregate: true, group_by: [...]` on `liongard_asset`)
-  page internally; a single call returns exact totals.
+- `COUNT` on `liongard_device` / `liongard_identity` / `liongard_domain`
+  (optionally with `includeStatusCounts: true`) returns exact totals and a
+  status breakdown in a single call — no paging needed.
 
 ### "No results" but you know the data exists
 
@@ -127,10 +128,11 @@ This means the MCP client hasn't finished its `initialize` handshake yet.
 
 ### VS Code / Copilot
 
-- Make sure your Copilot version supports MCP.
-- Config lives in your VS Code settings JSON under `"chat.mcp.servers"` or
-  the dedicated MCP settings panel — see
-  [`clients/vscode.md`](clients/vscode.md).
+- Make sure `"chat.mcp.enabled": true` is set in VS Code settings — without
+  it, VS Code silently ignores MCP configs.
+- Config lives in `.vscode/mcp.json` (workspace) or the user-level `mcp.json`
+  (**MCP: Open User Configuration**) under the `servers` key — not in
+  `settings.json`. See [`clients/vscode.md`](clients/vscode.md).
 
 ---
 

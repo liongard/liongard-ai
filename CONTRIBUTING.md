@@ -7,9 +7,14 @@ MCP — most improvements fall into one of four buckets:
 1. **Docs** — keep the guides under [`docs/`](docs/) current as the MCP
    evolves.
 2. **Slash commands** — add, improve, or fix commands under
-   [`.claude/commands/`](.claude/commands/).
+   [`plugins/liongard/commands/`](plugins/liongard/commands/) (canonical home).
 3. **Skills** — add, improve, or fix Claude Code skills under
-   [`.claude/skills/`](.claude/skills/).
+   [`plugins/liongard/skills/`](plugins/liongard/skills/) (canonical home).
+
+> **Canonical vs. mirror.** `plugins/liongard/{commands,skills}/` is the source
+> of truth (what `/plugin install liongard` ships). The repo-root `.claude/`
+> directory is an auto-generated mirror — never hand-edit it. After changing a
+> command or skill, run `bash scripts/sync-plugin-to-claude.sh` and commit both.
 4. **Install scripts** — improve the bash installers under
    [`scripts/`](scripts/).
 
@@ -27,7 +32,7 @@ MCP — most improvements fall into one of four buckets:
 
 ## Adding a slash command
 
-1. Create `.claude/commands/<name>.md`.
+1. Create `plugins/liongard/commands/<name>.md` (canonical home).
 2. Start with YAML front matter:
 
    ```markdown
@@ -45,7 +50,8 @@ MCP — most improvements fall into one of four buckets:
 
 ## Adding a skill
 
-1. Create `.claude/skills/<name>/SKILL.md` (each skill in its own folder).
+1. Create `plugins/liongard/skills/<name>/SKILL.md` (canonical home; each skill
+   in its own folder). Run `bash scripts/sync-plugin-to-claude.sh` after.
 2. Front matter must include:
 
    ```markdown

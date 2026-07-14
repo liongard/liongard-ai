@@ -1,50 +1,97 @@
 ---
 name: liongard-setup
-description: Configure the hosted Liongard MCP server in Claude Code using Bearer Access Token auth.
+description: Install and configure the Liongard MCP server in Claude Code using Bearer Access Token auth.
 argument-hint: "[instance] [scope]"
 ---
 
-# Liongard MCP Setup
+# Liongard MCP setup
 
-Guide the user through Claude Code setup. Use Bearer Access Token auth as the
-default and supported path.
+You are guiding the user through installing the Liongard MCP server into
+Claude Code. Do exactly the following — do not skip or combine steps.
 
-## Inputs
+Bearer Access Token auth is the supported setup path. OAuth is experimental and
+client-dependent; do not offer it as the default.
 
-`$ARGUMENTS` may include:
+## Step 1 — gather input
 
-- `INSTANCE` — `acme` or `acme.app.liongard.com`.
-- `SCOPE` — `user`, `local`, or `project` (default `user`).
+Ask the user, one at a time (or all at once if that's more natural):
 
-If missing, ask for them. Ask for the MCP token separately and never echo it.
-The token is `<accessKeyId>:<accessKeySecret>` from **AI Preferences -> Access
-Tokens**.
+1. **Liongard instance hostname.** Accept either `acme` or
+   `acme.app.liongard.com`. If they give just the subdomain, append
+   `.app.liongard.com`. Reject anything that includes a scheme or path —
+   only the hostname is valid. Store as `INSTANCE`.
+2. **Token.** Ask for the combined Access Token from **AI Preferences -> Access
+   Tokens**. It must be `<accessKeyId>:<accessKeySecret>` and start with
+   `lg_mcp_`. Treat it as secret — do not echo it back in full. Store as
+   `TOKEN`.
+3. **Scope.** Offer `user` (default, recommended; applies to all their
+   projects) or `local` (this project only) or `project` (shared via
+   `.mcp.json`, commit without the token). Store as `SCOPE`. Default: `user`.
 
-## Steps
+## Step 2 — register the server
 
-1. Normalize `INSTANCE` to `<instance>.app.liongard.com`.
-2. Validate the token contains a colon and starts with `lg_mcp_`.
-3. Preview the command with the token redacted.
-4. If `liongard` already exists, ask before removing it.
-5. Run:
+Construct the URL: `https://${INSTANCE}/api/mcp`.
 
-   ```bash
-   claude mcp add --scope ${SCOPE:-user} --transport http liongard \
-     "https://${INSTANCE}/api/mcp" \
-     --header "Authorization: Bearer ${TOKEN}"
-   ```
+Preview the exact command you're about to run and ask the user to confirm.
+Redact the token in the preview (show `Bearer lg_mcp_<id>:***`).
 
-6. Run:
+Run **exactly one** of these via the shell:
 
-   ```bash
-   claude mcp list
-   claude mcp get liongard
-   ```
+```bash
+claude mcp add --scope ${SCOPE:-user} --transport http liongard \
+  "https://${INSTANCE}/api/mcp" \
+  --header "Authorization: Bearer ${TOKEN}"
+```
 
-7. Ask the user to verify with: `List my Liongard environments.`
+If the server already exists, ask the user whether to remove and re-add, or
+update in place. `claude mcp remove liongard` deletes an existing entry.
+
+## Step 3 — verify
+
+Run:
+
+```bash
+claude mcp list
+claude mcp get liongard
+```
+
+Confirm the output shows:
+
+- `liongard` is present.
+- Transport is `http`.
+- URL matches `https://${INSTANCE}/api/mcp`.
+
+## Step 4 — smoke test
+
+Ask the user if they're ready to smoke-test. If yes, call the Liongard MCP
+via `tools/call` for a small, safe query:
+
+- Call `liongard_environment` with `{ operation: "COUNT" }` to get the total
+  count of environments the token can see.
+- If that succeeds, call `liongard_environment` with
+  `{ operation: "LIST", pageSize: 5 }` and show the first 5 environment
+  names.
+
+If the call fails, route the user to `/liongard-doctor`.
+
+## Step 5 — next steps
+
+Tell the user:
+
+- They can start asking Liongard questions in this chat.
+- Useful starting prompts:
+  - "What alerts are open in `<environment name>`?"
+  - "Show me MFA coverage across all environments."
+  - "Investigate alert `<id>`."
+- Examples live in `examples/prompts.md`.
+- If they want a structured workflow, they can load a Liongard skill —
+  `liongard-investigate-alert`, `liongard-environment-health`,
+  `liongard-compliance-audit`.
 
 ## Guardrails
 
-- Do not offer OAuth as the normal path. It is experimental and client-dependent.
-- Do not print, log, or persist the token anywhere except the Claude MCP config.
-- If setup fails, route the user to `/liongard-doctor`.
+- Never print the full token back to the user.
+- Never log the token to a file.
+- If the user provides a malformed token (no colon, no `lg_mcp_` prefix),
+  stop and ask them to recreate in the Liongard UI.
+- If `claude mcp add` returns a non-zero exit code, show the error and stop.

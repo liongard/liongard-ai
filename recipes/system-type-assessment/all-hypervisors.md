@@ -9,7 +9,7 @@ description: >
   density per host", "datastore free space", "snapshot age audit". Pulls
   vmware-esxi-inspector, vmware-vcenter-inspector (Beta), and hyper-v-inspector
   plus asset-inventory cross-reference for VM-to-host mapping.
-compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, liongard_metric, liongard_asset"
+compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, liongard_metric, liongard_device"
 personas: [noc, technical-alignment-manager, vcio-account-manager]
 output_formats: [markdown, word, pptx, xlsx]
 primitives: []
@@ -117,7 +117,7 @@ hypervisor inspectors internally.
 ### Step 1 — Asset inventory primary (find VMs and hosts)
 
 ```
-liongard_asset LIST environmentId=<ENV_ID> assetType=Device detail=full pageSize=200
+liongard_device LIST environmentId=<ENV_ID> pageSize=200
 
 # Hypervisor hosts (devices reported by ESXi or Hyper-V inspectors)
 hypervisor_hosts = Devices where Inspectors contains
@@ -278,7 +278,7 @@ topology diagram and capacity charts.
 | Step | Tool | Args | Result Shape | Status |
 |------|------|------|--------------|--------|
 | 1 | liongard_environment LIST | filter=<name> | array<environment> | ok |
-| 2 | liongard_asset LIST | envId=<ENV_ID> assetType=Device detail=full | array<device> | ok |
+| 2 | liongard_device LIST | envId=<ENV_ID> | array<device> | ok |
 | 3 | liongard_system LIST | query="esxi" envId=<ENV_ID> | array<system> | ok |
 | 4 | liongard_system LIST | query="vcenter" envId=<ENV_ID> | array<system> | ok |
 | 5 | liongard_system LIST | query="hyper-v" envId=<ENV_ID> | array<system> | ok |

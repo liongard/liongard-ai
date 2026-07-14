@@ -14,7 +14,7 @@ posture changes or current compliance gaps.
 2. Use `compliance-check` or `liongard_cyber_risk_dashboard` for current pillar
    coverage.
 3. Use `recent-changes` or `liongard_detection` for drift context.
-4. Use `liongard_asset` for identity/device drilldowns.
+4. Use `liongard_identity` / `liongard_device` for identity/device drilldowns.
 5. Keep findings tied to real returned values.
 
 ## Output

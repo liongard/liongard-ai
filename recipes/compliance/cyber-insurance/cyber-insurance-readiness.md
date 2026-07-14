@@ -94,7 +94,7 @@ Based on CIS Controls v8.1 Control Assist + carrier-form gap analyses:
 | Category | Approx Count | Source |
 |---|---|---|
 | Questions answerable via Liongard metrics | ~37 of 50 core | `liongard_metric EVALUATE` |
-| Questions answerable via asset inventory cross-check | ~15 | `liongard_asset` (Identity + Device) |
+| Questions answerable via reconciled-inventory cross-check | ~15 | `liongard_identity` + `liongard_device` |
 | Questions requiring manual attestation | ~13 of 50 core | Policy / governance — no inspectable state |
 | Regulatory & Privacy questions | ~12 (REG-1..REG-8) | Mostly manual; KnowBe4 for awareness |
 | Vendor & Third-Party questions | ~8 (VND-1..VND-8) | Partial Liongard coverage |
@@ -151,7 +151,7 @@ recipes/single-system-analysis/by-inspector/dark-web-monitoring.md  # credential
 > M365, Duo, JumpCloud, NinjaRMM, etc. into one record with one synthesized
 > `mfaStatus`, `accountActivity`, `privileged`, etc. A per-inspector metric (e.g., AD
 > metric 23 Privileged Users Count) only knows what its single inspector knows.
-> **Always start with `liongard_asset` and use per-metric `liongard_metric EVALUATE`
+> **Always start with the reconciled inventory (`liongard_identity` / `liongard_device`) and use per-metric `liongard_metric EVALUATE`
 > as a cross-check or for inspector-unique fields.**
 
 ### Step 1 — Identify the environment

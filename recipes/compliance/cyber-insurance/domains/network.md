@@ -4,7 +4,7 @@ description: >
   Domain reference for the cyber-insurance-readiness master skill. Covers Network & Cloud Infrastructure
   (Q19–Q21, Q35–Q36, Q41–Q43). Used as a sub-reference when answering cyber insurance underwriting
   questions in this control area.
-compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, liongard_metric, liongard_asset"
+compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, liongard_metric, liongard_device, liongard_identity"
 personas: [vcio-account-manager, soc, technical-alignment-manager]
 primitives:
   - metrics:sonicwall:any-to-any-allow-rules-count
@@ -28,8 +28,9 @@ customize:
 > question in this control area.
 
 > **Asset Inventory First.** Before evaluating the per-metric tables below, the
-> agent should pull `liongard_asset LIST detail=full` for the relevant assetType
-> (Identity or Device) and answer the question from the asset record's
+> agent should pull the reconciled inventory — `liongard_identity` (identity) or
+> `liongard_device` (device), using server-side filters or `COUNT` when only a
+> coverage figure is needed — and answer the question from the asset record's
 > cross-inspector synthesis (`mfaStatus`, `accountActivity`, `privileged`,
 > `antivirus`, `edr`, `inspectors[]`, etc.). Per-inspector metrics in this file
 > are the **cross-check** — they confirm the asset answer and provide

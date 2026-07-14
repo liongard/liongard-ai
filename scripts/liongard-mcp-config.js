@@ -55,7 +55,7 @@ function parseArgs(argv) {
   if (!["user", "local", "project"].includes(args.scope)) {
     throw new Error("--scope must be user, local, or project");
   }
-  if (!args.print && !args.write && args.client !== "claude-code") args.print = true;
+  if (!args.print && !args.write) args.print = true;
   return args;
 }
 
@@ -70,8 +70,8 @@ Options:
   --instance <host>       acme or acme.app.liongard.com
   --token <token>         <accessKeyId>:<accessKeySecret>
   --scope <scope>         claude-code scope: user, local, project
-  --project               write Cursor project config instead of user config
-  --print                 print generated config/command
+  --project               write project config (.cursor/mcp.json or .vscode/mcp.json) instead of user config
+  --print                 print generated config/command (default when --write is not set)
   --write                 write supported client config
   --dry-run               show target path and output without writing
   --backup                create timestamped backup before writing
@@ -137,10 +137,10 @@ function serverConfig(host, token) {
 function printedConfig(client, host, token, scope) {
   const server = serverConfig(host, token);
   if (client === "claude-code") {
-    return `claude mcp add --scope ${scope} --transport http liongard "${server.url}" --header "Authorization: Bearer ${redactToken(token)}"`;
+    return `claude mcp add --scope ${scope} --transport http liongard "${server.url}" --header "Authorization: Bearer ${token}"`;
   }
   if (client === "vscode") {
-    return JSON.stringify({ "chat.mcp.servers": { liongard: server } }, null, 2);
+    return JSON.stringify({ servers: { liongard: server } }, null, 2);
   }
   if (client === "generic") {
     return JSON.stringify({ name: "liongard", ...server }, null, 2);
@@ -164,13 +164,16 @@ function targetPath(client, project) {
     return path.join(process.env.XDG_CONFIG_HOME || path.join(os.homedir(), ".config"), "Claude", "claude_desktop_config.json");
   }
   if (client === "vscode") {
+    if (project) {
+      return path.join(process.cwd(), ".vscode", "mcp.json");
+    }
     if (process.platform === "darwin") {
-      return path.join(os.homedir(), "Library", "Application Support", "Code", "User", "settings.json");
+      return path.join(os.homedir(), "Library", "Application Support", "Code", "User", "mcp.json");
     }
     if (process.platform === "win32") {
-      return path.join(process.env.APPDATA || path.join(os.homedir(), "AppData", "Roaming"), "Code", "User", "settings.json");
+      return path.join(process.env.APPDATA || path.join(os.homedir(), "AppData", "Roaming"), "Code", "User", "mcp.json");
     }
-    return path.join(process.env.XDG_CONFIG_HOME || path.join(os.homedir(), ".config"), "Code", "User", "settings.json");
+    return path.join(process.env.XDG_CONFIG_HOME || path.join(os.homedir(), ".config"), "Code", "User", "mcp.json");
   }
   return undefined;
 }
@@ -186,7 +189,7 @@ function mergeConfig(existing, client, host, token) {
   const next = { ...existing };
   const server = serverConfig(host, token);
   if (client === "vscode") {
-    next["chat.mcp.servers"] = { ...(next["chat.mcp.servers"] || {}), liongard: server };
+    next.servers = { ...(next.servers || {}), liongard: server };
   } else {
     next.mcpServers = { ...(next.mcpServers || {}), liongard: server };
   }
@@ -199,7 +202,7 @@ function writeConfig(file, client, host, token, options) {
   const output = `${JSON.stringify(next, null, 2)}\n`;
   if (options.dryRun) {
     console.log(`Would write ${file}`);
-    console.log(output.replace(token, redactToken(token)));
+    console.log(output);
     return;
   }
   fs.mkdirSync(path.dirname(file), { recursive: true });
@@ -218,12 +221,14 @@ async function main() {
   const token = validateToken(args.token);
 
   if (args.print || args.dryRun) {
-    console.log(printedConfig(args.client, host, token, args.scope).replace(token, redactToken(token)));
+    console.log(printedConfig(args.client, host, token, args.scope));
+    console.error(`Note: output contains your access token (${redactToken(token)}) — treat it like a password.`);
   }
 
   if (args.client === "claude-code") {
-    if (!args.write) return;
-    console.log("Run the printed claude mcp add command manually so your shell history policy is under your control.");
+    if (args.print || args.dryRun) {
+      console.error("Run the printed claude mcp add command yourself; it will enter your shell history, so clear it afterwards if your history policy requires.");
+    }
     return;
   }
 

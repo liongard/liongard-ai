@@ -86,20 +86,21 @@ export `LIONGARD_MCP_TOKEN` in their own shell.
 
 ## Skills (optional)
 
-This repo ships Anthropic-format skill files under [`.claude/skills/`](../../.claude/skills).
+This repo ships Anthropic-format skill files under
+[`plugins/liongard/skills/`](../../plugins/liongard/skills) (the canonical home).
 Cursor uses a slightly different convention (`.cursor/skills/`). To use the
 Liongard skills in Cursor, copy the directories:
 
 ```bash
 mkdir -p ~/.cursor/skills
-cp -R .claude/skills/liongard-* ~/.cursor/skills/
+cp -R plugins/liongard/skills/liongard-* ~/.cursor/skills/
 ```
 
 Or symlink for easy updates:
 
 ```bash
 mkdir -p ~/.cursor/skills
-for skill in .claude/skills/liongard-*; do
+for skill in plugins/liongard/skills/liongard-*; do
   ln -sfn "$(pwd)/$skill" "$HOME/.cursor/skills/$(basename "$skill")"
 done
 ```

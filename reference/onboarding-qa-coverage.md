@@ -10,7 +10,7 @@ inspector was mapped to specific fields. Coverage notes are partner-confirmed.
 
 > **Reference, not a recipe.** Use this file to plan what each EDR recipe should
 > claim and what it should mark "not directly available — see
-> `liongard_asset` cross-check." See the
+> `liongard_device` cross-check." See the
 > "Onboarding QA — Endpoint Posture" section in each EDR recipe for the live
 > implementation.
 

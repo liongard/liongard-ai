@@ -13,6 +13,20 @@ The stable baseline is simple:
 The MCP server is hosted by your Liongard instance. This repo provides the
 public plugin package, setup commands, skills, installers, and client docs.
 
+## What's in this repo — two parts
+
+This repository serves two related but distinct purposes. Knowing which part
+you need keeps setup simple:
+
+| Part | Folders | Use it to… |
+| --- | --- | --- |
+| **1. MCP Connector & Plugin** (get connected) | `plugins/`, `.claude-plugin/`, `.claude/`, `docs/`, `scripts/`, `examples/` | Install the Liongard plugin, configure the hosted MCP server in your client, and run setup/health commands. Start here once. |
+| **2. Recipe Library** (do the work) | `recipes/`, `personas/`, `primitives/`, `reference/`, `templates/`, `partner-resources/`, `config/`, `ontology/`, `schemas/` | Turn live Liongard data into consistent MSP artifacts (QBRs, assessments, cyber-insurance evidence, roadmaps). Sync it, customize `config/`, and reference recipes in your prompts. |
+
+If you only want to **get connected**, you need Part 1. If you want to
+**produce reports/analysis**, Part 1 connects you and Part 2 is what you sync
+and customize. See [`ARCHITECTURE.md`](ARCHITECTURE.md) for the full map.
+
 ## Fastest Path
 
 ### Claude Code Plugin
@@ -56,34 +70,34 @@ brand or stack.
 | Path | What's there |
 | --- | --- |
 | [`config/`](config) | **MSP-wide settings: brand, vendor stack, SLAs. Edit once — recipes inherit.** |
-| [`recipes/`](recipes) | 121 recipes across 9 categories (single-system, system-type, domain, compliance, QBR, onboarding, sales, roadmap, external-data). |
+| [`recipes/`](recipes) | 120+ recipes across 9 categories (single-system, system-type, domain, compliance, QBR, onboarding, sales, roadmap, external-data). |
 | [`personas/`](personas) | Index pages for 7 MSP personas (NOC, SOC, vCIO, TAM, Sales, Executive, Finance) — each lists the recipes that role uses. |
 | [`reference/`](reference) | Inspector aliases, asset-field reference, onboarding-QA coverage matrix, QA retry pattern, persona × recipe matrix, future-recipes roadmap. |
-| [`primitives/`](primitives) | Semantic registry (`registry.yaml`) + per-inspector metric primitive YAML files (937 metrics, 76 inspectors). Enables intent routing and metric impact analysis. |
+| [`primitives/`](primitives) | Semantic registry (`registry.yaml`) + per-inspector metric primitive YAML files (950+ metrics, 76 inspectors — exact counts in `registry.yaml` `stats`). Enables intent routing and metric impact analysis. |
 | [`templates/`](templates) | Recipe skeleton + reusable customization / output blocks. |
 | [`partner-resources/`](partner-resources) | Partner-facing tools and skills: recipe picker and recipe scaffold generator. |
 
 ### Using a recipe
 
-0. **First-time setup (once per MSP):** copy
+1. **First-time setup (once per MSP):** copy
    `config/msp-config.local.yaml.example` → `config/msp-config.local.yaml`
    and fill in your MSP's brand identity, preferred vendor stack, and SLA
    baselines. Every recipe inherits from it — no per-recipe edits needed for
    brand or stack.
-1. Open the recipe in your Claude Code / Claude Desktop session with the
+2. Open the recipe in your Claude Code / Claude Desktop session with the
    Liongard MCP connected.
-2. (Optional) Edit the recipe's **Customize for your MSP** block — section
+3. (Optional) Edit the recipe's **Customize for your MSP** block — section
    names, recipe-specific SLAs, output format. Most recipes work out of the
    box once `msp-config.local.yaml` is set.
-3. Reference the recipe in your prompt:
+4. Reference the recipe in your prompt:
 
-```
-Using the recipe at recipes/single-system-analysis/by-inspector/sentinelone.md,
-produce a Q4 single-system assessment for SentinelOne system <SYS_ID> in
-environment <ENV_ID>. Output as Word docx.
-```
+   ```text
+   Using the recipe at recipes/single-system-analysis/by-inspector/sentinelone.md,
+   produce a Q4 single-system assessment for SentinelOne system <SYS_ID> in
+   environment <ENV_ID>. Output as Word docx.
+   ```
 
-4. The agent fetches data via the Liongard MCP, applies your customization,
+5. The agent fetches data via the Liongard MCP, applies your customization,
    produces the artifact.
 
 ### Personas served
@@ -126,7 +140,7 @@ In [`reference/`](reference):
 | --- | --- |
 | [`.claude-plugin/`](.claude-plugin) | Claude Code marketplace manifest. |
 | [`plugins/liongard/`](plugins/liongard) | Installable Claude Code plugin package. |
-| [`.claude/`](.claude) | Compatibility copy for launching Claude Code from this repo. |
+| [`.claude/`](.claude) | Auto-generated mirror of the plugin's skills/commands so Claude Code auto-loads them when launched from this repo. Canonical source is `plugins/liongard/`; regenerate with `scripts/sync-plugin-to-claude.sh`. |
 | [`docs/`](docs) | MCP overview, auth, tools, prompts, harnesses, troubleshooting. |
 | [`scripts/`](scripts) | Config generator, installers, validation, smoke tests. |
 | [`examples/`](examples) | Example prompts and workflows. |
@@ -153,8 +167,11 @@ The native tool catalog includes:
 - `liongard_agents` — list, get, and count Liongard agents.
 - `liongard_alert` — query actionable alerts.
 - `liongard_detection` — query change detections.
+- `liongard_events` — query real-time inspection events.
 - `liongard_launchpoint` — unified launchpoint and system tool.
-- `liongard_asset` — query inventory identities and devices.
+- `liongard_device` — query the reconciled device inventory.
+- `liongard_identity` — query the reconciled identity inventory.
+- `liongard_domain` — query the reconciled domain inventory.
 - `liongard_metric` — list and evaluate metrics.
 - `liongard_cyber_risk_dashboard` — security posture rollups.
 - `liongard_report` — list and retrieve reports.

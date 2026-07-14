@@ -471,7 +471,7 @@ when `narrative.group_recommendations_by_priority == true` (default).
 | Field | Status | Source if missing |
 |---|---|---|
 | Stale inspectors in window | flagged from Step 3 | Trigger re-inspection; confirm agent / API access |
-| Proposed-metric gaps in chained per-class recipes | flagged per-recipe | The relevant Jira metric-request ticket under ROAR-27030 |
+| Proposed-metric gaps in chained per-class recipes | flagged per-recipe | File a metric request with Liongard via the `liongard-metrics` skill |
 | Vendor portal-only data (traffic / threat analytics) | external | The relevant vendor console |
 | Restore-test history | not in dataprint | MSP runbook |
 | HA-pair config drift across vendors | not in dataprint | Manual UI compare |

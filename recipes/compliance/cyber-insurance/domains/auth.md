@@ -590,7 +590,7 @@ from the reconciled cross-system view is the strongest possible evidence.
 
 ## Asset Inventory Approach — Identity MFA & Activity State
 
-> **Use `liongard_asset` as the primary cross-inspector view for all identity questions.**
+> **Use `liongard_identity` as the primary cross-inspector view for all identity questions.**
 > It synthesizes data from AD, M365, Duo, NinjaRMM, and other inspectors into one record per
 > person, with evaluated `accountActivity` and `mfaStatus` already computed. This is faster and
 > more comprehensive than running individual metrics per inspector.
@@ -598,7 +598,7 @@ from the reconciled cross-system view is the strongest possible evidence.
 ### Fetch Pattern
 
 ```
-liongard_asset LIST environmentId=<ENV_ID> assetType=Identity detail=full pageSize=200
+liongard_identity LIST environmentId=<ENV_ID> pageSize=200
 ```
 
 Paginate until all identities are retrieved (`Pagination.totalItems / 200` pages).
@@ -757,10 +757,10 @@ records where username == "guest" AND enabled == true
 
 ### Evidence Recording
 
-When using `liongard_asset` as the evidence source, record in the evidence record Notes column:
+When using `liongard_identity` as the evidence source, record in the evidence record Notes column:
 
 ```
-Source: liongard_asset LIST assetType=Identity · environmentId=<ENV_ID> · date=<YYYY-MM-DD>
+Source: liongard_identity LIST · environmentId=<ENV_ID> · date=<YYYY-MM-DD>
 Result: <count> identities with mfaStatus=="NO" / <total> enabled identities
 ```
 

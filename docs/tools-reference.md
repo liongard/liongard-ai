@@ -127,26 +127,35 @@ Tips:
 
 ---
 
-## `liongard_asset`
+## `liongard_device` / `liongard_identity` / `liongard_domain`
 
-Query inventory assets — identities (users, service accounts, shared accounts)
-and devices. This tool supports both raw list results and server-side
-aggregation.
+The reconciled asset inventory. Each tool returns one record per real-world
+entity, joined across every inspector that observed it:
 
-Common operations:
+- `liongard_device` — devices (hostname, OS, serial, IP/MAC, AV/EDR, warranty,
+  EOL, virtualization).
+- `liongard_identity` — identities (email, MFA status, privileged, enabled,
+  account activity, license SKUs).
+- `liongard_domain` — domains (registrar, expiration, DMARC health, IP/ASN).
 
-- `LIST` — paginated list. Requires at least one of `query` or `environmentId`.
-- `GET` — single asset by ID.
-- Aggregation — pass `aggregate: true` with `group_by: [...]` and optional
-  `post_filters` for server-side grouped counts (for example MFA coverage
-  broken down by account type).
+> The legacy `liongard_asset` tool has been removed from the catalog — always
+> call the three dedicated tools directly.
+
+Common operations (all three):
+
+- `LIST` — paginated list with server-side filters (`hostname`, `mfaStatus`,
+  `dmarcHealth`, `maxDaysTillExpiration`, etc.). Omit `environmentId` to search
+  across all accessible environments.
+- `GET` — single record by UUID.
+- `COUNT` — exact totals without paging; pass `includeStatusCounts: true` for a
+  bucketed breakdown (for example MFA coverage in one call).
 
 Tips:
 
-- MFA summaries are the canonical identity aggregation:
-  `aggregate: true, group_by: ["MfaStatus"]`.
-- The `LIST` response includes a `Pagination` summary before a TSV body so
-  page state survives body truncation.
+- MFA summaries: `liongard_identity COUNT mfaStatus="NO" enabled=true
+  includeStatusCounts=true`.
+- For category counts (M365 users, Windows workstations/servers, macOS) prefer
+  `liongard_cyber_risk_dashboard`.
 
 ---
 
@@ -210,12 +219,49 @@ Tips:
 
 ## `liongard_report`
 
-Generate Liongard reports (the same reports available in the UI).
+Retrieve Liongard reports (the same reports available in the UI). Reports are
+generated summaries for review and communication — they are not authoritative
+sources of current configuration state.
 
 Common operations:
 
-- `LIST` — list available reports / scheduled reports.
-- `GENERATE` — generate a report for a scope (environment, system, time range).
+- `LIST` — search reports by keyword, optionally scoped with `environmentIds`.
+- `GET` — retrieve one report by `id` or exact `name`. Use
+  `detail: "summary"` (the default) first; pass `detail: "full"` only when you
+  need the per-system metric output.
+
+Tips:
+
+- Report generation is not exposed over MCP; use the Liongard UI to create or
+  schedule reports, then retrieve them here.
+- For authoritative current values, drill into `liongard_launchpoint`,
+  `liongard_device` / `liongard_identity` / `liongard_domain`, or
+  `liongard_metric` instead of quoting report output.
+
+---
+
+## `liongard_events`
+
+Query real-time events — system state changes and notable occurrences captured
+during inspection runs. Each event is tied to a launchpoint, system,
+environment, and inspection.
+
+Common operations:
+
+- `LIST` — paginated events with filters (`environmentId` / `environmentIds`,
+  `launchpointId`, `eventType`, `title`, `createdAfter` / `createdBefore`).
+- `GET` — a single event by UUID.
+- `COUNT` — total events matching a filter, without record data.
+
+Tips:
+
+- For yes/no or existence questions ("Did anything happen overnight?"), use
+  `COUNT` first; only `LIST` when the user wants to see the rows.
+- Prefer `liongard_alert` for rule-triggered actionable conditions and
+  `liongard_detection` for raw per-inspector change detections; use
+  `liongard_events` for the raw "what happened?" stream.
+- Date filters must be ISO 8601 strings (for example `2026-01-01T00:00:00Z`);
+  always narrow scope on large MSP datasets.
 
 ---
 

@@ -8,7 +8,7 @@ description: >
   "phishing security tests review", "training completion check", "pull KnowBe4
   data for <CUSTOMER>". Produces an artifact in the format set in the customization
   block.
-compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, liongard_metric, liongard_asset"
+compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, liongard_metric, liongard_identity"
 personas: [vcio-account-manager, soc, technical-alignment-manager]
 output_formats: [markdown, word, pptx]
 primitives: []
@@ -152,7 +152,7 @@ Single system per environment. `AccountInfo.name` returns the org name (a
 ### Cross-inspector cross-check — asset inventory
 
 ```
-liongard_asset LIST environmentId=<ENV_ID> assetType=Identity detail=full pageSize=200
+liongard_identity LIST environmentId=<ENV_ID> pageSize=200
 ```
 
 ```
@@ -319,5 +319,5 @@ Markdown / Word / PowerPoint per `output.format`. See `templates/output-block-*.
 | 1 | liongard_environment LIST | filter=<name> | array<environment> | ok |
 | 2 | liongard_system LIST | query="knowbe4" envId=<ENV_ID> | array<system> | ok |
 | 3 | liongard_metric EVALUATE | jmesPath sysId=<SYS_ID> envId=<ENV_ID> | <integer>, <array>, <object> | ok |
-| 4 | liongard_asset LIST | envId=<ENV_ID> assetType=Identity detail=full | array<identity> | ok |
+| 4 | liongard_identity LIST | envId=<ENV_ID> | array<identity> | ok |
 ```

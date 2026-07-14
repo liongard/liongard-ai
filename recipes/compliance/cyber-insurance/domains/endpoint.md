@@ -4,7 +4,7 @@ description: >
   Domain reference for the cyber-insurance-readiness master skill. Covers Endpoint Protection, Patching & Encryption
   (Q1, Q8–Q12, Q10-sub, Q27, Q32–Q34, Q37, Q40). Used as a sub-reference when answering cyber insurance underwriting
   questions in this control area.
-compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, liongard_metric, liongard_asset"
+compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, liongard_metric, liongard_device, liongard_identity"
 personas: [vcio-account-manager, soc, technical-alignment-manager]
 primitives:
   - metrics:cisco-meraki:days-until-license-expiry
@@ -71,8 +71,9 @@ customize:
 > question in this control area.
 
 > **Asset Inventory First.** Before evaluating the per-metric tables below, the
-> agent should pull `liongard_asset LIST detail=full` for the relevant assetType
-> (Identity or Device) and answer the question from the asset record's
+> agent should pull the reconciled inventory — `liongard_identity` (identity) or
+> `liongard_device` (device), using server-side filters or `COUNT` when only a
+> coverage figure is needed — and answer the question from the asset record's
 > cross-inspector synthesis (`mfaStatus`, `accountActivity`, `privileged`,
 > `antivirus`, `edr`, `inspectors[]`, etc.). Per-inspector metrics in this file
 > are the **cross-check** — they confirm the asset answer and provide
@@ -414,7 +415,7 @@ breached. Record the oldest pending update date in the Notes column.
 
 ## Asset Inventory Approach — Device EDR & AV Coverage
 
-> **Use `liongard_asset` as the cross-inspector coverage view for all endpoint security questions.**
+> **Use `liongard_device` as the cross-inspector coverage view for all endpoint security questions.**
 > The asset inventory synthesizes `antivirus` and `edr` fields from locally-inspected devices
 > (Windows Workstation, Windows Server, macOS inspectors) and exposes the `inspectors` array
 > showing which security tools "see" each device. This is the authoritative gap-detection method.
@@ -422,7 +423,7 @@ breached. Record the oldest pending update date in the Notes column.
 ### Fetch Pattern
 
 ```
-liongard_asset LIST environmentId=<ENV_ID> assetType=Device detail=full pageSize=200
+liongard_device LIST environmentId=<ENV_ID> pageSize=200
 ```
 
 Paginate until all devices retrieved. Filter returned JSON client-side.
@@ -592,10 +593,10 @@ Use: Q21 — `inventoryState == "Discovery"` = detected but not formally reviewe
 
 ### Evidence Recording
 
-When using `liongard_asset` for endpoint evidence, record in the evidence record Notes column:
+When using `liongard_device` for endpoint evidence, record in the evidence record Notes column:
 
 ```
-Source: liongard_asset LIST assetType=Device · environmentId=<ENV_ID> · date=<YYYY-MM-DD>
+Source: liongard_device LIST · environmentId=<ENV_ID> · date=<YYYY-MM-DD>
 Result: <X> of <total> compute devices have confirmed EDR; <Y> have no local inspection
 Products: <list antivirus/edr values observed>
 ```

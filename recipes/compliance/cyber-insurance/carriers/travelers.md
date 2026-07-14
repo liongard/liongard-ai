@@ -7,7 +7,7 @@ description: >
   attestation for Travelers", "answer Travelers underwriting questions". Carrier-specific
   variant of the cyber-insurance-readiness master skill, mapping each Travelers question
   to the corresponding Liongard metric-name, JMESPath, and asset-inventory evidence patterns.
-compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, liongard_metric, liongard_asset"
+compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, liongard_metric, liongard_device, liongard_identity"
 personas: [vcio-account-manager, soc, technical-alignment-manager]
 output_formats: [xlsx, word, markdown]
 primitives: []
@@ -33,7 +33,7 @@ customize:
 
 **How to run this:**
 
-1. Pull `liongard_asset LIST detail=full` for both Identity and Device asset types.
+1. Pull `liongard_identity LIST` and `liongard_device LIST` (the reconciled inventory).
    This is the **primary evidence source** — it reconciles MFA, account activity,
    privileged status, AV/EDR, OS, and `inspectors[]` coverage across every connected
    inspector into one record per asset.
@@ -54,7 +54,7 @@ customize:
 | Category | Count |
 |---|---|
 | Questions answerable with Liongard metric evidence | 10 of 22 trackable controls |
-| Questions with additional `liongard_asset` evidence | 8 (MFA, AV/EDR, stale accounts, vendor access) |
+| Questions with additional reconciled-inventory (`liongard_identity` / `liongard_device`) evidence | 8 (MFA, AV/EDR, stale accounts, vendor access) |
 | Questions requiring manual attestation | ~12 |
 | Liongard evidence mappings referenced | 50+ |
 
@@ -63,7 +63,7 @@ Q6a/6b (encryption at rest/transit), Q10b (firewall), Q10c (AV), Q10d (patching)
 Q10h (admin MFA), Q10i (remote access MFA), Q10j (email MFA), Q10k (VPN-only remote),
 Q10l (backup), Q10p (password policy), Q10q (user termination), MFA-1, MFA-2, MFA-3a–3d
 
-### Additional Asset Inventory Evidence (`liongard_asset`)
+### Additional Asset Inventory Evidence (`liongard_identity` / `liongard_device`)
 The following questions can be answered or corroborated using the Asset Inventory directly,
 which synthesizes data across all connected inspectors into per-identity and per-device records.
 See the **Asset Inventory Evidence** section at the bottom of this file for full fetch patterns.
@@ -507,7 +507,7 @@ Q11 (payment card), Q12–13 (content/IP), Q14–16 (BCP/IR/recovery time), Q17�
 
 ---
 
-## Asset Inventory Evidence (`liongard_asset`)
+## Asset Inventory Evidence (`liongard_identity` / `liongard_device`)
 
 For Travelers questions about MFA coverage, AV/EDR deployment, and identity hygiene, the
 Asset Inventory is the fastest cross-inspector evidence source. It synthesizes data from AD,
@@ -515,7 +515,8 @@ M365, Duo, NinjaRMM, Windows Workstation, and other inspectors into a single rec
 person or device — no per-inspector metric calls needed.
 
 ```
-liongard_asset LIST environmentId=<ENV_ID> assetType=<"Identity"|"Device"> detail=full pageSize=200
+liongard_identity LIST environmentId=<ENV_ID> pageSize=200   # identity evidence
+liongard_device   LIST environmentId=<ENV_ID> pageSize=200   # device evidence
 ```
 
 Paginate until all records are retrieved (`Pagination.totalItems / 200` pages).
@@ -618,10 +619,10 @@ group by: accountType — report AV/EDR coverage rate per class
 
 ### Evidence Recording for evidence record
 
-When using `liongard_asset` as an evidence source, record in the evidence record Notes column (column L):
+When using the reconciled inventory (`liongard_identity` / `liongard_device`) as an evidence source, record in the evidence record Notes column (column L):
 
 ```
-Source: liongard_asset LIST assetType=<Identity|Device> · environmentId=<ENV_ID> · date=<YYYY-MM-DD>
+Source: liongard_identity|liongard_device LIST · environmentId=<ENV_ID> · date=<YYYY-MM-DD>
 Result: <finding, e.g. "3 of 47 enabled identities have mfaStatus==NO">
 ```
 

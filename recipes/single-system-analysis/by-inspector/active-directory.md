@@ -204,7 +204,7 @@ stale_enabled = identities where accountActivity in ["Stale","Dormant","Never Us
   A value of `0` must be flagged as non-compliant regardless of the ≤10 SLA —
   it means brute force is unlimited. Check: `lockoutThreshold == 0` → FAIL.
 - **`Computers[*].MemberOf` is an array of full DN strings**, e.g.
-  `"CN=Remote Desktop Users,CN=Builtin,DC=contosov3,DC=com"`. JMESPath
+  `"CN=Remote Desktop Users,CN=Builtin,DC=contoso,DC=com"`. JMESPath
   `contains(MemberOf, 'RoarExclude')` checks for exact array element equality
   and will never match a group name substring. `MemberOfStr` is null on
   Computers. Use OS-string-based filters for EOL detection; do not rely on

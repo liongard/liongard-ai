@@ -2,11 +2,11 @@
 name: <kebab-case-skill-name>
 description: >
   Use this skill when <trigger phrases — what the user says or asks for>. Produces
-  <artifact name> using live Liongard data via <tools used: liongard_metric, liongard_asset,
-  liongard_system, liongard_environment, etc.>. Best for <persona(s)> at <cadence>.
-compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, liongard_metric, liongard_asset"
+  <artifact name> using live Liongard data via <tools used: liongard_metric, liongard_device,
+  liongard_identity, liongard_environment, etc.>. Best for <persona(s)> at <cadence>.
+compatibility: "Requires Liongard MCP: liongard_environment, liongard_launchpoint, liongard_metric, liongard_device, liongard_identity"
 personas: []                # optional — e.g. [vcio-account-manager, noc, soc]
-output_formats: [markdown]  # default; add: word, pptx, xlsx as supported
+output_formats: [markdown]  # default; add: html, word, pptx, xlsx as supported
 ---
 
 # <Recipe Name>
@@ -25,7 +25,13 @@ this block and adapts every downstream output.
 
 ```yaml
 output:
-  format: markdown            # markdown | word | pptx | xlsx
+  format: markdown            # markdown | html | word | pptx | xlsx
+                              # Set here to skip the pre-flight format question (see recipes/AGENTS.md § 3).
+  audience_type: internal     # internal | external
+                              # internal: verification log included; health timestamp optional.
+                              # external: verification log OMITTED; health section MUST show
+                              #   "Data as of: YYYY-MM-DD" timestamp per inspector.
+                              # Set here to skip the pre-flight audience question.
   filename: "<artifact>-<customer>-<period>.md"
   # brand: inherits from config/msp-config.yaml — override per-recipe only
   #   when a deliverable needs a different brand (e.g., co-branded white-label).
@@ -154,8 +160,8 @@ inspectors.**
 > [`reference/asset-fields.md`](../reference/asset-fields.md) § Deduplication
 > keys for details.
 
-> **Note:** `liongard_asset` is a deprecated compatibility alias — do not use it
-> in new recipes. The three tools above are the supported path.
+> **Note:** the legacy `liongard_asset` tool has been removed from the catalog —
+> do not use it in recipes. The three tools above are the supported path.
 
 > **Use `liongard_cyber_risk_dashboard` for category counts** (M365 users,
 > Windows workstations, Windows servers, macOS, AD users, etc.). Use the
@@ -294,6 +300,13 @@ customization block.
 Sections in order: Executive Summary → Data Overview → Health Metrics → Detail Table →
 Insights → Recommendations → Data Gaps → Appendix. Use tables for tabular data, fenced
 code blocks for query references, and a "Verification Log" appendix.
+
+<!-- INSPECTOR HEALTH SECTION — conditional field -->
+<!-- IF audience_type == external: each inspector row MUST include a "Data as of:"     -->
+<!--   timestamp derived from latestInspectionDate. Format: YYYY-MM-DD HH:MM UTC.      -->
+<!--   Example row: | SentinelOne | ✅ Active | Data as of: 2026-05-28 14:32 UTC |     -->
+<!-- IF audience_type == internal: timestamp is optional; status column is sufficient. -->
+<!-- See recipes/AGENTS.md § 4 and § 5 for HTML-specific timestamp rendering guidance.          -->
 
 ### Word (.docx)
 See `templates/output-block-word.md`. Uses heading styles (Heading 1 / 2 / 3),
@@ -489,8 +502,8 @@ Every new recipe runs the four-source coverage check (per
 | QBR / quarterly-business-review | ✅ / ⚠️ / ❌ / n/a | Highlights the QBR's Step 8 can consume from this recipe |
 
 If the check surfaces a gap that requires a new Liongard metric, file a
-metric request under the Defenders ROAR-27030 epic via the
-`liongard-metrics` skill and reference the ticket here.
+metric request with Liongard via the `liongard-metrics` skill and reference
+the response here.
 
 > **Why this matters:** Recipes that skip the cross-check ship with
 > predictable blind spots — questions the MSP's audience expects an
@@ -527,6 +540,10 @@ status and recommend a remediation step (e.g., "Connect the X inspector to confi
 
 ## Verification log (agent appends, MSP reviews)
 
+<!-- CONDITIONAL: INCLUDE IF audience_type == internal | OMIT IF audience_type == external -->
+<!-- For external-facing output (HTML or MD), omit this section entirely.               -->
+<!-- See recipes/AGENTS.md § 4 — render rules.                                                   -->
+
 Every run, the agent appends a log of every query it ran and the **shape** of the result
 (no concrete values). This makes the report auditable without leaking customer data into
 the library.
@@ -537,7 +554,7 @@ the library.
 | 1 | liongard_environment LIST | — | array<environment> | ok |
 | 2 | liongard_system LIST | query=<keyword> envId=<ENV_ID> | array<system> | ok |
 | 3 | liongard_metric EVALUATE | metricId=<id> sysId=<SYS_ID> envId=<ENV_ID> | <integer> | ok |
-| 4 | liongard_asset LIST | envId=<ENV_ID> assetType=Identity detail=full | array<identity> | ok |
+| 4 | liongard_identity COUNT | envId=<ENV_ID> mfaStatus="NO" enabled=true includeStatusCounts=true | {Count, statusCounts[]} | ok |
 ```
 
 ---
@@ -549,8 +566,8 @@ the library.
   `primitives/metrics/<inspector>.yaml` (the registry source of truth; `Liongard-Metrics.xlsx`
   is retired). Every `@id` in the frontmatter `primitives:` list must exist there — Gate 7
   fails on dangling references. If you need a metric that doesn't exist yet, validate it live
-  with `liongard_metric` and persist it via `internal/scripts/write_primitive.py`, or flag it
-  in the Data Gaps section + `internal/proposed-metrics-backlog.md` as a future-build opportunity.
+  with `liongard_metric` and add it to the matching `primitives/metrics/<inspector>.yaml`
+  file, or flag it in the Data Gaps section of your recipe as a future-build opportunity.
 - **Inspector slugs / IDs** must match `reference/inspector-name-system-id-mapping.xlsx`.
 - **Frontmatter `description`** controls auto-trigger. Lead with "Use this skill when…"
   and include the most-likely user phrasings.

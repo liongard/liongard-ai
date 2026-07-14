@@ -8,7 +8,7 @@ description: >
   "O365 report", "pull Microsoft 365 / Entra data for <CUSTOMER>", "verify M365
   backup coverage", "license utilization on M365". Produces an artifact in the
   format set in the customization block.
-compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, liongard_metric, liongard_asset"
+compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, liongard_metric, liongard_identity"
 personas: [vcio-account-manager, soc, technical-alignment-manager, accounting-finance]
 output_formats: [markdown, word, pptx, xlsx]
 primitives:
@@ -173,7 +173,7 @@ name (a `<string>`).
 ### Cross-inspector primary — asset inventory
 
 ```
-liongard_asset LIST environmentId=<ENV_ID> assetType=Identity detail=full pageSize=200
+liongard_identity LIST environmentId=<ENV_ID> pageSize=200
 ```
 
 ```
@@ -283,7 +283,7 @@ inventory.
 | Last directory sync time | `Organization[0].onPremisesLastSyncDateTime` | ✅ |
 | Global Admins (vs. all privileged roles) | `Users[?Privileged == 'Yes' && contains(AssignedRoles, 'Global Administrator')].userPrincipalName` | ⚠️ partial — `Privileged` covers all privileged roles; `AssignedRoles` is an array of role name strings (e.g., `['Global Administrator']`). Use `contains(AssignedRoles, 'Global Administrator')` to narrow to GA specifically. (`directoryRoles` is null — use `AssignedRoles` instead. VALIDATED: System B, 2026-05-22.) |
 | License names + counts | `Licensing[*].{ProductFriendlyName: ProductFriendlyName, consumedUnits: consumedUnits, enabled: prepaidUnits.enabled}` | ✅ |
-| License *expiration date* per SKU | **Not directly in current dataprint** — partner flagged as (not in current dataprint). Track via tenant subscription metadata (Graph API) or surface via `liongard_asset` `EmailLicenses` field for current SKU assignment | ⚠️ partial |
+| License *expiration date* per SKU | **Not directly in current dataprint** — partner flagged as (not in current dataprint). Track via tenant subscription metadata (Graph API) or surface via `liongard_identity` `emailLicenses` field for current SKU assignment | ⚠️ partial |
 
 > **Gap flagged by partner audit.** Specific license expiration dates per SKU
 > are not in the M365 inspector dataprint today — the consumed/enabled counts
@@ -375,5 +375,5 @@ Markdown / Word / PowerPoint / Excel per `output.format`. See
 | 3a | liongard_metric EVALUATE | jmesPath "length(Groups)" | 2 (object-key count — WRONG) | VALIDATED BUG 2026-05-27: Groups is an object; use length(Groups.ActiveGroups) |
 | 3b | liongard_metric EVALUATE | jmesPath "length(Groups.ActiveGroups)" | <integer> correct group count | VALIDATED 2026-05-27 |
 | 3c | liongard_metric EVALUATE | jmesPath "Policies.ConditionalAccess[?state == 'enabled'].displayName" | array<string> | VALIDATED 2026-05-27 — top-level ConditionalAccessPolicies is null; correct path is Policies.ConditionalAccess |
-| 4 | liongard_asset LIST | envId=<ENV_ID> assetType=Identity detail=full | array<identity> | ok |
+| 4 | liongard_identity LIST | envId=<ENV_ID> | array<identity> | ok |
 ```

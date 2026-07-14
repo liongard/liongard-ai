@@ -7,7 +7,7 @@ description: >
   Trigger phrases: "Windows workstation review for <HOSTNAME>", "audit
   <LAPTOP>", "is this device Win11 ready", "BitLocker status on <HOSTNAME>".
   Produces an artifact in the format set in the customization block.
-compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, liongard_metric, liongard_asset"
+compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, liongard_metric, liongard_device"
 personas: [noc, technical-alignment-manager, vcio-account-manager]
 output_formats: [markdown, word, xlsx]
 primitives:
@@ -112,8 +112,8 @@ liongard_system LIST searchMode=keyword query="windows-workstation" environmentI
 Many results — filter by hostname. The asset inventory provides the join key:
 
 ```
-liongard_asset LIST environmentId=<ENV_ID> assetType=Device detail=full pageSize=200
-device = Devices[?Hostname == '<workstation-hostname>']
+liongard_device LIST environmentId=<ENV_ID> pageSize=200
+device = Data[?hostname == '<workstation-hostname>']
 ```
 
 ---
@@ -148,7 +148,7 @@ device = Devices[?Hostname == '<workstation-hostname>']
 ### Cross-inspector cross-check — asset inventory
 
 ```
-device = Devices[?Hostname == '<workstation-hostname>']
+device = Data[?hostname == '<workstation-hostname>']
 ```
 
 Asset gives:
@@ -303,7 +303,7 @@ Markdown / Word / Excel per `output.format`. **xlsx** for onboarding-QA tables.
 | Step | Tool | Args | Result Shape | Status |
 |------|------|------|--------------|--------|
 | 1 | liongard_environment LIST | filter=<name> | array<environment> | ok |
-| 2 | liongard_asset LIST | envId=<ENV_ID> assetType=Device detail=full | array<device> | ok |
+| 2 | liongard_device LIST | envId=<ENV_ID> | array<device> | ok |
 | 3 | liongard_system LIST | query="windows-workstation" envId=<ENV_ID> | array<system> | ok |
 | 4 | liongard_metric EVALUATE | jmesPath sysId=<SYS_ID> envId=<ENV_ID> | varies | ok |
 ```

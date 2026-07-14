@@ -10,7 +10,7 @@ description: >
   is a system-type recipe (not single-system) — it iterates across every Windows
   Server and Windows Workstation system in the environment, with optional RMM
   cross-check.
-compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, liongard_metric, liongard_asset"
+compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, liongard_metric, liongard_device"
 personas: [noc, vcio-account-manager, technical-alignment-manager]
 output_formats: [markdown, word, pptx, xlsx]
 primitives:
@@ -233,7 +233,7 @@ section) reconciles.
 ### Cross-inspector primary — asset inventory
 
 ```
-liongard_asset LIST environmentId=<ENV_ID> assetType=Device detail=full pageSize=200
+liongard_device LIST environmentId=<ENV_ID> pageSize=200
 ```
 
 Filters useful for this recipe:
@@ -399,7 +399,7 @@ filterable). PowerPoint works best for the executive overview with the
 
 ```
 1. liongard_environment LIST → match customer → ENV_ID
-2. liongard_asset LIST assetType=Device detail=full → cache the device inventory
+2. liongard_device LIST → cache the device inventory
 3. List all Windows Server systems → SERVER_SYSTEM_IDS[]
 4. List all Windows Workstation systems → WORKSTATION_SYSTEM_IDS[]
 5. (Optional) Locate the RMM system (CW Automate / NinjaOne / N-central / Kaseya / Datto RMM) → RMM_SYSTEM_ID
@@ -422,7 +422,7 @@ filterable). PowerPoint works best for the executive overview with the
 | Step | Tool | Args | Result Shape | Status |
 |------|------|------|--------------|--------|
 | 1 | liongard_environment LIST | filter=<name> | array<environment> | ok |
-| 2 | liongard_asset LIST | envId=<ENV_ID> assetType=Device detail=full | array<device> | ok |
+| 2 | liongard_device LIST | envId=<ENV_ID> | array<device> | ok |
 | 3 | liongard_system LIST | inspector=windows-server envId=<ENV_ID> | array<system> | ok |
 | 4 | liongard_system LIST | inspector=windows-workstation envId=<ENV_ID> | array<system> | ok |
 | 5 | liongard_metric EVALUATE | jmesPath sysId=<DEVICE_SYS_ID> envId=<ENV_ID> | <integer>, <array> | ok per device |

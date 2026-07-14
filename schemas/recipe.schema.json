@@ -40,7 +40,7 @@
     },
     "compatibility": {
       "type": "string",
-      "description": "MCP-tool requirement statement, e.g., 'Requires Liongard MCP: liongard_environment, liongard_system, liongard_metric, liongard_asset'.",
+      "description": "MCP-tool requirement statement, e.g., 'Requires Liongard MCP: liongard_environment, liongard_launchpoint, liongard_metric, liongard_device, liongard_identity'.",
       "pattern": "^Requires Liongard MCP:"
     },
     "personas": {

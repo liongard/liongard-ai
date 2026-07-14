@@ -9,12 +9,21 @@ edit it without touching recipe internals.
 
 ```yaml
 output:
-  format: markdown            # markdown | word | pptx | xlsx
+  format: markdown            # markdown | html | word | pptx | xlsx
                               # Recipe-level constraints may narrow this set; check the
                               # recipe's "Output formats" section.
+                              # Set here to skip the agent's pre-flight format question.
+  audience_type: internal     # internal | external
+                              # internal: verification log included; inspector health
+                              #   timestamp optional.
+                              # external: verification log OMITTED; inspector health
+                              #   MUST show data timestamp ("Data as of: YYYY-MM-DD").
+                              # Set here to skip the agent's pre-flight audience question.
+                              # See recipes/AGENTS.md § 4 for the full render-rules table.
   filename: "<artifact>-<customer>-<period>.md"
                               # The agent substitutes <customer> and <period> from
                               # inputs. <period> uses ISO format (e.g., 2026-Q2).
+                              # Extension is overridden by format (.html, .docx, etc.).
   # brand: INHERITS from config/msp-config.yaml — the MSP's company name, colors,
   #   logo, letterhead, etc. live there and propagate to every recipe.
   #   Override per-recipe ONLY when a specific deliverable needs a different

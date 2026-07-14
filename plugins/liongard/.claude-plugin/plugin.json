@@ -1,6 +1,6 @@
 {
   "name": "liongard",
-  "version": "0.1.0",
+  "version": "0.2.3",
   "description": "Official Liongard MCP setup commands and MSP workflow skills for Claude Code.",
   "author": {
     "name": "Liongard"

@@ -7,7 +7,7 @@ description: >
   "SentinelOne report", "pull the S1 data for <CUSTOMER>", "single system review of
   SentinelOne", "review the S1 tenant for <CUSTOMER>". Produces an artifact in the
   format set in the customization block (Word, PowerPoint, Markdown, or Excel).
-compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, liongard_metric, liongard_asset"
+compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, liongard_metric, liongard_device"
 personas: [noc, soc, vcio-account-manager, technical-alignment-manager]
 output_formats: [markdown, word, pptx]
 primitives:
@@ -151,21 +151,21 @@ Top-level keys on a SentinelOne child system:
 ### Cross-inspector cross-check — asset inventory
 
 ```
-liongard_asset LIST environmentId=<ENV_ID> assetType=Device detail=full pageSize=200
+liongard_device LIST environmentId=<ENV_ID> pageSize=200
 ```
 
 For SentinelOne specifically:
 
 ```
 # Devices SentinelOne reports on
-items[?contains(Inspectors, 'sentinelone-inspector')]
+items[?inspectors[?name=='sentinelone-inspector']]
 
 # Devices Liongard knows but SentinelOne doesn't see (coverage gap)
-# (requires liongard_asset LIST result — client-side filter)
-items[?!contains(Inspectors, 'sentinelone-inspector') && category == 'compute']
+# (requires liongard_device LIST result — client-side filter)
+items[?!inspectors[?name=='sentinelone-inspector'] && category == 'compute']
 
 # Devices reporting EDR via S1
-items[?contains(EDR, 'SentinelOne') || contains(EDR, 'Sentinel')]
+items[?contains(edr, 'SentinelOne') || contains(edr, 'Sentinel')]
 ```
 
 The asset-inventory device count for `category == "compute"` is the authoritative
@@ -264,7 +264,7 @@ asset-inventory cross-check.
 | Total endpoints managed | `AgentsSummary.total` | ✅ |
 | Active in last 30 days | `length(Agents[?lastActiveDate > '<today − 30d>'])` | ✅ |
 | Inactive 2+ months | `length(Agents[?lastActiveDate < '<today − 60d>'])` | ✅ |
-| Not protected (coverage gap) | `liongard_asset LIST` + client filter: `items[?!contains(Inspectors, 'sentinelone-inspector') && category == 'compute']` | 🔍 asset cross-check |
+| Not protected (coverage gap) | `liongard_device LIST` + client filter: `items[?!inspectors[?name=='sentinelone-inspector'] && category == 'compute']` | 🔍 asset cross-check |
 | Servers managed | `length(Agents[?machineType == 'server'])` | ✅ |
 | High alerts / threats | `ThreatsSummary.notResolved` + `Threats[]` lifecycle | ✅ |
 
@@ -305,7 +305,7 @@ Returns one result per inspection timeline entry — chart trends over the perio
 ## Data gaps & coverage notes
 
 Always include this section. Populate from:
-- Devices in `liongard_asset` where `category == "compute"` and `Inspectors` does
+- Devices in `liongard_device` where `category == "compute"` and `Inspectors` does
   not contain `sentinelone-inspector` → ungoverned by S1.
 - `Agents[]` entries where `lastActiveDate` is older than `slas.agent_offline_days_max`.
 - `ApplicationCVEs` length is very large (8000+); a `length()` query is sufficient
@@ -350,5 +350,5 @@ The agent picks the format from `output.format`:
 | 1 | liongard_environment LIST | filter=<name> | array<environment> | ok |
 | 2 | liongard_system LIST | query="sentinelone" envId=<ENV_ID> | array<system> | ok |
 | 3 | liongard_metric EVALUATE | metricName=<METRIC_NAME> sysId=<SYS_ID> envId=<ENV_ID> | <integer> or <object> | ok |
-| 4 | liongard_asset LIST | envId=<ENV_ID> assetType=Device detail=full | array<device> | ok |
+| 4 | liongard_device LIST | envId=<ENV_ID> | array<device> | ok |
 ```

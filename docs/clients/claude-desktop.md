@@ -76,7 +76,8 @@ In a new chat:
 
 Claude Desktop reads skill files from the **workspace** you open. To use the
 skills shipped in this repo, open this repo folder as your workspace (or copy
-`.claude/skills/` into your own workspace). See [`../skills.md`](../skills.md).
+the canonical `plugins/liongard/skills/` into your own workspace). See
+[`../skills.md`](../skills.md).
 
 ---
 

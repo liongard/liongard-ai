@@ -104,6 +104,7 @@ Every recipe in this folder follows the canonical structure (see
 
 - `reference/inspector-aliases.md` — translate user shorthand (S1, KB4, M365,
   Entra, etc.) to the right inspector and API keyword.
-- `reference/asset-fields.md` — the complete `liongard_asset` field map for
-  Identity and Device records, with PBR-pattern library.
+- `reference/asset-fields.md` — the complete field map for the reconciled
+  `liongard_device` / `liongard_identity` / `liongard_domain` records, with
+  PBR-pattern library.
 - `templates/recipe-skeleton.md` — the canonical structure for new recipes.

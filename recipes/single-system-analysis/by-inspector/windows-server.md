@@ -7,7 +7,7 @@ description: >
   phrases: "Windows server review for <HOSTNAME>", "single-server onboarding
   QA", "audit <SERVER>", "what roles are on this server". Produces an artifact
   in the format set in the customization block.
-compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, liongard_metric, liongard_asset"
+compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, liongard_metric, liongard_device"
 personas: [noc, technical-alignment-manager, vcio-account-manager]
 output_formats: [markdown, word, xlsx]
 primitives:
@@ -116,9 +116,9 @@ provides the same join key:
 
 ```
 # Asset shows hostname AND inspectors[]
-liongard_asset LIST environmentId=<ENV_ID> assetType=Device detail=full
-device = Devices[?Hostname == '<server-hostname>']
-# device.Inspectors should contain "windows-server-inspector"
+liongard_device LIST environmentId=<ENV_ID>
+device = Data[?hostname == '<server-hostname>']
+# device.inspectors[].name should contain "windows-server-inspector"
 ```
 
 ---
@@ -153,8 +153,8 @@ device = Devices[?Hostname == '<server-hostname>']
 ### Cross-inspector cross-check — asset inventory
 
 ```
-liongard_asset LIST environmentId=<ENV_ID> assetType=Device detail=full pageSize=200
-device = Devices[?Hostname == '<server-hostname>']
+liongard_device LIST environmentId=<ENV_ID> pageSize=200
+device = Data[?hostname == '<server-hostname>']
 ```
 
 The device asset provides:
@@ -323,7 +323,7 @@ delivering an onboarding-QA workbook (one row per server, sortable columns).
 | Step | Tool | Args | Result Shape | Status |
 |------|------|------|--------------|--------|
 | 1 | liongard_environment LIST | filter=<name> | array<environment> | ok |
-| 2 | liongard_asset LIST | envId=<ENV_ID> assetType=Device detail=full | array<device> | ok |
+| 2 | liongard_device LIST | envId=<ENV_ID> | array<device> | ok |
 | 3 | liongard_system LIST | query="windows-server" envId=<ENV_ID> | array<system> | ok |
 | 4 | liongard_metric EVALUATE | jmesPath sysId=<SYS_ID> envId=<ENV_ID> | varies | ok |
 | 4a | liongard_metric EVALUATE | jmesPathQuery="Network.FirewallInfo.Domain.Enabled" sysId=<SYS_ID> | null — WRONG PATH | BUG 2026-05-28: Path does not exist; correct path is Firewall.Domain |

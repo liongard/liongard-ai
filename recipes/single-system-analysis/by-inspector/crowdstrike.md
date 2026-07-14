@@ -6,7 +6,7 @@ description: >
   detection / threat trend, sensor health. Trigger phrases: "CrowdStrike PBR",
   "Falcon report", "CS report", "CSF report", "pull CrowdStrike data for
   <CUSTOMER>". Produces an artifact in the format set in the customization block.
-compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, liongard_metric, liongard_asset"
+compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, liongard_metric, liongard_device"
 personas: [noc, soc, vcio-account-manager, technical-alignment-manager]
 output_formats: [markdown, word, pptx]
 primitives:
@@ -109,15 +109,15 @@ dataprint.
 ### Cross-inspector cross-check — asset inventory
 
 ```
-liongard_asset LIST environmentId=<ENV_ID> assetType=Device detail=full pageSize=200
+liongard_device LIST environmentId=<ENV_ID> pageSize=200
 ```
 
 ```
 # Devices CrowdStrike reports on
-items[?contains(Inspectors, 'crowdstrike-inspector')]
+items[?inspectors[?name=='crowdstrike-inspector']]
 
 # Coverage gap — compute devices without CrowdStrike
-items[?!contains(Inspectors, 'crowdstrike-inspector') && category == 'compute']
+items[?!inspectors[?name=='crowdstrike-inspector'] && category == 'compute']
 
 # Devices with CrowdStrike in EDR set
 items[?contains(edr, 'CrowdStrike') || contains(edr, 'Falcon')]
@@ -228,5 +228,5 @@ Markdown / Word / PowerPoint per `output.format`.
 | 1 | liongard_environment LIST | filter=<name> | array<environment> | ok |
 | 2 | liongard_system LIST | query="crowdstrike" envId=<ENV_ID> | array<system> | ok |
 | 3 | liongard_metric EVALUATE | jmesPath sysId=<SYS_ID> envId=<ENV_ID> | <integer>, <array> | ok |
-| 4 | liongard_asset LIST | envId=<ENV_ID> assetType=Device detail=full | array<device> | ok |
+| 4 | liongard_device LIST | envId=<ENV_ID> | array<device> | ok |
 ```

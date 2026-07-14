@@ -60,7 +60,9 @@ MCP tools. Native tools currently include:
 - `liongard_alert`
 - `liongard_detection`
 - `liongard_launchpoint`
-- `liongard_asset`
+- `liongard_device`
+- `liongard_identity`
+- `liongard_domain`
 - `liongard_metric`
 - `liongard_cyber_risk_dashboard`
 - `liongard_timeline`

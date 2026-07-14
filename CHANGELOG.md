@@ -1,5 +1,44 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+
+- Quick start accuracy pass:
+  - `scripts/liongard-mcp-config.js --print` now emits paste-able configs with
+    the real access token (previously always redacted, producing configs that
+    failed auth when copied verbatim). A stderr note warns that the output
+    contains the token.
+  - VS Code configs now use the current format: `mcp.json` (workspace
+    `.vscode/mcp.json` or user-level via **MCP: Open User Configuration**)
+    with the `servers` key — replacing the removed `chat.mcp.servers`
+    settings.json key across the generator, `docs/clients/vscode.md`,
+    `docs/harnesses.md`, and `docs/troubleshooting.md`.
+  - `docs/tools-reference.md`: `liongard_report` documents the supported
+    `LIST` / `GET` operations (removed the unsupported `GENERATE`); added a
+    `liongard_events` section; `liongard_asset` is documented as removed (not
+    a resolving alias). `README.md` tool catalog now includes
+    `liongard_events`.
+  - GitHub Actions workflow and pre-commit hooks no longer fail on the public
+    repo: internal-only governance validators are skipped when
+    `internal/scripts/` is absent, and public checks (`validate-repo.js`,
+    `.claude/` mirror sync, YAML/JSON syntax) run for everyone.
+  - Scrubbed internal test-tenant references from
+    `primitives/metrics/webroot.yaml` and
+    `primitives/metrics/managed-printer.yaml`.
+  - Removed references to non-distributed `internal/scripts/` tooling from
+    `primitives/registry.yaml` and `templates/recipe-skeleton.md`.
+  - Fixed `README.md` "Using a recipe" ordered-list rendering and switched
+    recipe/metric counts to drift-resistant approximations (exact counts live
+    in `primitives/registry.yaml` `stats`).
+
+### Added
+
+- `scripts/sync-plugin-to-claude.sh` now mirrors `plugins/liongard/agents`
+  into `.claude/agents` alongside skills and commands.
+- `docs/capability-status.md` release checklist covers publishing to the
+  public GitHub repo (sync, metadata, README rendering, CI status).
+
 ## [0.2.3] - 2026-06-01
 
 ### Changed

@@ -20,7 +20,7 @@ Statuses:
 | Claude Code | verified | Plugin or `claude mcp add`. |
 | Claude Desktop | config provided | `claude_desktop_config.json`. |
 | Cursor | config provided | `~/.cursor/mcp.json` or project `.cursor/mcp.json`. |
-| VS Code / GitHub Copilot | config provided | `chat.mcp.servers` or current MCP settings UI. |
+| VS Code / GitHub Copilot | config provided | `.vscode/mcp.json` or user-level `mcp.json` (`servers` key); requires `chat.mcp.enabled`. |
 | Codex CLI | config provided | Use generic HTTP MCP server config if supported by installed version. |
 | Gemini CLI | config provided | Use generic HTTP MCP server config if supported by installed version. |
 | Continue | config provided | Use generic MCP server config in Continue config. |
@@ -95,11 +95,12 @@ Generate:
 node scripts/liongard-mcp-config.js --client vscode --print
 ```
 
-Common shape:
+Common shape (goes in `.vscode/mcp.json` in your workspace, or the user-level
+`mcp.json` opened via **MCP: Open User Configuration** — not `settings.json`):
 
 ```json
 {
-  "chat.mcp.servers": {
+  "servers": {
     "liongard": {
       "type": "http",
       "url": "https://<instance>.app.liongard.com/api/mcp",
@@ -111,8 +112,9 @@ Common shape:
 }
 ```
 
-Copilot MCP settings are still evolving. If your build uses a different key,
-use the MCP settings UI and copy the same URL/header values.
+VS Code uses the `servers` key (not `mcpServers`) and requires
+`"chat.mcp.enabled": true` in settings. See
+[`clients/vscode.md`](clients/vscode.md) for the full walkthrough.
 
 ## Codex, Gemini, Continue, OpenCode, Windsurf
 

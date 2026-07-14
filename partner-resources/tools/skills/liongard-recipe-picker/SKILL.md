@@ -11,7 +11,7 @@ description: >
   "show me the SOC view of {environment}". This skill routes the request to
   the correct recipe in the Liongard Recipe Library so the agent follows the
   validated playbook instead of improvising.
-compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, liongard_metric, liongard_asset, liongard_device, liongard_identity, liongard_domain"
+compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, liongard_metric, liongard_device, liongard_identity, liongard_domain"
 personas: [noc, soc, vcio-account-manager, technical-alignment-manager, sales, executive, accounting-finance]
 output_formats: [markdown, word, pptx, xlsx]
 ---

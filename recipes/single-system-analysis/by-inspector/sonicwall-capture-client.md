@@ -6,7 +6,7 @@ description: >
   utilization. Trigger phrases: "Capture Client report", "SCC PBR", "SonicWall
   EDR review", "pull Capture Client data for <CUSTOMER>". Produces an artifact
   in the format set in the customization block.
-compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, liongard_metric, liongard_asset"
+compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, liongard_metric, liongard_device"
 personas: [noc, soc, vcio-account-manager, technical-alignment-manager]
 output_formats: [markdown, word, pptx]
 primitives:
@@ -104,7 +104,7 @@ Capture Client surfaces SentinelOne-based agent data:
 ### Cross-inspector cross-check — asset inventory
 
 ```
-liongard_asset LIST environmentId=<ENV_ID> assetType=Device detail=full pageSize=200
+liongard_device LIST environmentId=<ENV_ID> pageSize=200
 ```
 
 ```
@@ -192,5 +192,5 @@ Markdown / Word / PowerPoint per `output.format`.
 | 1 | liongard_environment LIST | filter=<name> | array<environment> | ok |
 | 2 | liongard_system LIST | query="sonicwall-capture-client" envId=<ENV_ID> | array<system> | ok |
 | 3 | liongard_metric EVALUATE | metricName or jmesPathQuery sysId=<SYS_ID> envId=<ENV_ID> | <integer>, <array> | ok |
-| 4 | liongard_asset LIST | envId=<ENV_ID> assetType=Device detail=full | array<device> | ok |
+| 4 | liongard_device LIST | envId=<ENV_ID> | array<device> | ok |
 ```

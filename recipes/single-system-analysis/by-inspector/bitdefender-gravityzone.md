@@ -6,7 +6,7 @@ description: >
   threat posture, license utilization. Trigger phrases: "Bitdefender PBR",
   "GravityZone report", "BD report", "BDGZ analysis", "pull Bitdefender data for
   <CUSTOMER>". Produces an artifact in the format set in the customization block.
-compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, liongard_metric, liongard_asset"
+compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, liongard_metric, liongard_device"
 personas: [noc, soc, vcio-account-manager, technical-alignment-manager]
 output_formats: [markdown, word, pptx]
 primitives:
@@ -104,16 +104,16 @@ company-name field on the dataprint.
 ### Cross-inspector cross-check — asset inventory
 
 ```
-liongard_asset LIST environmentId=<ENV_ID> assetType=Device detail=full pageSize=200
+liongard_device LIST environmentId=<ENV_ID> pageSize=200
 ```
 
 ```
 # Devices BD reports on
-items[?contains(Inspectors, 'bitdefender-gravityzone-inspector')]
+items[?inspectors[?name=='bitdefender-gravityzone-inspector']]
 
 # Coverage gap
-# (requires liongard_asset LIST result — client-side filter)
-items[?!contains(Inspectors, 'bitdefender-gravityzone-inspector') && category == 'compute']
+# (requires liongard_device LIST result — client-side filter)
+items[?!inspectors[?name=='bitdefender-gravityzone-inspector'] && category == 'compute']
 
 # Devices with BD in their AV/EDR sets
 items[?contains(antivirus, 'Bitdefender') || contains(edr, 'Bitdefender')]
@@ -130,7 +130,7 @@ Coverage per `reference/onboarding-qa-coverage.md`:
 | Total endpoints managed | `length(Endpoints)` | ✅ |
 | Active in last 30 days | `length(Endpoints[?details.stateName == 'online'])` | ✅ via online state |
 | Inactive 2+ months | `length(Endpoints[?details.stateName != 'online'])` (offline count — not in current dataprint or compute client-side) | ✅ |
-| Not protected (coverage gap) | `liongard_asset LIST` + client filter: `items[?!contains(Inspectors, 'bitdefender-gravityzone-inspector') && category == 'compute']` | 🔍 asset cross-check |
+| Not protected (coverage gap) | `liongard_device LIST` + client filter: `items[?!inspectors[?name=='bitdefender-gravityzone-inspector'] && category == 'compute']` | 🔍 asset cross-check |
 | Servers managed | `length(Endpoints[?details.machineType == \`2\`])` (integer: 1=workstation, 2=server) or VM count from the asset inventory | ⚠️ partial — VM count yes, server-vs-workstation requires client-side filter |
 | High alerts / threats | `length(Endpoints[?details.malware != null])` | ✅ |
 
@@ -205,5 +205,5 @@ Markdown / Word / PowerPoint per `output.format`. See `templates/output-block-*.
 | 1 | liongard_environment LIST | filter=<name> | array<environment> | ok |
 | 2 | liongard_system LIST | query="bitdefender" envId=<ENV_ID> | array<system> | ok |
 | 3 | liongard_metric EVALUATE | metricName or jmesPathQuery sysId=<SYS_ID> envId=<ENV_ID> | <integer>, <array> | ok |
-| 4 | liongard_asset LIST | envId=<ENV_ID> assetType=Device detail=full | array<device> | ok |
+| 4 | liongard_device LIST | envId=<ENV_ID> | array<device> | ok |
 ```

@@ -262,7 +262,7 @@ no sites configured or the sync is incomplete.
    indicate pending child-launchpoint creation (normal for freshly onboarded
    companies; unusual if persistent).
 3. Cross-reference total `DevicesCount` against reconciled inventory from
-   `liongard_asset LIST environmentId=<ENV_ID>` if available.
+   `liongard_device LIST environmentId=<ENV_ID>` if available.
 4. Flag any company where `activityStatus.activeFlag != true` for
    human review — CW Asio may retain churned companies in the system.
 

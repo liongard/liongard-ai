@@ -43,7 +43,8 @@ claude mcp add --scope user --transport http liongard \
   --header "Authorization: Bearer <accessKeyId>:<accessKeySecret>"
 ```
 
-For JSON-config clients:
+For JSON-config clients, generate a ready-to-paste config (it prompts for your
+instance and token, or pass `--instance` / `--token`):
 
 ```bash
 node scripts/liongard-mcp-config.js --client cursor --print
@@ -51,6 +52,10 @@ node scripts/liongard-mcp-config.js --client claude-desktop --print
 node scripts/liongard-mcp-config.js --client vscode --print
 node scripts/liongard-mcp-config.js --client generic --print
 ```
+
+The printed config contains your real access token — paste it into your
+client's MCP config file and treat the file like a password. Cursor and
+VS Code also support `--write` to update the config file in place.
 
 Client guides:
 

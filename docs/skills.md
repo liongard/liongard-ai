@@ -6,8 +6,13 @@ other agent that understands the Anthropic skill format — how to use the
 Liongard MCP for specific workflows without polluting every conversation with
 boilerplate.
 
-Skills in this repo live under [`.claude/skills/`](../.claude/skills), each in
-its own folder with a `SKILL.md` file.
+**Canonical location:** skills live under
+[`plugins/liongard/skills/`](../plugins/liongard/skills) — each in its own
+folder with a `SKILL.md` file. This is the package `/plugin install liongard`
+ships. The repo-root [`.claude/skills/`](../.claude/skills) directory is an
+auto-generated mirror (so Claude Code auto-loads skills when launched inside
+this repo); never hand-edit it. Regenerate it with
+`bash scripts/sync-plugin-to-claude.sh`.
 
 ---
 
@@ -15,11 +20,11 @@ its own folder with a `SKILL.md` file.
 
 | Skill | What it's for |
 | --- | --- |
-| [`liongard-mcp`](../.claude/skills/liongard-mcp/SKILL.md) | Baseline "how to use the Liongard MCP" reference. Loaded automatically when a user mentions Liongard, agents, alerts, environments, inspections, etc. |
-| [`liongard-first-five-minutes`](../.claude/skills/liongard-first-five-minutes/SKILL.md) | Safe first-run orientation after connecting the MCP: count environments, sample visible scope, and suggest next prompts. |
-| [`liongard-investigate-alert`](../.claude/skills/liongard-investigate-alert/SKILL.md) | End-to-end alert investigation: gather context on the alert, launchpoint, related detections, and propose remediation. |
-| [`liongard-environment-health`](../.claude/skills/liongard-environment-health/SKILL.md) | Daily environment health check — open alert load, failing inspections, recent changes, cyber-risk posture. |
-| [`liongard-compliance-audit`](../.claude/skills/liongard-compliance-audit/SKILL.md) | Compliance audit across the five cyber-risk pillars (MFA, EDR, encryption, firewall, TLS/SSL). |
+| [`liongard-mcp`](../plugins/liongard/skills/liongard-mcp/SKILL.md) | Baseline "how to use the Liongard MCP" reference. Loaded automatically when a user mentions Liongard, agents, alerts, environments, inspections, etc. |
+| [`liongard-first-five-minutes`](../plugins/liongard/skills/liongard-first-five-minutes/SKILL.md) | Safe first-run orientation after connecting the MCP: count environments, sample visible scope, and suggest next prompts. |
+| [`liongard-investigate-alert`](../plugins/liongard/skills/liongard-investigate-alert/SKILL.md) | End-to-end alert investigation: gather context on the alert, launchpoint, related detections, and propose remediation. |
+| [`liongard-environment-health`](../plugins/liongard/skills/liongard-environment-health/SKILL.md) | Daily environment health check — open alert load, failing inspections, recent changes, cyber-risk posture. |
+| [`liongard-compliance-audit`](../plugins/liongard/skills/liongard-compliance-audit/SKILL.md) | Compliance audit across the five cyber-risk pillars (MFA, EDR, encryption, firewall, TLS/SSL). |
 
 ---
 
@@ -63,8 +68,9 @@ Every skill we ship follows a few rules:
 
 ## Writing your own Liongard skill
 
-1. Create a directory under `.claude/skills/` named for your workflow, for
-   example `.claude/skills/liongard-my-workflow/`.
+1. Create a directory under `plugins/liongard/skills/` (the canonical home)
+   named for your workflow, for example
+   `plugins/liongard/skills/liongard-my-workflow/`.
 2. Add a `SKILL.md` file. The minimum template:
 
    ```markdown
@@ -89,7 +95,9 @@ Every skill we ship follows a few rules:
    - …
    ```
 
-3. Commit and open a PR. See [`../CONTRIBUTING.md`](../CONTRIBUTING.md).
+3. Run `bash scripts/sync-plugin-to-claude.sh` to refresh the `.claude/`
+   mirror, then commit both and open a PR. See
+   [`../CONTRIBUTING.md`](../CONTRIBUTING.md).
 
 ---
 
@@ -97,11 +105,12 @@ Every skill we ship follows a few rules:
 
 The canonical plugin package stores skills under
 [`plugins/liongard/skills`](../plugins/liongard/skills). The root
-`.claude/skills/` directory is kept as a compatibility copy for launching
-Claude Code from this repository. Other clients are catching up:
+`.claude/skills/` directory is an auto-generated mirror of it (kept in sync by
+`scripts/sync-plugin-to-claude.sh`) so Claude Code auto-loads skills when
+launched from this repository. Other clients are catching up:
 
-- **Claude Desktop** reads the same `.claude/skills/` directory when you open
-  the repo as your workspace.
+- **Claude Desktop** reads the `.claude/skills/` mirror when you open the repo
+  as your workspace.
 - **Cursor** may use a slightly different convention (`.cursor/skills/`);
   copy or symlink from `plugins/liongard/skills` if your Cursor version
   supports local skills.

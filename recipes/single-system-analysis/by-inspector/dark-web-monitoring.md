@@ -266,12 +266,15 @@ deployed, cross-reference the exposed-account list against the
 authoritative identity inventory:
 
 ```
-liongard_asset LIST environmentId=<ENV_ID>
-                    fields=["username","accountType","privileged","mfaStatus","lastLogin","enabled"]
+liongard_identity LIST environmentId=<ENV_ID>
+                    fields=["username","type","privileged","mfaStatus","lastLogin","enabled"]
 ```
 
-> **Tool note:** Use `liongard_asset` for identity cross-reference until
-> `liongard_identity` ships to production.
+> **Tool note:** `liongard_identity` is the reconciled identity inventory —
+> one record per email, joined across every identity inspector (M365, AD,
+> JumpCloud, OneLogin, Duo, etc.). Use the server-side filters
+> (`mfaStatus`, `privileged`, `enabled`) or `COUNT` instead of pulling the
+> full list when you only need a coverage figure.
 
 Surface enrichment:
 
@@ -391,7 +394,7 @@ customer-facing; always honor `privacy.redact_individual_users_in`.
 | 3 | liongard_metric GENERATE_AND_EVALUATE | envId=<ENV_ID> sysId=<SYS_ID> jmesPath="NumberOfTotalBreaches" | integer | VALIDATED |
 | 3 | liongard_metric GENERATE_AND_EVALUATE | envId=<ENV_ID> sysId=<SYS_ID> jmesPath="Users[*].{Email: Email, Breaches: Breaches}" | array | VALIDATED |
 | 3 | liongard_metric GENERATE_AND_EVALUATE | envId=<ENV_ID> sysId=<SYS_ID> jmesPath=<proposed-path> | varies | SCHEMA_CONFIRMED — not found in live dataprint; confirm against production system |
-| 4 | liongard_asset LIST | envId=<ENV_ID> [fields] | array<asset> | ok |
+| 4 | liongard_identity LIST | envId=<ENV_ID> [fields] | array<identity> | ok |
 | 4 | (cross-reference — derived) | exposed accounts ∩ identity inventory | enriched-finding | ok |
 | 5 | (trend — derived) | per slas.recent_exposure_days | series | ok |
 | 6 | QA pass | per `reference/qa-retry-pattern.md` (privacy check included) | varies | ok |

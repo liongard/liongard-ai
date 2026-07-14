@@ -7,7 +7,7 @@ description: >
   phrases: "Linux server review for <HOSTNAME>", "audit <LINUX-BOX>", "what
   packages are on <HOSTNAME>", "who has sudo on <HOSTNAME>". Produces an
   artifact in the format set in the customization block.
-compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, liongard_metric, liongard_asset"
+compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, liongard_metric, liongard_device"
 personas: [noc, technical-alignment-manager, soc]
 output_formats: [markdown, word, xlsx]
 primitives: []
@@ -80,8 +80,8 @@ liongard_system LIST searchMode=keyword query="linux" environmentId=<ENV_ID>
 The asset inventory provides the join key:
 
 ```
-liongard_asset LIST environmentId=<ENV_ID> assetType=Device detail=full pageSize=200
-device = Devices[?Hostname == '<linux-hostname>' AND OperatingSystem contains "Linux"]
+liongard_device LIST environmentId=<ENV_ID> pageSize=200
+device = Data[?hostname == '<linux-hostname>' AND operatingSystem contains "Linux"]
 ```
 
 ---
@@ -100,7 +100,7 @@ device = Devices[?Hostname == '<linux-hostname>' AND OperatingSystem contains "L
 ### Cross-inspector cross-check — asset inventory
 
 ```
-device = Devices[?Hostname == '<hostname>' AND OperatingSystem contains "Linux"]
+device = Data[?hostname == '<hostname>' AND operatingSystem contains "Linux"]
 ```
 
 Asset record provides:
@@ -203,7 +203,7 @@ Markdown / Word / Excel per `output.format`.
 | Step | Tool | Args | Result Shape | Status |
 |------|------|------|--------------|--------|
 | 1 | liongard_environment LIST | filter=<name> | array<environment> | ok |
-| 2 | liongard_asset LIST | envId=<ENV_ID> assetType=Device detail=full | array<device> | ok |
+| 2 | liongard_device LIST | envId=<ENV_ID> | array<device> | ok |
 | 3 | liongard_system LIST | query="linux" envId=<ENV_ID> | array<system> | ok |
 | 4 | liongard_metric EVALUATE | metricName="Linux: Privileged User List" sysId=<SYS_ID> envId=<ENV_ID> | <array> | ok |
 | 5 | liongard_metric EVALUATE | metricName="Linux: Software Version" sysId=<SYS_ID> envId=<ENV_ID> | <string> | ok |

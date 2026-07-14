@@ -286,7 +286,7 @@ than servers; surface as a TAM finding if delta exceeds SLA.
 
 If `AgentlessDevices` returns a non-zero count, these are devices visible
 on the N-able-monitored network that lack an agent. Surface as a coverage
-gap. Cross-reference against the Reconciled Device Inventory (liongard_asset)
+gap. Cross-reference against the Reconciled Device Inventory (liongard_device)
 to determine if they are unmanaged or out-of-scope devices.
 
 ### Step 7 — Mobile devices

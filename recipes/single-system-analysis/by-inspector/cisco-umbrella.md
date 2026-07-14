@@ -7,7 +7,7 @@ description: >
   "Umbrella PBR", "Cisco Umbrella report", "pull Umbrella data for <CUSTOMER>",
   "DNS security review", "OpenDNS report" (legacy name). Produces an artifact in
   the format set in the customization block.
-compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, liongard_metric, liongard_asset"
+compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, liongard_metric, liongard_device"
 personas: [noc, soc, vcio-account-manager, technical-alignment-manager]
 output_formats: [markdown, word, pptx]
 primitives:
@@ -171,7 +171,7 @@ liongard_system LIST searchMode=keyword query="umbrella" environmentId=<ENV_ID>
 ### Cross-inspector cross-check — asset inventory
 
 ```
-liongard_asset LIST environmentId=<ENV_ID> assetType=Device detail=full pageSize=200
+liongard_device LIST environmentId=<ENV_ID> pageSize=200
 ```
 
 ```
@@ -296,5 +296,5 @@ Markdown / Word / PowerPoint per `output.format`. See `templates/output-block-*.
 | 1 | liongard_environment LIST | filter=<name> | array<environment> | ok |
 | 2 | liongard_system LIST | query="umbrella" envId=<ENV_ID> | array<system> | ok |
 | 3 | liongard_metric EVALUATE | jmesPath sysId=<SYS_ID> envId=<ENV_ID> | <integer> or <array> | ok |
-| 4 | liongard_asset LIST | envId=<ENV_ID> assetType=Device detail=full | array<device> | ok |
+| 4 | liongard_device LIST | envId=<ENV_ID> | array<device> | ok |
 ```

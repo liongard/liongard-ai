@@ -24,7 +24,7 @@ after connecting.
 | --- | --- | --- |
 | OAuth login | Experimental | Discovery endpoints exist, but Bearer auth is the supported setup path. |
 | Skills outside Claude/Cursor | Client-dependent | Treat skills as guidance files unless the harness loads them natively. |
-| VS Code/Copilot MCP settings | Client-dependent | Config keys can change between Copilot releases. |
+| VS Code/Copilot MCP settings | Client-dependent | Current builds use `mcp.json` with a `servers` key (see [`clients/vscode.md`](clients/vscode.md)); details can change between Copilot releases. |
 
 ## Not A Data Source
 
@@ -39,6 +39,18 @@ after connecting.
 Before publishing docs or plugin changes:
 
 1. Connect to a current Liongard test tenant.
-2. Compare this page with live `tools/list` and `prompts/list` responses.
+2. Compare this page and [`tools-reference.md`](tools-reference.md) with live
+   `tools/list` and `prompts/list` responses.
 3. Run `node scripts/validate-repo.js`.
-4. Run `node scripts/liongard-mcp-smoke-test.js` against a test tenant.
+4. Run `bash scripts/sync-plugin-to-claude.sh --check`.
+5. Run `node scripts/liongard-mcp-smoke-test.js` against a test tenant.
+
+When publishing to the public GitHub repo (`liongard/liongard-ai`):
+
+1. Push the current release state to GitHub `main` — the public repo must not
+   lag behind, since partners drive the quick start from it.
+2. Confirm the GitHub repo **description** and **topics** are set (for
+   example: `liongard`, `mcp`, `model-context-protocol`, `msp`, `ai-agents`)
+   so the repo is discoverable.
+3. Spot-check `README.md` rendering on GitHub (lists, tables, links).
+4. Verify the GitHub Actions **Repo Validation** workflow is green on `main`.

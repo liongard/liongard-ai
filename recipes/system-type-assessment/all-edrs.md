@@ -8,7 +8,7 @@ description: >
   EDR coverage across vendors". Iterates each deployed EDR (SentinelOne,
   Huntress, Sophos Central, Webroot, Bitdefender, CrowdStrike, ESET, SonicWall
   Capture Client) and rolls up to one fleet-level report.
-compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, liongard_metric, liongard_asset"
+compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, liongard_metric, liongard_device"
 personas: [vcio-account-manager, soc, technical-alignment-manager]
 output_formats: [markdown, word, pptx, xlsx]
 primitives:
@@ -175,7 +175,7 @@ required.
 ### Step 1 — Pull asset inventory (the denominator)
 
 ```
-liongard_asset LIST environmentId=<ENV_ID> assetType=Device detail=full pageSize=200
+liongard_device LIST environmentId=<ENV_ID> pageSize=200
 compute_devices = Devices where category == "compute"
 total_compute = length(compute_devices)
 ```
@@ -311,7 +311,7 @@ fleet-evidence packs (one row per device); PowerPoint for executive overview.
 | Step | Tool | Args | Result Shape | Status |
 |------|------|------|--------------|--------|
 | 1 | liongard_environment LIST | filter=<name> | array<environment> | ok |
-| 2 | liongard_asset LIST | envId=<ENV_ID> assetType=Device detail=full | array<device> | ok |
+| 2 | liongard_device LIST | envId=<ENV_ID> | array<device> | ok |
 | 3 | liongard_system LIST | envId=<ENV_ID> | array<system> | ok |
 | 4 | per EDR system: liongard_metric EVALUATE | jmesPath sysId=<SYS_ID> envId=<ENV_ID> | varies | ok |
 ```
