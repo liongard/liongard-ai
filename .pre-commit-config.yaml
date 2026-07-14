@@ -1,0 +1,43 @@
+# Pre-commit hooks for recipe library governance.
+# The governance hooks below require the Liongard internal validation scripts
+# (internal/scripts/), which are not distributed in this repo. Each hook
+# skips itself with a notice when internal/scripts/ is absent, so external
+# contributors can run `pre-commit` without failures. YAML/JSON syntax and
+# repo structure are validated for everyone by the CI workflow at
+# .github/workflows/validate.yml.
+repos:
+  - repo: local
+    hooks:
+      - id: repo-validate
+        name: Validate repo structure (public)
+        entry: node scripts/validate-repo.js
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-commit]
+
+      - id: claude-mirror-check
+        name: Verify .claude/ mirror matches plugins/liongard/
+        entry: bash scripts/sync-plugin-to-claude.sh --check
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-commit]
+
+      - id: recipe-library-validate
+        name: Validate Liongard recipe library (governance gates, internal only)
+        entry: bash -c 'if [ -f internal/scripts/validate-recipes.py ]; then python3 internal/scripts/validate-recipes.py; else echo "internal/scripts not present; skipping (public checks run in CI)"; fi'
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-commit]
+        types_or: [markdown, yaml, json]
+        files: ^(recipes/|primitives/|schemas/|ontology/|reference/inspector-aliases\.md$)
+
+      - id: recipe-library-scrub
+        name: Partner-name scrub (Gate 1, internal only)
+        entry: bash -c 'if [ -f internal/scripts/verify-promotion.sh ]; then bash internal/scripts/verify-promotion.sh; else echo "internal/scripts not present; skipping (public checks run in CI)"; fi'
+        language: system
+        pass_filenames: false
+        stages: [pre-commit]
+        files: ^(recipes/|primitives/|reference/|templates/)

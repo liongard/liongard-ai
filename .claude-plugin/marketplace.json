@@ -1,0 +1,27 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "liongard-ai",
+  "description": "Official Liongard MCP setup, skills, and workflows for MSP operators and engineers.",
+  "version": "0.2.3",
+  "owner": {
+    "name": "Liongard",
+    "email": "support@liongard.com"
+  },
+  "plugins": [
+    {
+      "name": "liongard",
+      "source": "./plugins/liongard",
+      "description": "Connect Claude Code to the hosted Liongard MCP server for environments, agents, alerts, inspections, inventory, metrics, and cyber-risk workflows.",
+      "version": "0.2.3",
+      "category": "msp",
+      "tags": [
+        "liongard",
+        "mcp",
+        "msp",
+        "monitoring",
+        "configuration",
+        "cyber-risk"
+      ]
+    }
+  ]
+}

@@ -1,1 +1,77 @@
+# macOS
 .DS_Store
+
+# Editor local state
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Claude Code local state (per-user MCP registrations, cached auth)
+.claude/settings.local.json
+.claude/claude_desktop_config.json
+.claude.json
+
+# Cursor local state
+.cursor/mcp.json
+
+# Node / tooling junk (in case anyone adds helpers later)
+node_modules/
+npm-debug.log*
+yarn-error.log
+
+# Logs
+*.log
+
+# Local env overrides
+.env
+.env.local
+
+# Recipe library — local-only files
+# MSP-specific config override (MSP's real brand / vendor / SLA values)
+config/msp-config.local.yaml
+
+# Local scrub patterns (partner / customer names to grep against; sensitive)
+.scrub-patterns
+
+# Local MCP overrides
+.mcp.json
+
+# Generated assessment outputs (contain real customer data)
+assessments/
+assessments/**
+
+# Generated customer deliverables — recipes write here; never commit (real customer data)
+outputs/
+outputs/**
+
+# Partner-provided / customer-test content
+archive/partner-specific/
+archive/partner-specific/**
+
+# Claude session scratch
+.claude-cache/
+
+# Excel / Office lock files
+~$*.xlsx
+~$*.docx
+~$*.pptx
+.~lock.*
+
+# Python virtualenvs / caches
+.venv/
+__pycache__/
+*.pyc
+
+# Packaged skill build artifacts
+*.skill
+dist/
+
+# Misc
+*.tmp
+*.bak
+Thumbs.db
+*~
+
+# Tool-generated agent skill mirror (regenerated locally; not source of truth)
+.agents/
