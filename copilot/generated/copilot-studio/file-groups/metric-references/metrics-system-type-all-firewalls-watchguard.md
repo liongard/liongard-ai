@@ -1,0 +1,101 @@
+# metrics-system-type-all-firewalls-watchguard - Metric reference (watchguard-inspector)
+
+> Operator words in queries: before sending any `jmesPathQuery`, replace each EQ_OP with two equals characters in a row each AND_OP with two ampersand characters in a row and each OR_OP with two vertical-bar characters in a row; change nothing else. (Knowledge storage corrupts those symbols.)
+
+Required metric primitives for the recipe `system-type-all-firewalls` (System-Type Assessment — All Firewalls), inspector `watchguard-inspector` (ID 29). 29 primitives, sequence ids P124-P152. For every system of this inspector, evaluate EVERY primitive below with `liongard_metric EVALUATE` (`jmesPathQuery`, `systemId`, `environmentId`), retry a null or error once, and log one row per primitive per system. Respect each gotcha.
+
+- **`metrics:watchguard:access-rule-summary`** [P124] - WatchGuard — Access Rule Summary. Formatted summary of all access rules including name, enabled state, action, service, from/to aliases, and NAT settings.
+  - metricId: 601 | query: `` AccessRules[].join( `, `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`Enabled`, to_string(Enabled)]), join(`: `, [`Action`, to_string(ConnectionsAre)]), join(`: `, [`Service`, to_string(Service)]), join(`: `, [`From`, to_string(FromAliasList)]), join(`: `, [`To`, to_string(ToAliasList)]), join(`: `, [`Static NAT`, to_string(StaticNat)]), join(`: `, [`Global NAT`, to_string(GlobalDnat)]) , join(`: `, [`Global 1:1 Nat`, to_string(Global_1to1Nat)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:watchguard:account-lockout-disabled-count`** [P125] - WatchGuard — Account Lockout Disabled Count. Count of account lockout settings where status is not 'Enabled'. Non-zero means lockout is not enforced, leaving admin accounts open to brute-force.
+  - metricId: 885 | query: `SystemInfo.AccountLockoutSettings[?Status != 'Enabled'] |length(@)` | result: integer (count)
+  - compliant when: result EQ_OP 0
+  - status: VALIDATED
+- **`metrics:watchguard:account-lockout-enabled-list`** [P126] - WatchGuard — Account Lockout Enabled Status List. List of account lockout settings where status is 'Enabled'. Confirms lockout configuration is active.
+  - metricId: 884 | query: `SystemInfo.AccountLockoutSettings[?Status EQ_OP 'Enabled'].[Status][]` | result: array
+  - status: VALIDATED
+- **`metrics:watchguard:alias-summary`** [P127] - WatchGuard — Alias Summary. Formatted summary of all firewall aliases including alias name, description, and member list.
+  - metricId: 603 | query: `` Aliases[].join( `, `, [join(`: `, [`Name`, to_string("Alias Name")]), join(`: `, [`Description`, to_string(Description)]), join(`: `, [`Members`, to_string(AliasMembersList_r)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:watchguard:down-interfaces-count`** [P128] - WatchGuard — Down Interfaces Count. Count of enabled interfaces where status is not 'Up'. A non-zero count warrants investigation for connectivity or configuration problems.
+  - metricId: 883 | query: `Interfaces[?Enabled EQ_OP 'yes' AND_OP Status != 'Up'] | length(@)` | result: integer (count)
+  - compliant when: result EQ_OP 0
+  - status: VALIDATED
+- **`metrics:watchguard:down-interfaces-list`** [P129] - WatchGuard — Down Interfaces List. Names and statuses of enabled interfaces that are not in 'Up' state. Companion list to the down-interfaces count metric.
+  - metricId: 882 | query: `Interfaces[?Enabled EQ_OP 'yes' AND_OP Status != 'Up'].[Name, Status]` | result: array
+  - compliant when: result EQ_OP []
+  - status: VALIDATED
+- **`metrics:watchguard:dynamic-nat-summary`** [P130] - WatchGuard — Dynamic NAT Summary. Formatted summary of dynamic NAT rules including to, from, and source IP fields.
+  - metricId: 596 | query: `` NAT.dynamicNAT[].join( `, `, [join(`: `, [`To`, to_string(To)]), join(`: `, [`From`, to_string(From)]), join(`: `, [`Source IP`, to_string(SourceIP)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:watchguard:features-expiring-30d-count`** [P131] - WatchGuard — Features Expiring Within 30 Days Count. Count of licensed features (TSS, GAV, IPS, WebBlocker, etc.) with DaysUntilExpiration_r <= 30. Non-zero triggers an immediate renewal action.
+  - metricId: 889 | query: `Features[?DaysUntilExpiration_r <= '30'] | length(@)` | result: integer (count)
+  - compliant when: result EQ_OP 0
+  - gotcha: DaysUntilExpiration_r is a resolved/computed string field — filter uses string comparison '<= 30' not numeric. Confirm behavior when value is exactly 30.
+  - status: VALIDATED
+- **`metrics:watchguard:features-expiring-30d-list`** [P132] - WatchGuard — Features Expiring Within 30 Days List. Feature names and expiration dates for licensed features expiring within 30 days. Companion list for the expiration count metric.
+  - metricId: 888 | query: `Features[?DaysUntilExpiration_r <= '30'].[Feature,Expiration]` | result: array
+  - compliant when: result EQ_OP []
+  - status: VALIDATED
+- **`metrics:watchguard:firmware-version`** [P133] - WatchGuard — Firmware Version (Fireware OS). Running Fireware OS version string from SystemInfo.Version. Cross-reference against WatchGuard release notes for CVEs and EOL status.
+  - metricId: 318 | query: `SystemInfo.Version` | result: string
+  - status: VALIDATED
+- **`metrics:watchguard:group-summary`** [P134] - WatchGuard — Group Account Summary. Formatted summary of group accounts including name, auth server, and description.
+  - metricId: 605 | query: `` Users[?Type EQ_OP 'Group'].join( `, `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`AuthServer`, to_string(AuthServer)]), join(`: `, [`Description`, to_string(Description)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:watchguard:hostname`** [P135] - WatchGuard — Hostname (System Name). Firewall system name from SystemInfo.SystemName. Used for asset identification and report headers.
+  - metricId: 1999 | query: `SystemInfo.SystemName` | result: string
+  - status: VALIDATED
+- **`metrics:watchguard:interface-summary`** [P136] - WatchGuard — Interface Summary. Formatted summary of all interfaces including name, enabled state, type, address, IP type, and IP assignment.
+  - metricId: 598 | query: `` Interfaces[].join( `, `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`Enabled`, to_string(Enabled)]), join(`: `, [`Type`, to_string(Type)]), join(`: `, [`Address`, to_string(Address)]), join(`: `, [`IP Type`, to_string(IPNodeType)]), join(`: `, [`IP Assignment`, to_string(IPAssignment)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:watchguard:licensed-interface-count`** [P137] - WatchGuard — Licensed Interface Count. Number of interfaces licensed for this appliance from SystemInfo.LicensedInterface. Helps size the appliance against actual port usage.
+  - metricId: 319 | query: `SystemInfo.LicensedInterface` | result: integer (count)
+  - status: VALIDATED
+- **`metrics:watchguard:management-ip`** [P138] - WatchGuard — Management IP Address. Management IP address of the appliance from SystemInfo.ManagementIP. Used to confirm whether management is reachable from WAN.
+  - metricId: 606 | query: `SystemInfo.ManagementIP` | result: string
+  - status: VALIDATED
+- **`metrics:watchguard:mgmt-user-summary`** [P139] - WatchGuard — Management User Summary. Formatted summary of all device management users including username, role, and authentication server.
+  - metricId: 602 | query: `` DeviceMgmtUsers[].join( `, `, [join(`: `, [`Username`, to_string(Username)]), join(`: `, [`Role`, to_string(Role)]), join(`: `, [`AuthServer`, to_string(AuthServer)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:watchguard:mgmt-users-locked-out-count`** [P140] - WatchGuard — Management Users Locked Out Count. Count of device management users currently in a locked-out state. Non-zero may indicate a brute-force event or stale locked account.
+  - metricId: 887 | query: `DeviceMgmtUsers[?LockedOutStatus !='No lockout'] | length(@)` | result: integer (count)
+  - compliant when: result EQ_OP 0
+  - status: VALIDATED
+- **`metrics:watchguard:mgmt-users-locked-out-list`** [P141] - WatchGuard — Management Users Locked Out List. Usernames of device management users currently locked out. Companion list for the locked-out count metric.
+  - metricId: 886 | query: `DeviceMgmtUsers[?LockedOutStatus !='No lockout'].[Username]` | result: array
+  - compliant when: result EQ_OP []
+  - status: VALIDATED
+- **`metrics:watchguard:mobile-ipsec-policies`** [P142] - WatchGuard — Mobile IPSec Client VPN Policies. Formatted summary of Mobile IPSec client VPN policies including name, auth server, allowed access, virtual IP pool, and settings.
+  - metricId: 609 | query: `` VPN.ClientVPN.MobileIPSec[].join( `, `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`AuthServer`, to_string(AuthServer)]), join(`: `, [`Allowed Access`, to_string(AllowedAccessStr_r)]), join(`: `, [`Virtual IP Address Pool`, to_string(VirtualIPAddressPool)]), join(`: `, [`Settings`, to_string(IPSecSettings)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:watchguard:mobile-ssl-vpn-summary`** [P143] - WatchGuard — Mobile SSL VPN Settings Summary. Formatted summary of Mobile SSL VPN settings including SSL server, DNS servers, domain name, encryption, VPN traffic mode, data channel, IP pool, authentication, and resources.
+  - metricId: 610 | query: `` VPN.ClientVPN.MobileSSL.join( `, `, [join(`: `, [`SSL Server`, to_string(SslServer)]), join(`: `, [`DNS Servers`, to_string(DnsServers)]), join(`: `, [`Domain Name`, to_string(DomainName)]), join(`: `, [`Encryption`, to_string(Encryption)]), join(`: `, [`VPN Traffic`, to_string(VpnTraffic)]), join(`: `, [`DataChannel`, to_string(DataChannel)]), join(`: `, [`IP Address Pool`, to_string(IpAddressPool)]), join(`: `, [`Authentication`, to_string(Authentication)]), join(`: `, [`Allowed Resources`, to_string(AllowedResources)]), join(`: `, [`Auth Users`, to_string(AuthenticationUsers)])]) `` | result: object
+  - status: VALIDATED
+- **`metrics:watchguard:model`** [P144] - WatchGuard — Hardware Model. Appliance model identifier from SystemInfo.Model. Used for lifecycle and EOL tracking across Firebox T, M, and virtual product lines.
+  - metricId: 2000 | query: `SystemInfo.Model` | result: string
+  - status: VALIDATED
+- **`metrics:watchguard:one-to-one-nat-summary`** [P145] - WatchGuard — 1:1 NAT Summary. Formatted summary of 1:1 NAT entries including interface, NAT address, and real address.
+  - metricId: 597 | query: `` NAT.oneToOneNAT[].join( `, `, [join(`: `, [`Interface`, to_string(Interface)]), join(`: `, [`NAT Address`, to_string(NATAddress)]), join(`: `, [`Real Address`, to_string(RealAddress)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:watchguard:physical-interface-count`** [P146] - WatchGuard — Physical Interface Count. Number of physical interfaces on the appliance from SystemInfo.PhysicalInterface.
+  - metricId: 320 | query: `SystemInfo.PhysicalInterface` | result: integer (count)
+  - status: VALIDATED
+- **`metrics:watchguard:quota-action-summary`** [P147] - WatchGuard — Quota Action Summary. Formatted summary of quota actions including name, time per day (min), and bandwidth per day (MB).
+  - metricId: 600 | query: `` QuotaAction[].join( `, `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`Time(Min/Day)`, to_string(TimeInMinPerDay)]), join(`: `, [`Bandwidth(MB/Day)`, to_string(BandwidthInMBPerDay)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:watchguard:quota-rule-summary`** [P148] - WatchGuard — Quota Rule Summary. Formatted summary of quota rules including name, action, and status.
+  - metricId: 599 | query: `` QuotaRules[].join( `, `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`Action`, to_string(Action)]), join(`: `, [`Status`, to_string(Status)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:watchguard:serial-number`** [P149] - WatchGuard — Serial Number. Hardware serial number from SystemInfo.SerialNumber. Ties the appliance to a WatchGuard support contract.
+  - metricId: 2001 | query: `SystemInfo.SerialNumber` | result: string
+  - status: VALIDATED
+- **`metrics:watchguard:site-to-site-phase1-summary`** [P150] - WatchGuard — Site-to-Site Phase 1 Policy Summary. Formatted summary of BOVPN Phase 1 (IKE) policies including policy name, status, version, peer name, action, exchange mode, and local interface.
+  - metricId: 607 | query: `` SiteToSiteVPN.Phase1[].join( `, `, [join(`: `, [`Policy Name`, to_string(PolicyName)]), join(`: `, [`Status`, to_string(Status)]), join(`: `, [`Version`, to_string(Version)]), join(`: `, [`Peer Name`, to_string(PeerName)]), join(`: `, [`Action Name`, to_string(ActionName)]), join(`: `, [`Xchng Mode`, to_string(XchngMode)]), join(`: `, [`Local Interface`, to_string(LocalInterface)]), join(`: `, [`VIF`, to_string(VIF)]), join(`: `, [`VIF Protocol`, to_string(VIFProto)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:watchguard:site-to-site-phase2-summary`** [P151] - WatchGuard — Site-to-Site Phase 2 Policy Summary. Formatted summary of BOVPN Phase 2 (IPSec) policies including policy name, status, IKE version, mode, key mode, VPN type, and IKE policy.
+  - metricId: 608 | query: `` SiteToSiteVPN.Phase2[].join( `, `, [join(`: `, [`Policy Name`, to_string(PolicyName)]), join(`: `, [`Status`, to_string(Status)]), join(`: `, [`IKE Version`, to_string(IKEVersion)]), join(`: `, [`Mode`, to_string(Mode)]), join(`: `, [`Key Mode`, to_string(KeyMode)]), join(`: `, [`VPN Type`, to_string(VPNType)]), join(`: `, [`IKE Policy`, to_string(IKEPolicyName)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:watchguard:user-summary`** [P152] - WatchGuard — Single-User Account Summary. Formatted summary of individual user accounts (type = Single-User) including name, auth server, and description.
+  - metricId: 604 | query: `` Users[?Type EQ_OP 'Single-User'].join( `, `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`AuthServer`, to_string(AuthServer)]), join(`: `, [`Description`, to_string(Description)])]) | sort(@) `` | result: array
+  - status: VALIDATED

@@ -39,6 +39,7 @@ in your prompts — repeatedly, as part of normal delivery work.
 | `partner-resources/` | Partner-facing tools and skills (recipe picker, recipe scaffold generator). |
 | `ontology/` | JSON-LD governance context for cross-cutting signals. |
 | `schemas/` | JSON Schema for recipe + primitive validation. |
+| `copilot/` | Generated Microsoft Copilot (Copilot Studio / Agent Builder) packages compiled from the recipes by `scripts/copilot/build_copilot_package.py`. Never hand-edit `copilot/generated/`. |
 
 ---
 

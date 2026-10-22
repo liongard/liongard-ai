@@ -1,0 +1,106 @@
+# metrics-system-type-all-firewalls-sonicwall - Metric reference (sonicwall-inspector)
+
+> Operator words in queries: before sending any `jmesPathQuery`, replace each EQ_OP with two equals characters in a row each AND_OP with two ampersand characters in a row and each OR_OP with two vertical-bar characters in a row; change nothing else. (Knowledge storage corrupts those symbols.)
+
+Required metric primitives for the recipe `system-type-all-firewalls` (System-Type Assessment — All Firewalls), inspector `sonicwall-inspector` (ID 7). 26 primitives, sequence ids P076-P101. For every system of this inspector, evaluate EVERY primitive below with `liongard_metric EVALUATE` (`jmesPathQuery`, `systemId`, `environmentId`), retry a null or error once, and log one row per primitive per system. Respect each gotcha.
+
+- **`metrics:sonicwall:admin-session-idle-timeout`** [P076] - SonicWall — Administrator Session Idle Logout Timeout (Minutes). Admin session idle timeout in minutes from System.Administration.IdleLogoutTime. Timeouts exceeding 10 minutes leave sessions exposed.
+  - metricId: 106910 | query: `System.Administration.IdleLogoutTime` | result: integer (minutes)
+  - compliant when: result <= 10
+  - status: VALIDATED
+- **`metrics:sonicwall:admin-username`** [P077] - SonicWall — Administrator Username. Configured administrator account name from System.Administration.AdminName. Default 'admin' username significantly reduces brute-force resistance.
+  - metricId: 106905 | query: `System.Administration.AdminName` | result: string
+  - compliant when: result != 'admin'
+  - status: VALIDATED
+- **`metrics:sonicwall:agss-license-expiry`** [P078] - SonicWall — AGSS License Expiration Date. Expiration date for the Advanced Gateway Security Suite (AGSS) subscription from Licenses[?Name EQ_OP 'AGSS'].ExpiryDate. AGSS covers AV, IPS, APP Control, and ATP.
+  - metricId: 106974 | query: `Licenses[?Name EQ_OP 'AGSS'].ExpiryDate` | result: array
+  - status: VALIDATED
+- **`metrics:sonicwall:any-to-any-allow-rules-count`** [P079] - SonicWall — Permissive Any-to-Any Allow Firewall Rule Count. Count of IPv4 firewall rules allowing any source, any destination, any service from Firewall.AccessRulesIPv4[?SourceAddressAny EQ_OP true AND_OP DestinationAddressAny EQ_OP true AND_OP ServiceAny EQ_OP true AND_OP Action EQ_OP 'allow'] | length(@). Should be 0.
+  - metricId: 106925 | query: `Firewall.AccessRulesIPv4[?SourceAddressAny EQ_OP true AND_OP DestinationAddressAny EQ_OP true AND_OP ServiceAny EQ_OP true AND_OP Action EQ_OP 'allow'] | length(@)` | result: integer (count)
+  - compliant when: result EQ_OP 0
+  - status: VALIDATED
+- **`metrics:sonicwall:audit-logging-enabled`** [P080] - SonicWall — Enhanced Audit Logging Enabled. Whether enhanced audit logging for configuration changes is active from System.Administration.EnhancedAuditLogging. Without this, config changes are not recorded.
+  - metricId: 106950 | query: `System.Administration.EnhancedAuditLogging` | result: boolean
+  - compliant when: result EQ_OP true
+  - status: VALIDATED
+- **`metrics:sonicwall:capture-atp-enabled`** [P081] - SonicWall — Capture Advanced Threat Protection (ATP) Enabled. Whether Capture ATP sandbox analysis is enabled from CurrentConfig.capture_atp.enable. Without ATP, zero-day threats bypass inspection entirely.
+  - metricId: 106918 | query: `CurrentConfig.capture_atp.enable` | result: boolean
+  - compliant when: result EQ_OP true
+  - status: VALIDATED
+- **`metrics:sonicwall:firmware-version`** [P082] - SonicWall — Firmware Version. Running SonicOS firmware version string from System.FirmwareVersion. Cross-reference against known CVEs in the NVD.
+  - metricId: 253 | query: `System.FirmwareVersion` | result: string
+  - status: VALIDATED
+- **`metrics:sonicwall:geo-ip-block-all-enabled`** [P083] - SonicWall — Geo-IP Block All Inbound Connections Enabled. Whether Geo-IP block-all is active from CurrentConfig.geo_ip.block.connections.all. Without this, connections from high-risk IP ranges are accepted.
+  - metricId: 106919 | query: `CurrentConfig.geo_ip.block.connections.all` | result: boolean
+  - compliant when: result EQ_OP true
+  - status: VALIDATED
+- **`metrics:sonicwall:hostname`** [P084] - SonicWall — Hostname (Firewall Name). Firewall display name from Administration.FirewallName (SonicOS 7). Use for asset identification and report headers.
+  - metricId: 1998 | query: `Administration.FirewallName` | result: string
+  - gotcha: SonicOS 7 path is Administration.FirewallName. SonicOS 6 uses System.Administration.FirewallName. The id=1998 Global metric uses the shorter path — confirmed correct for inspectorId=7.
+  - status: VALIDATED
+- **`metrics:sonicwall:http-management-enabled`** [P085] - SonicWall — Cleartext HTTP Web Management Allowed. Whether HTTP (cleartext) web management is enabled from System.Administration.WebManagementAllowHttp. When true, admin credentials are transmitted in cleartext.
+  - metricId: 106907 | query: `System.Administration.WebManagementAllowHttp` | result: boolean
+  - compliant when: result EQ_OP false
+  - status: VALIDATED
+- **`metrics:sonicwall:licenses-expiring-30d-count`** [P086] - SonicWall — Licenses Expiring Within 30 Days Count. Count of security service licenses expiring in fewer than 30 days from length(Licenses.[?Expiration AND_OP time_until(Expiration, 'days') < 30]).
+  - metricId: 700 | query: `` length(Licenses.[?Expiration AND_OP time_until(Expiration, `days`) < `30`]) `` | result: integer (count)
+  - compliant when: result EQ_OP 0
+  - status: VALIDATED
+- **`metrics:sonicwall:licenses-expiring-30d-list`** [P087] - SonicWall — Licenses Expiring Within 30 Days List. Pipe-joined list of security service names expiring within 30 days.
+  - metricId: 699 | query: `` join(' | ' ,Licenses[?Expiration AND_OP time_until(Expiration, `days`) < `30`].SecurityService) `` | result: string
+  - compliant when: result EQ_OP null OR_OP result EQ_OP ''
+  - status: VALIDATED
+- **`metrics:sonicwall:local-users-count`** [P088] - SonicWall — Local User Account Count. Count of local (non-centralized) user accounts from Users.LocalUsers | length(@). Local accounts bypass LDAP/AD and complicate offboarding.
+  - metricId: 106913 | query: `Users.LocalUsers | length(@)` | result: integer (count)
+  - status: VALIDATED
+- **`metrics:sonicwall:min-password-length`** [P089] - SonicWall — Minimum Password Length (Characters). Minimum password length requirement from System.Administration.PasswordMinimumLength. Values below 12 indicate insufficient complexity.
+  - metricId: 106908 | query: `System.Administration.PasswordMinimumLength` | result: integer (characters)
+  - compliant when: result >= 12
+  - status: VALIDATED
+- **`metrics:sonicwall:model`** [P090] - SonicWall — Hardware Model. Hardware model identifier from System.Model. Used for lifecycle/EOL tracking.
+  - metricId: 252 | query: `System.Model` | result: string
+  - status: VALIDATED
+- **`metrics:sonicwall:otp-config-count`** [P091] - SonicWall — Administrator OTP Configuration Entries. Count of one-time password (OTP/MFA) entries configured for admin accounts from CurrentConfig.administration.admin.one_time_password | length(@). Zero means MFA is not configured.
+  - metricId: 106911 | query: `CurrentConfig.administration.admin.one_time_password | length(@)` | result: integer (count)
+  - compliant when: result > 0
+  - gotcha: CurrentConfig uses camelCase path (.administration.admin) vs the System.Administration path used elsewhere. Both paths exist in the dataprint — CurrentConfig contains the full SonicOS running config JSON, System contains the parsed top-level fields.
+  - status: VALIDATED
+- **`metrics:sonicwall:restart-required`** [P092] - SonicWall — Device Restart Required. Boolean flag indicating whether a device restart is pending from System.RestartRequired. A pending restart may mean a firmware update has not taken effect.
+  - metricId: 701 | query: `System.RestartRequired` | result: boolean
+  - compliant when: result EQ_OP false
+  - status: VALIDATED
+- **`metrics:sonicwall:serial-number`** [P093] - SonicWall — Serial Number. Hardware serial number from System.SerialNumber.
+  - metricId: 536 | query: `System.SerialNumber` | result: string
+  - status: VALIDATED
+- **`metrics:sonicwall:stealth-mode-enabled`** [P094] - SonicWall — Firewall Stealth Mode Enabled. Whether stealth mode is active from Firewall.Settings.StealthMode. When false, the device responds to ICMP probes and is discoverable to network scanners.
+  - metricId: 106926 | query: `Firewall.Settings.StealthMode` | result: boolean
+  - compliant when: result EQ_OP true
+  - status: VALIDATED
+- **`metrics:sonicwall:syslog-configured`** [P095] - SonicWall — Syslog Server Forwarding Configured. Syslog forwarding configuration from CurrentConfig.log.syslog. Without a syslog server, logs cannot be retained in a SIEM or compliant storage.
+  - metricId: 106954 | query: `CurrentConfig.log.syslog` | result: object
+  - status: VALIDATED
+- **`metrics:sonicwall:user-lockout-enabled`** [P096] - SonicWall — User Account Lockout Policy Enabled. Whether account lockout is enforced from System.Administration.UserLockoutEnable. Without lockout, accounts are vulnerable to unlimited password guessing.
+  - metricId: 106906 | query: `System.Administration.UserLockoutEnable` | result: boolean
+  - compliant when: result EQ_OP true
+  - status: VALIDATED
+- **`metrics:sonicwall:wan-allow-rules-for-management-count`** [P097] - SonicWall — WAN Allow Rules Permitting Management Traffic Count. Count of WAN-inbound allow rules targeting management services. Internet-exposed admin interfaces significantly increase attack surface.
+  - metricId: 106909 | query: `Firewall.AccessRulesIPv4[?From EQ_OP 'WAN' AND_OP Action EQ_OP 'allow' AND_OP ((ServiceName != null AND_OP contains(ServiceName, 'Management')) OR_OP ServiceAny EQ_OP True)] | length(@)` | result: integer (count)
+  - compliant when: result EQ_OP 0
+  - status: VALIDATED
+- **`metrics:sonicwall:wan-to-lan-explicit-allow-any-list`** [P098] - SonicWall — Explicit Allow Any WAN-to-LAN Rules. Names of WAN→LAN allow rules with both source and destination set to ANY. These rules bypass the firewall perimeter entirely.
+  - metricId: 1135 | query: `` [Firewall.AccessRulesIPv4[?From EQ_OP `WAN` AND_OP To EQ_OP `LAN` AND_OP Action EQ_OP `allow` AND_OP SourceAddressAny AND_OP DestinationAddressAny AND_OP Enable], Firewall.AccessRulesIPv6[?From EQ_OP `WAN` AND_OP To EQ_OP `LAN` AND_OP Action EQ_OP `allow` AND_OP SourceAddressAny AND_OP DestinationAddressAny AND_OP Enable]][].Name `` | result: array
+  - compliant when: result EQ_OP []
+  - status: VALIDATED
+- **`metrics:sonicwall:zones-without-gav-count`** [P099] - SonicWall — Zones With Gateway Anti-Virus Disabled Count. Count of zones where GatewayAntiVirus is false. Zones without GAV allow uninspected HTTP/FTP/SMTP traffic.
+  - metricId: 106915 | query: `Network.Zones[?GatewayAntiVirus EQ_OP False] | length(@)` | result: integer (count)
+  - compliant when: result EQ_OP 0
+  - status: VALIDATED
+- **`metrics:sonicwall:zones-without-ips-count`** [P100] - SonicWall — Zones Without Intrusion Prevention Count. Count of network zones where IntrusionPrevention is false from length(Network.Zones[?IntrusionPrevention EQ_OP 'false']). Should be 0.
+  - metricId: 703 | query: `` length(Network.Zones[?IntrusionPrevention EQ_OP `false`]) `` | result: integer (count)
+  - compliant when: result EQ_OP 0
+  - gotcha: IntrusionPrevention is boolean False (not string 'false') — the Global metric uses backtick `false` which is JSON false in JMESPath. The id=106916 variant uses `Network.Zones[?IntrusionPrevention EQ_OP False]` (Python-style) and also returns a valid result. Use backtick-quoted boolean for strict JMESPath compliance.
+  - status: VALIDATED
+- **`metrics:sonicwall:zones-without-ips-list`** [P101] - SonicWall — Zones Without Intrusion Prevention List. Comma-joined names of zones without IPS enabled. Should be '-' (empty).
+  - metricId: 702 | query: `` Network.Zones[?IntrusionPrevention EQ_OP `false`].Name OR_OP to_array(`-`) | join(`, `, @) `` | result: string
+  - compliant when: result EQ_OP '-'
+  - status: VALIDATED

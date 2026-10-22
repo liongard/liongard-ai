@@ -77,16 +77,16 @@ cross_check:
 proposed_metric_gaps:
   - field: "Per-job status composite"
     fallback: "Client-side parse of Jobs[*]"
-    jira_ticket:
+    tracking_ref:
   - field: "Failed job count"
     fallback: "Client-side length filter"
-    jira_ticket:
+    tracking_ref:
   - field: "Hours since last successful backup"
     fallback: "Client-side max() over Jobs[*]"
-    jira_ticket:
+    tracking_ref:
   - field: "Backup image retention compliance"
     fallback: "Manual confirm in SPX console"
-    jira_ticket:
+    tracking_ref:
 
 trigger_keyword: storagecraft
 

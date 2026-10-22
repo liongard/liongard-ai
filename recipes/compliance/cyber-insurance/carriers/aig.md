@@ -132,7 +132,7 @@ services — check via Windows Server single-system recipe.
 - Third-party application EOL: not directly inspected — requires software inventory attestation
 
 **Note:** Use string-based OS filters (not `OperatingSystemVersionNum < 6.2` which misses
-Windows 10) per `learnings.md` — confirmed bug. Correct pattern:
+Windows 10, VersionNum=10) — a known catalog trap. Correct pattern:
 `contains(OperatingSystem, 'Windows 7')`, `contains(OperatingSystem, 'Windows XP')`.
 
 ---
@@ -281,10 +281,10 @@ Security / Industrial Control
 
 | Item | Source | Notes |
 |---|---|---|
-| Form 149053 Ed. 08/23 | `internal/cyber-insurance-forms/aig/aig-cyber-insurance-application-2023.txt` | Full extraction, ≤$50M revenue form |
-| Broker guidance | `internal/cyber-insurance-forms/aig/aig-cyber-application-broker-guidance.txt` | SAR/ESR context, CyberMatics |
+| Form 149053 Ed. 08/23 | Carrier application (from carrier or broker) | Full extraction, ≤$50M revenue form |
+| Broker guidance | Carrier application (from carrier or broker) | SAR/ESR context, CyberMatics |
 | Evidence mapping | `domains/auth.md`, `domains/endpoint.md`, `domains/network.md`, `domains/vendor.md` | Domain files are metric source of truth |
-| EOL OS note | `learnings.md` — 2026-05-21 AD bug entry | Use string-based OS filter, not VersionNum |
+| EOL OS note | Known catalog trap: VersionNum filters miss Windows 10 | Use string-based OS filter, not VersionNum |
 
 ---
 

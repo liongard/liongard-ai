@@ -1,0 +1,275 @@
+{
+  "primitiveCount": 29,
+  "recipe": "single-system-watchguard",
+  "source": "recipes/single-system-analysis/by-inspector/watchguard.md",
+  "sourceSha256": "64138be53312d0d6efd08ae5301fd23199f3945585aec3bfbdc7cd4b28c94dc3",
+  "vendors": [
+    {
+      "inspectorId": 29,
+      "inspectorSlug": "watchguard-inspector",
+      "primitives": [
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:access-rule-summary",
+          "metricUuid": "c838e319-444b-438f-b3d6-1d6dba36f54b",
+          "query": "AccessRules[].join( `, `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`Enabled`, to_string(Enabled)]), join(`: `, [`Action`, to_string(ConnectionsAre)]), join(`: `, [`Service`, to_string(Service)]), join(`: `, [`From`, to_string(FromAliasList)]), join(`: `, [`To`, to_string(ToAliasList)]), join(`: `, [`Static NAT`, to_string(StaticNat)]), join(`: `, [`Global NAT`, to_string(GlobalDnat)]) , join(`: `, [`Global 1:1 Nat`, to_string(Global_1to1Nat)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P001"
+        },
+        {
+          "compliantWhen": "result == 0",
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:account-lockout-disabled-count",
+          "metricUuid": "465e834e-7cd2-43de-9c7d-f44f1a7ecfae",
+          "query": "SystemInfo.AccountLockoutSettings[?Status != 'Enabled'] |length(@)",
+          "resultType": "integer",
+          "seq": "P002"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:account-lockout-enabled-list",
+          "metricUuid": "b3254b6b-3e79-42ed-a935-b601b67307f6",
+          "query": "SystemInfo.AccountLockoutSettings[?Status == 'Enabled'].[Status][]",
+          "resultType": "array",
+          "seq": "P003"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:alias-summary",
+          "metricUuid": "c4c036c6-ee18-47d8-bd34-d21596380fb7",
+          "query": "Aliases[].join( `, `, [join(`: `, [`Name`, to_string(\"Alias Name\")]), join(`: `, [`Description`, to_string(Description)]), join(`: `, [`Members`, to_string(AliasMembersList_r)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P004"
+        },
+        {
+          "compliantWhen": "result == 0",
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:down-interfaces-count",
+          "metricUuid": "f287894a-7d50-4f96-9bdb-c7fca5b409b8",
+          "query": "Interfaces[?Enabled == 'yes' && Status != 'Up'] | length(@)",
+          "resultType": "integer",
+          "seq": "P005"
+        },
+        {
+          "compliantWhen": "result == []",
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:down-interfaces-list",
+          "metricUuid": "5f401c27-7b62-4389-972c-78771f7fc254",
+          "query": "Interfaces[?Enabled == 'yes' && Status != 'Up'].[Name, Status]",
+          "resultType": "array",
+          "seq": "P006"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:dynamic-nat-summary",
+          "metricUuid": "bd76eb82-9bf2-4f35-a9dc-7bec5d489936",
+          "query": "NAT.dynamicNAT[].join( `, `, [join(`: `, [`To`, to_string(To)]), join(`: `, [`From`, to_string(From)]), join(`: `, [`Source IP`, to_string(SourceIP)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P007"
+        },
+        {
+          "compliantWhen": "result == 0",
+          "fieldGotcha": "DaysUntilExpiration_r is a resolved/computed string field \u2014 filter uses string comparison '<= 30' not numeric. Confirm behavior when value is exactly 30.",
+          "id": "metrics:watchguard:features-expiring-30d-count",
+          "metricUuid": "8cb8c636-d56c-4d8a-90a7-4702057b3eb3",
+          "query": "Features[?DaysUntilExpiration_r <= '30'] | length(@)",
+          "resultType": "integer",
+          "seq": "P008"
+        },
+        {
+          "compliantWhen": "result == []",
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:features-expiring-30d-list",
+          "metricUuid": "941ffaf6-dda2-4770-a712-a4a091fbbc3f",
+          "query": "Features[?DaysUntilExpiration_r <= '30'].[Feature,Expiration]",
+          "resultType": "array",
+          "seq": "P009"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:firmware-version",
+          "metricUuid": "1282de1c-bfc8-4687-8c2c-ad884f8d52ec",
+          "query": "SystemInfo.Version",
+          "resultType": "string",
+          "seq": "P010"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:group-summary",
+          "metricUuid": "88c8b3ba-a0fc-4673-8e93-5d43e1ce53eb",
+          "query": "Users[?Type == 'Group'].join( `, `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`AuthServer`, to_string(AuthServer)]), join(`: `, [`Description`, to_string(Description)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P011"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:hostname",
+          "metricUuid": "ab839c00-30aa-11ee-be56-0242ac120002",
+          "query": "SystemInfo.SystemName",
+          "resultType": "string",
+          "seq": "P012"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:interface-summary",
+          "metricUuid": "9afaca99-3520-4876-b2cf-e7c3e0e462e8",
+          "query": "Interfaces[].join( `, `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`Enabled`, to_string(Enabled)]), join(`: `, [`Type`, to_string(Type)]), join(`: `, [`Address`, to_string(Address)]), join(`: `, [`IP Type`, to_string(IPNodeType)]), join(`: `, [`IP Assignment`, to_string(IPAssignment)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P013"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:licensed-interface-count",
+          "metricUuid": "55787acd-063a-4a7f-8da9-7037a762bae1",
+          "query": "SystemInfo.LicensedInterface",
+          "resultType": "integer",
+          "seq": "P014"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:management-ip",
+          "metricUuid": "e422f773-48bc-4707-8dad-21b97f487c2f",
+          "query": "SystemInfo.ManagementIP",
+          "resultType": "string",
+          "seq": "P015"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:mgmt-user-summary",
+          "metricUuid": "4d23f503-43ff-4a47-bfb8-245eb2ac5764",
+          "query": "DeviceMgmtUsers[].join( `, `, [join(`: `, [`Username`, to_string(Username)]), join(`: `, [`Role`, to_string(Role)]), join(`: `, [`AuthServer`, to_string(AuthServer)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P016"
+        },
+        {
+          "compliantWhen": "result == 0",
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:mgmt-users-locked-out-count",
+          "metricUuid": "d137f23e-b10e-4bb9-ad46-5df0a35eb4e6",
+          "query": "DeviceMgmtUsers[?LockedOutStatus !='No lockout'] | length(@)",
+          "resultType": "integer",
+          "seq": "P017"
+        },
+        {
+          "compliantWhen": "result == []",
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:mgmt-users-locked-out-list",
+          "metricUuid": "c1278754-ffdf-4c1e-8d98-0ee6efc6aaa2",
+          "query": "DeviceMgmtUsers[?LockedOutStatus !='No lockout'].[Username]",
+          "resultType": "array",
+          "seq": "P018"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:mobile-ipsec-policies",
+          "metricUuid": "412c590a-b5e6-4f5b-9e5f-e6ec6cb2b85e",
+          "query": "VPN.ClientVPN.MobileIPSec[].join( `, `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`AuthServer`, to_string(AuthServer)]), join(`: `, [`Allowed Access`, to_string(AllowedAccessStr_r)]), join(`: `, [`Virtual IP Address Pool`, to_string(VirtualIPAddressPool)]), join(`: `, [`Settings`, to_string(IPSecSettings)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P019"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:mobile-ssl-vpn-summary",
+          "metricUuid": "62ab6830-a05d-4d6e-9512-041bb6eb83a3",
+          "query": "VPN.ClientVPN.MobileSSL.join( `, `, [join(`: `, [`SSL Server`, to_string(SslServer)]), join(`: `, [`DNS Servers`, to_string(DnsServers)]), join(`: `, [`Domain Name`, to_string(DomainName)]), join(`: `, [`Encryption`, to_string(Encryption)]), join(`: `, [`VPN Traffic`, to_string(VpnTraffic)]), join(`: `, [`DataChannel`, to_string(DataChannel)]), join(`: `, [`IP Address Pool`, to_string(IpAddressPool)]), join(`: `, [`Authentication`, to_string(Authentication)]), join(`: `, [`Allowed Resources`, to_string(AllowedResources)]), join(`: `, [`Auth Users`, to_string(AuthenticationUsers)])])",
+          "resultType": "object",
+          "seq": "P020"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:model",
+          "metricUuid": "ab839e80-30aa-11ee-be56-0242ac120002",
+          "query": "SystemInfo.Model",
+          "resultType": "string",
+          "seq": "P021"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:one-to-one-nat-summary",
+          "metricUuid": "694c4a94-4809-4399-a37f-ca03faa77284",
+          "query": "NAT.oneToOneNAT[].join( `, `, [join(`: `, [`Interface`, to_string(Interface)]), join(`: `, [`NAT Address`, to_string(NATAddress)]), join(`: `, [`Real Address`, to_string(RealAddress)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P022"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:physical-interface-count",
+          "metricUuid": "aee8de4d-a0de-4042-9e62-bd99e0e86379",
+          "query": "SystemInfo.PhysicalInterface",
+          "resultType": "integer",
+          "seq": "P023"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:quota-action-summary",
+          "metricUuid": "c1eec04c-8907-4a71-9d4d-a6cce8d44794",
+          "query": "QuotaAction[].join( `, `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`Time(Min/Day)`, to_string(TimeInMinPerDay)]), join(`: `, [`Bandwidth(MB/Day)`, to_string(BandwidthInMBPerDay)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P024"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:quota-rule-summary",
+          "metricUuid": "9d5549f8-be54-4753-8b67-192ce4dde403",
+          "query": "QuotaRules[].join( `, `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`Action`, to_string(Action)]), join(`: `, [`Status`, to_string(Status)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P025"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:serial-number",
+          "metricUuid": "ab839fd4-30aa-11ee-be56-0242ac120002",
+          "query": "SystemInfo.SerialNumber",
+          "resultType": "string",
+          "seq": "P026"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:site-to-site-phase1-summary",
+          "metricUuid": "1bbd241b-0fc5-4560-886f-b1c5453c13b4",
+          "query": "SiteToSiteVPN.Phase1[].join( `, `, [join(`: `, [`Policy Name`, to_string(PolicyName)]), join(`: `, [`Status`, to_string(Status)]), join(`: `, [`Version`, to_string(Version)]), join(`: `, [`Peer Name`, to_string(PeerName)]), join(`: `, [`Action Name`, to_string(ActionName)]), join(`: `, [`Xchng Mode`, to_string(XchngMode)]), join(`: `, [`Local Interface`, to_string(LocalInterface)]), join(`: `, [`VIF`, to_string(VIF)]), join(`: `, [`VIF Protocol`, to_string(VIFProto)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P027"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:site-to-site-phase2-summary",
+          "metricUuid": "89263756-8579-45b3-99b2-3de75c4df04a",
+          "query": "SiteToSiteVPN.Phase2[].join( `, `, [join(`: `, [`Policy Name`, to_string(PolicyName)]), join(`: `, [`Status`, to_string(Status)]), join(`: `, [`IKE Version`, to_string(IKEVersion)]), join(`: `, [`Mode`, to_string(Mode)]), join(`: `, [`Key Mode`, to_string(KeyMode)]), join(`: `, [`VPN Type`, to_string(VPNType)]), join(`: `, [`IKE Policy`, to_string(IKEPolicyName)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P028"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:user-summary",
+          "metricUuid": "19f93f81-40f6-4e7c-936b-d58e43031be6",
+          "query": "Users[?Type == 'Single-User'].join( `, `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`AuthServer`, to_string(AuthServer)]), join(`: `, [`Description`, to_string(Description)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P029"
+        }
+      ]
+    }
+  ]
+}

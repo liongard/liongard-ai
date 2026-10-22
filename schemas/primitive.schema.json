@@ -46,7 +46,7 @@
         "inspectorId": {
           "type": "integer",
           "minimum": 1,
-          "description": "Numeric inspector ID from internal/inspector-name-system-id-mapping.xlsx. May differ across instances — informational only."
+          "description": "Numeric inspector ID (see reference/inspector-aliases.md). May differ across instances — informational only."
         }
       }
     },
@@ -79,7 +79,7 @@
     },
     "resultUnit": {
       "type": "string",
-      "description": "Unit hint when resultType is integer. Pin this so threshold comparisons don't drift (catalog trap from learnings.md — hours vs. minutes vs. days).",
+      "description": "Unit hint when resultType is integer. Pin this so threshold comparisons don't drift (common catalog trap — hours vs. minutes vs. days).",
       "examples": ["count", "days", "hours", "minutes", "seconds", "bytes", "megabytes", "percent"]
     },
     "compliantWhen": {

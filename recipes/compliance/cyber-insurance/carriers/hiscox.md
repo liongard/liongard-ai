@@ -166,7 +166,7 @@ The Tech E&O section asks about:
 
 | Item | Source | Notes |
 |---|---|---|
-| PLP_A0002 DOC file | `internal/cyber-insurance-forms/hiscox/PLP_A0002-HiscoxPRO-Tech-Cyber-Renewal-Application.DOC` | 437K DOC; broker portal PDFs require authentication |
+| PLP_A0002 DOC file | Carrier application (from carrier or broker) | 437K DOC; broker portal PDFs require authentication |
 | Evidence mapping | `domains/auth.md`, `domains/endpoint.md`, `domains/backup.md`, `domains/network.md`, `domains/vendor.md` | Domain files are metric source of truth |
 | Form availability note | As of 2026-05-21, Hiscox broker portal PDFs are not publicly accessible. Use the DOC file above and request current forms from the Hiscox PRO team or broker portal. | |
 

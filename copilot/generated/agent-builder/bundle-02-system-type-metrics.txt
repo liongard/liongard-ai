@@ -1,0 +1,623 @@
+LIONGARD METRIC REFERENCE DOCUMENTS for bundle bundle-02-system-type
+Documents: metrics-system-type-all-firewalls-barracuda-firewall, metrics-system-type-all-firewalls-cisco-asa, metrics-system-type-all-firewalls-cisco-meraki, metrics-system-type-all-firewalls-fortinet-fortigate, metrics-system-type-all-firewalls-palo-alto-panos, metrics-system-type-all-firewalls-pfsense, metrics-system-type-all-firewalls-sonicwall, metrics-system-type-all-firewalls-sophos-firewall, metrics-system-type-all-firewalls-sophos-sg, metrics-system-type-all-firewalls-watchguard
+
+
+========================================================================
+
+DOCUMENT: metrics-system-type-all-firewalls-barracuda-firewall
+
+# metrics-system-type-all-firewalls-barracuda-firewall - Metric reference (barracuda-firewall-inspector)
+
+Required metric primitives for the recipe `system-type-all-firewalls` (System-Type Assessment — All Firewalls), inspector `barracuda-firewall-inspector` (ID 52). 9 primitives, sequence ids P001-P009. For every system of this inspector, evaluate EVERY primitive below with `liongard_metric EVALUATE` (`jmesPathQuery`, `systemId`, `environmentId`), retry a null or error once, and log one row per primitive per system. Respect each gotcha.
+
+- **`metrics:barracuda-firewall:application-control-enabled`** [P001] - Barracuda Firewall — Application Control License Status. Whether the Application Control security service is enabled on the appliance.
+  - metricId: none (use query) | query: `SecuritySubscriptions[?name=='AppID'].status | [0]` | result: string
+  - compliant when: result == true
+  - gotcha: Licence status, not an on/off flag; application control is applied per firewall rule.
+  - status: VALIDATED
+- **`metrics:barracuda-firewall:atp-enabled`** [P002] - Barracuda Firewall — ATP License Status. Whether the Advanced Threat Protection (ATP) service is enabled on the appliance.
+  - metricId: none (use query) | query: `SecuritySubscriptions[?name=='ATD'].status | [0]` | result: string
+  - compliant when: result == true
+  - gotcha: Licence status (e.g. "Licensed"), not an on/off flag; ATP is applied per firewall rule.
+  - status: VALIDATED
+- **`metrics:barracuda-firewall:energize-updates-days-until-expiration`** [P003] - Barracuda Firewall — Energize Updates Days Until Expiration. Days remaining until Energize Updates subscription expires. Subscription feeds IPS, AV, and URL filter signatures — expiry stops all signature updates.
+  - metricId: none (use query) | query: `Licenses[?module=='Energize-Updates'].daysTillExpiration | [0]` | result: integer
+  - compliant when: result > 60
+  - status: VALIDATED
+- **`metrics:barracuda-firewall:firmware-version`** [P004] - Barracuda Firewall — Firmware Version. Current firmware version installed on the Barracuda CloudGen Firewall appliance.
+  - metricId: none (use query) | query: `SystemInfo.release` | result: string
+  - status: VALIDATED
+- **`metrics:barracuda-firewall:ips-enabled`** [P005] - Barracuda Firewall — IPS Enabled. Whether the Intrusion Prevention System (IPS) security service is enabled on the appliance.
+  - metricId: none (use query) | query: `IPS.enable` | result: boolean
+  - compliant when: result == true
+  - gotcha: Also check IPS.reportOnly: true means detect-only (a finding).
+  - status: VALIDATED
+- **`metrics:barracuda-firewall:local-users-total-count`** [P006] - Barracuda Firewall — Admin Account Count. Total number of local user accounts configured on the appliance.
+  - metricId: none (use query) | query: `length(Admins)` | result: integer
+  - gotcha: Only administrator accounts are in the dataprint.
+  - status: VALIDATED
+- **`metrics:barracuda-firewall:rules-open-any-to-any-count`** [P007] - Barracuda Firewall — Open Any-to-Any Access Rules Count. Count of access rules permitting any source to any destination — critical finding requiring immediate restriction.
+  - metricId: none (use query) | query: `length(FirewallRules[?source.references=='Any' && destination.references=='Any' && action.type!='block' && action.type!='deny' && !deactivated])` | result: integer
+  - compliant when: result == 0
+  - gotcha: Action values observed: block, pass. Filter confirmed; no positive case observed yet.
+  - status: VALIDATED
+- **`metrics:barracuda-firewall:system-model`** [P008] - Barracuda Firewall — System Model. Hardware model of the Barracuda CloudGen Firewall appliance.
+  - metricId: none (use query) | query: `SystemInfo.appliance` | result: string
+  - gotcha: SystemInfo.model gives the lowercase form.
+  - status: VALIDATED
+- **`metrics:barracuda-firewall:wan-management-allowed`** [P009] - Barracuda Firewall — Admins With Unrestricted Source IP. Whether management access is permitted from the WAN interface — must be false per MSP baseline.
+  - metricId: none (use query) | query: `length(Admins[?contains(peerIpRestriction, '0.0.0.0/0')])` | result: integer
+  - compliant when: result == false
+  - gotcha: No WAN-management flag exists; counts admin accounts allowed to log in from any source IP.
+  - status: VALIDATED
+
+
+========================================================================
+
+DOCUMENT: metrics-system-type-all-firewalls-cisco-asa
+
+# metrics-system-type-all-firewalls-cisco-asa - Metric reference (cisco-asa-inspector)
+
+Required metric primitives for the recipe `system-type-all-firewalls` (System-Type Assessment — All Firewalls), inspector `cisco-asa-inspector` (ID 22). 9 primitives, sequence ids P010-P018. For every system of this inspector, evaluate EVERY primitive below with `liongard_metric EVALUATE` (`jmesPathQuery`, `systemId`, `environmentId`), retry a null or error once, and log one row per primitive per system. Respect each gotcha.
+
+- **`metrics:cisco-asa:configs-match`** [P010] - Cisco ASA — Running and Startup Configs Match. Boolean indicating whether the running config matches the startup config from SystemInfo.MatchingConfigurations. False means unsaved changes will be lost on reboot.
+  - metricId: 736 | query: `SystemInfo.MatchingConfigurations` | result: boolean
+  - compliant when: result == true
+  - status: VALIDATED
+- **`metrics:cisco-asa:last-config-modified`** [P011] - Cisco ASA — Last Config Modification Date. Timestamp of the last configuration change from SystemInfo.LastModifiedAt. Use for change detection.
+  - metricId: 18 | query: `SystemInfo.LastModifiedAt` | result: string
+  - status: VALIDATED
+- **`metrics:cisco-asa:licenses-expiring-30d-count`** [P012] - Cisco ASA — Active Licenses Expiring Within 30 Days Count. Count of active ASA licenses expiring within 30 days from SystemInfo.Licenses[?DaysTillExpiration<=30 && Active==true].
+  - metricId: 732 | query: `` length(SystemInfo.Licenses[?DaysTillExpiration<=`30` && Active==`true`]) `` | result: integer (count)
+  - compliant when: result == 0
+  - status: VALIDATED
+- **`metrics:cisco-asa:licenses-expiring-5d-count`** [P013] - Cisco ASA — Active Licenses Expiring Within 5 Days Count. Count of active ASA licenses expiring within 5 days — critical alert threshold.
+  - metricId: 731 | query: `` length(SystemInfo.Licenses[?DaysTillExpiration<=`5` && Active==`true`]) `` | result: integer (count)
+  - compliant when: result == 0
+  - status: VALIDATED
+- **`metrics:cisco-asa:licenses-expiring-5d-list`** [P014] - Cisco ASA — Active Licenses Expiring Within 5 Days List. List of active ASA license objects expiring within 5 days.
+  - metricId: 730 | query: `` to_string(SystemInfo.Licenses[?DaysTillExpiration<=`5` && Active==`true`] || `-`) `` | result: string
+  - compliant when: result == '-'
+  - status: VALIDATED
+- **`metrics:cisco-asa:model`** [P015] - Cisco ASA — Model. Hardware model from SystemInfo.Model.
+  - metricId: 257 | query: `SystemInfo.Model` | result: string
+  - status: VALIDATED
+- **`metrics:cisco-asa:running-config`** [P016] - Cisco ASA — Running Configuration. Full running configuration snapshot from RunningConfig. Use for policy review and change detection.
+  - metricId: 522 | query: `RunningConfig` | result: object
+  - status: VALIDATED
+- **`metrics:cisco-asa:serial-number`** [P017] - Cisco ASA — Serial Number. Hardware serial number from SystemInfo.SerialNumber.
+  - metricId: 9 | query: `SystemInfo.SerialNumber` | result: string
+  - status: VALIDATED
+- **`metrics:cisco-asa:software-version`** [P018] - Cisco ASA — ASA Software Version. ASA software version string from SystemInfo.CiscoAdaptiveSecurityApplianceSoftwareVersion.
+  - metricId: 254 | query: `SystemInfo.CiscoAdaptiveSecurityApplianceSoftwareVersion` | result: string
+  - status: VALIDATED
+
+
+========================================================================
+
+DOCUMENT: metrics-system-type-all-firewalls-cisco-meraki
+
+# metrics-system-type-all-firewalls-cisco-meraki - Metric reference (cisco-meraki-inspector)
+
+Required metric primitives for the recipe `system-type-all-firewalls` (System-Type Assessment — All Firewalls), inspector `cisco-meraki-inspector` (ID 3). 15 primitives, sequence ids P019-P033. For every system of this inspector, evaluate EVERY primitive below with `liongard_metric EVALUATE` (`jmesPathQuery`, `systemId`, `environmentId`), retry a null or error once, and log one row per primitive per system. Respect each gotcha.
+
+- **`metrics:cisco-meraki:days-until-license-expiry`** [P019] - Cisco Meraki — Days Until License Expiration. Days until the Cisco Meraki license expires from LicensingOverview.DaysTillExpiration.
+  - metricId: 10 | query: `LicensingOverview.DaysTillExpiration` | result: integer (days)
+  - compliant when: result > slas.license_expiration_warn_days (default 30)
+  - gotcha: Recipe verification logs may reference LicenseStatus.expirationInDays — this path does NOT exist. The correct field is LicensingOverview.DaysTillExpiration, confirmed by Global metric id=10.
+  - status: VALIDATED
+- **`metrics:cisco-meraki:device-firmware-summary`** [P020] - Cisco Meraki — Device Firmware Summary. Sorted list of DeviceName + firmware version strings from Networks[].Devices[].
+  - metricId: 636 | query: `` Networks[].Devices[].join(', ', [join(': ', [`Device Name`, to_string(DeviceName)]), join(': ', [`Firmware`, to_string(firmware)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:cisco-meraki:device-serial-list`** [P021] - Cisco Meraki — Device Serial Number List. Sorted list of hardware serial numbers from Inventory[].serial.
+  - metricId: 525 | query: `Inventory[].serial | sort(@)` | result: array
+  - status: VALIDATED
+- **`metrics:cisco-meraki:hardware-list`** [P022] - Cisco Meraki — Hardware Device List. Array of device objects (Model, DeviceName, NetworkName) from Networks[].Devices[?networkId].
+  - metricId: 104678 | query: `Networks[].Devices[?networkId].{Model: model, DeviceName: DeviceName, NetworkName: NetworkName}` | result: array
+  - gotcha: The top-level key for Meraki devices is Networks[].Devices[] — NOT NetworkDevices (which does not exist). Always traverse via Networks[]. Confirmed by Global metric id=104678 and recipe verification on System B (2026-05-22).
+  - status: VALIDATED
+- **`metrics:cisco-meraki:license-status`** [P023] - Cisco Meraki — License Status. License status string from LicensingOverview.status (e.g. 'OK', 'License Required').
+  - metricId: 706 | query: `LicensingOverview.status` | result: string
+  - compliant when: result == 'OK'
+  - status: VALIDATED
+- **`metrics:cisco-meraki:open-ssid-count`** [P024] - Cisco Meraki — Open (No Auth) SSID Count. Count of enabled wireless SSIDs with authMode == 'open' (no PSK or 802.1x). Should be 0.
+  - metricId: 705 | query: `` length(Networks[?Type==`wireless`].SSIDs[] | [?enabled==`true`] | [?authMode==`open`]) `` | result: integer (count)
+  - compliant when: result == 0
+  - gotcha: SSIDs are nested under Networks[].SSIDs — not top-level Ssids[]. The recipe pattern Ssids[?authMode == 'open'] will return null. Always traverse via Networks[?Type=='wireless'].SSIDs[].
+  - status: VALIDATED
+- **`metrics:cisco-meraki:open-ssid-list`** [P025] - Cisco Meraki — Open (No Auth) SSID List. Names of enabled wireless SSIDs with authMode == 'open'. Should be empty.
+  - metricId: 704 | query: `` Networks[?Type==`wireless`].SSIDs[] | [?enabled==`true`] | [?authMode==`open`][].name || to_array(`-`) | join(`, `, @) `` | result: string
+  - compliant when: result == '-'
+  - status: VALIDATED
+- **`metrics:cisco-meraki:privileged-user-count`** [P026] - Cisco Meraki — Privileged User Count. Count of dashboard users with Privileged == 'Yes' from Users[].
+  - metricId: 237 | query: `` Users[?Privileged == `Yes`].name | length(@) `` | result: integer (count)
+  - gotcha: Privileged is the string 'Yes' not boolean true. Filter: Privileged == `Yes` (backtick-quoted string in JMESPath).
+  - status: VALIDATED
+- **`metrics:cisco-meraki:privileged-user-list`** [P027] - Cisco Meraki — Privileged User List. Comma-joined names of dashboard users with Privileged == 'Yes'.
+  - metricId: 238 | query: `` Users[?Privileged == `Yes`].name | join(`, `, @) `` | result: string
+  - status: VALIDATED
+- **`metrics:cisco-meraki:ssid-list`** [P028] - Cisco Meraki — SSID List. Comma-joined list of all SSID names across all networks from Networks[].SSIDs[].name.
+  - metricId: 16 | query: `` Networks[].SSIDs[].name | join(`, `,@) `` | result: string
+  - status: VALIDATED
+- **`metrics:cisco-meraki:total-device-count`** [P029] - Cisco Meraki — Total Device Count. Count of all network devices across all networks. Traverse via Networks[].Devices[] — NOT a top-level key.
+  - metricId: none (use query) | query: `length(Networks[].Devices[])` | result: integer (count)
+  - status: VALIDATED
+- **`metrics:cisco-meraki:vlan-count`** [P030] - Cisco Meraki — VLAN Count. Total VLAN count summed across all networks via sum(Networks[].length(VLANs)).
+  - metricId: 707 | query: `sum(Networks[].length(VLANs))` | result: integer (count)
+  - status: VALIDATED
+- **`metrics:cisco-meraki:vpn-enabled-subnets`** [P031] - Cisco Meraki — VPN Enabled Subnets. Array of [networkName, subnet list] pairs for networks with enabled VPN subnets.
+  - metricId: 637 | query: `` Networks[].[name, join(`, `, [to_string(VPNs.EnabledSubnets[])])][] `` | result: array
+  - status: VALIDATED
+- **`metrics:cisco-meraki:weak-encryption-ssid-count`** [P032] - Cisco Meraki — Weak Encryption SSID Count. Count of enabled wireless SSIDs where wpaEncryptionMode != 'WPA2 only'. Should be 0.
+  - metricId: 709 | query: `` length(Networks[?Type==`wireless`].SSIDs[] | [?enabled==`true`] | [?wpaEncryptionMode!=`WPA2 only`]) `` | result: integer (count)
+  - compliant when: result == 0
+  - status: VALIDATED
+- **`metrics:cisco-meraki:weak-encryption-ssid-list`** [P033] - Cisco Meraki — Weak Encryption SSID List. Names of enabled wireless SSIDs not using WPA2-only encryption.
+  - metricId: 708 | query: `` Networks[?Type==`wireless`].SSIDs[] | [?enabled==`true`] | [?wpaEncryptionMode!=`WPA2 only`][].name || to_array(`-`) | join(`, `, @) `` | result: string
+  - compliant when: result == '-'
+  - status: VALIDATED
+
+
+========================================================================
+
+DOCUMENT: metrics-system-type-all-firewalls-fortinet-fortigate
+
+# metrics-system-type-all-firewalls-fortinet-fortigate - Metric reference (fortinet-fortigate-inspector)
+
+Required metric primitives for the recipe `system-type-all-firewalls` (System-Type Assessment — All Firewalls), inspector `fortinet-fortigate-inspector` (ID 33). 13 primitives, sequence ids P034-P046. For every system of this inspector, evaluate EVERY primitive below with `liongard_metric EVALUATE` (`jmesPathQuery`, `systemId`, `environmentId`), retry a null or error once, and log one row per primitive per system. Respect each gotcha.
+
+- **`metrics:fortinet-fortigate:access-profiles-summary`** [P034] - Fortinet FortiGate — Access Profiles Summary. Admin access profile permissions summary from UserProfiles[]. Identifies which profiles have system, network, and security configuration access.
+  - metricId: 630 | query: `` UserProfiles[].join( `, `, [join(`: `, [`Name`, to_string(name)]), join(`: `, [`Scope`,to_string(scope)]) , join(`: `, [`Network Config`,to_string(netgrp)]) , join(`: `, [`System Config`,to_string(sysgrp)]) , join(`: `, [`Security Profiles`,to_string(utmgrp)]), join(`: `, [`IPsec,SSL,PPTP,L2TP VPN`,to_string(vpngrp)])]) `` | result: array
+  - status: VALIDATED
+- **`metrics:fortinet-fortigate:dns-servers`** [P035] - Fortinet FortiGate — DNS Servers. Comma-joined primary and secondary DNS server addresses from DNS.["primary","secondary"].
+  - metricId: 222 | query: `` DNS.["primary","secondary"] | join(`, `, @) `` | result: string
+  - status: VALIDATED
+- **`metrics:fortinet-fortigate:firewall-policy-structured`** [P036] - Fortinet FortiGate — Firewall Policy Summary (Structured). Structured array of firewall policy objects with name, srcintf, dstintf, srcaddr, dstaddr, service, comments. Use for programmatic analysis.
+  - metricId: 106514 | query: `FirewallPolicy[].[name, srcintf[].name, dstintf[].name, srcaddr[].name, dstaddr[].name, service[].name, comments]` | result: array
+  - status: VALIDATED
+- **`metrics:fortinet-fortigate:firewall-policy-summary`** [P037] - Fortinet FortiGate — Firewall Policy Summary (Rich). Sorted array of firewall policy detail strings (name, NAT, action, status, source/dest addresses, services) from FirewallPolicy[].
+  - metricId: 631 | query: `` FirewallPolicy[].join( `, `, [join(`: `, [`Name`, to_string(name)]) , join(`: `, [`NAT`,to_string(nat)]), join(`: `, [`Action`,to_string(action)]), join(`: `, [`Status`,to_string(status)]), join(`: `, [`Source Address`,to_string(sort(srcaddr[].name))]), join(`: `, [`Source Interface`,to_string(sort(srcintf[].name))]), join(`: `, [`Service`,to_string(sort(service[].name))])]) `` | result: array
+  - status: VALIDATED
+- **`metrics:fortinet-fortigate:firewall-vip-summary`** [P038] - Fortinet FortiGate — Firewall VIP Summary. Virtual IP (port forwarding / DNAT) entries from FirewallVIP[]. Review for exposed services and misconfigurations.
+  - metricId: 632 | query: `` FirewallVIP[].join( `, `, [join(`: `, [`Name`, to_string(name)]), join(`: `, [`Type`, to_string(type)]), join(`: `, [`External IP`, to_string(extip)]), join(`: `, [`External Interface`, to_string(extintf)]), join(`: `, [`External Port`, to_string(extport)]), join(`: `, [`Mapped IP Range`, to_string(sort(mappedip[].range))]) , join(`: `, [`Mapped Port`, to_string(mappedport)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:fortinet-fortigate:firmware-version`** [P039] - Fortinet FortiGate — Firmware Version. Current firmware version string from Firmware.current."version".
+  - metricId: 224 | query: `Firmware.current."version"` | result: string
+  - gotcha: Quoted key required in JMESPath because 'version' is a reserved word in some JMESPath implementations. Use Firmware.current."version" not Firmware.current.version. The id=521 metric provides an alternate path SystemInfo.Firmware.Version which may differ on some firmware versions.
+  - status: VALIDATED
+- **`metrics:fortinet-fortigate:fortiem-status`** [P040] - Fortinet FortiGate — FortiEMS Cloud Status. FortiEMS cloud licensing name and status from {Name: Name, Status: Licensing.fortiems_cloud.status}. Confirms endpoint management integration is active.
+  - metricId: 106544 | query: `{Name: Name, Status: Licensing.fortiems_cloud.status}` | result: object
+  - status: VALIDATED
+- **`metrics:fortinet-fortigate:group-summary`** [P041] - Fortinet FortiGate — Group Summary. Sorted array of group detail strings (name, email, members, group type) from Groups[].
+  - metricId: 628 | query: `` Groups[].join( `, `, [join(`: `, [`Name`,to_string(name)]), join(`: `, [`Email`,to_string(email)]), join(`: `, [`Member`,to_string(sort(member[].name))]), join(`: `, [`Group Type`,to_string("group-type")])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:fortinet-fortigate:hostname`** [P042] - Fortinet FortiGate — Hostname. Hostname of the FortiGate appliance from SystemGlobal.hostname.
+  - metricId: 626 | query: `SystemGlobal.hostname` | result: string
+  - status: VALIDATED
+- **`metrics:fortinet-fortigate:interface-summary`** [P043] - Fortinet FortiGate — Interface Summary. Sorted array of interface details (name, MTU, IP, role, VLAN ID, MAC) from Interfaces[].
+  - metricId: 629 | query: `` Interfaces[].join( `, `, [join(`: `, [`Name`, to_string(name)]), join(`: `, [`Vdom`,to_string(vdom)]), join(`: `, [`Type`,to_string(type)]), join(`: `, [`IP & Subnet`,to_string(ip)]), join(`: `, [`Role`,to_string(role)]), join(`: `, [`VLAN ID`,to_string(vlanid)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:fortinet-fortigate:model`** [P044] - Fortinet FortiGate — Model Number. Hardware platform ID (model) from Firmware.current."platform-id".
+  - metricId: 223 | query: `Firmware.current."platform-id"` | result: string
+  - gotcha: Two paths exist for model/version info. id=223 uses Firmware.current."platform-id" (the Fortinet API path). id=521 uses SystemInfo.Firmware.Version for the firmware string. These are complementary — use 223 for model, 224/521 for firmware version.
+  - status: VALIDATED
+- **`metrics:fortinet-fortigate:routing-policy-summary`** [P045] - Fortinet FortiGate — Routing Policy Summary. Sorted array of IPv4 routing entries (type, gateway, IP mask, interface) from IPV4Routing[].
+  - metricId: 633 | query: `` IPV4Routing[].join( `, `, [join(`: `, [`Type`, to_string(type)]), join(`: `, [`Gateway`, to_string(gateway)]), join(`: `, [`IP Mask`, to_string(ip_mask)]), join(`: `, [`Interface`, to_string(interface)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:fortinet-fortigate:user-summary`** [P046] - Fortinet FortiGate — User Summary. Sorted array of user detail strings (name, vdom, type, access profile) from Users[].
+  - metricId: 627 | query: `` Users[].join( `, `, [join(`: `, [`Name`, to_string(name)]), join(`: `, [`Vdom Name`,to_string(sort(vdom[].name))]), join(`: `, [`Type`,to_string(type_r)]), join(`: `, [`Profile`,to_string(accprofile)])]) | sort(@) `` | result: array
+  - gotcha: Users[] contains local VPN/firewall auth accounts only — NOT admin accounts. FortiGate admin accounts (System > Administrators) are NOT present in the dataprint. AdminUsers key returns null on all validated systems. Admin account audit requires manual FortiGate GUI review.
+  - status: VALIDATED
+
+
+========================================================================
+
+DOCUMENT: metrics-system-type-all-firewalls-palo-alto-panos
+
+# metrics-system-type-all-firewalls-palo-alto-panos - Metric reference (palo-alto-panos-inspector)
+
+Required metric primitives for the recipe `system-type-all-firewalls` (System-Type Assessment — All Firewalls), inspector `palo-alto-panos-inspector` (ID 49). 11 primitives, sequence ids P047-P057. For every system of this inspector, evaluate EVERY primitive below with `liongard_metric EVALUATE` (`jmesPathQuery`, `systemId`, `environmentId`), retry a null or error once, and log one row per primitive per system. Respect each gotcha.
+
+- **`metrics:palo-alto-panos:certificate-expiration`** [P047] - Palo Alto PAN-OS — Certificate Expiration Summary. Formatted list of shared certificates with common name and not-valid-after date. Used to flag certificates approaching expiration.
+  - metricId: 76072 | query: `` Configuration.shared.certificate[].join(`, `, [join(`: `, ['Name', "common-name"]), join(`: `, ['Expiration Date', "not-valid-after"])]) `` | result: array
+  - status: VALIDATED
+- **`metrics:palo-alto-panos:check-device-resources`** [P048] - Palo Alto PAN-OS — Device Resource Utilization (CPU & Memory). Formatted summary of CPU and memory utilization percentages from SystemResources. Used for capacity and performance monitoring.
+  - metricId: 76075 | query: `` SystemResources.join(`, `, [join(`: `, ['CPU Utilization', to_string(CPU.UsagePercentage)]), join(`: `, ['Memory Utilization', to_string(Memory.UsagePercentage)])]) `` | result: object
+  - status: VALIDATED
+- **`metrics:palo-alto-panos:config-changes-pending`** [P049] - Palo Alto PAN-OS — Configuration Changes Pending. Whether uncommitted configuration changes exist from Configuration.pending-changes-exist. Pending changes mean the running config does not match the candidate config — critical for audits.
+  - metricId: 76069 | query: `Configuration."pending-changes-exist"` | result: boolean
+  - compliant when: result == false
+  - gotcha: Key is hyphenated — JMESPath requires quoting: Configuration."pending-changes-exist".
+  - status: VALIDATED
+- **`metrics:palo-alto-panos:device-admins`** [P050] - Palo Alto PAN-OS — Device Administrator List. Array of admin usernames from AdminUsers[].admin. Use to audit for the default 'admin' account and excess privileged users.
+  - metricId: 76070 | query: `AdminUsers[].admin` | result: array
+  - status: VALIDATED
+- **`metrics:palo-alto-panos:dhcp-expiration`** [P051] - Palo Alto PAN-OS — DHCP Lease Expiration Summary. Formatted list of DHCP leases with IP and lease-end timestamp from Interfaces[].dhcp.lease.leases[].
+  - metricId: 76074 | query: `` Interfaces[].dhcp.lease.leases[?"lease-end"].join(`, `, [join(`: `, ['IP', "ip"]), join(`: `, ['Lease End', "lease-end"])])[] `` | result: array
+  - status: VALIDATED
+- **`metrics:palo-alto-panos:dhcp-lease-monitoring`** [P052] - Palo Alto PAN-OS — DHCP Active Lease Count. Count of active DHCP leases across all interfaces from length(Interfaces[].dhcp.lease.leases[]). Provides scope for DHCP server load.
+  - metricId: 76073 | query: `length(Interfaces[].dhcp.lease.leases[])` | result: integer (count)
+  - status: VALIDATED
+- **`metrics:palo-alto-panos:expired-device-certificates`** [P053] - Palo Alto PAN-OS — Expired Device Certificates (Boolean). Returns true if any system certificates are past their expiration date. Uses time_until() to check days remaining < 0.
+  - metricId: 76071 | query: `SystemInfo.certificates.info[?time_until(expirationDate, 'days') < '0'] | length(@) > '0'` | result: boolean
+  - compliant when: result == false
+  - status: VALIDATED
+- **`metrics:palo-alto-panos:interface-packets-received`** [P054] - Palo Alto PAN-OS — Interface Packets Received Summary. Formatted summary of received packet counts per interface. Used for traffic load and capacity review.
+  - metricId: 76077 | query: `` Interfaces[].join(`, `, [join(`: `, ['Interface', name]), join(`: `, ['Received Packets', to_string(status."received-packets")])]) `` | result: array
+  - status: VALIDATED
+- **`metrics:palo-alto-panos:interface-packets-transmitted`** [P055] - Palo Alto PAN-OS — Interface Packets Transmitted Summary. Formatted summary of transmitted packet counts per interface. Used for traffic load and capacity review.
+  - metricId: 76078 | query: `` Interfaces[].join(`, `, [join(`: `, ['Interface', name]), join(`: `, ['Transmitted Packets', to_string(status."transmitted-packets")])]) `` | result: array
+  - status: VALIDATED
+- **`metrics:palo-alto-panos:policy-based-forwarding-ips`** [P056] - Palo Alto PAN-OS — Policy Based Forwarding IP Addresses. Formatted list of policy-based forwarding (PBF) rules with rule name and forwarding nexthop IP across all applicable interfaces.
+  - metricId: 76076 | query: `` Interfaces[?pbfRules[].nexthop].pbfRules[].join(`, `, [join(`: `, ['Rule', "name"]), join(`: `, ['Forwarding IP', nexthop])]) `` | result: array
+  - status: VALIDATED
+- **`metrics:palo-alto-panos:software-version`** [P057] - Palo Alto PAN-OS — Software Version. Running PAN-OS version string from SystemInfo.sw-version. Used for firmware currency checks and CVE cross-reference. Key field for lifecycle review.
+  - metricId: 76068 | query: `SystemInfo."sw-version"` | result: string
+  - gotcha: The key is hyphenated — JMESPath requires quoting: SystemInfo."sw-version". Without quotes the hyphen is interpreted as subtraction and the query returns null.
+  - status: VALIDATED
+
+
+========================================================================
+
+DOCUMENT: metrics-system-type-all-firewalls-pfsense
+
+# metrics-system-type-all-firewalls-pfsense - Metric reference (pfsense-inspector)
+
+Required metric primitives for the recipe `system-type-all-firewalls` (System-Type Assessment — All Firewalls), inspector `pfsense-inspector` (ID 37). 18 primitives, sequence ids P058-P075. For every system of this inspector, evaluate EVERY primitive below with `liongard_metric EVALUATE` (`jmesPathQuery`, `systemId`, `environmentId`), retry a null or error once, and log one row per primitive per system. Respect each gotcha.
+
+- **`metrics:pfsense:alias-summary`** [P058] - pfSense — Alias Summary. Formatted summary of firewall aliases including name, type, description, detail, and address.
+  - metricId: 663 | query: `` aliases[].join( `, `, [join(`: `, [`Name`,to_string(name)]), join(`: `, [`type`,to_string(type)]), join(`: `, [`Description`,to_string(descr)]), join(`: `, [`Detail`,to_string(detail)]), join(`: `, [`Address`,to_string(address)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:pfsense:ca-certificate-summary`** [P059] - pfSense — CA Certificate Summary. Formatted summary of Certificate Authority entries including serial and description. Used to audit PKI configuration.
+  - metricId: 656 | query: `` ca[].join( `, `, [join(`: `, [`Serial`, to_string(serial)]), join(`: `, [`Description`, to_string(descr)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:pfsense:certificate-revocation-list-summary`** [P060] - pfSense — Certificate Revocation List Summary. Formatted summary of Certificate Revocation Lists including description, method, serial, and lifetime.
+  - metricId: 657 | query: `` crl[].join( `, `, [join(`: `, [`Description`, to_string(descr)]), join(`: `, [`Method`,to_string(method)]) , join(`: `, [`Serial`,to_string(serial)]), join(`: `, [`Lifetime`,to_string(lifetime)])]) `` | result: array
+  - status: VALIDATED
+- **`metrics:pfsense:cron-job-summary`** [P061] - pfSense — Cron Job Summary. Formatted summary of scheduled cron jobs including who, hour, day of month, day of week, month, minute, and command. Use to detect unauthorized scheduled tasks.
+  - metricId: 658 | query: `` cron[].join( `, `, [join(`: `, [`Who`, to_string(who)]), join(`: `, [`Hour`,to_string(hour)]), join(`: `, [`Day of the Month`, to_string(mday)]), join(`: `, [`Day of the week`, to_string(wday)]), join(`: `, [`Month`, to_string(month)]), join(`: `, [`Minute`, to_string(minute)]) , join(`: `, [`Command`, to_string(command)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:pfsense:firewall-rule-summary`** [P062] - pfSense — Firewall Rule Summary. Formatted summary of all firewall rules including description, type, source, interface, and destination.
+  - metricId: 660 | query: `` filter[?type != `null`].join( `, `, [join(`: `, [`Description`, to_string(descr)]), join(`: `, [`Type`,to_string(type)]), join(`: `, [`Source`, to_string(source)]) , join(`: `, [`Interface`,to_string(interface)]), join(`: `, [`Destination`,to_string(destination)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:pfsense:groups-summary`** [P063] - pfSense — Groups Summary. Formatted summary of all groups including name, description, privileges, and scope.
+  - metricId: 662 | query: `` groups[].join( `, `, [join(`: `, [`Name`, to_string(name)]), join(`: `, [`Description`,to_string(description)]) join(`: `, [`Privileges`,to_string(priv)]), join(`: `, [`Scope`,to_string(scope)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:pfsense:interface-summary`** [P064] - pfSense — Interface Summary. Formatted summary of all network interfaces including physical interface, description, IP address, subnet, and gateway.
+  - metricId: 666 | query: `` interfaces[].join( `, `, [join(`: `, [`Interface`, to_string(if)]), join(`: `, [`Description`,to_string(descr)]), join(`: `, [`IP Address`,to_string(ipaddr)]), join(`: `, [`Subnet`,to_string(subnet)]), join(`: `, [`Gateway`,to_string(gateway)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:pfsense:nat-1to1-rule-summary`** [P065] - pfSense — NAT 1:1 Rule Summary. Formatted summary of 1:1 NAT rules including description, source address, external address, interface, and destination.
+  - metricId: 654 | query: `` nat.onetoone[].join( `, `, [join(`: `, [`Description`, descr]), join(`: `, [`Source Address`, source.address]), join(`: `, [`External Address`, to_string(external)]), join(`: `, [`Interface`, to_string(interface)]), join(`: `, [`Destination`, to_string(destination)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:pfsense:outbound-nat-list`** [P066] - pfSense — Outbound NAT Configuration. Outbound NAT configuration object from nat.outbound. Use to confirm outbound NAT mode (automatic/hybrid/manual).
+  - metricId: 653 | query: `nat.outbound` | result: object
+  - status: VALIDATED
+- **`metrics:pfsense:port-forwarding-rule-summary`** [P067] - pfSense — Port Forwarding Rule Summary. Formatted summary of port forwarding (inbound NAT) rules including description, target, protocol, interface, local port, and destination.
+  - metricId: 652 | query: `` nat.rule[].join( `, `, [join(`: `, [`Description`, to_string(descr)]), join(`: `, [`Target`, to_string(target) ]) , join(`: `, [`Protocol`, to_string(protocol) ]), join(`: `, [`Interface`, to_string(interface) ]) , join(`: `, [`Local-Port`, to_string("local-port") ]) , join(`: `, [`Destination[Port,Network]`, to_string(destination)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:pfsense:software-version`** [P068] - pfSense — Software Version. Running pfSense version number from SystemInfo.version (float, e.g. 19.1). Distinguishes Community Edition from pfSense Plus and tracks firmware currency.
+  - metricId: 231 | query: `SystemInfo.version` | result: float
+  - gotcha: SystemInfo.version is a FLOAT (e.g., 19.1), not a string. Prior resultType 'string' was incorrect. Do not use string comparison on this field.
+  - status: VALIDATED
+- **`metrics:pfsense:switchport-summary`** [P069] - pfSense — Switchport Summary. Formatted summary of managed switch ports including port number and state (applies to hardware with embedded switch, e.g., SG-3100).
+  - metricId: 665 | query: `` switches.switch.swports.swport[].join( `, `, [join(`: `, [`Port`, to_string(port)]), join(`: `, [`State`,to_string(state)]) ]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:pfsense:time-servers`** [P070] - pfSense — Configured Time Servers (NTP). NTP time server addresses configured on the appliance from SystemInfo.timeservers. Accurate time is required for VPN, certificates, and log correlation.
+  - metricId: 230 | query: `SystemInfo.timeservers` | result: string
+  - status: VALIDATED
+- **`metrics:pfsense:user-list-with-scope`** [P071] - pfSense — User List with Scope. Array of [username, scope] pairs for all local users. Scope distinguishes local from remote/LDAP accounts.
+  - metricId: 229 | query: `users[].[name, scope]` | result: array
+  - status: VALIDATED
+- **`metrics:pfsense:user-server-certificate-summary`** [P072] - pfSense — User and Server Certificate Summary. Formatted summary of user and server certificates including type and description.
+  - metricId: 655 | query: `` certificate_keys[].join( `, `, [join(`: `, [`Type`, to_string(type)]), join(`: `, [`Description`, to_string(descr)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:pfsense:users-added-summary`** [P073] - pfSense — Users Added Summary. Formatted summary of all user accounts including name and scope.
+  - metricId: 661 | query: `` users[].join( `, `, [join(`: `, [`Name`, to_string(name)]), join(`: `, [`Scope`, to_string(scope)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:pfsense:virtual-ip-summary`** [P074] - pfSense — Virtual IP Summary. Formatted summary of virtual IPs (CARP, IP Alias, etc.) including mode, type, description, subnet, subnet bits, and interface.
+  - metricId: 664 | query: `` virtualip.vip[].join( `, `, [join(`: `, [`Mode`, to_string(mode)]), join(`: `, [`Type`,to_string(type)]), join(`: `, [`Description`,to_string(descr)]) , join(`: `, [`Subnet`,to_string(subnet)]) , join(`: `, [`Subnet Bits`,to_string(subnet_bits)]), join(`: `, [`Interface`,to_string(interface)]) ]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:pfsense:vlan-summary`** [P075] - pfSense — VLAN Summary. Formatted summary of configured VLANs including description, tag, and virtual interface.
+  - metricId: 659 | query: `` vlans[].join( `, `, [join(`: `, [`Description`, to_string(descr)]), join(`: `, [`Tag`,to_string(tag)]), join(`: `, [`Interface`, to_string(vlanif)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+
+
+========================================================================
+
+DOCUMENT: metrics-system-type-all-firewalls-sonicwall
+
+# metrics-system-type-all-firewalls-sonicwall - Metric reference (sonicwall-inspector)
+
+Required metric primitives for the recipe `system-type-all-firewalls` (System-Type Assessment — All Firewalls), inspector `sonicwall-inspector` (ID 7). 26 primitives, sequence ids P076-P101. For every system of this inspector, evaluate EVERY primitive below with `liongard_metric EVALUATE` (`jmesPathQuery`, `systemId`, `environmentId`), retry a null or error once, and log one row per primitive per system. Respect each gotcha.
+
+- **`metrics:sonicwall:admin-session-idle-timeout`** [P076] - SonicWall — Administrator Session Idle Logout Timeout (Minutes). Admin session idle timeout in minutes from System.Administration.IdleLogoutTime. Timeouts exceeding 10 minutes leave sessions exposed.
+  - metricId: 106910 | query: `System.Administration.IdleLogoutTime` | result: integer (minutes)
+  - compliant when: result <= 10
+  - status: VALIDATED
+- **`metrics:sonicwall:admin-username`** [P077] - SonicWall — Administrator Username. Configured administrator account name from System.Administration.AdminName. Default 'admin' username significantly reduces brute-force resistance.
+  - metricId: 106905 | query: `System.Administration.AdminName` | result: string
+  - compliant when: result != 'admin'
+  - status: VALIDATED
+- **`metrics:sonicwall:agss-license-expiry`** [P078] - SonicWall — AGSS License Expiration Date. Expiration date for the Advanced Gateway Security Suite (AGSS) subscription from Licenses[?Name=='AGSS'].ExpiryDate. AGSS covers AV, IPS, APP Control, and ATP.
+  - metricId: 106974 | query: `Licenses[?Name=='AGSS'].ExpiryDate` | result: array
+  - status: VALIDATED
+- **`metrics:sonicwall:any-to-any-allow-rules-count`** [P079] - SonicWall — Permissive Any-to-Any Allow Firewall Rule Count. Count of IPv4 firewall rules allowing any source, any destination, any service from Firewall.AccessRulesIPv4[?SourceAddressAny==true && DestinationAddressAny==true && ServiceAny==true && Action=='allow'] | length(@). Should be 0.
+  - metricId: 106925 | query: `Firewall.AccessRulesIPv4[?SourceAddressAny==true && DestinationAddressAny==true && ServiceAny==true && Action=='allow'] | length(@)` | result: integer (count)
+  - compliant when: result == 0
+  - status: VALIDATED
+- **`metrics:sonicwall:audit-logging-enabled`** [P080] - SonicWall — Enhanced Audit Logging Enabled. Whether enhanced audit logging for configuration changes is active from System.Administration.EnhancedAuditLogging. Without this, config changes are not recorded.
+  - metricId: 106950 | query: `System.Administration.EnhancedAuditLogging` | result: boolean
+  - compliant when: result == true
+  - status: VALIDATED
+- **`metrics:sonicwall:capture-atp-enabled`** [P081] - SonicWall — Capture Advanced Threat Protection (ATP) Enabled. Whether Capture ATP sandbox analysis is enabled from CurrentConfig.capture_atp.enable. Without ATP, zero-day threats bypass inspection entirely.
+  - metricId: 106918 | query: `CurrentConfig.capture_atp.enable` | result: boolean
+  - compliant when: result == true
+  - status: VALIDATED
+- **`metrics:sonicwall:firmware-version`** [P082] - SonicWall — Firmware Version. Running SonicOS firmware version string from System.FirmwareVersion. Cross-reference against known CVEs in the NVD.
+  - metricId: 253 | query: `System.FirmwareVersion` | result: string
+  - status: VALIDATED
+- **`metrics:sonicwall:geo-ip-block-all-enabled`** [P083] - SonicWall — Geo-IP Block All Inbound Connections Enabled. Whether Geo-IP block-all is active from CurrentConfig.geo_ip.block.connections.all. Without this, connections from high-risk IP ranges are accepted.
+  - metricId: 106919 | query: `CurrentConfig.geo_ip.block.connections.all` | result: boolean
+  - compliant when: result == true
+  - status: VALIDATED
+- **`metrics:sonicwall:hostname`** [P084] - SonicWall — Hostname (Firewall Name). Firewall display name from Administration.FirewallName (SonicOS 7). Use for asset identification and report headers.
+  - metricId: 1998 | query: `Administration.FirewallName` | result: string
+  - gotcha: SonicOS 7 path is Administration.FirewallName. SonicOS 6 uses System.Administration.FirewallName. The id=1998 Global metric uses the shorter path — confirmed correct for inspectorId=7.
+  - status: VALIDATED
+- **`metrics:sonicwall:http-management-enabled`** [P085] - SonicWall — Cleartext HTTP Web Management Allowed. Whether HTTP (cleartext) web management is enabled from System.Administration.WebManagementAllowHttp. When true, admin credentials are transmitted in cleartext.
+  - metricId: 106907 | query: `System.Administration.WebManagementAllowHttp` | result: boolean
+  - compliant when: result == false
+  - status: VALIDATED
+- **`metrics:sonicwall:licenses-expiring-30d-count`** [P086] - SonicWall — Licenses Expiring Within 30 Days Count. Count of security service licenses expiring in fewer than 30 days from length(Licenses.[?Expiration && time_until(Expiration, 'days') < 30]).
+  - metricId: 700 | query: `` length(Licenses.[?Expiration && time_until(Expiration, `days`) < `30`]) `` | result: integer (count)
+  - compliant when: result == 0
+  - status: VALIDATED
+- **`metrics:sonicwall:licenses-expiring-30d-list`** [P087] - SonicWall — Licenses Expiring Within 30 Days List. Pipe-joined list of security service names expiring within 30 days.
+  - metricId: 699 | query: `` join(' | ' ,Licenses[?Expiration && time_until(Expiration, `days`) < `30`].SecurityService) `` | result: string
+  - compliant when: result == null || result == ''
+  - status: VALIDATED
+- **`metrics:sonicwall:local-users-count`** [P088] - SonicWall — Local User Account Count. Count of local (non-centralized) user accounts from Users.LocalUsers | length(@). Local accounts bypass LDAP/AD and complicate offboarding.
+  - metricId: 106913 | query: `Users.LocalUsers | length(@)` | result: integer (count)
+  - status: VALIDATED
+- **`metrics:sonicwall:min-password-length`** [P089] - SonicWall — Minimum Password Length (Characters). Minimum password length requirement from System.Administration.PasswordMinimumLength. Values below 12 indicate insufficient complexity.
+  - metricId: 106908 | query: `System.Administration.PasswordMinimumLength` | result: integer (characters)
+  - compliant when: result >= 12
+  - status: VALIDATED
+- **`metrics:sonicwall:model`** [P090] - SonicWall — Hardware Model. Hardware model identifier from System.Model. Used for lifecycle/EOL tracking.
+  - metricId: 252 | query: `System.Model` | result: string
+  - status: VALIDATED
+- **`metrics:sonicwall:otp-config-count`** [P091] - SonicWall — Administrator OTP Configuration Entries. Count of one-time password (OTP/MFA) entries configured for admin accounts from CurrentConfig.administration.admin.one_time_password | length(@). Zero means MFA is not configured.
+  - metricId: 106911 | query: `CurrentConfig.administration.admin.one_time_password | length(@)` | result: integer (count)
+  - compliant when: result > 0
+  - gotcha: CurrentConfig uses camelCase path (.administration.admin) vs the System.Administration path used elsewhere. Both paths exist in the dataprint — CurrentConfig contains the full SonicOS running config JSON, System contains the parsed top-level fields.
+  - status: VALIDATED
+- **`metrics:sonicwall:restart-required`** [P092] - SonicWall — Device Restart Required. Boolean flag indicating whether a device restart is pending from System.RestartRequired. A pending restart may mean a firmware update has not taken effect.
+  - metricId: 701 | query: `System.RestartRequired` | result: boolean
+  - compliant when: result == false
+  - status: VALIDATED
+- **`metrics:sonicwall:serial-number`** [P093] - SonicWall — Serial Number. Hardware serial number from System.SerialNumber.
+  - metricId: 536 | query: `System.SerialNumber` | result: string
+  - status: VALIDATED
+- **`metrics:sonicwall:stealth-mode-enabled`** [P094] - SonicWall — Firewall Stealth Mode Enabled. Whether stealth mode is active from Firewall.Settings.StealthMode. When false, the device responds to ICMP probes and is discoverable to network scanners.
+  - metricId: 106926 | query: `Firewall.Settings.StealthMode` | result: boolean
+  - compliant when: result == true
+  - status: VALIDATED
+- **`metrics:sonicwall:syslog-configured`** [P095] - SonicWall — Syslog Server Forwarding Configured. Syslog forwarding configuration from CurrentConfig.log.syslog. Without a syslog server, logs cannot be retained in a SIEM or compliant storage.
+  - metricId: 106954 | query: `CurrentConfig.log.syslog` | result: object
+  - status: VALIDATED
+- **`metrics:sonicwall:user-lockout-enabled`** [P096] - SonicWall — User Account Lockout Policy Enabled. Whether account lockout is enforced from System.Administration.UserLockoutEnable. Without lockout, accounts are vulnerable to unlimited password guessing.
+  - metricId: 106906 | query: `System.Administration.UserLockoutEnable` | result: boolean
+  - compliant when: result == true
+  - status: VALIDATED
+- **`metrics:sonicwall:wan-allow-rules-for-management-count`** [P097] - SonicWall — WAN Allow Rules Permitting Management Traffic Count. Count of WAN-inbound allow rules targeting management services. Internet-exposed admin interfaces significantly increase attack surface.
+  - metricId: 106909 | query: `Firewall.AccessRulesIPv4[?From=='WAN' && Action=='allow' && ((ServiceName != null && contains(ServiceName, 'Management')) || ServiceAny==True)] | length(@)` | result: integer (count)
+  - compliant when: result == 0
+  - status: VALIDATED
+- **`metrics:sonicwall:wan-to-lan-explicit-allow-any-list`** [P098] - SonicWall — Explicit Allow Any WAN-to-LAN Rules. Names of WAN→LAN allow rules with both source and destination set to ANY. These rules bypass the firewall perimeter entirely.
+  - metricId: 1135 | query: `` [Firewall.AccessRulesIPv4[?From == `WAN` && To == `LAN` && Action == `allow` && SourceAddressAny && DestinationAddressAny && Enable], Firewall.AccessRulesIPv6[?From == `WAN` && To == `LAN` && Action == `allow` && SourceAddressAny && DestinationAddressAny && Enable]][].Name `` | result: array
+  - compliant when: result == []
+  - status: VALIDATED
+- **`metrics:sonicwall:zones-without-gav-count`** [P099] - SonicWall — Zones With Gateway Anti-Virus Disabled Count. Count of zones where GatewayAntiVirus is false. Zones without GAV allow uninspected HTTP/FTP/SMTP traffic.
+  - metricId: 106915 | query: `Network.Zones[?GatewayAntiVirus==False] | length(@)` | result: integer (count)
+  - compliant when: result == 0
+  - status: VALIDATED
+- **`metrics:sonicwall:zones-without-ips-count`** [P100] - SonicWall — Zones Without Intrusion Prevention Count. Count of network zones where IntrusionPrevention is false from length(Network.Zones[?IntrusionPrevention=='false']). Should be 0.
+  - metricId: 703 | query: `` length(Network.Zones[?IntrusionPrevention ==`false`]) `` | result: integer (count)
+  - compliant when: result == 0
+  - gotcha: IntrusionPrevention is boolean False (not string 'false') — the Global metric uses backtick `false` which is JSON false in JMESPath. The id=106916 variant uses `Network.Zones[?IntrusionPrevention==False]` (Python-style) and also returns a valid result. Use backtick-quoted boolean for strict JMESPath compliance.
+  - status: VALIDATED
+- **`metrics:sonicwall:zones-without-ips-list`** [P101] - SonicWall — Zones Without Intrusion Prevention List. Comma-joined names of zones without IPS enabled. Should be '-' (empty).
+  - metricId: 702 | query: `` Network.Zones[?IntrusionPrevention  == `false`].Name || to_array(`-`) | join(`, `, @) `` | result: string
+  - compliant when: result == '-'
+  - status: VALIDATED
+
+
+========================================================================
+
+DOCUMENT: metrics-system-type-all-firewalls-sophos-firewall
+
+# metrics-system-type-all-firewalls-sophos-firewall - Metric reference (sophos-firewall-inspector)
+
+Required metric primitives for the recipe `system-type-all-firewalls` (System-Type Assessment — All Firewalls), inspector `sophos-firewall-inspector` (ID 28). 7 primitives, sequence ids P102-P108. For every system of this inspector, evaluate EVERY primitive below with `liongard_metric EVALUATE` (`jmesPathQuery`, `systemId`, `environmentId`), retry a null or error once, and log one row per primitive per system. Respect each gotcha.
+
+- **`metrics:sophos-firewall:active-user-list`** [P102] - Sophos Firewall — Active User List. Returns the names of all currently active users on the Sophos XG/XGS firewall
+  - metricId: 220 | query: `` User[?Status == `Active`].Name | join(`, `, @) `` | result: string
+  - status: VALIDATED
+- **`metrics:sophos-firewall:device-dns-summary`** [P103] - Sophos Firewall — Device DNS Summary. Returns the DNS IPv4 summary configuration for the Sophos XG/XGS firewall
+  - metricId: 584 | query: `SystemInfo.DNS_IPv4_Summary` | result: string
+  - status: VALIDATED
+- **`metrics:sophos-firewall:interfaces-count`** [P104] - Sophos Firewall — Interfaces Count. Total number of interfaces configured on the Sophos XG/XGS firewall
+  - metricId: 221 | query: `SystemInfo.InterfacesCount` | result: integer
+  - status: VALIDATED
+- **`metrics:sophos-firewall:security-policy-summary`** [P105] - Sophos Firewall — Security Policy Summary. Returns name and ordering details for all security policies on the Sophos XG/XGS firewall
+  - metricId: 583 | query: `` SecurityPolicy[].join( ` ', ' `, [join(`: `, [`Name`,to_string(Name)]), join(`: `, [`After`, to_string(After.Name)])]) `` | result: array
+  - status: VALIDATED
+- **`metrics:sophos-firewall:user-group-summary`** [P106] - Sophos Firewall — User Group Summary. Returns name and type details for all user groups configured on the Sophos XG/XGS firewall
+  - metricId: 585 | query: `` UserGroup.GroupDetail[].join( ` ', ' `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`Type`, to_string(GroupType)])]) `` | result: array
+  - status: VALIDATED
+- **`metrics:sophos-firewall:user-summary`** [P107] - Sophos Firewall — Active User Summary. Returns name, status, and group membership for all active users on the Sophos XG/XGS firewall
+  - metricId: 582 | query: `` User[?Status == `Active`].join( ` ', ' `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`Status`, to_string(Status)])]) `` | result: array
+  - status: VALIDATED
+- **`metrics:sophos-firewall:zone-summary`** [P108] - Sophos Firewall — Zone Summary. Returns name, type, and SSH/HTTPS management flags for all security zones on the Sophos XG/XGS firewall
+  - metricId: 586 | query: `` Zone[].join( `, `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`Type`, to_string(Type)]), join(`: `, [`SSH`, to_string(SSH)])]) `` | result: array
+  - status: VALIDATED
+
+
+========================================================================
+
+DOCUMENT: metrics-system-type-all-firewalls-sophos-sg
+
+# metrics-system-type-all-firewalls-sophos-sg - Metric reference (sophos-sg-inspector)
+
+Required metric primitives for the recipe `system-type-all-firewalls` (System-Type Assessment — All Firewalls), inspector `sophos-sg-inspector` (ID 43). 15 primitives, sequence ids P109-P123. For every system of this inspector, evaluate EVERY primitive below with `liongard_metric EVALUATE` (`jmesPathQuery`, `systemId`, `environmentId`), retry a null or error once, and log one row per primitive per system. Respect each gotcha.
+
+- **`metrics:sophos-sg:count-of-active-users`** [P109] - Sophos SG — Count of Active Users. Total number of enabled (active) users configured on the Sophos SG appliance
+  - metricId: 1397 | query: `` Users[?enabled == `true`] | length(@) `` | result: integer
+  - status: VALIDATED
+- **`metrics:sophos-sg:count-of-groups`** [P110] - Sophos SG — Count of Groups. Total number of groups configured on the Sophos SG appliance
+  - metricId: 1388 | query: `Groups[] | length(@)` | result: integer
+  - status: VALIDATED
+- **`metrics:sophos-sg:interface-summary`** [P111] - Sophos SG — Interface Summary. Returns name, type, IP address, link state, and MTU for all interfaces on the Sophos SG appliance
+  - metricId: 1162 | query: `` Interfaces[].[`Name:` name , `| Type:` InterfaceType_r ,`| Address:`primary_address `| Link:` link, `| MTU:` mtu] `` | result: array
+  - status: VALIDATED
+- **`metrics:sophos-sg:licenses-expiring-30-days-count`** [P112] - Sophos SG — Licenses Within 30 Days of Expiration Count. Total number of Sophos SG licenses expiring within the next 30 days
+  - metricId: 1387 | query: `` SystemInfo.Licensing[?DaysUntilExpiration_r < `30`] | length(@) `` | result: integer
+  - status: VALIDATED
+- **`metrics:sophos-sg:licenses-expiring-30-days-list`** [P113] - Sophos SG — Licenses Within 30 Days of Expiration List. Returns the names of Sophos SG licenses expiring within the next 30 days
+  - metricId: 1396 | query: `` SystemInfo.Licensing[?DaysUntilExpiration_r < `30`].name `` | result: array
+  - status: VALIDATED
+- **`metrics:sophos-sg:list-of-active-users`** [P114] - Sophos SG — List of Active Users. Returns the names of all enabled (active) users configured on the Sophos SG appliance
+  - metricId: 1159 | query: `` Users[?enabled == `true`].name `` | result: array
+  - status: VALIDATED
+- **`metrics:sophos-sg:list-of-groups`** [P115] - Sophos SG — List of Groups. Returns name, dynamic flag, and network for all groups configured on the Sophos SG appliance
+  - metricId: 1161 | query: `` Groups[].[`Name:`,name,`| Dynamic:` dynamic, `| Network:` network] `` | result: array
+  - status: VALIDATED
+- **`metrics:sophos-sg:list-of-network-definitions`** [P116] - Sophos SG — List of Network Definitions. Returns name and address for all network definition objects on the Sophos SG appliance
+  - metricId: 1386 | query: `` NetworkDefinitions[].[`Name:`name, `| Address:`address] `` | result: array
+  - status: VALIDATED
+- **`metrics:sophos-sg:nat-rules`** [P117] - Sophos SG — NAT Rules. Returns name, source, service, and destination for all active NAT rules on the Sophos SG appliance
+  - metricId: 496 | query: `` NAT[?status == `true`].[name, `| Src: `, source.name, `| Svc: `, service.name, `| Dest: `, destination.name] `` | result: array
+  - status: VALIDATED
+- **`metrics:sophos-sg:packet-filter-rules-summary`** [P118] - Sophos SG — Packet Filter Rules Summary. Returns name, action, direction, and status for all packet filter rules on the Sophos SG appliance
+  - metricId: 1163 | query: `` PacketFilter[].[`Name:`name,`| Action:`action,`| Direction:`direction, `| Status:` status] `` | result: array
+  - status: VALIDATED
+- **`metrics:sophos-sg:remote-access-profiles-summary`** [P119] - Sophos SG — Remote Access Profiles Summary. Returns name, status, and assigned networks for all SSL remote access profiles on the Sophos SG appliance
+  - metricId: 1167 | query: `` SSLRemoteAccessProfile[].[`Name:`name, `| Status:`status, `| Networks:` to_string(networks_r)] `` | result: array
+  - status: VALIDATED
+- **`metrics:sophos-sg:remote-gateways-summary`** [P120] - Sophos SG — Remote Gateways Summary. Returns name, authentication method, host, and Xauth flag for all IPsec remote gateways on the Sophos SG appliance
+  - metricId: 1165 | query: `` IpsecRemoteGateway[].[`Name:`name, `| Auth:`authentication, `| Host:` host, `| Xauth:`xauth] `` | result: array
+  - status: VALIDATED
+- **`metrics:sophos-sg:site-to-site-vpn-summary`** [P121] - Sophos SG — Site-to-Site VPN Connections Summary. Returns name, status, interface, and remote gateway for all site-to-site VPN connections on the Sophos SG appliance
+  - metricId: 1164 | query: `` SiteToSiteVPN[].[`Name:`name, `| Status:`status, `| Interface:`interface, `| Remote Gateway:`remote_gateway] `` | result: array
+  - status: VALIDATED
+- **`metrics:sophos-sg:ssh-enabled`** [P122] - Sophos SG — SSH Enabled. Indicates whether SSH access is enabled on the Sophos SG appliance
+  - metricId: 1157 | query: `SystemInfo.SSHAccessEnabled` | result: boolean
+  - status: VALIDATED
+- **`metrics:sophos-sg:utm-version`** [P123] - Sophos SG — UTM Version. Returns the current UTM firmware version of the Sophos SG appliance
+  - metricId: 1156 | query: `SystemInfo.UTMVersion` | result: string
+  - status: VALIDATED
+
+
+========================================================================
+
+DOCUMENT: metrics-system-type-all-firewalls-watchguard
+
+# metrics-system-type-all-firewalls-watchguard - Metric reference (watchguard-inspector)
+
+Required metric primitives for the recipe `system-type-all-firewalls` (System-Type Assessment — All Firewalls), inspector `watchguard-inspector` (ID 29). 29 primitives, sequence ids P124-P152. For every system of this inspector, evaluate EVERY primitive below with `liongard_metric EVALUATE` (`jmesPathQuery`, `systemId`, `environmentId`), retry a null or error once, and log one row per primitive per system. Respect each gotcha.
+
+- **`metrics:watchguard:access-rule-summary`** [P124] - WatchGuard — Access Rule Summary. Formatted summary of all access rules including name, enabled state, action, service, from/to aliases, and NAT settings.
+  - metricId: 601 | query: `` AccessRules[].join( `, `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`Enabled`, to_string(Enabled)]), join(`: `, [`Action`, to_string(ConnectionsAre)]), join(`: `, [`Service`, to_string(Service)]), join(`: `, [`From`, to_string(FromAliasList)]), join(`: `, [`To`, to_string(ToAliasList)]), join(`: `, [`Static NAT`, to_string(StaticNat)]), join(`: `, [`Global NAT`, to_string(GlobalDnat)]) , join(`: `, [`Global 1:1 Nat`, to_string(Global_1to1Nat)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:watchguard:account-lockout-disabled-count`** [P125] - WatchGuard — Account Lockout Disabled Count. Count of account lockout settings where status is not 'Enabled'. Non-zero means lockout is not enforced, leaving admin accounts open to brute-force.
+  - metricId: 885 | query: `SystemInfo.AccountLockoutSettings[?Status != 'Enabled'] |length(@)` | result: integer (count)
+  - compliant when: result == 0
+  - status: VALIDATED
+- **`metrics:watchguard:account-lockout-enabled-list`** [P126] - WatchGuard — Account Lockout Enabled Status List. List of account lockout settings where status is 'Enabled'. Confirms lockout configuration is active.
+  - metricId: 884 | query: `SystemInfo.AccountLockoutSettings[?Status == 'Enabled'].[Status][]` | result: array
+  - status: VALIDATED
+- **`metrics:watchguard:alias-summary`** [P127] - WatchGuard — Alias Summary. Formatted summary of all firewall aliases including alias name, description, and member list.
+  - metricId: 603 | query: `` Aliases[].join( `, `, [join(`: `, [`Name`, to_string("Alias Name")]), join(`: `, [`Description`, to_string(Description)]), join(`: `, [`Members`, to_string(AliasMembersList_r)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:watchguard:down-interfaces-count`** [P128] - WatchGuard — Down Interfaces Count. Count of enabled interfaces where status is not 'Up'. A non-zero count warrants investigation for connectivity or configuration problems.
+  - metricId: 883 | query: `Interfaces[?Enabled == 'yes' && Status != 'Up'] | length(@)` | result: integer (count)
+  - compliant when: result == 0
+  - status: VALIDATED
+- **`metrics:watchguard:down-interfaces-list`** [P129] - WatchGuard — Down Interfaces List. Names and statuses of enabled interfaces that are not in 'Up' state. Companion list to the down-interfaces count metric.
+  - metricId: 882 | query: `Interfaces[?Enabled == 'yes' && Status != 'Up'].[Name, Status]` | result: array
+  - compliant when: result == []
+  - status: VALIDATED
+- **`metrics:watchguard:dynamic-nat-summary`** [P130] - WatchGuard — Dynamic NAT Summary. Formatted summary of dynamic NAT rules including to, from, and source IP fields.
+  - metricId: 596 | query: `` NAT.dynamicNAT[].join( `, `, [join(`: `, [`To`, to_string(To)]), join(`: `, [`From`, to_string(From)]), join(`: `, [`Source IP`, to_string(SourceIP)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:watchguard:features-expiring-30d-count`** [P131] - WatchGuard — Features Expiring Within 30 Days Count. Count of licensed features (TSS, GAV, IPS, WebBlocker, etc.) with DaysUntilExpiration_r <= 30. Non-zero triggers an immediate renewal action.
+  - metricId: 889 | query: `Features[?DaysUntilExpiration_r <= '30'] | length(@)` | result: integer (count)
+  - compliant when: result == 0
+  - gotcha: DaysUntilExpiration_r is a resolved/computed string field — filter uses string comparison '<= 30' not numeric. Confirm behavior when value is exactly 30.
+  - status: VALIDATED
+- **`metrics:watchguard:features-expiring-30d-list`** [P132] - WatchGuard — Features Expiring Within 30 Days List. Feature names and expiration dates for licensed features expiring within 30 days. Companion list for the expiration count metric.
+  - metricId: 888 | query: `Features[?DaysUntilExpiration_r <= '30'].[Feature,Expiration]` | result: array
+  - compliant when: result == []
+  - status: VALIDATED
+- **`metrics:watchguard:firmware-version`** [P133] - WatchGuard — Firmware Version (Fireware OS). Running Fireware OS version string from SystemInfo.Version. Cross-reference against WatchGuard release notes for CVEs and EOL status.
+  - metricId: 318 | query: `SystemInfo.Version` | result: string
+  - status: VALIDATED
+- **`metrics:watchguard:group-summary`** [P134] - WatchGuard — Group Account Summary. Formatted summary of group accounts including name, auth server, and description.
+  - metricId: 605 | query: `` Users[?Type == 'Group'].join( `, `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`AuthServer`, to_string(AuthServer)]), join(`: `, [`Description`, to_string(Description)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:watchguard:hostname`** [P135] - WatchGuard — Hostname (System Name). Firewall system name from SystemInfo.SystemName. Used for asset identification and report headers.
+  - metricId: 1999 | query: `SystemInfo.SystemName` | result: string
+  - status: VALIDATED
+- **`metrics:watchguard:interface-summary`** [P136] - WatchGuard — Interface Summary. Formatted summary of all interfaces including name, enabled state, type, address, IP type, and IP assignment.
+  - metricId: 598 | query: `` Interfaces[].join( `, `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`Enabled`, to_string(Enabled)]), join(`: `, [`Type`, to_string(Type)]), join(`: `, [`Address`, to_string(Address)]), join(`: `, [`IP Type`, to_string(IPNodeType)]), join(`: `, [`IP Assignment`, to_string(IPAssignment)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:watchguard:licensed-interface-count`** [P137] - WatchGuard — Licensed Interface Count. Number of interfaces licensed for this appliance from SystemInfo.LicensedInterface. Helps size the appliance against actual port usage.
+  - metricId: 319 | query: `SystemInfo.LicensedInterface` | result: integer (count)
+  - status: VALIDATED
+- **`metrics:watchguard:management-ip`** [P138] - WatchGuard — Management IP Address. Management IP address of the appliance from SystemInfo.ManagementIP. Used to confirm whether management is reachable from WAN.
+  - metricId: 606 | query: `SystemInfo.ManagementIP` | result: string
+  - status: VALIDATED
+- **`metrics:watchguard:mgmt-user-summary`** [P139] - WatchGuard — Management User Summary. Formatted summary of all device management users including username, role, and authentication server.
+  - metricId: 602 | query: `` DeviceMgmtUsers[].join( `, `, [join(`: `, [`Username`, to_string(Username)]), join(`: `, [`Role`, to_string(Role)]), join(`: `, [`AuthServer`, to_string(AuthServer)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:watchguard:mgmt-users-locked-out-count`** [P140] - WatchGuard — Management Users Locked Out Count. Count of device management users currently in a locked-out state. Non-zero may indicate a brute-force event or stale locked account.
+  - metricId: 887 | query: `DeviceMgmtUsers[?LockedOutStatus !='No lockout'] | length(@)` | result: integer (count)
+  - compliant when: result == 0
+  - status: VALIDATED
+- **`metrics:watchguard:mgmt-users-locked-out-list`** [P141] - WatchGuard — Management Users Locked Out List. Usernames of device management users currently locked out. Companion list for the locked-out count metric.
+  - metricId: 886 | query: `DeviceMgmtUsers[?LockedOutStatus !='No lockout'].[Username]` | result: array
+  - compliant when: result == []
+  - status: VALIDATED
+- **`metrics:watchguard:mobile-ipsec-policies`** [P142] - WatchGuard — Mobile IPSec Client VPN Policies. Formatted summary of Mobile IPSec client VPN policies including name, auth server, allowed access, virtual IP pool, and settings.
+  - metricId: 609 | query: `` VPN.ClientVPN.MobileIPSec[].join( `, `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`AuthServer`, to_string(AuthServer)]), join(`: `, [`Allowed Access`, to_string(AllowedAccessStr_r)]), join(`: `, [`Virtual IP Address Pool`, to_string(VirtualIPAddressPool)]), join(`: `, [`Settings`, to_string(IPSecSettings)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:watchguard:mobile-ssl-vpn-summary`** [P143] - WatchGuard — Mobile SSL VPN Settings Summary. Formatted summary of Mobile SSL VPN settings including SSL server, DNS servers, domain name, encryption, VPN traffic mode, data channel, IP pool, authentication, and resources.
+  - metricId: 610 | query: `` VPN.ClientVPN.MobileSSL.join( `, `, [join(`: `, [`SSL Server`, to_string(SslServer)]), join(`: `, [`DNS Servers`, to_string(DnsServers)]), join(`: `, [`Domain Name`, to_string(DomainName)]), join(`: `, [`Encryption`, to_string(Encryption)]), join(`: `, [`VPN Traffic`, to_string(VpnTraffic)]), join(`: `, [`DataChannel`, to_string(DataChannel)]), join(`: `, [`IP Address Pool`, to_string(IpAddressPool)]), join(`: `, [`Authentication`, to_string(Authentication)]), join(`: `, [`Allowed Resources`, to_string(AllowedResources)]), join(`: `, [`Auth Users`, to_string(AuthenticationUsers)])]) `` | result: object
+  - status: VALIDATED
+- **`metrics:watchguard:model`** [P144] - WatchGuard — Hardware Model. Appliance model identifier from SystemInfo.Model. Used for lifecycle and EOL tracking across Firebox T, M, and virtual product lines.
+  - metricId: 2000 | query: `SystemInfo.Model` | result: string
+  - status: VALIDATED
+- **`metrics:watchguard:one-to-one-nat-summary`** [P145] - WatchGuard — 1:1 NAT Summary. Formatted summary of 1:1 NAT entries including interface, NAT address, and real address.
+  - metricId: 597 | query: `` NAT.oneToOneNAT[].join( `, `, [join(`: `, [`Interface`, to_string(Interface)]), join(`: `, [`NAT Address`, to_string(NATAddress)]), join(`: `, [`Real Address`, to_string(RealAddress)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:watchguard:physical-interface-count`** [P146] - WatchGuard — Physical Interface Count. Number of physical interfaces on the appliance from SystemInfo.PhysicalInterface.
+  - metricId: 320 | query: `SystemInfo.PhysicalInterface` | result: integer (count)
+  - status: VALIDATED
+- **`metrics:watchguard:quota-action-summary`** [P147] - WatchGuard — Quota Action Summary. Formatted summary of quota actions including name, time per day (min), and bandwidth per day (MB).
+  - metricId: 600 | query: `` QuotaAction[].join( `, `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`Time(Min/Day)`, to_string(TimeInMinPerDay)]), join(`: `, [`Bandwidth(MB/Day)`, to_string(BandwidthInMBPerDay)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:watchguard:quota-rule-summary`** [P148] - WatchGuard — Quota Rule Summary. Formatted summary of quota rules including name, action, and status.
+  - metricId: 599 | query: `` QuotaRules[].join( `, `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`Action`, to_string(Action)]), join(`: `, [`Status`, to_string(Status)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:watchguard:serial-number`** [P149] - WatchGuard — Serial Number. Hardware serial number from SystemInfo.SerialNumber. Ties the appliance to a WatchGuard support contract.
+  - metricId: 2001 | query: `SystemInfo.SerialNumber` | result: string
+  - status: VALIDATED
+- **`metrics:watchguard:site-to-site-phase1-summary`** [P150] - WatchGuard — Site-to-Site Phase 1 Policy Summary. Formatted summary of BOVPN Phase 1 (IKE) policies including policy name, status, version, peer name, action, exchange mode, and local interface.
+  - metricId: 607 | query: `` SiteToSiteVPN.Phase1[].join( `, `, [join(`: `, [`Policy Name`, to_string(PolicyName)]), join(`: `, [`Status`, to_string(Status)]), join(`: `, [`Version`, to_string(Version)]), join(`: `, [`Peer Name`, to_string(PeerName)]), join(`: `, [`Action Name`, to_string(ActionName)]), join(`: `, [`Xchng Mode`, to_string(XchngMode)]), join(`: `, [`Local Interface`, to_string(LocalInterface)]), join(`: `, [`VIF`, to_string(VIF)]), join(`: `, [`VIF Protocol`, to_string(VIFProto)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:watchguard:site-to-site-phase2-summary`** [P151] - WatchGuard — Site-to-Site Phase 2 Policy Summary. Formatted summary of BOVPN Phase 2 (IPSec) policies including policy name, status, IKE version, mode, key mode, VPN type, and IKE policy.
+  - metricId: 608 | query: `` SiteToSiteVPN.Phase2[].join( `, `, [join(`: `, [`Policy Name`, to_string(PolicyName)]), join(`: `, [`Status`, to_string(Status)]), join(`: `, [`IKE Version`, to_string(IKEVersion)]), join(`: `, [`Mode`, to_string(Mode)]), join(`: `, [`Key Mode`, to_string(KeyMode)]), join(`: `, [`VPN Type`, to_string(VPNType)]), join(`: `, [`IKE Policy`, to_string(IKEPolicyName)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:watchguard:user-summary`** [P152] - WatchGuard — Single-User Account Summary. Formatted summary of individual user accounts (type = Single-User) including name, auth server, and description.
+  - metricId: 604 | query: `` Users[?Type == 'Single-User'].join( `, `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`AuthServer`, to_string(AuthServer)]), join(`: `, [`Description`, to_string(Description)])]) | sort(@) `` | result: array
+  - status: VALIDATED

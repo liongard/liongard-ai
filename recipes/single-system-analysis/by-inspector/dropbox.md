@@ -12,22 +12,11 @@ compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, li
 personas: [soc, technical-alignment-manager, vcio-account-manager, accounting-finance]
 output_formats: [markdown, word, pptx, xlsx]
 primitives:
-  - metrics:dropbox:content-stale-file-count
   - metrics:dropbox:licensing-seat-total
   - metrics:dropbox:licensing-seat-used
-  - metrics:dropbox:licensing-utilization-pct
   - metrics:dropbox:security-admin-count
-  - metrics:dropbox:security-app-authorization-count
-  - metrics:dropbox:shares-expiration-configured-count
-  - metrics:dropbox:shares-external-count
-  - metrics:dropbox:shares-public-link-count
-  - metrics:dropbox:storage-total-gb
-  - metrics:dropbox:storage-used-gb
-  - metrics:dropbox:storage-utilization-pct
-  - metrics:dropbox:team-folders-orphaned-count
   - metrics:dropbox:team-folders-total-count
   - metrics:dropbox:users-active-count
-  - metrics:dropbox:users-mfa-enabled-count
   - metrics:dropbox:users-suspended-count
   - metrics:dropbox:users-total-count
 ---

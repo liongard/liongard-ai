@@ -14,17 +14,9 @@ primitives:
   - metrics:kaseya-vsa-inspector:agents-offline-count
   - metrics:kaseya-vsa-inspector:agents-online-count
   - metrics:kaseya-vsa-inspector:agents-total-count
-  - metrics:kaseya-vsa-inspector:alarms-critical-count
   - metrics:kaseya-vsa-inspector:alarms-open-count
   - metrics:kaseya-vsa-inspector:endpoint-security-coverage-count
-  - metrics:kaseya-vsa-inspector:licensing-seat-total
-  - metrics:kaseya-vsa-inspector:licensing-seat-used
-  - metrics:kaseya-vsa-inspector:licensing-utilization-pct
   - metrics:kaseya-vsa-inspector:monitor-sets-assigned-count
-  - metrics:kaseya-vsa-inspector:monitor-sets-disabled-count
-  - metrics:kaseya-vsa-inspector:patches-critical-pending-count
-  - metrics:kaseya-vsa-inspector:patches-pending-count
-  - metrics:kaseya-vsa-inspector:users-mfa-enabled-count
   - metrics:kaseya-vsa-inspector:users-total-count
 ---
 

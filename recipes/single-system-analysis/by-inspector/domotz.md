@@ -16,7 +16,7 @@ category: Network
 personas: [noc, technical-alignment-manager, vcio-account-manager]
 output_formats: [markdown, word, pptx, xlsx]
 primitives:
-  # Reconciled 2026-05-29: pruned dangling refs not present in the live dataprint (see internal/proposed-metrics-backlog.md).
+  # Reconciled 2026-05-29: pruned dangling refs not present in the live dataprint.
   - metrics:domotz-inspector:agent-connection-consumption
   - metrics:domotz-inspector:agent-status
   - metrics:domotz-inspector:api-usage

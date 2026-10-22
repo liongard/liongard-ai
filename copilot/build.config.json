@@ -1,0 +1,237 @@
+{
+  "schemaVersion": 1,
+  "comment": "Build configuration for the generated Microsoft Copilot package. Edit this file (not the generated output) to change scope, grouping, limits, or normalizations.",
+  "limits": {
+    "docsCheckedOn": "2026-10-05",
+    "copilotStudio": {
+      "agentInstructionsMaxChars": 8000,
+      "maxKnowledgeFiles": 500,
+      "maxFileBytes": 536870912,
+      "uploadExtensions": [
+        ".md",
+        ".txt",
+        ".yaml",
+        ".yml",
+        ".docx",
+        ".pdf"
+      ]
+    },
+    "agentBuilder": {
+      "agentInstructionsMaxChars": 8000,
+      "maxUploadFiles": 20,
+      "uploadExtensions": [
+        ".txt",
+        ".docx",
+        ".pdf",
+        ".csv"
+      ],
+      "targetBundleCount": [
+        10,
+        15
+      ]
+    },
+    "skills": {
+      "docs": "https://learn.microsoft.com/en-us/microsoft-365/copilot/extensibility/declarative-agent-skills",
+      "docsCheckedOn": "2026-10-07",
+      "skillMdMaxChars": 20000,
+      "maxSkillsPerAgent": 8,
+      "maxFilesPerAgent": 350,
+      "maxZipBytes": 52428800,
+      "maxDirectoryDepth": 3,
+      "fileExtensions": [
+        ".md",
+        ".json",
+        ".yaml",
+        ".yml",
+        ".txt",
+        ".csv"
+      ],
+      "maxSkillUncompressedBytes": 1900000,
+      "maxSkillUncompressedBytesNote": "Empirical (2026-10-07): Copilot Studio silently rejected a 2.12 MB (uncompressed) skill and accepted 1.99 MB; Microsoft does not document this limit."
+    }
+  },
+  "scope": {
+    "comment": "Priority batch: onboarding (primary), WatchGuard (test single-system), MFA gap report, stack singles. POC recipes retained for regression.",
+    "mode": "list",
+    "recipes": [
+      "recipes/onboarding-assessment/new-customer-onboarding.md",
+      "recipes/domain-assessment/identity-mfa-gap-report.md",
+      "recipes/single-system-analysis/by-inspector/watchguard.md",
+      "recipes/single-system-analysis/by-inspector/microsoft-365.md",
+      "recipes/single-system-analysis/by-inspector/google-workspace.md",
+      "recipes/single-system-analysis/by-inspector/autotask.md",
+      "recipes/single-system-analysis/by-inspector/datto-rmm.md",
+      "recipes/single-system-analysis/by-inspector/huntress.md",
+      "recipes/single-system-analysis/by-inspector/fortinet-fortigate.md",
+      "recipes/single-system-analysis/by-inspector/ubiquiti-unifi.md",
+      "recipes/single-system-analysis/by-inspector/datto-bcdr.md",
+      "recipes/single-system-analysis/by-inspector/active-directory.md",
+      "recipes/single-system-analysis/by-inspector/knowbe4.md",
+      "recipes/single-system-analysis/by-inspector/synology-nas.md",
+      "recipes/system-type-assessment/all-firewalls.md",
+      "recipes/environment-quarterly-lookback/quarterly-business-review.md",
+      "recipes/compliance/hipaa/hipaa-readiness.md"
+    ]
+  },
+  "fileGroups": {
+    "groupBy": "category",
+    "categories": {
+      "single-system-analysis": {
+        "group": "single-system-assessments",
+        "title": "Single-System Assessments",
+        "bundle": "bundle-01-single-system"
+      },
+      "system-type-assessment": {
+        "group": "system-type-rollups",
+        "title": "System-Type Rollups",
+        "bundle": "bundle-02-system-type"
+      },
+      "domain-assessment": {
+        "group": "domain-assessments",
+        "title": "Domain Assessments",
+        "bundle": "bundle-03-domain"
+      },
+      "environment-quarterly-lookback": {
+        "group": "qbr-and-reviews",
+        "title": "QBR and Reviews",
+        "bundle": "bundle-04-qbr-roadmap-onboarding-sales"
+      },
+      "roadmap-planning": {
+        "group": "qbr-and-reviews",
+        "title": "QBR and Reviews",
+        "bundle": "bundle-04-qbr-roadmap-onboarding-sales"
+      },
+      "onboarding-assessment": {
+        "group": "qbr-and-reviews",
+        "title": "QBR and Reviews",
+        "bundle": "bundle-04-qbr-roadmap-onboarding-sales"
+      },
+      "sales-assessment": {
+        "group": "qbr-and-reviews",
+        "title": "QBR and Reviews",
+        "bundle": "bundle-04-qbr-roadmap-onboarding-sales"
+      },
+      "compliance": {
+        "group": "compliance-and-insurance",
+        "title": "Compliance and Insurance",
+        "bundle": "bundle-05-compliance"
+      },
+      "external-data": {
+        "group": "external-data",
+        "title": "External Data",
+        "bundle": "bundle-06-external-data"
+      }
+    }
+  },
+  "references": [
+    {
+      "source": "reference/inspector-aliases.md",
+      "name": "reference-inspector-aliases",
+      "title": "Reference: Inspector Aliases"
+    },
+    {
+      "source": "reference/asset-fields.md",
+      "name": "reference-asset-fields",
+      "title": "Reference: Asset Fields"
+    },
+    {
+      "source": "reference/qa-retry-pattern.md",
+      "name": "reference-qa-retry-pattern",
+      "title": "Reference: QA Retry Pattern"
+    }
+  ],
+  "pathRewrites": {
+    "reference/inspector-aliases.md": "the knowledge document \"Reference: Inspector Aliases\"",
+    "reference/asset-fields.md": "the knowledge document \"Reference: Asset Fields\"",
+    "reference/qa-retry-pattern.md": "the knowledge document \"Reference: QA Retry Pattern\"",
+    "reference/cross-cutting-signals.md": "the knowledge document \"Reference: Cross-Cutting Signals\" (not yet compiled)",
+    "reference/personas-recipe-matrix.md": "the recipe catalog",
+    "reference/future-recipes-roadmap.md": "the recipe catalog",
+    "reference/onboarding-qa-coverage.md": "the onboarding QA coverage reference (not yet compiled)",
+    "config/msp-config.yaml": "the MSP profile (msp-profile-template)",
+    "config/msp-config.local.yaml": "the MSP profile (msp-profile-template)",
+    "templates/recipe-skeleton.md": "the recipe structure",
+    "templates/customization-block.md": "the MSP profile",
+    "recipes/AGENTS.md": "the agent instructions"
+  },
+  "toolMap": {
+    "comment": "Tools referenced by recipes that do not exist on the live MCP server. Rewritten at compile time and reported in manifest.normalizations. Fix the canonical recipes in a follow-up, then remove entries.",
+    "liongard_system": "liongard_launchpoint"
+  },
+  "toolDescriptions": {
+    "liongard_environment": "List/search/count environments (customers).",
+    "liongard_launchpoint": "Find systems (inspector instances) by environment and inspector; read dataprint overviews.",
+    "liongard_metric": "Evaluate JMESPath metric queries against a system dataprint.",
+    "liongard_device": "Reconciled device inventory across inspectors.",
+    "liongard_identity": "Reconciled identity/user inventory across inspectors.",
+    "liongard_domain": "Reconciled domain inventory.",
+    "liongard_timeline": "Change history for a system over time.",
+    "liongard_detection": "Detections raised for an environment/system.",
+    "liongard_alert": "Alerts raised for an environment/system.",
+    "liongard_cyber_risk_dashboard": "Cyber risk score and dashboard data.",
+    "liongard_report": "List/get existing Liongard reports.",
+    "liongard_events": "Event feed for environments/systems.",
+    "liongard_agents": "Liongard agent inventory and health.",
+    "liongard_query": "Natural-language query over Liongard data.",
+    "liongard_navigate": "Discover entities and navigation links."
+  },
+  "primitivePlan": {
+    "comment": "Single-system recipes embed their primitive list inline (many workflow steps carry no JMESPath; the validated queries live in frontmatter primitives). Rollup categories keep separate metric docs until they delegate to single-system recipes.",
+    "categories": [
+      "system-type-assessment"
+    ],
+    "inlineCategories": [
+      "single-system-analysis"
+    ],
+    "compactCategories": [
+      "single-system-analysis"
+    ]
+  },
+  "compactRecipes": [
+    "recipes/onboarding-assessment/new-customer-onboarding.md"
+  ],
+  "skill": {
+    "roots": "all",
+    "references": [
+      "reference/inspector-aliases.md",
+      "reference/asset-fields.md",
+      "reference/qa-retry-pattern.md",
+      "config/msp-config.yaml"
+    ],
+    "chainToSingleSystem": [
+      "new-customer-onboarding"
+    ],
+    "skills": [
+      {
+        "name": "liongard-single-system",
+        "title": "Single-system assessments",
+        "categories": [
+          "single-system-analysis"
+        ],
+        "description": "Run a Liongard single-system assessment for one vendor in one customer environment (for example Microsoft 365, Active Directory, WatchGuard, Synology, SentinelOne, Datto) against live Liongard MCP data, and produce the report."
+      },
+      {
+        "name": "liongard-rollups",
+        "title": "Same-type rollups",
+        "categories": [
+          "system-type-assessment"
+        ],
+        "description": "Run a Liongard same-type rollup across every deployed vendor of one system type (all firewalls, all backups, all EDRs, all servers, all domains and more) for one customer environment, and produce the report."
+      },
+      {
+        "name": "liongard-environment",
+        "title": "Environment, compliance, QBR and onboarding",
+        "categories": [
+          "compliance",
+          "domain-assessment",
+          "environment-quarterly-lookback",
+          "onboarding-assessment",
+          "sales-assessment",
+          "roadmap-planning",
+          "external-data"
+        ],
+        "description": "Run a Liongard environment-level recipe for one customer: onboarding assessment, quarterly business review, MFA audit against the identity asset inventory, cyber-insurance questionnaires, CMMC or HIPAA readiness, pre-sales discovery or refresh roadmap."
+      }
+    ]
+  }
+}

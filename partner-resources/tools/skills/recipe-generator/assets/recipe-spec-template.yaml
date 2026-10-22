@@ -85,7 +85,7 @@ metrics:
 proposed_metric_gaps:
   # - field: "<field name>"
   #   fallback: "<how the recipe works around it>"
-  #   jira_ticket: "CORE-XXXX"       # optional, if filed already
+  #   tracking_ref: "<ref>"          # optional, your own tracking reference
 
 # ============================================================================
 # OPTIONAL — asset-inventory cross-check pattern

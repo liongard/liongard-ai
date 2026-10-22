@@ -53,4 +53,4 @@ maps directly to the external-attack-surface inspectors:
 
 Each carrier file maps the carrier's question numbers to coverage status (`LIONGARD` / `PARTIAL` / `MANUAL`)
 and the relevant `domains/` file section. Metric tables live in the domain files — carrier files
-reference them rather than duplicating. Source forms are in `internal/cyber-insurance-forms/<carrier>/`.
+reference them rather than duplicating. Source forms are the carriers' published applications; obtain current editions from the carrier or broker.

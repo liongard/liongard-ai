@@ -1,0 +1,46 @@
+# metrics-system-type-all-firewalls-fortinet-fortigate - Metric reference (fortinet-fortigate-inspector)
+
+Required metric primitives for the recipe `system-type-all-firewalls` (System-Type Assessment — All Firewalls), inspector `fortinet-fortigate-inspector` (ID 33). 13 primitives, sequence ids P034-P046. For every system of this inspector, evaluate EVERY primitive below with `liongard_metric EVALUATE` (`jmesPathQuery`, `systemId`, `environmentId`), retry a null or error once, and log one row per primitive per system. Respect each gotcha.
+
+- **`metrics:fortinet-fortigate:access-profiles-summary`** [P034] - Fortinet FortiGate — Access Profiles Summary. Admin access profile permissions summary from UserProfiles[]. Identifies which profiles have system, network, and security configuration access.
+  - metricId: 630 | query: `` UserProfiles[].join( `, `, [join(`: `, [`Name`, to_string(name)]), join(`: `, [`Scope`,to_string(scope)]) , join(`: `, [`Network Config`,to_string(netgrp)]) , join(`: `, [`System Config`,to_string(sysgrp)]) , join(`: `, [`Security Profiles`,to_string(utmgrp)]), join(`: `, [`IPsec,SSL,PPTP,L2TP VPN`,to_string(vpngrp)])]) `` | result: array
+  - status: VALIDATED
+- **`metrics:fortinet-fortigate:dns-servers`** [P035] - Fortinet FortiGate — DNS Servers. Comma-joined primary and secondary DNS server addresses from DNS.["primary","secondary"].
+  - metricId: 222 | query: `` DNS.["primary","secondary"] | join(`, `, @) `` | result: string
+  - status: VALIDATED
+- **`metrics:fortinet-fortigate:firewall-policy-structured`** [P036] - Fortinet FortiGate — Firewall Policy Summary (Structured). Structured array of firewall policy objects with name, srcintf, dstintf, srcaddr, dstaddr, service, comments. Use for programmatic analysis.
+  - metricId: 106514 | query: `FirewallPolicy[].[name, srcintf[].name, dstintf[].name, srcaddr[].name, dstaddr[].name, service[].name, comments]` | result: array
+  - status: VALIDATED
+- **`metrics:fortinet-fortigate:firewall-policy-summary`** [P037] - Fortinet FortiGate — Firewall Policy Summary (Rich). Sorted array of firewall policy detail strings (name, NAT, action, status, source/dest addresses, services) from FirewallPolicy[].
+  - metricId: 631 | query: `` FirewallPolicy[].join( `, `, [join(`: `, [`Name`, to_string(name)]) , join(`: `, [`NAT`,to_string(nat)]), join(`: `, [`Action`,to_string(action)]), join(`: `, [`Status`,to_string(status)]), join(`: `, [`Source Address`,to_string(sort(srcaddr[].name))]), join(`: `, [`Source Interface`,to_string(sort(srcintf[].name))]), join(`: `, [`Service`,to_string(sort(service[].name))])]) `` | result: array
+  - status: VALIDATED
+- **`metrics:fortinet-fortigate:firewall-vip-summary`** [P038] - Fortinet FortiGate — Firewall VIP Summary. Virtual IP (port forwarding / DNAT) entries from FirewallVIP[]. Review for exposed services and misconfigurations.
+  - metricId: 632 | query: `` FirewallVIP[].join( `, `, [join(`: `, [`Name`, to_string(name)]), join(`: `, [`Type`, to_string(type)]), join(`: `, [`External IP`, to_string(extip)]), join(`: `, [`External Interface`, to_string(extintf)]), join(`: `, [`External Port`, to_string(extport)]), join(`: `, [`Mapped IP Range`, to_string(sort(mappedip[].range))]) , join(`: `, [`Mapped Port`, to_string(mappedport)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:fortinet-fortigate:firmware-version`** [P039] - Fortinet FortiGate — Firmware Version. Current firmware version string from Firmware.current."version".
+  - metricId: 224 | query: `Firmware.current."version"` | result: string
+  - gotcha: Quoted key required in JMESPath because 'version' is a reserved word in some JMESPath implementations. Use Firmware.current."version" not Firmware.current.version. The id=521 metric provides an alternate path SystemInfo.Firmware.Version which may differ on some firmware versions.
+  - status: VALIDATED
+- **`metrics:fortinet-fortigate:fortiem-status`** [P040] - Fortinet FortiGate — FortiEMS Cloud Status. FortiEMS cloud licensing name and status from {Name: Name, Status: Licensing.fortiems_cloud.status}. Confirms endpoint management integration is active.
+  - metricId: 106544 | query: `{Name: Name, Status: Licensing.fortiems_cloud.status}` | result: object
+  - status: VALIDATED
+- **`metrics:fortinet-fortigate:group-summary`** [P041] - Fortinet FortiGate — Group Summary. Sorted array of group detail strings (name, email, members, group type) from Groups[].
+  - metricId: 628 | query: `` Groups[].join( `, `, [join(`: `, [`Name`,to_string(name)]), join(`: `, [`Email`,to_string(email)]), join(`: `, [`Member`,to_string(sort(member[].name))]), join(`: `, [`Group Type`,to_string("group-type")])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:fortinet-fortigate:hostname`** [P042] - Fortinet FortiGate — Hostname. Hostname of the FortiGate appliance from SystemGlobal.hostname.
+  - metricId: 626 | query: `SystemGlobal.hostname` | result: string
+  - status: VALIDATED
+- **`metrics:fortinet-fortigate:interface-summary`** [P043] - Fortinet FortiGate — Interface Summary. Sorted array of interface details (name, MTU, IP, role, VLAN ID, MAC) from Interfaces[].
+  - metricId: 629 | query: `` Interfaces[].join( `, `, [join(`: `, [`Name`, to_string(name)]), join(`: `, [`Vdom`,to_string(vdom)]), join(`: `, [`Type`,to_string(type)]), join(`: `, [`IP & Subnet`,to_string(ip)]), join(`: `, [`Role`,to_string(role)]), join(`: `, [`VLAN ID`,to_string(vlanid)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:fortinet-fortigate:model`** [P044] - Fortinet FortiGate — Model Number. Hardware platform ID (model) from Firmware.current."platform-id".
+  - metricId: 223 | query: `Firmware.current."platform-id"` | result: string
+  - gotcha: Two paths exist for model/version info. id=223 uses Firmware.current."platform-id" (the Fortinet API path). id=521 uses SystemInfo.Firmware.Version for the firmware string. These are complementary — use 223 for model, 224/521 for firmware version.
+  - status: VALIDATED
+- **`metrics:fortinet-fortigate:routing-policy-summary`** [P045] - Fortinet FortiGate — Routing Policy Summary. Sorted array of IPv4 routing entries (type, gateway, IP mask, interface) from IPV4Routing[].
+  - metricId: 633 | query: `` IPV4Routing[].join( `, `, [join(`: `, [`Type`, to_string(type)]), join(`: `, [`Gateway`, to_string(gateway)]), join(`: `, [`IP Mask`, to_string(ip_mask)]), join(`: `, [`Interface`, to_string(interface)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:fortinet-fortigate:user-summary`** [P046] - Fortinet FortiGate — User Summary. Sorted array of user detail strings (name, vdom, type, access profile) from Users[].
+  - metricId: 627 | query: `` Users[].join( `, `, [join(`: `, [`Name`, to_string(name)]), join(`: `, [`Vdom Name`,to_string(sort(vdom[].name))]), join(`: `, [`Type`,to_string(type_r)]), join(`: `, [`Profile`,to_string(accprofile)])]) | sort(@) `` | result: array
+  - gotcha: Users[] contains local VPN/firewall auth accounts only — NOT admin accounts. FortiGate admin accounts (System > Administrators) are NOT present in the dataprint. AdminUsers key returns null on all validated systems. Admin account audit requires manual FortiGate GUI review.
+  - status: VALIDATED

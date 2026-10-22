@@ -74,8 +74,8 @@ The skill writes the recipe to
 and reports:
 - The path of the file written.
 - A count of `<!-- TODO -->` markers and their section names.
-- Any `[PROPOSED]` metrics referenced (these need tracking +
-  Jira metric-request tickets to the Core team).
+- Any `[PROPOSED]` metrics referenced (these need a Liongard metric request
+  before the recipe can rely on them).
 
 Next steps for the author:
 1. Fill the TODO markers using the "Vendor-specific narrative checklist"
@@ -84,6 +84,5 @@ Next steps for the author:
    "Already shipped" table.
 3. If new aliases were introduced, update
    `reference/inspector-aliases.md`.
-4. If `[PROPOSED]` metrics were referenced, file Jira tickets via the
-   `jira-ticket` skill (Core team, AI Agent product area, Feature
-   Enhancement, Medium priority).
+4. If `[PROPOSED]` metrics were referenced, validate them live or remove
+   them before publishing; recipes must not reference unvalidated metrics.

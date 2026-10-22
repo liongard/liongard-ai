@@ -197,8 +197,8 @@ inspector system metadata.
 
 | Item | Source | Notes |
 |---|---|---|
-| Premier form question set | `internal/cyber-insurance-forms/hartford/hartford-cyberchoice-premier-application-2023.txt` | Extracted |
-| Underwriting form question set | `internal/cyber-insurance-forms/hartford/hartford-cyberchoice-underwriting-application-2025.txt` | Extracted |
+| Premier form question set | Carrier application (from carrier or broker) | Extracted |
+| Underwriting form question set | Carrier application (from carrier or broker) | Extracted |
 | Evidence mapping | `domains/auth.md`, `domains/endpoint.md`, `domains/backup.md`, `domains/network.md` | Domain files are metric source of truth |
 
 ---

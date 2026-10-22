@@ -16,8 +16,7 @@ primitives:
   # Reconciled 2026-05-29 vs live dataprint (live production environment, inspected 2026-05-29).
   # The dataprint exposes Organizations/Users/Domains/FlexibleAssetTypes/Contacts metadata —
   # NOT document bodies, password vaults, or expiration records, and Users carry no MFA field.
-  # documents-*, passwords-*, expirations-*, users-mfa-enabled, users-stale-enabled pruned to
-  # internal/proposed-metrics-backlog.md.
+  # documents-*, passwords-*, expirations-*, users-mfa-enabled, users-stale-enabled removed.
   - metrics:itglue-inspector:organizations-total-count
   - metrics:itglue-inspector:organizations-active-count
   - metrics:itglue-inspector:users-total-count

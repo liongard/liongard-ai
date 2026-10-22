@@ -373,7 +373,7 @@ liongard_identity COUNT environmentId=<ENV_ID>
 liongard_identity COUNT environmentId=<ENV_ID> mfaStatus="NO" enabled=true
 liongard_identity COUNT environmentId=<ENV_ID> privileged=true
 liongard_identity LIST environmentId=<ENV_ID>
-                       fields=["displayName","username","email","accountType","privileged","mfaStatus","lastLogin","enabled","emailLicenses","inspectors"]
+                       fields=["displayName","username","email","type","privileged","mfaStatus","lastLogin","enabled","emailLicenses","inspectors"]
 
 # Domains — reconciled across Internet Domain + M365 accepted-domains + Google Workspace verified-domains + per-tenant references
 liongard_domain COUNT environmentId=<ENV_ID>

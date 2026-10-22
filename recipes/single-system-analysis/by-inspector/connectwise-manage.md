@@ -13,18 +13,7 @@ personas: [vcio-account-manager, accounting-finance, noc, technical-alignment-ma
 output_formats: [markdown, word, pptx, xlsx]
 primitives:
   - metrics:connectwise-manage-inspector:agreements-active-count
-  - metrics:connectwise-manage-inspector:agreements-expiring-count
-  - metrics:connectwise-manage-inspector:agreements-without-member-count
-  - metrics:connectwise-manage-inspector:members-billable-utilization-pct
   - metrics:connectwise-manage-inspector:members-total-count
-  - metrics:connectwise-manage-inspector:sla-breached-count
-  - metrics:connectwise-manage-inspector:sla-resolution-compliance-pct
-  - metrics:connectwise-manage-inspector:sla-response-compliance-pct
-  - metrics:connectwise-manage-inspector:tickets-aging-by-bracket
-  - metrics:connectwise-manage-inspector:tickets-avg-time-to-close
-  - metrics:connectwise-manage-inspector:tickets-open-by-priority
-  - metrics:connectwise-manage-inspector:tickets-open-count
-  - metrics:connectwise-manage-inspector:time-entries-total-count
 ---
 
 # Single-System Analysis — ConnectWise Manage

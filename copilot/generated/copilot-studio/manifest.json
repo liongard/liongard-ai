@@ -1,0 +1,1206 @@
+{
+  "edition": "copilot-studio",
+  "fileGroups": [
+    "compliance-and-insurance",
+    "domain-assessments",
+    "qbr-and-reviews",
+    "single-system-assessments",
+    "system-type-rollups"
+  ],
+  "files": [
+    {
+      "bytes": 7755,
+      "path": "agent-instructions.txt",
+      "role": "instructions",
+      "sha256": "baef3d92c0c89997bf2e307f94b48cbdf544a27f3a3714103a8691832829fc6f",
+      "sources": [
+        "copilot/templates/agent-instructions.txt"
+      ],
+      "upload": false
+    },
+    {
+      "bytes": 19532,
+      "path": "recipe-catalog.txt",
+      "role": "catalog",
+      "sha256": "cac67066f25556db79ea677dffe124e922ee49d118733e0d0eefcac70ca8e2ea",
+      "sources": [
+        "recipes/onboarding-assessment/new-customer-onboarding.md",
+        "recipes/domain-assessment/identity-mfa-gap-report.md",
+        "recipes/single-system-analysis/by-inspector/watchguard.md",
+        "recipes/single-system-analysis/by-inspector/microsoft-365.md",
+        "recipes/single-system-analysis/by-inspector/google-workspace.md",
+        "recipes/single-system-analysis/by-inspector/autotask.md",
+        "recipes/single-system-analysis/by-inspector/datto-rmm.md",
+        "recipes/single-system-analysis/by-inspector/huntress.md",
+        "recipes/single-system-analysis/by-inspector/fortinet-fortigate.md",
+        "recipes/single-system-analysis/by-inspector/ubiquiti-unifi.md",
+        "recipes/single-system-analysis/by-inspector/datto-bcdr.md",
+        "recipes/single-system-analysis/by-inspector/active-directory.md",
+        "recipes/single-system-analysis/by-inspector/knowbe4.md",
+        "recipes/single-system-analysis/by-inspector/synology-nas.md",
+        "recipes/system-type-assessment/all-firewalls.md",
+        "recipes/environment-quarterly-lookback/quarterly-business-review.md",
+        "recipes/compliance/hipaa/hipaa-readiness.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 12207,
+      "path": "msp-profile-template.txt",
+      "role": "msp-profile",
+      "sha256": "600b5c38ae0e8aab7fc36d730264dd1b8f4cccddb0ea4e7fd04047b9c131fb60",
+      "sources": [
+        "config/msp-config.yaml"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 20106,
+      "path": "references/reference-inspector-aliases.md",
+      "role": "reference",
+      "sha256": "78bee2409d0b22a562d741c80e195992c3248187ca8ecad1cb714feaef6c1dfd",
+      "sources": [
+        "reference/inspector-aliases.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 21802,
+      "path": "references/reference-asset-fields.md",
+      "role": "reference",
+      "sha256": "f72953ddf08e2e85c76a97b341b4db0539e760a08e3f9d145b98bba2504790a4",
+      "sources": [
+        "reference/asset-fields.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 10922,
+      "path": "references/reference-qa-retry-pattern.md",
+      "role": "reference",
+      "sha256": "57f70f34e20d05ff191d166459c45c2014f5cdbd714b09cdc05a90f68d2f40a4",
+      "sources": [
+        "reference/qa-retry-pattern.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 23430,
+      "path": "file-groups/qbr-and-reviews/new-customer-onboarding.md",
+      "role": "recipe",
+      "sha256": "a7a9176cd3642929276be346feb7d934e4884f11b1fc8c6ffd17b8d6099d17db",
+      "sources": [
+        "recipes/onboarding-assessment/new-customer-onboarding.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 19555,
+      "path": "file-groups/domain-assessments/domain-assessment-identity-mfa-gap-report.md",
+      "role": "recipe",
+      "sha256": "c3c987bb7fab97ea33586b171b977b842551022237d88d1376faa87c9590c526",
+      "sources": [
+        "recipes/domain-assessment/identity-mfa-gap-report.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 6371,
+      "path": "file-groups/single-system-assessments/single-system-watchguard.md",
+      "role": "recipe",
+      "sha256": "29eb8467e181459b60b641fe553cf3d119af658a1a3ea407aecbc1088d1714cb",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/watchguard.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 2092,
+      "path": "file-groups/single-system-assessments/single-system-watchguard-part-2.md",
+      "role": "metrics",
+      "sha256": "351c0263a963e28c0e568f5b66751a19e5b1f8302ab77009cb3fbf2327860cd6",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/watchguard.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 1833,
+      "path": "file-groups/single-system-assessments/single-system-watchguard-part-3.md",
+      "role": "metrics",
+      "sha256": "273d374884b26c9dc577074bc92efdcb9c9cc7366be33921670124e6c83fdbc8",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/watchguard.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 1807,
+      "path": "file-groups/single-system-assessments/single-system-watchguard-part-4.md",
+      "role": "metrics",
+      "sha256": "c98d70ad451bd859166d23b2607102f76fa94fd9d475f8ce8a79442296af0c62",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/watchguard.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 2160,
+      "path": "file-groups/single-system-assessments/single-system-watchguard-part-5.md",
+      "role": "metrics",
+      "sha256": "7528eb36124671b3dc105d0ce09d8c3464061dd3334fb4dd04b2fdad6bb6de42",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/watchguard.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 2270,
+      "path": "file-groups/single-system-assessments/single-system-watchguard-part-6.md",
+      "role": "metrics",
+      "sha256": "594f010ec8dca51bc6a2feb099fd523bd7cb90f7ec7f7f6013f858eb0fb0fcd9",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/watchguard.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 7458,
+      "path": "file-groups/single-system-assessments/single-system-microsoft-365.md",
+      "role": "recipe",
+      "sha256": "a46acf3cd12b35458af0cd2745aac25c4defde020dcc62b96531155d26d58cbe",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/microsoft-365.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 1724,
+      "path": "file-groups/single-system-assessments/single-system-microsoft-365-part-2.md",
+      "role": "metrics",
+      "sha256": "c61a9001ad9dcc7a31a958c961696bd912bc73cfb2f78d9ceb63b710cd3bd449",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/microsoft-365.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 1516,
+      "path": "file-groups/single-system-assessments/single-system-microsoft-365-part-3.md",
+      "role": "metrics",
+      "sha256": "0ac8ecee0e820c5eb18eb446d35e74bd5cab4b970d980ee16adc98a03e68d514",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/microsoft-365.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 1820,
+      "path": "file-groups/single-system-assessments/single-system-microsoft-365-part-4.md",
+      "role": "metrics",
+      "sha256": "d2703725c3392fe152baa4dd1b7d1ebb0dbd10032c34a1cb910301860dc72aa9",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/microsoft-365.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 940,
+      "path": "file-groups/single-system-assessments/single-system-microsoft-365-part-5.md",
+      "role": "metrics",
+      "sha256": "e5f84e5107ad11dc1fe8ca1ff670b4c91be8ded138cef905f257b2e09dde93ce",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/microsoft-365.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 8028,
+      "path": "file-groups/single-system-assessments/single-system-google-workspace.md",
+      "role": "recipe",
+      "sha256": "1ddb6abafdfc3c7bd5b0b76140c528db46d8c6d72b6b6e3aead04dfa4f67e27d",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/google-workspace.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 1871,
+      "path": "file-groups/single-system-assessments/single-system-google-workspace-part-2.md",
+      "role": "metrics",
+      "sha256": "52b2465c622d053a0ab08e2577d571538d2b6c6324b06f847e3d42666c45253a",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/google-workspace.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 408,
+      "path": "file-groups/single-system-assessments/single-system-google-workspace-part-3.md",
+      "role": "metrics",
+      "sha256": "5b4c19bc2be46e274b8eb299440472005bb9b49bf7774210c2c5a91a68085a27",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/google-workspace.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 7024,
+      "path": "file-groups/single-system-assessments/single-system-autotask.md",
+      "role": "recipe",
+      "sha256": "3c2047df4a79ddcaacdc09859adb99a9c325aa6dd6bb81290ec2c320c490ac14",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/autotask.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 1274,
+      "path": "file-groups/single-system-assessments/single-system-autotask-part-2.md",
+      "role": "metrics",
+      "sha256": "1d2d0eb19f679fe867800210add7bdd049ec878c28c48c66777500a108dd0c30",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/autotask.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 384,
+      "path": "file-groups/single-system-assessments/single-system-autotask-part-3.md",
+      "role": "metrics",
+      "sha256": "9c10a982471d97525236c54adac519c402b8577d5e2d1fe0099d3b05d3317fbc",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/autotask.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 5636,
+      "path": "file-groups/single-system-assessments/single-system-datto-rmm.md",
+      "role": "recipe",
+      "sha256": "ec1c8f386af0c73ac568db09d8a8557a58035743738ff1dfcd213804b8528e03",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/datto-rmm.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 926,
+      "path": "file-groups/single-system-assessments/single-system-datto-rmm-part-2.md",
+      "role": "metrics",
+      "sha256": "bcb9b39828adf34f00e89b6800fdc8472474b52a91f9fe80dbe7fb8525b6aebe",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/datto-rmm.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 5846,
+      "path": "file-groups/single-system-assessments/single-system-huntress.md",
+      "role": "recipe",
+      "sha256": "91ce884ee70b27dd3aaaca90e91511e1c8225a50af614abda8291f7e869132df",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/huntress.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 1844,
+      "path": "file-groups/single-system-assessments/single-system-huntress-part-2.md",
+      "role": "metrics",
+      "sha256": "20bbafd6f8a95b2dcc0c6775e8fe171412e7904ac183958981c11213798025b6",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/huntress.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 895,
+      "path": "file-groups/single-system-assessments/single-system-huntress-part-3.md",
+      "role": "metrics",
+      "sha256": "fbbe317b77e8ad805b0b1690212354b4adc9f67ed5ee20bf01f29d186c4fdd3d",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/huntress.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 6238,
+      "path": "file-groups/single-system-assessments/single-system-fortinet-fortigate.md",
+      "role": "recipe",
+      "sha256": "d9ae36b52e6a4430ecb7b67e562db753410992804d712beb1ccff257f1315e82",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/fortinet-fortigate.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 2267,
+      "path": "file-groups/single-system-assessments/single-system-fortinet-fortigate-part-2.md",
+      "role": "metrics",
+      "sha256": "f2fd99de09914ebebc81682e282f2974a5aec2a21136b4de57c5531ef67cf404",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/fortinet-fortigate.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 1762,
+      "path": "file-groups/single-system-assessments/single-system-fortinet-fortigate-part-3.md",
+      "role": "metrics",
+      "sha256": "fed88e440e3aa3c94487c228b9ce00ea7c5824749355a1e17f8cf7846487c97e",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/fortinet-fortigate.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 781,
+      "path": "file-groups/single-system-assessments/single-system-fortinet-fortigate-part-4.md",
+      "role": "metrics",
+      "sha256": "a50560d9bdcbcbb9114ac7c9001e15b7a21d4b770c451367f33ed3774c4f7dca",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/fortinet-fortigate.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 6775,
+      "path": "file-groups/single-system-assessments/single-system-ubiquiti-unifi.md",
+      "role": "recipe",
+      "sha256": "4626d94b62141cfc05e48ad4cc1a2625b0592771a399a6dbe7fbe87a09a65c24",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/ubiquiti-unifi.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 1346,
+      "path": "file-groups/single-system-assessments/single-system-ubiquiti-unifi-part-2.md",
+      "role": "metrics",
+      "sha256": "1d1a3428563e080538facf2a8e0a865102c33dcdf39999055e5791630218ea4e",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/ubiquiti-unifi.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 5995,
+      "path": "file-groups/single-system-assessments/single-system-datto-bcdr.md",
+      "role": "recipe",
+      "sha256": "caf92f70167f13eacd980b2c1737994cf02d55e414eb03efc99ab95e229fb9ec",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/datto-bcdr.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 1751,
+      "path": "file-groups/single-system-assessments/single-system-datto-bcdr-part-2.md",
+      "role": "metrics",
+      "sha256": "2d43e76213aea8dd8c539330bb8b35dbec97eb671d8bd4c4f2dfc71b25654a6e",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/datto-bcdr.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 2261,
+      "path": "file-groups/single-system-assessments/single-system-datto-bcdr-part-3.md",
+      "role": "metrics",
+      "sha256": "044bc5cc4461e0707b6944b43234bcf48cca190b374ee617291d617bebcb1607",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/datto-bcdr.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 8809,
+      "path": "file-groups/single-system-assessments/single-system-active-directory.md",
+      "role": "recipe",
+      "sha256": "190b024556fc89f586c892f2d0bdcb325e82807d9570af6173304aca304bcce8",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/active-directory.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 1545,
+      "path": "file-groups/single-system-assessments/single-system-active-directory-part-2.md",
+      "role": "metrics",
+      "sha256": "2e934255d080c2e21ea5b7120ac30120b08da96d76ab7ed6a38237a2a431a037",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/active-directory.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 1570,
+      "path": "file-groups/single-system-assessments/single-system-active-directory-part-3.md",
+      "role": "metrics",
+      "sha256": "b2f9dc641155435e58ffc47aaf58e83dd30d892ed87852739caa2be3a606bb3b",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/active-directory.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 1184,
+      "path": "file-groups/single-system-assessments/single-system-active-directory-part-4.md",
+      "role": "metrics",
+      "sha256": "b957cd8c9e8e7eab573d2c0de119208431815db728022d0dc818e120c2520416",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/active-directory.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 17492,
+      "path": "file-groups/single-system-assessments/single-system-knowbe4.md",
+      "role": "recipe",
+      "sha256": "e1f82772ab9202e6a7d2fcaeb0a25bd0e9dd6888668c36adea455b6026e570cb",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/knowbe4.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 7173,
+      "path": "file-groups/single-system-assessments/single-system-synology-nas.md",
+      "role": "recipe",
+      "sha256": "9784d6f15095dfa8e9e8084e6098ce26a054b7de7c4fa342d185ded778e5395d",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/synology-nas.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 2455,
+      "path": "file-groups/single-system-assessments/single-system-synology-nas-part-2.md",
+      "role": "metrics",
+      "sha256": "09525546319c0875ce2ae31fcc7e2598ecb70b830d6e673adfb7e630a625df68",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/synology-nas.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 1923,
+      "path": "file-groups/single-system-assessments/single-system-synology-nas-part-3.md",
+      "role": "metrics",
+      "sha256": "ef72c9311473e67a8ff403ee2678592d5fca5f77fe9f93cc2c3ad772678de2da",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/synology-nas.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 1994,
+      "path": "file-groups/single-system-assessments/single-system-synology-nas-part-4.md",
+      "role": "metrics",
+      "sha256": "16ca1d4b7261fba448cd25f4fd758fb3f25315ea2790c4cd1773e2f05cccc05d",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/synology-nas.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 1547,
+      "path": "file-groups/single-system-assessments/single-system-synology-nas-part-5.md",
+      "role": "metrics",
+      "sha256": "4dab08cacb54b4e12dd70fd4682955c246da3b23945fb6024102e9452ec35202",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/synology-nas.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 26027,
+      "path": "file-groups/system-type-rollups/system-type-all-firewalls.md",
+      "role": "recipe",
+      "sha256": "a92bdda66bb7518050beee0437572af7a44c747f076ca603fb5f47687d6655d6",
+      "sources": [
+        "recipes/system-type-assessment/all-firewalls.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 31591,
+      "path": "file-groups/qbr-and-reviews/environment-quarterly-lookback.md",
+      "role": "recipe",
+      "sha256": "6b2abdbf82d855d6873676bd06a40b4fc90da45a944cbe4368ed3c33e9592adf",
+      "sources": [
+        "recipes/environment-quarterly-lookback/quarterly-business-review.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 30744,
+      "path": "file-groups/compliance-and-insurance/hipaa-readiness.md",
+      "role": "recipe",
+      "sha256": "6a71ae9cdae4c79f6420ec4abb5c0efb0994b4ac709c33431d524cd0850a3f1f",
+      "sources": [
+        "recipes/compliance/hipaa/hipaa-readiness.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 4721,
+      "path": "file-groups/metric-references/metrics-system-type-all-firewalls-barracuda-firewall.md",
+      "role": "metrics",
+      "sha256": "5fa11bedf2efd590130c5432a6c2e59be21110ca404155aa62ecd2ed49159464",
+      "sources": [
+        "recipes/system-type-assessment/all-firewalls.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 3727,
+      "path": "file-groups/metric-references/metrics-system-type-all-firewalls-cisco-asa.md",
+      "role": "metrics",
+      "sha256": "eb4cf6a791446c3abb745800200b5fd83a4eeb9956f2bb9aeba4aaf380362549",
+      "sources": [
+        "recipes/system-type-assessment/all-firewalls.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 6740,
+      "path": "file-groups/metric-references/metrics-system-type-all-firewalls-cisco-meraki.md",
+      "role": "metrics",
+      "sha256": "4d99e6d13567969ee1f57a2ce45bffb2981290eb031ce81f7ab1b98b10382217",
+      "sources": [
+        "recipes/system-type-assessment/all-firewalls.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 7297,
+      "path": "file-groups/metric-references/metrics-system-type-all-firewalls-fortinet-fortigate.md",
+      "role": "metrics",
+      "sha256": "cab1e255bb0380ba143cfacf7714edc7cef67601154658864f18af0862ba9265",
+      "sources": [
+        "recipes/system-type-assessment/all-firewalls.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 5725,
+      "path": "file-groups/metric-references/metrics-system-type-all-firewalls-palo-alto-panos.md",
+      "role": "metrics",
+      "sha256": "1e9c4018ffff634e44ecce0cc71f5b4a3b58aee22c06ffec442b7bd4a361db43",
+      "sources": [
+        "recipes/system-type-assessment/all-firewalls.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 8783,
+      "path": "file-groups/metric-references/metrics-system-type-all-firewalls-pfsense.md",
+      "role": "metrics",
+      "sha256": "c71d2e80436e04e771769dff6601eab6cc4aace12dc0dabdbdf53c46796aae0b",
+      "sources": [
+        "recipes/system-type-assessment/all-firewalls.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 12234,
+      "path": "file-groups/metric-references/metrics-system-type-all-firewalls-sonicwall.md",
+      "role": "metrics",
+      "sha256": "4ce1e3ef443ce3d85a6d1c283f9836d8d2bd7cf13c04b2183fafcfaebe935d3f",
+      "sources": [
+        "recipes/system-type-assessment/all-firewalls.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 3224,
+      "path": "file-groups/metric-references/metrics-system-type-all-firewalls-sophos-firewall.md",
+      "role": "metrics",
+      "sha256": "4b8a6811946dc0e588ac27e9c9a30739f8466911cc83c87d8c0cf3ebdf90cf89",
+      "sources": [
+        "recipes/system-type-assessment/all-firewalls.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 5645,
+      "path": "file-groups/metric-references/metrics-system-type-all-firewalls-sophos-sg.md",
+      "role": "metrics",
+      "sha256": "50ba06be2dc3671f1cd705fc474c0c131117f56e79bbd09e25e5245c920043c1",
+      "sources": [
+        "recipes/system-type-assessment/all-firewalls.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 14280,
+      "path": "file-groups/metric-references/metrics-system-type-all-firewalls-watchguard.md",
+      "role": "metrics",
+      "sha256": "2db340f4f913c77916cb73bb2806c5867b95e4f8221b4ca200cab1652a3d0694",
+      "sources": [
+        "recipes/system-type-assessment/all-firewalls.md"
+      ],
+      "upload": true
+    },
+    {
+      "bytes": 13623,
+      "path": "execution-plans/single-system-watchguard.json",
+      "role": "plan",
+      "sha256": "93ada0f0c4802dc9f83e5717761c3c228124ae685a38988c265148f65c8d776e",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/watchguard.md"
+      ],
+      "upload": false
+    },
+    {
+      "bytes": 7949,
+      "path": "execution-plans/single-system-microsoft-365.json",
+      "role": "plan",
+      "sha256": "531b0812e19ef85b729eb60b510ccd0b50ebff6e9fa564c8a8a0e00c34d3f851",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/microsoft-365.md"
+      ],
+      "upload": false
+    },
+    {
+      "bytes": 2905,
+      "path": "execution-plans/single-system-google-workspace.json",
+      "role": "plan",
+      "sha256": "3c31ab8b2b44e11b067965e73c2c8ff2c8407bb4701dfbbe5fec85b911d4dd1d",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/google-workspace.md"
+      ],
+      "upload": false
+    },
+    {
+      "bytes": 2402,
+      "path": "execution-plans/single-system-autotask.json",
+      "role": "plan",
+      "sha256": "667034dafde30250cc85493f0e93b64fc9d0a7b62345fafb123686090a8a4f3c",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/autotask.md"
+      ],
+      "upload": false
+    },
+    {
+      "bytes": 1066,
+      "path": "execution-plans/single-system-datto-rmm.json",
+      "role": "plan",
+      "sha256": "e343af2c10c720fab75de8a841f55928fb93e188b6f465c44bfa344d62b4069a",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/datto-rmm.md"
+      ],
+      "upload": false
+    },
+    {
+      "bytes": 3916,
+      "path": "execution-plans/single-system-huntress.json",
+      "role": "plan",
+      "sha256": "63a6d08658222548802a51eba97c81f702cbffafc1c72c712f3d7e9839d58d07",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/huntress.md"
+      ],
+      "upload": false
+    },
+    {
+      "bytes": 7298,
+      "path": "execution-plans/single-system-fortinet-fortigate.json",
+      "role": "plan",
+      "sha256": "d7798a22775d6bb6ea29271ac1aa2bd7997d4047099592b039034d53c72387cd",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/fortinet-fortigate.md"
+      ],
+      "upload": false
+    },
+    {
+      "bytes": 2366,
+      "path": "execution-plans/single-system-ubiquiti-unifi.json",
+      "role": "plan",
+      "sha256": "7cac5818941c96fc1eff561382e65e1ca252d35194e16230126f73eeaaf62498",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/ubiquiti-unifi.md"
+      ],
+      "upload": false
+    },
+    {
+      "bytes": 5690,
+      "path": "execution-plans/single-system-datto-bcdr.json",
+      "role": "plan",
+      "sha256": "1baa50119677942f1854848e1cd6724f1c585826dd69892812b9bd79e333162a",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/datto-bcdr.md"
+      ],
+      "upload": false
+    },
+    {
+      "bytes": 6374,
+      "path": "execution-plans/single-system-active-directory.json",
+      "role": "plan",
+      "sha256": "11ecc491e680f5ce50f5b73b0681831755e51e6fbdbff4b473240d092f8d436e",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/active-directory.md"
+      ],
+      "upload": false
+    },
+    {
+      "bytes": 10885,
+      "path": "execution-plans/single-system-synology-nas.json",
+      "role": "plan",
+      "sha256": "a0eafa08615de808213180f16772877006eef80669ed7e4a5b39c31d3fa02cf8",
+      "sources": [
+        "recipes/single-system-analysis/by-inspector/synology-nas.md"
+      ],
+      "upload": false
+    },
+    {
+      "bytes": 65016,
+      "path": "execution-plans/system-type-all-firewalls.json",
+      "role": "plan",
+      "sha256": "71e8ef1a80c94f029ccb5afb092d9be22577473393adc6dbda958cb6b1889aef",
+      "sources": [
+        "recipes/system-type-assessment/all-firewalls.md"
+      ],
+      "upload": false
+    },
+    {
+      "bytes": 3727,
+      "path": "setup-copilot-studio.md",
+      "role": "docs",
+      "sha256": "a415a2c8ddf8da9882e545d781980b2089bdcea3fa9a384ea42d4dfb933f4712",
+      "sources": [
+        "copilot/docs/setup-copilot-studio.md"
+      ],
+      "upload": false
+    },
+    {
+      "bytes": 2469,
+      "path": "acceptance-tests.md",
+      "role": "docs",
+      "sha256": "fdb30d9e24e6f201a7f909b69cf9fbfbd8b47b6aa1cfe501a1a74f0169c8f587",
+      "sources": [
+        "copilot/docs/acceptance-tests.md"
+      ],
+      "upload": false
+    }
+  ],
+  "generator": {
+    "name": "build_copilot_package.py",
+    "version": "0.1.0-poc"
+  },
+  "libraryVersion": "0.2.3",
+  "limitsDocsCheckedOn": "2026-10-05",
+  "normalizations": {
+    "toolRewrites": {
+      "liongard_system": 11
+    },
+    "unmappedPathReferences": [
+      "recipes/external-data/client-surveys-nps.md",
+      "recipes/sales-assessment/",
+      "recipes/single-system-analysis/by-inspector/",
+      "templates/output-block-",
+      "templates/output-block-pptx.md",
+      "templates/output-block-word.md",
+      "templates/output-block-xlsx.md"
+    ]
+  },
+  "recipes": [
+    {
+      "bundle": "bundle-04-qbr-roadmap-onboarding-sales",
+      "dependencies": {
+        "composes": [
+          "recipe:qbr:environment-quarterly-lookback",
+          "recipe:single-system:single-system-active-directory",
+          "recipe:single-system:single-system-knowbe4",
+          "recipe:single-system:single-system-microsoft-365",
+          "recipe:system-type:system-type-all-backups",
+          "recipe:system-type:system-type-all-domains",
+          "recipe:system-type:system-type-all-edrs",
+          "recipe:system-type:system-type-all-external-attack-surface",
+          "recipe:system-type:system-type-all-firewalls",
+          "recipe:system-type:system-type-all-hypervisors",
+          "recipe:system-type:system-type-all-servers"
+        ],
+        "primitiveCount": 0
+      },
+      "group": "qbr-and-reviews",
+      "id": "recipe:onboarding-assessment:new-customer-onboarding",
+      "name": "new-customer-onboarding",
+      "source": "recipes/onboarding-assessment/new-customer-onboarding.md",
+      "sourceSha256": "fe11a0dc917a08fa5f3a0d1ea2fc7122b92ecda5f82b26c7f55ee0bc23d84547",
+      "tools": [
+        "liongard_environment",
+        "liongard_launchpoint",
+        "liongard_timeline",
+        "liongard_cyber_risk_dashboard",
+        "liongard_device",
+        "liongard_identity",
+        "liongard_domain",
+        "liongard_metric",
+        "liongard_detection",
+        "liongard_alert"
+      ]
+    },
+    {
+      "bundle": "bundle-03-domain",
+      "dependencies": {
+        "composes": [],
+        "primitiveCount": 0
+      },
+      "group": "domain-assessments",
+      "id": "recipe:domain-assessment:domain-assessment-identity-mfa-gap-report",
+      "name": "domain-assessment-identity-mfa-gap-report",
+      "source": "recipes/domain-assessment/identity-mfa-gap-report.md",
+      "sourceSha256": "474638f03eb4e075ef60571b58af9bbf4210480da7970c7850f3613f955655ed",
+      "tools": [
+        "liongard_environment",
+        "liongard_identity",
+        "liongard_launchpoint",
+        "liongard_metric"
+      ]
+    },
+    {
+      "bundle": "bundle-01-single-system",
+      "dependencies": {
+        "composes": [],
+        "primitiveCount": 29
+      },
+      "group": "single-system-assessments",
+      "id": "recipe:single-system-analysis:single-system-watchguard",
+      "name": "single-system-watchguard",
+      "source": "recipes/single-system-analysis/by-inspector/watchguard.md",
+      "sourceSha256": "64138be53312d0d6efd08ae5301fd23199f3945585aec3bfbdc7cd4b28c94dc3",
+      "tools": [
+        "liongard_environment",
+        "liongard_launchpoint",
+        "liongard_metric",
+        "liongard_device"
+      ]
+    },
+    {
+      "bundle": "bundle-01-single-system",
+      "dependencies": {
+        "composes": [],
+        "primitiveCount": 20
+      },
+      "group": "single-system-assessments",
+      "id": "recipe:single-system-analysis:single-system-microsoft-365",
+      "name": "single-system-microsoft-365",
+      "source": "recipes/single-system-analysis/by-inspector/microsoft-365.md",
+      "sourceSha256": "2e90756cada9cbf44edc3dddaedd92fdbd652c45a5eb75f1409c40017f315b7c",
+      "tools": [
+        "liongard_environment",
+        "liongard_launchpoint",
+        "liongard_metric",
+        "liongard_identity"
+      ]
+    },
+    {
+      "bundle": "bundle-01-single-system",
+      "dependencies": {
+        "composes": [],
+        "primitiveCount": 7
+      },
+      "group": "single-system-assessments",
+      "id": "recipe:single-system-analysis:single-system-google-workspace",
+      "name": "single-system-google-workspace",
+      "source": "recipes/single-system-analysis/by-inspector/google-workspace.md",
+      "sourceSha256": "dcb65dc88c41ab4786735fd82d8c32fb8d38d68eb6c734e72602116c6808e5ba",
+      "tools": [
+        "liongard_environment",
+        "liongard_launchpoint",
+        "liongard_metric",
+        "liongard_identity"
+      ]
+    },
+    {
+      "bundle": "bundle-01-single-system",
+      "dependencies": {
+        "composes": [],
+        "primitiveCount": 7
+      },
+      "group": "single-system-assessments",
+      "id": "recipe:single-system-analysis:single-system-autotask",
+      "name": "single-system-autotask",
+      "source": "recipes/single-system-analysis/by-inspector/autotask.md",
+      "sourceSha256": "4859ca7bac3cb3b34564befab86e0cc662a61e99f53edbc19ce7970d460ca274",
+      "tools": [
+        "liongard_environment",
+        "liongard_launchpoint",
+        "liongard_metric",
+        "liongard_timeline"
+      ]
+    },
+    {
+      "bundle": "bundle-01-single-system",
+      "dependencies": {
+        "composes": [],
+        "primitiveCount": 2
+      },
+      "group": "single-system-assessments",
+      "id": "recipe:single-system-analysis:single-system-datto-rmm",
+      "name": "single-system-datto-rmm",
+      "source": "recipes/single-system-analysis/by-inspector/datto-rmm.md",
+      "sourceSha256": "02992c032a18fe6f14671b6fd690cab8a241849e7e5f6fab61ffc4e9fe8160f1",
+      "tools": [
+        "liongard_environment",
+        "liongard_launchpoint",
+        "liongard_metric",
+        "liongard_device"
+      ]
+    },
+    {
+      "bundle": "bundle-01-single-system",
+      "dependencies": {
+        "composes": [],
+        "primitiveCount": 8
+      },
+      "group": "single-system-assessments",
+      "id": "recipe:single-system-analysis:single-system-huntress",
+      "name": "single-system-huntress",
+      "source": "recipes/single-system-analysis/by-inspector/huntress.md",
+      "sourceSha256": "1b360b696d982eda1afb4b668ab45c739ad729b2701d4d4a3c3f935e67b8edb9",
+      "tools": [
+        "liongard_environment",
+        "liongard_launchpoint",
+        "liongard_metric",
+        "liongard_device"
+      ]
+    },
+    {
+      "bundle": "bundle-01-single-system",
+      "dependencies": {
+        "composes": [],
+        "primitiveCount": 13
+      },
+      "group": "single-system-assessments",
+      "id": "recipe:single-system-analysis:single-system-fortinet-fortigate",
+      "name": "single-system-fortinet-fortigate",
+      "source": "recipes/single-system-analysis/by-inspector/fortinet-fortigate.md",
+      "sourceSha256": "180b73ca1b91381f5bbd381f33878df48c994c1d5666036019e2f28ca8d9a703",
+      "tools": [
+        "liongard_environment",
+        "liongard_launchpoint",
+        "liongard_metric",
+        "liongard_device"
+      ]
+    },
+    {
+      "bundle": "bundle-01-single-system",
+      "dependencies": {
+        "composes": [],
+        "primitiveCount": 6
+      },
+      "group": "single-system-assessments",
+      "id": "recipe:single-system-analysis:single-system-ubiquiti-unifi",
+      "name": "single-system-ubiquiti-unifi",
+      "source": "recipes/single-system-analysis/by-inspector/ubiquiti-unifi.md",
+      "sourceSha256": "a609e069132e9324141e443ccd25874590cf2e3fb59f4d0b48a286d8b7941508",
+      "tools": [
+        "liongard_environment",
+        "liongard_launchpoint",
+        "liongard_metric",
+        "liongard_device"
+      ]
+    },
+    {
+      "bundle": "bundle-01-single-system",
+      "dependencies": {
+        "composes": [],
+        "primitiveCount": 12
+      },
+      "group": "single-system-assessments",
+      "id": "recipe:single-system-analysis:single-system-datto-bcdr",
+      "name": "single-system-datto-bcdr",
+      "source": "recipes/single-system-analysis/by-inspector/datto-bcdr.md",
+      "sourceSha256": "371fc768ee9ae925dbf9d15d96ee754ed95e830cadd96dde8529adcf7ff2a71a",
+      "tools": [
+        "liongard_environment",
+        "liongard_launchpoint",
+        "liongard_metric",
+        "liongard_device"
+      ]
+    },
+    {
+      "bundle": "bundle-01-single-system",
+      "dependencies": {
+        "composes": [],
+        "primitiveCount": 16
+      },
+      "group": "single-system-assessments",
+      "id": "recipe:single-system-analysis:single-system-active-directory",
+      "name": "single-system-active-directory",
+      "source": "recipes/single-system-analysis/by-inspector/active-directory.md",
+      "sourceSha256": "381eb2c25297b132775ae25a2999f8ce56f29d45204d9ed1b076fc3236fc7c76",
+      "tools": [
+        "liongard_environment",
+        "liongard_launchpoint",
+        "liongard_metric",
+        "liongard_identity",
+        "liongard_device"
+      ]
+    },
+    {
+      "bundle": "bundle-01-single-system",
+      "dependencies": {
+        "composes": [],
+        "primitiveCount": 0
+      },
+      "group": "single-system-assessments",
+      "id": "recipe:single-system-analysis:single-system-knowbe4",
+      "name": "single-system-knowbe4",
+      "source": "recipes/single-system-analysis/by-inspector/knowbe4.md",
+      "sourceSha256": "d2b49209806f4ff2c844d8f7c202f93859ee5e5f810ca590b0dd4bbf368c927d",
+      "tools": [
+        "liongard_environment",
+        "liongard_launchpoint",
+        "liongard_metric",
+        "liongard_identity"
+      ]
+    },
+    {
+      "bundle": "bundle-01-single-system",
+      "dependencies": {
+        "composes": [],
+        "primitiveCount": 24
+      },
+      "group": "single-system-assessments",
+      "id": "recipe:single-system-analysis:single-system-synology-nas",
+      "name": "single-system-synology-nas",
+      "source": "recipes/single-system-analysis/by-inspector/synology-nas.md",
+      "sourceSha256": "d4eb46bc2c1141771ca61b98220dfe631e08f5f08acb29934cec4c9d68d9daba",
+      "tools": [
+        "liongard_launchpoint",
+        "liongard_metric"
+      ]
+    },
+    {
+      "bundle": "bundle-02-system-type",
+      "dependencies": {
+        "composes": [],
+        "primitiveCount": 152
+      },
+      "group": "system-type-rollups",
+      "id": "recipe:system-type-assessment:system-type-all-firewalls",
+      "name": "system-type-all-firewalls",
+      "source": "recipes/system-type-assessment/all-firewalls.md",
+      "sourceSha256": "57247cc7349c4d0ed62301b514862159e425541291ea04007dd9883847d86288",
+      "tools": [
+        "liongard_environment",
+        "liongard_launchpoint",
+        "liongard_metric",
+        "liongard_device"
+      ]
+    },
+    {
+      "bundle": "bundle-04-qbr-roadmap-onboarding-sales",
+      "dependencies": {
+        "composes": [
+          "recipe:single-system:single-system-active-directory",
+          "recipe:single-system:single-system-knowbe4",
+          "recipe:single-system:single-system-microsoft-365",
+          "recipe:system-type:system-type-all-backups",
+          "recipe:system-type:system-type-all-domains",
+          "recipe:system-type:system-type-all-edrs",
+          "recipe:system-type:system-type-all-external-attack-surface",
+          "recipe:system-type:system-type-all-firewalls",
+          "recipe:system-type:system-type-all-hypervisors",
+          "recipe:system-type:system-type-all-servers"
+        ],
+        "primitiveCount": 0
+      },
+      "group": "qbr-and-reviews",
+      "id": "recipe:environment-quarterly-lookback:environment-quarterly-lookback",
+      "name": "environment-quarterly-lookback",
+      "source": "recipes/environment-quarterly-lookback/quarterly-business-review.md",
+      "sourceSha256": "b4c3a81090d7f50b776f9935eafd422b4b2443483967fc95bb782a2b99a5a389",
+      "tools": [
+        "liongard_environment",
+        "liongard_launchpoint",
+        "liongard_timeline",
+        "liongard_cyber_risk_dashboard",
+        "liongard_device",
+        "liongard_identity",
+        "liongard_domain",
+        "liongard_detection",
+        "liongard_alert",
+        "liongard_metric"
+      ]
+    },
+    {
+      "bundle": "bundle-05-compliance",
+      "dependencies": {
+        "composes": [
+          "recipe:single-system:single-system-knowbe4",
+          "recipe:single-system:single-system-tls-ssl",
+          "recipe:single-system:single-system-windows-server",
+          "recipe:single-system:single-system-windows-workstation",
+          "recipe:system-type:system-type-all-backups",
+          "recipe:system-type:system-type-all-edrs",
+          "recipe:system-type:system-type-all-firewalls",
+          "recipe:system-type:system-type-windows-patching"
+        ],
+        "primitiveCount": 0
+      },
+      "group": "compliance-and-insurance",
+      "id": "recipe:compliance:hipaa-readiness",
+      "name": "hipaa-readiness",
+      "source": "recipes/compliance/hipaa/hipaa-readiness.md",
+      "sourceSha256": "6e72a30f813a9497ef562a8e59ff738cc1a99525f2540d574079918876f6e647",
+      "tools": [
+        "liongard_environment",
+        "liongard_launchpoint",
+        "liongard_timeline",
+        "liongard_cyber_risk_dashboard",
+        "liongard_identity",
+        "liongard_device",
+        "liongard_domain",
+        "liongard_metric",
+        "liongard_detection",
+        "liongard_alert"
+      ]
+    }
+  ],
+  "schemaVersion": 1,
+  "sourceCommit": "eb59e053bb7e8c4bcd63cff152dd7d2d443623c2",
+  "synthesizedSections": [
+    {
+      "from": "generic default",
+      "recipe": "single-system-watchguard",
+      "section": "output-contract"
+    },
+    {
+      "from": "generic default",
+      "recipe": "single-system-google-workspace",
+      "section": "output-contract"
+    },
+    {
+      "from": "generic default",
+      "recipe": "single-system-autotask",
+      "section": "output-contract"
+    },
+    {
+      "from": "generic default",
+      "recipe": "single-system-datto-rmm",
+      "section": "output-contract"
+    },
+    {
+      "from": "generic default",
+      "recipe": "single-system-ubiquiti-unifi",
+      "section": "output-contract"
+    },
+    {
+      "from": "generic default",
+      "recipe": "hipaa-readiness",
+      "section": "required-inputs"
+    },
+    {
+      "from": "generic default",
+      "recipe": "hipaa-readiness",
+      "section": "output-contract"
+    }
+  ],
+  "uploadFileCount": 61,
+  "warnings": []
+}

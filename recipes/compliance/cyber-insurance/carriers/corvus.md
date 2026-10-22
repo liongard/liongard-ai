@@ -262,7 +262,7 @@ Sophos IPS). See `domains/network.md` — "IDS/IPS" section.
 
 | Item | Source | Notes |
 |---|---|---|
-| Form Version 3.2 September 2024 | `internal/cyber-insurance-forms/corvus/corvus-smart-cyber-application-v3.2-2024.txt` | Full extraction |
+| Form Version 3.2 September 2024 | Carrier application (from carrier or broker) | Full extraction |
 | Evidence mapping | `domains/auth.md`, `domains/endpoint.md`, `domains/backup.md`, `domains/network.md` | Domain files are metric source of truth |
 | Corvus DLP scan context | Corvus product documentation | Automated internet scanning is core to the Corvus model |
 

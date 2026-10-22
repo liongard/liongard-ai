@@ -17,7 +17,7 @@ primitives:
     compliantWhen: '>= slas.active_pct_min% of total'
     status: VALIDATED
     validatedOn: '2026-05-28'
-    validatedSystemReference: System N (inspected 2026-03-12)
+    validatedSystemReference: System N — Contoso Nation, Completed 2026-03-12
     sourceRecipe: recipes/single-system-analysis/by-inspector/webroot.md
     dateAdded: '2026-05-26'
 
@@ -32,14 +32,15 @@ primitives:
       inspectorSlug: webroot-inspector
       inspectorId: 15
     liongardMetricName: 'Webroot: Devices Not Checked in Within 30 Days Count'
-    resultType: integer
     compliantWhen: == 0
-    status: PROPOSED
-    validatedOn: '2026-05-26'
-    validatedSystemReference: Liongard Global metric catalog
     sourceRecipe: recipes/single-system-analysis/by-inspector/webroot.md
     dateAdded: '2026-05-26'
-    jmesPath: N/A
+    jmesPath: "length(Endpoints[?DaysSinceLastSeen > `30` && !Deactivated])"
+    resultType: "integer"
+    fieldGotcha: "DaysSinceLastSeen is a precomputed integer."
+    status: "VALIDATED"
+    validatedOn: "2026-10-07"
+    validatedSystemReference: "Systems A, B (dev environment), live EVALUATE 2026-10-07"
 
   - '@id': metrics:webroot:infected-device-count
     '@type': liongard:MetricPrimitive
@@ -55,7 +56,7 @@ primitives:
     compliantWhen: == 0
     status: VALIDATED
     validatedOn: '2026-05-28'
-    validatedSystemReference: System N (inspected 2026-03-12)
+    validatedSystemReference: System N — Contoso Nation, Completed 2026-03-12
     sourceRecipe: recipes/single-system-analysis/by-inspector/webroot.md
     dateAdded: '2026-05-26'
     jmesPath: length(Endpoints[?Infected == `true`])
@@ -77,7 +78,7 @@ primitives:
     resultType: array
     status: VALIDATED
     validatedOn: '2026-05-28'
-    validatedSystemReference: System N (inspected 2026-03-12)
+    validatedSystemReference: System N — Contoso Nation, Completed 2026-03-12
     sourceRecipe: recipes/single-system-analysis/by-inspector/webroot.md
     dateAdded: '2026-05-26'
 

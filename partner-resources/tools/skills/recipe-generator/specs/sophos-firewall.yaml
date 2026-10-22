@@ -114,22 +114,22 @@ cross_check:
 proposed_metric_gaps:
   - field: "Sophos XG: Hostname (separate metric)"
     fallback: "Use SystemInfo direct read"
-    jira_ticket:
+    tracking_ref:
   - field: "Central management status"
     fallback: "Check both sophos-firewall-inspector AND sophos-central-inspector — overlap = centrally managed"
-    jira_ticket:
+    tracking_ref:
   - field: "WAN admin access exposure"
     fallback: "Manual review of zone configuration in Sophos UI"
-    jira_ticket:
+    tracking_ref:
   - field: "IPS / Gateway AV / VPN service status"
     fallback: "Manual review in Sophos UI"
-    jira_ticket:
+    tracking_ref:
   - field: "DNS configuration (primary/secondary/tertiary)"
     fallback: "Manual review in Sophos UI"
-    jira_ticket:
+    tracking_ref:
   - field: "DHCP scope detail"
     fallback: "Manual review in Sophos UI"
-    jira_ticket:
+    tracking_ref:
 
 trigger_keyword: sophos-firewall
 

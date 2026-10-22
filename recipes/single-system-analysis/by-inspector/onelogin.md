@@ -11,7 +11,7 @@ compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, li
 personas: [soc, technical-alignment-manager, vcio-account-manager]
 output_formats: [markdown, word, pptx, xlsx]
 primitives:
-  # Reconciled 2026-05-29: pruned dangling refs not present in the live dataprint (see internal/proposed-metrics-backlog.md).
+  # Reconciled 2026-05-29: pruned dangling refs not present in the live dataprint.
   - metrics:onelogin:active-users-count
   - metrics:onelogin:active-users-list
   - metrics:onelogin:application-summary

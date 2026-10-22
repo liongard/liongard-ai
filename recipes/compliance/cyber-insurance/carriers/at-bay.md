@@ -263,9 +263,9 @@ The Ransomware Supplemental asks deep technical questions. Liongard covers the s
 
 | Item | Source | Notes |
 |---|---|---|
-| New business question set (AB-CYB-APP) | `internal/cyber-insurance-forms/at-bay/at-bay-cyber-insurance-new-business-application-2023.txt` | Full extraction |
-| Renewal question set (AB-CYB-RAP) | `internal/cyber-insurance-forms/at-bay/at-bay-cyber-renewal-application-2025.txt` | Key renewal deltas |
-| Ransomware Supplemental (AB-CYB-RWS) | `internal/cyber-insurance-forms/at-bay/at-bay-ransomware-supplemental-application-2025.txt` | Deep technical sections |
+| New business question set (AB-CYB-APP) | Carrier application (from carrier or broker) | Full extraction |
+| Renewal question set (AB-CYB-RAP) | Carrier application (from carrier or broker) | Key renewal deltas |
+| Ransomware Supplemental (AB-CYB-RWS) | Carrier application (from carrier or broker) | Deep technical sections |
 | Evidence mapping | `domains/auth.md`, `domains/endpoint.md`, `domains/backup.md`, `domains/network.md` | Metric source of truth |
 
 ---

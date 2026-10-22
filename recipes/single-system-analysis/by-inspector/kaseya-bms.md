@@ -13,8 +13,7 @@ output_formats: [markdown, word, pptx, xlsx]
 primitives:
   # Reconciled 2026-05-29 vs live dataprint (live production environment, inspected 2026-05-28).
   # This dataprint exposes Users/Roles/Contracts/Accounts/Services only — no tickets,
-  # SLA-compliance, billable-utilization, or per-user MFA. Those refs were pruned to
-  # internal/proposed-metrics-backlog.md. (Users are the technicians/employees.)
+  # SLA-compliance, billable-utilization, or per-user MFA. Those refs were removed. (Users are the technicians/employees.)
   - metrics:kaseya-bms-inspector:users-total-count
   - metrics:kaseya-bms-inspector:users-active-count
   - metrics:kaseya-bms-inspector:accounts-total-count

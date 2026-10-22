@@ -36,7 +36,7 @@ The recipes in this folder are **the** building blocks for cross-system rollups 
 **Networking / Infra:**
 `network-discovery.md` · `network-ip-address.md` · `internet-domain-dns.md` · `tls-ssl.md` · `datto-networking.md` · `hp-procurve.md` · `cisco-sbs-switch.md` · `junos.md` · `managed-printer.md` · `godaddy.md`
 
-For the complete inspector-to-system mapping with IDs, see `internal/inspector-name-system-id-mapping.xlsx`.
+For inspector slugs and IDs, see `reference/inspector-aliases.md`.
 
 ## How to invoke a recipe
 

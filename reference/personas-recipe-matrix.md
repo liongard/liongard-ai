@@ -232,6 +232,3 @@ When a persona's recipe usage materially shifts:
 
 1. Update Section 1 markings.
 2. Update the persona's `README.md` index.
-3. Note the change in `learnings.md` if the shift represents a new
-   pattern (e.g., a new role emerges that consolidates two existing
-   personas).

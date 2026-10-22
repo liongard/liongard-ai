@@ -269,7 +269,7 @@ evidence from Liongard before submitting the application to surface issues proac
 
 | Item | Source | Notes |
 |---|---|---|
-| Form SP 17 717 1120 question set | `internal/cyber-insurance-forms/coalition/coalition-new-business-cyber-application.txt` | Full question text extracted |
+| Form SP 17 717 1120 question set | Carrier application (from carrier or broker) | Full question text extracted |
 | Evidence mapping | `domains/auth.md`, `domains/endpoint.md`, `domains/backup.md` | Domain files are the metric source of truth |
 | Coalition scan context | Coalition product documentation | Automated internet scanning supplements this form |
 

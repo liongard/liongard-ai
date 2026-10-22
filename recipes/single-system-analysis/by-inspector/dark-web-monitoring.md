@@ -15,7 +15,7 @@ compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, li
 personas: [sales, soc, vcio-account-manager, technical-alignment-manager, executive]
 output_formats: [markdown, word, pptx, xlsx]
 primitives:
-  # Reconciled 2026-05-29: pruned dangling refs not present in the live dataprint (see internal/proposed-metrics-backlog.md).
+  # Reconciled 2026-05-29: pruned dangling refs not present in the live dataprint.
   - metrics:dark-web-inspector:breach-details
   - metrics:dark-web-inspector:total-breaches-count
   - metrics:dark-web-inspector:users-breach-list

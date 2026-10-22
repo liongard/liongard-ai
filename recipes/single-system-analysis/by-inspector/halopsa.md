@@ -14,7 +14,7 @@ primitives:
   # Reconciled 2026-05-29 vs live dataprint (live production environment, inspected 2026-05-29).
   # Tickets[] key exists but was empty on the test system, and no SLA-compliance/billable
   # fields are present — tickets-*, sla-*, agents-billable-utilization-pct, contracts-expiring
-  # pruned to internal/proposed-metrics-backlog.md (tickets-* are SCHEMA_CONFIRMED candidates).
+  # removed (tickets-* are SCHEMA_CONFIRMED candidates).
   - metrics:halopsa-inspector:agents-total-count
   - metrics:halopsa-inspector:agents-active-count
   - metrics:halopsa-inspector:customers-total-count

@@ -128,7 +128,7 @@ for each proposed_metric in recipe.proposed_metrics_used:
         'category': 'proposed_metric_gap',
         'field': <field_name>,
         'workaround': <client_side_filter or 'no fallback'>,
-        'remediation': 'Confirm in <vendor> console; track Jira ticket <CORE-XXXX>'
+        'remediation': 'Confirm in <vendor> console; request a Liongard metric for this field'
     })
 ```
 
@@ -174,7 +174,7 @@ assessment run.
 |---|---|---|---|---|
 | 1 | Stale inspector | SonicWall firewall <hostname> | Inspector last reported 9 days ago | Confirm firmware version + WAN rules in SonicWall portal |
 | 2 | Count divergence | Privileged users count | liongard_identity reports 12; AD metric 23 reports 14 | Reconcile in AD; difference may be M365-only privileged accounts |
-| 3 | Proposed metric gap | M365 license expiration date per SKU | Not yet in Liongard library | Confirm renewal date in M365 admin portal; track CORE-XXXX |
+| 3 | Proposed metric gap | M365 license expiration date per SKU | Not yet in Liongard library | Confirm renewal date in M365 admin portal |
 | 4 | Single-source visibility | <hostname> | Domain-known, no local inspection | Deploy Windows Workstation Inspector |
 | 5 | Persistent null | EDR detection on <hostname> | 3 retries returned null | Verify EDR install state in vendor console |
 ```

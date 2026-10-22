@@ -1,173 +1,672 @@
 "$schema": "../../schemas/primitive.schema.json"
 
+# NinjaOne is parent/child. The PARENT dataprint holds the tenant roster
+# (Organizations, Groups, Policies, Roles, Users = technicians, Discovered).
+# Each CHILD dataprint is one NinjaOne organization (Devices + device telemetry).
+# Every primitive below says which side it evaluates against in fieldGotcha.
+#
+# Child dataprints come in two shapes. Lean children carry only Name, Users,
+# Devices, SystemInfo, DiskSummary, AntiVirusSummary. Expanded children (2026
+# telemetry) add SoftwareInventory, WindowsServices, PatchStatus,
+# OsPatchInstallHistory, Volumes, ComputerSystem, UserSession and hardware
+# arrays. length() on an absent key fails the EVALUATE; treat that as "not
+# collected on this shape", never as 0.
+
 primitives:
 
-  - '@id': metrics:ninjaone:devices-total-count
-    '@type': liongard:MetricPrimitive
+# ── Devices / agent coverage (child) ─────────────────────────────────────────
+
+  - "@id": "metrics:ninjaone:devices-total-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "NinjaOne — Total Device Count"
+    description: "Total number of devices (agents and agentless nodes) managed in the NinjaOne organization."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "ninjaone-inspector"
+      inspectorId: 72
+    jmesPath: "length(Devices)"
+    resultType: "integer"
+    resultUnit: "count"
+    fieldGotcha: "Child systems only; a parent dataprint has no Devices key. Matches the asset-inventory count of devices whose inspectors[] contains ninja-rmm-inspector."
     compliesWith:
-    - CIS-Controls-v8:1.1
-    dateAdded: '2026-05-26'
-    description: Total number of devices managed by the NinjaOne tenant.
-    evaluates:
-      '@type': liongard:Inspector
-      inspectorId: 72
-      inspectorSlug: ninjaone-inspector
-    jmesPath: length(Devices)
-    name: NinjaOne — Total Device Count
-    notes: 'Devices[].offline is boolean: false=online, true=offline.'
-    resultType: integer
-    sourceRecipe: recipes/single-system-analysis/by-inspector/ninjaone.md
-    status: VALIDATED
-    validatedOn: '2026-05-28'
-    validatedSystemReference: System A (inspected 2026-05-18) — returned 4
+      - "CIS-Controls-v8:1.1"
+    status: "VALIDATED"
+    validatedOn: "2026-10-21"
+    validatedSystemReference: "System A (inspected 2026-10-08) — 58; System B (inspected 2026-10-21) — 1; System C (inspected 2026-06-17) — 29"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/ninjaone.md"
+    dateAdded: "2026-05-26"
+    dateModified: "2026-10-21"
 
-  - '@id': metrics:ninjaone:devices-online-count
-    '@type': liongard:MetricPrimitive
-    dateAdded: '2026-05-26'
-    description: Number of devices currently online in the NinjaOne tenant.
+  - "@id": "metrics:ninjaone:devices-online-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "NinjaOne — Online Device Count"
+    description: "Number of devices currently online in the NinjaOne organization."
     evaluates:
-      '@type': liongard:Inspector
+      "@type": "liongard:Inspector"
+      inspectorSlug: "ninjaone-inspector"
       inspectorId: 72
-      inspectorSlug: ninjaone-inspector
-    jmesPath: length(Devices[?offline == `false`])
-    name: NinjaOne — Online Device Count
-    notes: Devices.offline is boolean. Online = offline == `false`. Use backtick-quoted
-      boolean.
-    resultType: integer
-    sourceRecipe: recipes/single-system-analysis/by-inspector/ninjaone.md
-    status: VALIDATED
-    validatedOn: '2026-05-28'
-    validatedSystemReference: System A (inspected 2026-05-18) — returned 4
+    jmesPath: "length(Devices[?offline == `false`])"
+    resultType: "integer"
+    resultUnit: "count"
+    fieldGotcha: "Child systems only. Devices[].offline is a boolean (false = online); use the backtick-quoted literal."
+    status: "VALIDATED"
+    validatedOn: "2026-10-21"
+    validatedSystemReference: "System A (inspected 2026-10-08) — 58; System B (inspected 2026-10-21) — 0; System C (inspected 2026-06-17) — 27"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/ninjaone.md"
+    dateAdded: "2026-05-26"
+    dateModified: "2026-10-21"
 
-  - '@id': metrics:ninjaone:patches-pending-count
-    '@type': liongard:MetricPrimitive
+  - "@id": "metrics:ninjaone:devices-offline-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "NinjaOne — Offline Device Count"
+    description: "Number of devices NinjaOne currently reports as offline."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "ninjaone-inspector"
+      inspectorId: 72
+    jmesPath: "length(Devices[?offline == `true`])"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    fieldGotcha: "Child systems only. Offline is the state at inspection time; use devices-offline-list for how long each device has been out of contact."
+    status: "VALIDATED"
+    validatedOn: "2026-10-21"
+    validatedSystemReference: "System A (inspected 2026-10-08) — 0; System B (inspected 2026-10-21) — 1; System C (inspected 2026-06-17) — 2"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/ninjaone.md"
+    dateAdded: "2026-10-21"
+
+  - "@id": "metrics:ninjaone:devices-offline-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "NinjaOne — Offline Device List"
+    description: "Offline devices with the timestamp of their last contact with NinjaOne."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "ninjaone-inspector"
+      inspectorId: 72
+    jmesPath: "Devices[?offline == `true`].{name: systemName, lastContact: LastContact_r, nodeClass: nodeClass}"
+    resultType: "array"
+    compliantWhen: "result == []"
+    fieldGotcha: "Child systems only. LastContact_r is ISO 8601; the raw lastContact is epoch SECONDS (a float), unlike UserSession[].logonTime, which is epoch milliseconds."
+    status: "VALIDATED"
+    validatedOn: "2026-10-21"
+    validatedSystemReference: "System B (inspected 2026-10-21) — 1 row; System C (inspected 2026-06-17) — 2 rows"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/ninjaone.md"
+    dateAdded: "2026-10-21"
+
+  - "@id": "metrics:ninjaone:devices-server-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "NinjaOne — Server Device Count"
+    description: "Number of managed devices whose NinjaOne node class is a server class."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "ninjaone-inspector"
+      inspectorId: 72
+    jmesPath: "length(Devices[?contains(nodeClass, 'SERVER')])"
+    resultType: "integer"
+    resultUnit: "count"
+    fieldGotcha: "Child systems only. Observed nodeClass values: WINDOWS_WORKSTATION, WINDOWS_SERVER, VMWARE_VM_HOST, VMWARE_VM_GUEST. Hypervisor hosts and guests are not counted as servers."
+    status: "VALIDATED"
+    validatedOn: "2026-10-21"
+    validatedSystemReference: "System A (inspected 2026-10-08) — 4; System B (inspected 2026-10-21) — 1; System C (inspected 2026-06-17) — 2"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/ninjaone.md"
+    dateAdded: "2026-10-21"
+
+  - "@id": "metrics:ninjaone:devices-agent-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "NinjaOne — Agent Device Count"
+    description: "Number of devices running the NinjaOne agent, excluding hypervisor host and VM-guest records."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "ninjaone-inspector"
+      inspectorId: 72
+    jmesPath: "length(Devices[?deviceType == 'AgentDevice'])"
+    resultType: "integer"
+    resultUnit: "count"
+    fieldGotcha: "Child systems only. deviceType values: AgentDevice, VMHost, VMGuest. When NinjaOne monitors an ESXi host, each VM appears once as a VMGuest record and again as an AgentDevice if it also runs the agent, so devices-total-count double-counts those VMs. Use this primitive as the managed-endpoint count and for seat reconciliation."
+    status: "VALIDATED"
+    validatedOn: "2026-10-21"
+    validatedSystemReference: "System A (inspected 2026-10-08) — 58 of 58; System B (inspected 2026-10-21) — 1 of 1; System C (inspected 2026-06-17) — 22 of 29 (1 VMHost, 6 VMGuest)"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/ninjaone.md"
+    dateAdded: "2026-10-21"
+
+  - "@id": "metrics:ninjaone:devices-windows10-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "NinjaOne — Windows 10 Device Count"
+    description: "Number of managed devices still running Windows 10, which is past end of support."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "ninjaone-inspector"
+      inspectorId: 72
+    jmesPath: "length(Devices[?contains(os.name || '', 'Windows 10')])"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    fieldGotcha: "Child systems only. os.name is null on VMHost / VMGuest records; without the || '' guard, contains() fails the whole query. Lean children report 'Microsoft Windows 10 Pro', expanded children 'Windows 10 Professional Edition', so match with contains(), never equality."
     compliesWith:
-    - CIS-Controls-v8:7.3
-    - CIS-Controls-v8:7.4
-    dateAdded: '2026-05-26'
-    description: Total number of patches pending installation across all managed devices.
-    evaluates:
-      '@type': liongard:Inspector
-      inspectorId: 72
-      inspectorSlug: ninjaone-inspector
-    jmesPath: N/A
-    name: NinjaOne — Pending Patch Count
-    notes: 'DATA GAP: NinjaOne dataprint has only Devices[], Users[], SystemInfo, DiskSummary,
-      AntiVirusSummary. No Patches[], Alerts[], or Licensing data.'
-    resultType: integer
-    sourceRecipe: recipes/single-system-analysis/by-inspector/ninjaone.md
-    status: PROPOSED
-    validatedOn: '2026-05-28'
-    validatedSystemReference: System A (inspected 2026-05-18) — no Patches[] array in
-      dataprint
+      - "CIS-Controls-v8:2.2"
+      - "cyber-insurance-domain-endpoint"
+    status: "VALIDATED"
+    validatedOn: "2026-10-21"
+    validatedSystemReference: "System A (inspected 2026-10-08) — 15; System B (inspected 2026-10-21) — 0; System C (inspected 2026-06-17) — 5"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/ninjaone.md"
+    dateAdded: "2026-10-21"
 
-  - '@id': metrics:ninjaone:patches-critical-pending-count
-    '@type': liongard:MetricPrimitive
+  - "@id": "metrics:ninjaone:devices-not-updated-14d-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "NinjaOne — Devices Not Updated in 14 Days"
+    description: "Number of devices whose NinjaOne record has not updated in more than 14 days (stale agent signal)."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "ninjaone-inspector"
+      inspectorId: 72
+    liongardMetricName: "NinjaRMM: Count of Devices not updated in the last 14 days"
+    liongardMetricId: 1089
+    liongardMetricUuid: "1db2bc5e-c06a-4559-a965-7f2de54b8b9f"
+    jmesPath: "Devices[?DaysSinceLastUpdated_r > `14`] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    fieldGotcha: "Child systems only. DaysSinceLastUpdated_r is an integer number of days, computed at inspection time."
+    status: "VALIDATED"
+    validatedOn: "2026-10-21"
+    validatedSystemReference: "System A (inspected 2026-10-08) — 0; System B (inspected 2026-10-21) — 1; System C (inspected 2026-06-17) — 1"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/ninjaone.md"
+    dateAdded: "2026-10-21"
+
+  - "@id": "metrics:ninjaone:devices-unhealthy-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "NinjaOne — Unhealthy Device Count"
+    description: "Number of devices NinjaOne rates UNHEALTHY."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "ninjaone-inspector"
+      inspectorId: 72
+    liongardMetricName: "NinjaRMM: Count of Devices in Unhealthy State"
+    liongardMetricId: 1091
+    liongardMetricUuid: "f319ee61-e5aa-4097-a1ee-cab65f60132e"
+    jmesPath: "Devices[?DeviceHealth_r.healthStatus == `UNHEALTHY`] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    fieldGotcha: "Child systems only. healthStatus values observed: HEALTHY, NEEDS_ATTENTION, UNHEALTHY, UNKNOWN."
+    status: "VALIDATED"
+    validatedOn: "2026-10-21"
+    validatedSystemReference: "System A (inspected 2026-10-08) — 0; System B (inspected 2026-10-21) — 1; System C (inspected 2026-06-17) — 0"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/ninjaone.md"
+    dateAdded: "2026-10-21"
+
+  - "@id": "metrics:ninjaone:devices-needs-attention-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "NinjaOne — Needs-Attention Device Count"
+    description: "Number of devices NinjaOne rates NEEDS_ATTENTION."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "ninjaone-inspector"
+      inspectorId: 72
+    liongardMetricName: "NinjaRMM: Count of Devices in Needs Attention State"
+    liongardMetricId: 1093
+    liongardMetricUuid: "3b3e6f0d-2d39-496a-b52c-30ad4a5a4c46"
+    jmesPath: "Devices[?DeviceHealth_r.healthStatus == `NEEDS_ATTENTION`] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    fieldGotcha: "Child systems only."
+    status: "VALIDATED"
+    validatedOn: "2026-10-21"
+    validatedSystemReference: "System A (inspected 2026-10-08) — 0; System C (inspected 2026-06-17) — 6"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/ninjaone.md"
+    dateAdded: "2026-10-21"
+
+  - "@id": "metrics:ninjaone:devices-pending-reboot-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "NinjaOne — Devices Pending Reboot"
+    description: "Number of devices whose operating system reports a reboot is required."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "ninjaone-inspector"
+      inspectorId: 72
+    jmesPath: "length(Devices[?os.needsReboot == `true`])"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    fieldGotcha: "Child systems only. Devices[].os.needsReboot is a boolean. DeviceHealth_r.pendingRebootReason is usually an empty string, so do not filter on it."
+    status: "VALIDATED"
+    validatedOn: "2026-10-21"
+    validatedSystemReference: "System A (inspected 2026-10-08) — 0; System B (inspected 2026-10-21) — 0; System C (inspected 2026-06-17) — 3"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/ninjaone.md"
+    dateAdded: "2026-10-21"
+
+  - "@id": "metrics:ninjaone:devices-low-disk-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "NinjaOne — Devices With a Volume Below 20% Free"
+    description: "Number of devices with at least one volume under 20% free space."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "ninjaone-inspector"
+      inspectorId: 72
+    liongardMetricName: "NinjaRMM: Count of Devices with freespace below 20%"
+    liongardMetricId: 1099
+    liongardMetricUuid: "0399305c-253d-47be-848c-ddcff22c9157"
+    jmesPath: "Devices[?volumes[?PercentageFree_r < `20` && PercentageFree_r != `null`]] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    fieldGotcha: "Child systems only. PercentageFree_r exists on the per-device Devices[].volumes[] array, not on the top-level Volumes[] array."
+    status: "VALIDATED"
+    validatedOn: "2026-10-21"
+    validatedSystemReference: "System A (inspected 2026-10-08) — 0; System B (inspected 2026-10-21) — 0; System C (inspected 2026-06-17) — 6"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/ninjaone.md"
+    dateAdded: "2026-10-21"
+
+  - "@id": "metrics:ninjaone:disks-not-ok-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "NinjaOne — Physical Disks Not OK"
+    description: "Number of physical disks whose reported status is not OK."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "ninjaone-inspector"
+      inspectorId: 72
+    liongardMetricName: "NinjaRMM: Count of Disks that Need Attention"
+    liongardMetricId: 1101
+    liongardMetricUuid: "184c0436-d888-40db-97fe-f61ea00fcf94"
+    jmesPath: "DiskSummary[?status != `OK`] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    fieldGotcha: "Child systems only. DiskSummary is present on lean and expanded child shapes."
+    status: "VALIDATED"
+    validatedOn: "2026-10-21"
+    validatedSystemReference: "System A (inspected 2026-10-08) — 0; System B (inspected 2026-10-21) — 0; System C (inspected 2026-06-17) — 1"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/ninjaone.md"
+    dateAdded: "2026-10-21"
+
+# ── Patch posture (child) ────────────────────────────────────────────────────
+
+  - "@id": "metrics:ninjaone:patches-pending-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "NinjaOne — Pending Patch Count"
+    description: "Total number of OS and third-party software patches pending installation across all managed devices."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "ninjaone-inspector"
+      inspectorId: 72
+    jmesPath: "sum(Devices[].[DeviceHealth_r.pendingOSPatchesCount, DeviceHealth_r.pendingSoftwarePatchesCount][])"
+    resultType: "integer"
+    resultUnit: "count"
+    fieldGotcha: "Child systems only (the parent holds the tenant roster). Works on lean and expanded shapes because it reads the per-device DeviceHealth_r rollup, not PatchStatus[]."
     compliesWith:
-    - CIS-Controls-v8:7.3
-    - CIS-Controls-v8:7.4
-    dateAdded: '2026-05-26'
-    description: Number of critical-severity patches pending installation.
-    evaluates:
-      '@type': liongard:Inspector
-      inspectorId: 72
-      inspectorSlug: ninjaone-inspector
-    jmesPath: N/A
-    name: NinjaOne — Critical Pending Patch Count
-    notes: 'DATA GAP: NinjaOne dataprint has only Devices[], Users[], SystemInfo, DiskSummary,
-      AntiVirusSummary. No Patches[], Alerts[], or Licensing data.'
-    resultType: integer
-    sourceRecipe: recipes/single-system-analysis/by-inspector/ninjaone.md
-    status: PROPOSED
-    validatedOn: '2026-05-28'
-    validatedSystemReference: System A (inspected 2026-05-18) — no Patches[] in dataprint
+      - "CIS-Controls-v8:7.3"
+      - "CIS-Controls-v8:7.4"
+    status: "VALIDATED"
+    validatedOn: "2026-10-21"
+    validatedSystemReference: "System A (inspected 2026-10-08) — 8; System B (inspected 2026-10-21) — 1; System C (inspected 2026-06-17) — 29"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/ninjaone.md"
+    dateAdded: "2026-05-26"
+    dateModified: "2026-10-21"
 
-  - '@id': metrics:ninjaone:alerts-open-count
-    '@type': liongard:MetricPrimitive
-    dateAdded: '2026-05-26'
-    description: Number of currently open/unresolved alerts in NinjaOne.
+  - "@id": "metrics:ninjaone:patches-critical-pending-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "NinjaOne — Critical/Important Pending Patch Count"
+    description: "Number of CRITICAL- or IMPORTANT-severity patches not rejected by patch policy (approved, delayed or awaiting manual approval)."
     evaluates:
-      '@type': liongard:Inspector
+      "@type": "liongard:Inspector"
+      inspectorSlug: "ninjaone-inspector"
       inspectorId: 72
-      inspectorSlug: ninjaone-inspector
-    jmesPath: N/A
-    name: NinjaOne — Open Alert Count
-    notes: 'DATA GAP: NinjaOne dataprint has only Devices[], Users[], SystemInfo, DiskSummary,
-      AntiVirusSummary. No Patches[], Alerts[], or Licensing data.'
-    resultType: integer
-    sourceRecipe: recipes/single-system-analysis/by-inspector/ninjaone.md
-    status: PROPOSED
-    validatedOn: '2026-05-28'
-    validatedSystemReference: System A (inspected 2026-05-18) — no Alerts[] array in
-      dataprint
+    jmesPath: "length(PatchStatus[?(severity == 'CRITICAL' || severity == 'IMPORTANT') && status != 'REJECTED'])"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result <= slas.critical_patches_pending_max (default 0)"
+    fieldGotcha: "Expanded child shape only; PatchStatus[] is absent on lean children and length() then fails. Observed severity values: IMPORTANT, MODERATE, OPTIONAL, NONE, and null on most third-party (PatchKind_r == 'SOFTWARE') rows. CRITICAL was not observed in test data but is kept in the filter. Observed status values: APPROVED, DELAYED, MANUAL, REJECTED."
+    compliesWith:
+      - "CIS-Controls-v8:7.3"
+      - "CIS-Controls-v8:7.4"
+    status: "VALIDATED"
+    validatedOn: "2026-10-21"
+    validatedSystemReference: "System B (inspected 2026-10-21) — 2; System C (inspected 2026-06-17) — 20"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/ninjaone.md"
+    dateAdded: "2026-05-26"
+    dateModified: "2026-10-21"
 
-  - '@id': metrics:ninjaone:alerts-critical-count
-    '@type': liongard:MetricPrimitive
-    dateAdded: '2026-05-26'
-    description: Number of open critical-priority alerts in NinjaOne.
+  - "@id": "metrics:ninjaone:patches-failed-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "NinjaOne — Failed Patch Count"
+    description: "Total OS and software patch installs that failed, summed across devices."
     evaluates:
-      '@type': liongard:Inspector
+      "@type": "liongard:Inspector"
+      inspectorSlug: "ninjaone-inspector"
       inspectorId: 72
-      inspectorSlug: ninjaone-inspector
-    jmesPath: N/A
-    name: NinjaOne — Critical Alert Count
-    notes: 'DATA GAP: NinjaOne dataprint has only Devices[], Users[], SystemInfo, DiskSummary,
-      AntiVirusSummary. No Patches[], Alerts[], or Licensing data.'
-    resultType: integer
-    sourceRecipe: recipes/single-system-analysis/by-inspector/ninjaone.md
-    status: PROPOSED
-    validatedOn: '2026-05-28'
-    validatedSystemReference: System A (inspected 2026-05-18) — no Alerts[] in dataprint
+    jmesPath: "sum(Devices[].[DeviceHealth_r.failedOSPatchesCount, DeviceHealth_r.failedSoftwarePatchesCount][])"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    fieldGotcha: "Child systems only. OsPatchInstallHistory[] showed only INSTALLED rows in test data, so failures come from DeviceHealth_r, not install history."
+    compliesWith:
+      - "CIS-Controls-v8:7.4"
+    status: "VALIDATED"
+    validatedOn: "2026-10-21"
+    validatedSystemReference: "System A (inspected 2026-10-08) — 0; System B (inspected 2026-10-21) — 0; System C (inspected 2026-06-17) — 1"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/ninjaone.md"
+    dateAdded: "2026-10-21"
 
-  - '@id': metrics:ninjaone:users-technician-count
-    '@type': liongard:MetricPrimitive
-    dateAdded: '2026-05-26'
-    description: Number of technician accounts in the NinjaOne tenant.
+  - "@id": "metrics:ninjaone:devices-failed-os-patches-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "NinjaOne — Devices With Failed OS Patches"
+    description: "Number of devices reporting at least one failed OS patch."
     evaluates:
-      '@type': liongard:Inspector
+      "@type": "liongard:Inspector"
+      inspectorSlug: "ninjaone-inspector"
       inspectorId: 72
-      inspectorSlug: ninjaone-inspector
-    jmesPath: length(Users)
-    name: NinjaOne — Technician Count
-    notes: Users[] is the NinjaOne technician/user roster. Users[].enabled is boolean.
-    resultType: integer
-    sourceRecipe: recipes/single-system-analysis/by-inspector/ninjaone.md
-    status: VALIDATED
-    validatedOn: '2026-05-28'
-    validatedSystemReference: System A (inspected 2026-05-18) — returned 2
+    liongardMetricName: "NinjaRMM: Count of Devices with failed OS patches"
+    liongardMetricId: 1095
+    liongardMetricUuid: "fbd0d225-30e4-491f-a04b-9036ba46452e"
+    jmesPath: "Devices[?DeviceHealth_r.failedOSPatchesCount > `0` && systemName].systemName | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    fieldGotcha: "Child systems only. The stored metric's description says 'more than 1' but the query counts devices with at least one failure."
+    status: "VALIDATED"
+    validatedOn: "2026-10-21"
+    validatedSystemReference: "System A (inspected 2026-10-08) — 0; System C (inspected 2026-06-17) — 0"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/ninjaone.md"
+    dateAdded: "2026-10-21"
 
-  - '@id': metrics:ninjaone:users-mfa-enabled-count
-    '@type': liongard:MetricPrimitive
-    dateAdded: '2026-05-26'
-    description: Number of technician accounts with MFA enabled.
+  - "@id": "metrics:ninjaone:devices-failed-software-patches-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "NinjaOne — Devices With Failed Software Patches"
+    description: "Number of devices reporting at least one failed third-party software patch."
     evaluates:
-      '@type': liongard:Inspector
+      "@type": "liongard:Inspector"
+      inspectorSlug: "ninjaone-inspector"
       inspectorId: 72
-      inspectorSlug: ninjaone-inspector
-    jmesPath: length(Users[?mfaConfigured == `true`])
-    name: NinjaOne — Technician MFA Enabled Count
-    notes: mfaConfigured is boolean. Use backtick-quoted `true`.
-    resultType: integer
-    sourceRecipe: recipes/single-system-analysis/by-inspector/ninjaone.md
-    status: VALIDATED
-    validatedOn: '2026-05-28'
-    validatedSystemReference: System A (inspected 2026-05-18) — returned 2
+    liongardMetricName: "NinjaRMM: Count of Devices with failed software patches"
+    liongardMetricId: 1097
+    liongardMetricUuid: "4d51d999-cc08-4a8a-b4d8-4c2c4a300598"
+    jmesPath: "Devices[?DeviceHealth_r.failedSoftwarePatchesCount > `0` && systemName] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    fieldGotcha: "Child systems only."
+    status: "VALIDATED"
+    validatedOn: "2026-10-21"
+    validatedSystemReference: "System A (inspected 2026-10-08) — 0; System C (inspected 2026-06-17) — 1"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/ninjaone.md"
+    dateAdded: "2026-10-21"
 
-  - '@id': metrics:ninjaone:licensing-utilization-pct
-    '@type': liongard:MetricPrimitive
-    dateAdded: '2026-05-26'
-    description: Percentage of device-seat licenses currently in use.
+# ── Antivirus / threat posture (child) ───────────────────────────────────────
+
+  - "@id": "metrics:ninjaone:av-not-protected-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "NinjaOne — Devices Without Active Antivirus"
+    description: "Number of devices whose antivirus summary reports no product or a product that is not ON."
     evaluates:
-      '@type': liongard:Inspector
+      "@type": "liongard:Inspector"
+      inspectorSlug: "ninjaone-inspector"
       inspectorId: 72
-      inspectorSlug: ninjaone-inspector
-    jmesPath: N/A
-    name: NinjaOne — License Utilization Percent
-    notes: 'DATA GAP: No licensing/seat data in NinjaOne dataprint.'
-    resultType: integer
-    sourceRecipe: recipes/single-system-analysis/by-inspector/ninjaone.md
-    status: PROPOSED
-    validatedOn: '2026-05-28'
-    validatedSystemReference: System A (inspected 2026-05-18) — no Licensing object
-      in dataprint
+    jmesPath: "length(AntiVirusSummary[?productName == 'NONE' || productState != 'ON'])"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    fieldGotcha: "Child systems only. 'No AV' is the string 'NONE' in productName, not null; productState is null on those rows. AntiVirusSummary can have fewer rows than Devices (22 for 29 devices on one test system), so also compare length(AntiVirusSummary) with length(Devices) to find devices with no AV record at all."
+    compliesWith:
+      - "CIS-Controls-v8:10.1"
+      - "cyber-insurance-domain-endpoint"
+    status: "VALIDATED"
+    validatedOn: "2026-10-21"
+    validatedSystemReference: "System A (inspected 2026-10-08) — 0; System B (inspected 2026-10-21) — 1; System C (inspected 2026-06-17) — 2"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/ninjaone.md"
+    dateAdded: "2026-10-21"
 
+  - "@id": "metrics:ninjaone:av-definitions-outdated-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "NinjaOne — Antivirus Definitions Not Up to Date"
+    description: "Number of devices with an antivirus product whose definition status is not Up-to-Date."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "ninjaone-inspector"
+      inspectorId: 72
+    jmesPath: "length(AntiVirusSummary[?productName != 'NONE' && definitionStatus != 'Up-to-Date'])"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    fieldGotcha: "Child systems only. definitionStatus is the exact string 'Up-to-Date' (hyphenated, mixed case)."
+    compliesWith:
+      - "CIS-Controls-v8:10.2"
+    status: "VALIDATED"
+    validatedOn: "2026-10-21"
+    validatedSystemReference: "System A (inspected 2026-10-08) — 0; System C (inspected 2026-06-17) — 0"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/ninjaone.md"
+    dateAdded: "2026-10-21"
+
+  - "@id": "metrics:ninjaone:threats-active-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "NinjaOne — Active Threat Count"
+    description: "Active threats reported by NinjaOne-integrated security products, summed across devices."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "ninjaone-inspector"
+      inspectorId: 72
+    jmesPath: "sum(Devices[].DeviceHealth_r.activeThreatsCount)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    fieldGotcha: "Child systems only. Only populated for security products NinjaOne integrates with; a third-party EDR reports its own threats in its own inspector."
+    status: "VALIDATED"
+    validatedOn: "2026-10-21"
+    validatedSystemReference: "System A (inspected 2026-10-08) — 0; System B (inspected 2026-10-21) — 0; System C (inspected 2026-06-17) — 0"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/ninjaone.md"
+    dateAdded: "2026-10-21"
+
+# ── Alerts (child) ───────────────────────────────────────────────────────────
+
+  - "@id": "metrics:ninjaone:alerts-open-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "NinjaOne — Open Alert Count"
+    description: "Number of currently open alerts, summed from each device's health rollup."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "ninjaone-inspector"
+      inspectorId: 72
+    jmesPath: "sum(Devices[].DeviceHealth_r.alertCount)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result <= slas.unresolved_alerts_max (default 0)"
+    fieldGotcha: "Child systems only. There is no Alerts[] array on any dataprint shape, so alert severity, age and policy name are not available."
+    status: "VALIDATED"
+    validatedOn: "2026-10-21"
+    validatedSystemReference: "System A (inspected 2026-10-08) — 0; System B (inspected 2026-10-21) — 1; System C (inspected 2026-06-17) — 3"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/ninjaone.md"
+    dateAdded: "2026-05-26"
+    dateModified: "2026-10-21"
+
+# ── Software, services, encryption (expanded child shape) ───────────────────
+
+  - "@id": "metrics:ninjaone:software-inventory-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "NinjaOne — Installed Software Record Count"
+    description: "Number of installed-software records (one row per title per device) across the organization."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "ninjaone-inspector"
+      inspectorId: 72
+    jmesPath: "length(SoftwareInventory)"
+    resultType: "integer"
+    resultUnit: "count"
+    fieldGotcha: "Expanded child shape only. Rows are per device, so this is not a unique-title count (JMESPath has no distinct). Can run to thousands of rows; filter by name or publisher rather than pulling the whole array."
+    compliesWith:
+      - "CIS-Controls-v8:2.1"
+    status: "VALIDATED"
+    validatedOn: "2026-10-21"
+    validatedSystemReference: "System B (inspected 2026-10-21) — 28; System C (inspected 2026-06-17) — 2542"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/ninjaone.md"
+    dateAdded: "2026-10-21"
+
+  - "@id": "metrics:ninjaone:services-auto-start-stopped-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "NinjaOne — Automatic Services Not Running"
+    description: "Number of Windows services set to start automatically that were stopped at inspection time."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "ninjaone-inspector"
+      inspectorId: 72
+    jmesPath: "length(WindowsServices[?(startType == 'AUTO_START' || startType == 'AUTO_START_DELAYED') && state == 'STOPPED'])"
+    resultType: "integer"
+    resultUnit: "count"
+    fieldGotcha: "Expanded child shape only. startType values: AUTO_START, AUTO_START_DELAYED, DEMAND_START, DISABLED; state values: RUNNING, STOPPED. One test system returned exactly 1000 rows, which suggests a collection cap, so treat counts on large tenants as a floor. Many delayed-start and trigger-start services stop normally; review the names before calling them failures."
+    status: "VALIDATED"
+    validatedOn: "2026-10-21"
+    validatedSystemReference: "System B (inspected 2026-10-21) — 0; System C (inspected 2026-06-17) — 30"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/ninjaone.md"
+    dateAdded: "2026-10-21"
+
+  - "@id": "metrics:ninjaone:volumes-bitlocker-unprotected-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "NinjaOne — Volumes Without BitLocker Protection"
+    description: "Number of volumes whose BitLocker protection status is UNPROTECTED."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "ninjaone-inspector"
+      inspectorId: 72
+    jmesPath: "length(Volumes[?bitLockerStatus.protectionStatus == 'UNPROTECTED'])"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    fieldGotcha: "Expanded child shape only; the top-level Volumes[] array is absent on lean children, and Devices[].volumes[].bitLockerStatus is null there. Counts volumes, not devices; removable and data volumes are included."
+    compliesWith:
+      - "CIS-Controls-v8:3.6"
+      - "cyber-insurance-domain-endpoint"
+    status: "VALIDATED"
+    validatedOn: "2026-10-21"
+    validatedSystemReference: "System B (inspected 2026-10-21) — 1; System C (inspected 2026-06-17) — 11"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/ninjaone.md"
+    dateAdded: "2026-10-21"
+
+# ── Technicians and tenant roster (parent) ───────────────────────────────────
+
+  - "@id": "metrics:ninjaone:users-technician-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "NinjaOne — Technician Count"
+    description: "Number of technician accounts in the NinjaOne tenant."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "ninjaone-inspector"
+      inspectorId: 72
+    jmesPath: "length(Users[?userType == 'TECHNICIAN'])"
+    resultType: "integer"
+    resultUnit: "count"
+    fieldGotcha: "Parent system only. Child dataprints also have a Users[] array, but it holds END_USER contacts (or is empty), so length(Users) on a child is not a technician count."
+    status: "VALIDATED"
+    validatedOn: "2026-10-21"
+    validatedSystemReference: "System D (parent, inspected 2026-10-21) — 8; System E (parent, inspected 2026-10-16) — 4"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/ninjaone.md"
+    dateAdded: "2026-05-26"
+    dateModified: "2026-10-21"
+
+  - "@id": "metrics:ninjaone:users-mfa-enabled-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "NinjaOne — Technician MFA Enabled Count"
+    description: "Number of technician accounts with MFA configured."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "ninjaone-inspector"
+      inspectorId: 72
+    jmesPath: "length(Users[?userType == 'TECHNICIAN' && mfaConfigured == `true`])"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == users-technician-count"
+    fieldGotcha: "Parent system only. mfaConfigured is a boolean; use the backtick-quoted literal."
+    compliesWith:
+      - "CIS-Controls-v8:6.5"
+    status: "VALIDATED"
+    validatedOn: "2026-10-21"
+    validatedSystemReference: "System D (parent, inspected 2026-10-21) — 5; System E (parent, inspected 2026-10-16) — 3"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/ninjaone.md"
+    dateAdded: "2026-05-26"
+    dateModified: "2026-10-21"
+
+  - "@id": "metrics:ninjaone:users-without-mfa-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "NinjaOne — Enabled Users Without MFA"
+    description: "Number of enabled NinjaOne console users with no MFA configured."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "ninjaone-inspector"
+      inspectorId: 72
+    liongardMetricName: "NinjaRMM: Count of Users without MFA"
+    liongardMetricId: 1077
+    liongardMetricUuid: "cd5f5a8b-ec41-4383-ba05-4c1cd4c677d9"
+    jmesPath: "Users[?enabled == `true` && mfaConfigured == `false`] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    compliantWhen: "result == 0"
+    fieldGotcha: "Evaluate against the parent system, where Users[] are technicians. Accounts with invitationStatus 'EXPIRED' are still enabled and count here."
+    compliesWith:
+      - "CIS-Controls-v8:6.5"
+      - "cyber-insurance-domain-auth"
+    status: "VALIDATED"
+    validatedOn: "2026-10-21"
+    validatedSystemReference: "System D (parent, inspected 2026-10-21) — 3; System E (parent, inspected 2026-10-16) — 1"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/ninjaone.md"
+    dateAdded: "2026-10-21"
+
+  - "@id": "metrics:ninjaone:users-without-mfa-list"
+    "@type": "liongard:MetricPrimitive"
+    name: "NinjaOne — Enabled Users Without MFA List"
+    description: "First and last names of enabled NinjaOne console users with no MFA configured."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "ninjaone-inspector"
+      inspectorId: 72
+    liongardMetricName: "NinjaRMM: List of Users without MFA"
+    liongardMetricId: 1076
+    liongardMetricUuid: "11c68b60-2cd6-4382-9401-8fea2b8e281d"
+    jmesPath: "Users[?enabled == `true` && mfaConfigured == `false`].[firstName, lastName]"
+    resultType: "array"
+    compliantWhen: "result == []"
+    fieldGotcha: "Parent system only. Returns [firstName, lastName] pairs, not email addresses."
+    compliesWith:
+      - "CIS-Controls-v8:6.5"
+    status: "VALIDATED"
+    validatedOn: "2026-10-21"
+    validatedSystemReference: "System D (parent, inspected 2026-10-21) — 3 rows"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/ninjaone.md"
+    dateAdded: "2026-10-21"
+
+  - "@id": "metrics:ninjaone:users-privileged-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "NinjaOne — Enabled Administrator Count"
+    description: "Number of enabled NinjaOne console users with administrator rights."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "ninjaone-inspector"
+      inspectorId: 72
+    liongardMetricName: "NinjaRMM: Count of Privileged Users"
+    liongardMetricId: 1079
+    liongardMetricUuid: "7e133fb0-d96d-4dde-b18f-f5f89ab6b220"
+    jmesPath: "Users[?enabled == `true` && administrator == `true`] | length(@)"
+    resultType: "integer"
+    resultUnit: "count"
+    fieldGotcha: "Parent system only."
+    compliesWith:
+      - "CIS-Controls-v8:5.4"
+    status: "VALIDATED"
+    validatedOn: "2026-10-21"
+    validatedSystemReference: "System D (parent, inspected 2026-10-21) — 7 of 8"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/ninjaone.md"
+    dateAdded: "2026-10-21"
+
+  - "@id": "metrics:ninjaone:organizations-count"
+    "@type": "liongard:MetricPrimitive"
+    name: "NinjaOne — Organization Count"
+    description: "Number of NinjaOne organizations (customer tenants) in the parent roster."
+    evaluates:
+      "@type": "liongard:Inspector"
+      inspectorSlug: "ninjaone-inspector"
+      inspectorId: 72
+    jmesPath: "length(Organizations)"
+    resultType: "integer"
+    resultUnit: "count"
+    fieldGotcha: "Parent system only. Each organization can become a child system; Discovered[] lists them, with Inspector = 'ninja-rmm-inspector'."
+    status: "VALIDATED"
+    validatedOn: "2026-10-21"
+    validatedSystemReference: "System D (parent, inspected 2026-10-21) — 35; System E (parent, inspected 2026-10-16) — 33"
+    sourceRecipe: "recipes/single-system-analysis/by-inspector/ninjaone.md"
+    dateAdded: "2026-10-21"

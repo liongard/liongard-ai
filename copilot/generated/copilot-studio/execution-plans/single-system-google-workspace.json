@@ -1,0 +1,77 @@
+{
+  "primitiveCount": 7,
+  "recipe": "single-system-google-workspace",
+  "source": "recipes/single-system-analysis/by-inspector/google-workspace.md",
+  "sourceSha256": "dcb65dc88c41ab4786735fd82d8c32fb8d38d68eb6c734e72602116c6808e5ba",
+  "vendors": [
+    {
+      "inspectorId": 61,
+      "inspectorSlug": "google-workspace-inspector",
+      "primitives": [
+        {
+          "compliantWhen": null,
+          "fieldGotcha": "Subscriptions present on one of three systems; on flexible plans assigned can exceed purchased, so report the fields rather than a single percentage.",
+          "id": "metrics:google-workspace:licensing-utilization-pct",
+          "metricUuid": null,
+          "query": "Subscriptions[].{sku: skuName, status: status, purchased: seats.numberOfSeats, max: seats.maximumNumberOfSeats, assigned: seats.licensedNumberOfSeats}",
+          "resultType": "array",
+          "seq": "P001"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:google-workspace:super-admin-count",
+          "metricUuid": null,
+          "query": "length(Users[?isAdmin == `true`])",
+          "resultType": "integer",
+          "seq": "P002"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:google-workspace:super-admin-list",
+          "metricUuid": null,
+          "query": "Users[?isAdmin == `true`].primaryEmail",
+          "resultType": "array",
+          "seq": "P003"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": "Returns enrolled and total; compute the percentage as enrolled / total. isEnrolledIn2Sv_m holds strings; do not filter on it.",
+          "id": "metrics:google-workspace:twostep-coverage-pct",
+          "metricUuid": null,
+          "query": "{enrolled: length(Users[?isEnrolledIn2Sv && !suspended && !archived]), total: length(Users[?!suspended && !archived])}",
+          "resultType": "object",
+          "seq": "P004"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:google-workspace:twostep-enforced-count",
+          "metricUuid": null,
+          "query": "length(Users[?isEnforcedIn2Sv == `true`])",
+          "resultType": "integer",
+          "seq": "P005"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:google-workspace:users-stale-count",
+          "metricUuid": null,
+          "query": "length(Users[?DaysSinceLastLogin_r > `90`])",
+          "resultType": "integer",
+          "seq": "P006"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:google-workspace:users-total-count",
+          "metricUuid": null,
+          "query": "length(Users)",
+          "resultType": "integer",
+          "seq": "P007"
+        }
+      ]
+    }
+  ]
+}

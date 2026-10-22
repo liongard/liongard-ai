@@ -14,7 +14,7 @@ primitives:
   # This dataprint exposes device/org roster + DevicesDetails[] (incl. device_policies with
   # prevention/firewall/sensor_update keys), but NO detections, alerts, or ZTA scores. Those,
   # plus the device_policies-derived posture metrics (disabled-prevention/firewall, missing-policy),
-  # were pruned to internal/proposed-metrics-backlog.md (the policy ones are derivable from
+  # were removed (the policy ones are derivable from
   # DevicesDetails[].device_policies — validate the exact logic before re-adding).
   - metrics:crowdstrike:stale-hosts-count-30d
   - metrics:crowdstrike:stale-hosts-count-7d

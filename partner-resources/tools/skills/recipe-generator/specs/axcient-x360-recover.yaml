@@ -157,10 +157,10 @@ cross_check:
 proposed_metric_gaps:
   - field: "Vault capacity utilization per vault"
     fallback: "Use metrics 78644/78643 when populated; manual confirm in Axcient portal when drive_size is null"
-    jira_ticket:
+    tracking_ref:
   - field: "Client count rollup"
     fallback: "Client-side length(Clients)"
-    jira_ticket:
+    tracking_ref:
 
 trigger_keyword: axcient
 

@@ -96,7 +96,7 @@
     "liongardMetricName": {
       "@id": "liongard:liongardMetricName",
       "@type": "xsd:string",
-      "comment": "Human-readable name of the stored Liongard Global metric. Stable across instances for User='Global' metrics. Acceptable canonical reference until UUID is exposed everywhere. Names should match the live liongard_metric LIST output exactly — not the snapshot in internal/Liongard-Metrics.xlsx (which may be stale)."
+      "comment": "Human-readable name of the stored Liongard Global metric. Stable across instances for User='Global' metrics. Acceptable canonical reference until UUID is exposed everywhere. Names should match the live liongard_metric LIST output exactly."
     },
 
     "liongardMetricId": {
@@ -124,7 +124,7 @@
     "inspectorId": {
       "@id": "liongard:inspectorId",
       "@type": "xsd:integer",
-      "comment": "Numeric inspector ID matching internal/inspector-name-system-id-mapping.xlsx."
+      "comment": "Numeric inspector ID (see reference/inspector-aliases.md)."
     },
 
     "compliesWith": {

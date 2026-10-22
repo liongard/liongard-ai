@@ -288,7 +288,7 @@ cross_check:
 proposed_metric_gaps:
   - field: "Per-scope DHCP detail (name, range, lease, DNS, reservations)"
     fallback: "Client-side parse of DHCP.Serverv4Scopes array; field population varies by dataprint"
-    jira_ticket:
+    tracking_ref:
 
 trigger_keyword: active-directory
 

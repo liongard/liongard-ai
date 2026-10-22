@@ -118,19 +118,19 @@ cross_check:
 proposed_metric_gaps:
   - field: "Per-interface LAN/WAN role classification"
     fallback: "Manual review of Interfaces array; client-side filter"
-    jira_ticket:
+    tracking_ref:
   - field: "WAN management exposure detail"
     fallback: "Manual review of Interfaces[*].allowAccess"
-    jira_ticket:
+    tracking_ref:
   - field: "Per-service license expiration (FortiGuard AV, IPS, Web Filter)"
     fallback: "Manual review in FortiGate UI"
-    jira_ticket:
+    tracking_ref:
   - field: "DHCP server scope detail"
     fallback: "Manual review in FortiGate UI"
-    jira_ticket:
+    tracking_ref:
   - field: "IPSec Phase 1 tunnel inventory + status"
     fallback: "Manual review in FortiGate UI"
-    jira_ticket:
+    tracking_ref:
 
 trigger_keyword: fortinet
 

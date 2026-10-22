@@ -18,7 +18,7 @@ primitives:
   # Reconciled 2026-05-29 vs live dataprint (live production environment, inspected 2026-03-13).
   # SystemInfo exposes only Ip / ReverseLookup / AS / ASInfo / limitedOutput. The inspector
   # does NOT return blocklist/RBL, CVE, reputation-score, open-ports, or threat-intel data —
-  # those refs pruned to internal/proposed-metrics-backlog.md. NOTE: the recipe description
+  # those refs removed. NOTE: the recipe description
   # over-promises external-posture data the inspector doesn't collect; trim it to ASN/DNS facts.
   - metrics:network-ip-inspector:ip-address
   - metrics:network-ip-inspector:reverse-lookup

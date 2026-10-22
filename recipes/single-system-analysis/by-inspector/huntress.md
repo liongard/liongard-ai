@@ -11,7 +11,7 @@ compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, li
 personas: [noc, soc, vcio-account-manager, technical-alignment-manager]
 output_formats: [markdown, word, pptx]
 primitives:
-  # Reconciled 2026-05-29: pruned dangling refs not present in the live dataprint (see internal/proposed-metrics-backlog.md).
+  # Reconciled 2026-05-29: pruned dangling refs not present in the live dataprint.
   - metrics:huntress:active-incidents-count
   - metrics:huntress:agents-total-count
   - metrics:huntress:unresponsive-agents-count-21d

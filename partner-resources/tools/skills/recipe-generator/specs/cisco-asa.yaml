@@ -123,25 +123,25 @@ cross_check:
 proposed_metric_gaps:
   - field: "Hostname (separate from Model)"
     fallback: "Parse from RunningConfig snapshot"
-    jira_ticket:
+    tracking_ref:
   - field: "Per-interface IP / security-level summary"
     fallback: "Parse from RunningConfig snapshot"
-    jira_ticket:
+    tracking_ref:
   - field: "Local user accounts"
     fallback: "Parse from RunningConfig snapshot"
-    jira_ticket:
+    tracking_ref:
   - field: "SSH management channels"
     fallback: "Parse from RunningConfig snapshot"
-    jira_ticket:
+    tracking_ref:
   - field: "Active license feature list"
     fallback: "Existing 'Licenses Expiring within 30 Days' is partial — full feature list requires UI"
-    jira_ticket:
+    tracking_ref:
   - field: "Inbound ACL permit rules"
     fallback: "Parse from RunningConfig snapshot"
-    jira_ticket:
+    tracking_ref:
   - field: "DHCP enabled flag"
     fallback: "Parse from RunningConfig snapshot"
-    jira_ticket:
+    tracking_ref:
 
 trigger_keyword: cisco-asa
 

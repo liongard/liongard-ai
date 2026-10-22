@@ -13,12 +13,9 @@ compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, li
 personas: [soc, technical-alignment-manager, vcio-account-manager, accounting-finance]
 output_formats: [markdown, word, pptx, xlsx]
 primitives:
-  - metrics:google-workspace:groups-open-membership-count
-  - metrics:google-workspace:less-secure-app-access-enabled
   - metrics:google-workspace:licensing-utilization-pct
   - metrics:google-workspace:super-admin-count
   - metrics:google-workspace:super-admin-list
-  - metrics:google-workspace:third-party-apps-unverified-count
   - metrics:google-workspace:twostep-coverage-pct
   - metrics:google-workspace:twostep-enforced-count
   - metrics:google-workspace:users-stale-count

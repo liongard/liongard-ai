@@ -100,22 +100,22 @@ cross_check:
 proposed_metric_gaps:
   - field: "Recent failed backup flag"
     fallback: "Manual confirm in Datto Partner Portal"
-    jira_ticket:
+    tracking_ref:
   - field: "24-hour overdue backup count + list"
     fallback: "Manual confirm in Datto Partner Portal"
-    jira_ticket:
+    tracking_ref:
   - field: "Per-agent last-backup composite (for the all-backups.md join)"
     fallback: "Client-side parse of Agents[*]"
-    jira_ticket:
+    tracking_ref:
   - field: "Cloud sync / offsite replication status per agent"
     fallback: "Manual confirm in Datto Partner Portal"
-    jira_ticket:
+    tracking_ref:
   - field: "Appliance storage utilization"
     fallback: "Manual confirm in Datto Partner Portal"
-    jira_ticket:
+    tracking_ref:
   - field: "Screenshot verification state per agent"
     fallback: "Manual confirm in Datto Partner Portal"
-    jira_ticket:
+    tracking_ref:
 
 trigger_keyword: datto
 

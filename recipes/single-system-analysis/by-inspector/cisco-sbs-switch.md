@@ -14,8 +14,7 @@ primitives:
   # Reconciled 2026-05-29 vs live dataprint (internal dev instance, Cisco SBS, inspected 2025-12-05).
   # Added model / local-users-total-count / ports-disabled-count (validated). hostname →
   # system-name (existing). EOL/firmware-date, PoE, http/telnet-enabled, stacking-mode,
-  # uptime-days, ports-down/description-missing, vlans-unused pruned to
-  # internal/proposed-metrics-backlog.md (not in dataprint; SystemUpTime is a string —
+  # uptime-days, ports-down/description-missing, vlans-unused removed (not in dataprint; SystemUpTime is a string —
   # uptime-days derivable later).
   - metrics:cisco-sbs-switch-inspector:system-name
   - metrics:cisco-sbs-switch-inspector:model

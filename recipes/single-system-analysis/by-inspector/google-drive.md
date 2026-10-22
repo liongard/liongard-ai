@@ -15,7 +15,7 @@ primitives:
   # Reconciled 2026-05-29 vs live dataprint (live production environment, inspected 2026-03-13).
   # security-admin-count and users-mfa-enabled-count added (validated: Users[?isAdmin] /
   # Users[?isEnrolledIn2Sv]). licensing-*, storage-utilization-pct, shared-drives-orphaned-count,
-  # and shares-anyone/public-in-search pruned to internal/proposed-metrics-backlog.md
+  # and shares-anyone/public-in-search removed
   # (no licensing/quota data; SharedDrives carry no owner/member fields).
   - metrics:google-drive:users-list
   - metrics:google-drive:users-total-count

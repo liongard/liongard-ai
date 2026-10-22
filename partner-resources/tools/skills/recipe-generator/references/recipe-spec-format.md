@@ -81,7 +81,7 @@ proposed_metric_gaps:            # list — proposed metrics this recipe
                                  # and reports them after generation.
   - field:                       # string — what the field would be called
     fallback:                    # string — how the recipe works around it
-    jira_ticket:                 # optional — CORE-XXXX if filed already
+    tracking_ref:                # optional — your own tracking reference
 
 cross_check:                     # asset-inventory cross-check spec
   asset_type:                    # "device" | "identity" | "domain"

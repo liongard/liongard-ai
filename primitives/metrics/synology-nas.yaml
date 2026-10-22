@@ -90,17 +90,15 @@ primitives:
     '@type': liongard:Inspector
     inspectorSlug: synology-nas-inspector
     inspectorId: 64
-  liongardMetricName: "Synology NAS: Admin Users Count List"
-  liongardMetricId: 397
-  liongardMetricUuid: "d44df314-d3f6-40b6-8ebd-ef20354fd71e"
-  jmesPath: "Users[?GroupMembership[?name == `administrators`]].name"
+  jmesPath: "Users[?GroupMembership[?name == 'administrators' && is_member] || GroupMembership.groups[?name == 'administrators' && is_member]].name"
   resultType: array
   compliantWhen: result contains only expected admin accounts
   compliesWith:
   - CIS-Controls-v8:5.4
+  fieldGotcha: "GroupMembership is an array of {name, is_member} on DSM 6 and an object {groups: [...]} on DSM 7. Every user lists the administrators group with is_member true/false, so filter on is_member; matching the group name alone returns every user. Liongard catalog metric 397 still uses the old name-only query: do not use it until it is corrected."
   status: VALIDATED
-  validatedOn: '2026-05-26'
-  validatedSystemReference: "System A — dev environment"
+  validatedOn: '2026-10-07'
+  validatedSystemReference: "Systems A, B, C — DSM 6.2 and DSM 7.1 (dev environments)"
   sourceRecipe: recipes/single-system-analysis/by-inspector/synology-nas.md
   dateAdded: '2026-05-26'
 
@@ -112,17 +110,15 @@ primitives:
     '@type': liongard:Inspector
     inspectorSlug: synology-nas-inspector
     inspectorId: 64
-  liongardMetricName: "Synology NAS: Admin Users Count"
-  liongardMetricId: 398
-  liongardMetricUuid: "48e8870a-4be9-45bd-b957-fa33e64b355a"
-  jmesPath: "Users[?GroupMembership[?name == `administrators`]] | length(@)"
+  jmesPath: "Users[?GroupMembership[?name == 'administrators' && is_member] || GroupMembership.groups[?name == 'administrators' && is_member]] | length(@)"
   resultType: integer
   resultUnit: count
   compliesWith:
   - CIS-Controls-v8:5.4
+  fieldGotcha: "See admin-users-list. Liongard catalog metric 398 still uses the old name-only query (counts every user): do not use it until it is corrected."
   status: VALIDATED
-  validatedOn: '2026-05-26'
-  validatedSystemReference: "System A — dev environment"
+  validatedOn: '2026-10-07'
+  validatedSystemReference: "Systems A, B, C — DSM 6.2 and DSM 7.1 (dev environments)"
   sourceRecipe: recipes/single-system-analysis/by-inspector/synology-nas.md
   dateAdded: '2026-05-26'
 
@@ -153,58 +149,54 @@ primitives:
 - '@id': metrics:synology-nas:drives-not-normal-list
   '@type': liongard:MetricPrimitive
   name: "Synology NAS — Drives Not in Normal State (List)"
-  description: Names of disks whose drive_status_category is "health" and drive_status_key is not "normal".
+  description: Names of disks whose status is not "normal".
   evaluates:
     '@type': liongard:Inspector
     inspectorSlug: synology-nas-inspector
     inspectorId: 64
-  liongardMetricName: "Synology NAS: Drives Not In Normal State List"
-  liongardMetricId: 914
-  liongardMetricUuid: "64ea3f2a-47a9-4272-8055-531920d59119"
-  jmesPath: "Disks[?drive_status_category && (drive_status_category == `health` && drive_status_key != `normal`)].name"
+  jmesPath: "Disks[?status != 'normal'].name"
   resultType: array
   compliantWhen: result == []
+  fieldGotcha: "drive_status_category / drive_status_key do not exist in current dataprints (DSM 6.2 and 7.1); filters on them always return 0 (a silent false pass). Use status. Liongard catalog metric 914 still uses the old fields: do not use it until it is corrected."
   status: VALIDATED
-  validatedOn: '2026-05-26'
-  validatedSystemReference: "System A — dev environment"
+  validatedOn: '2026-10-07'
+  validatedSystemReference: "Systems A, B, C — DSM 6.2 and DSM 7.1 (dev environments)"
   sourceRecipe: recipes/single-system-analysis/by-inspector/synology-nas.md
   dateAdded: '2026-05-26'
 
 - '@id': metrics:synology-nas:drives-not-normal-count
   '@type': liongard:MetricPrimitive
   name: "Synology NAS — Drives Not in Normal State (Count)"
-  description: Count of disks whose drive_status_category is "health" and drive_status_key is not "normal".
+  description: Count of disks whose status is not "normal".
   evaluates:
     '@type': liongard:Inspector
     inspectorSlug: synology-nas-inspector
     inspectorId: 64
-  liongardMetricName: "Synology NAS: Drives Not In Normal State Count"
-  liongardMetricId: 915
-  liongardMetricUuid: "f15fcd01-3efe-4df8-9888-74921c12e35c"
-  jmesPath: "Disks[?drive_status_category && (drive_status_category == `health` && drive_status_key != `normal`)] | length(@)"
+  jmesPath: "Disks[?status != 'normal'] | length(@)"
   resultType: integer
   resultUnit: count
   compliantWhen: result == 0
+  fieldGotcha: "drive_status_category / drive_status_key do not exist in current dataprints (DSM 6.2 and 7.1); filters on them always return 0 (a silent false pass). Use status. Liongard catalog metric 915 still uses the old fields: do not use it until it is corrected."
   status: VALIDATED
-  validatedOn: '2026-05-26'
-  validatedSystemReference: "System A — dev environment"
+  validatedOn: '2026-10-07'
+  validatedSystemReference: "Systems A, B, C — DSM 6.2 and DSM 7.1 (dev environments)"
   sourceRecipe: recipes/single-system-analysis/by-inspector/synology-nas.md
   dateAdded: '2026-05-26'
 
 - '@id': metrics:synology-nas:disks-normal-count
   '@type': liongard:MetricPrimitive
   name: "Synology NAS — Disks in Normal State (Count)"
-  description: Count of disks where drive_status_key is "normal". Complement of drives-not-normal-count.
+  description: Count of disks where status is "normal". Complement of drives-not-normal-count.
   evaluates:
     '@type': liongard:Inspector
     inspectorSlug: synology-nas-inspector
     inspectorId: 64
-  jmesPath: "length(Disks[?drive_status_key == 'normal'])"
+  jmesPath: "length(Disks[?status == 'normal'])"
   resultType: integer
   resultUnit: count
   status: VALIDATED
-  validatedOn: '2026-05-26'
-  validatedSystemReference: "System A — dev environment"
+  validatedOn: '2026-10-07'
+  validatedSystemReference: "Systems A, B, C — DSM 6.2 and DSM 7.1 (dev environments)"
   sourceRecipe: recipes/single-system-analysis/by-inspector/synology-nas.md
   dateAdded: '2026-05-26'
 
@@ -427,20 +419,19 @@ primitives:
 - '@id': metrics:synology-nas:risky-services-enabled
   '@type': liongard:MetricPrimitive
   name: "Synology NAS — Enabled Services (List)"
-  description: Names of all services with enable_status == "enabled". Use to identify risky services (Telnet, NFS, AFP) — flag any of these in the result list.
+  description: Names of all services that are enabled (any DSM field shape). Use to identify risky services (Telnet, NFS, AFP) — flag any of these in the result list.
   evaluates:
     '@type': liongard:Inspector
     inspectorSlug: synology-nas-inspector
     inspectorId: 64
-  jmesPath: "Services[?enable_status == 'enabled'].name"
+  jmesPath: "Services[?enable_status == 'enabled' || enable_status == 'enable' || type(enable) == 'boolean' && enable].display_name"
   resultType: array
-  fieldGotcha: "Services[].enable_status is a STRING \"enabled\"/\"disabled\", NOT a boolean.
-    Filter with == 'enabled' (single-quoted string comparison). Do NOT use == `true`."
+  fieldGotcha: "Service state field varies: DSM 7 enable_status \"enabled\"/\"disabled\"/\"static\"; older DSM 6 enable_status \"enable\"/\"disable\"; newer DSM 6 boolean enable. Use the combined filter. If enabled + disabled is 0 while length(Services) > 0, report Not evaluated, never \"no services enabled\"."
   compliesWith:
   - CIS-Controls-v8:4.8
   status: VALIDATED
-  validatedOn: '2026-05-26'
-  validatedSystemReference: "System A — dev environment"
+  validatedOn: '2026-10-07'
+  validatedSystemReference: "Systems A, B, C — DSM 6.2 and DSM 7.1 (dev environments)"
   sourceRecipe: recipes/single-system-analysis/by-inspector/synology-nas.md
   dateAdded: '2026-05-26'
 
@@ -464,37 +455,37 @@ primitives:
 - '@id': metrics:synology-nas:services-enabled-count
   '@type': liongard:MetricPrimitive
   name: "Synology NAS — Enabled Services Count"
-  description: Count of services with enable_status == "enabled".
+  description: Count of services that are enabled (any DSM field shape).
   evaluates:
     '@type': liongard:Inspector
     inspectorSlug: synology-nas-inspector
     inspectorId: 64
-  jmesPath: "length(Services[?enable_status == 'enabled'])"
+  jmesPath: "length(Services[?enable_status == 'enabled' || enable_status == 'enable' || type(enable) == 'boolean' && enable])"
   resultType: integer
   resultUnit: count
-  fieldGotcha: "Services[].enable_status is a STRING. Filter with == 'enabled', not == `true`."
+  fieldGotcha: "Service state field varies: DSM 7 enable_status \"enabled\"/\"disabled\"/\"static\"; older DSM 6 enable_status \"enable\"/\"disable\"; newer DSM 6 boolean enable. Use the combined filter. If enabled + disabled is 0 while length(Services) > 0, report Not evaluated, never \"no services enabled\"."
   compliesWith:
   - CIS-Controls-v8:4.8
   status: VALIDATED
-  validatedOn: '2026-05-26'
-  validatedSystemReference: "System A — dev environment"
+  validatedOn: '2026-10-07'
+  validatedSystemReference: "Systems A, B, C — DSM 6.2 and DSM 7.1 (dev environments)"
   sourceRecipe: recipes/single-system-analysis/by-inspector/synology-nas.md
   dateAdded: '2026-05-26'
 
 - '@id': metrics:synology-nas:services-disabled-count
   '@type': liongard:MetricPrimitive
   name: "Synology NAS — Disabled Services Count"
-  description: Count of services with enable_status == "disabled".
+  description: Count of services that are disabled (any DSM field shape).
   evaluates:
     '@type': liongard:Inspector
     inspectorSlug: synology-nas-inspector
     inspectorId: 64
-  jmesPath: "length(Services[?enable_status == 'disabled'])"
+  jmesPath: "length(Services[?enable_status == 'disabled' || enable_status == 'disable' || type(enable) == 'boolean' && !enable])"
   resultType: integer
   resultUnit: count
-  fieldGotcha: "Services[].enable_status is a STRING. Filter with == 'disabled', not == `false`."
+  fieldGotcha: "Service state field varies: DSM 7 enable_status \"enabled\"/\"disabled\"/\"static\"; older DSM 6 enable_status \"enable\"/\"disable\"; newer DSM 6 boolean enable. Use the combined filter. If enabled + disabled is 0 while length(Services) > 0, report Not evaluated, never \"no services enabled\"."
   status: VALIDATED
-  validatedOn: '2026-05-26'
-  validatedSystemReference: "System A — dev environment"
+  validatedOn: '2026-10-07'
+  validatedSystemReference: "Systems A, B, C — DSM 6.2 and DSM 7.1 (dev environments)"
   sourceRecipe: recipes/single-system-analysis/by-inspector/synology-nas.md
   dateAdded: '2026-05-26'

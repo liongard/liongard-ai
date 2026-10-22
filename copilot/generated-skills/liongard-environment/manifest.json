@@ -1,0 +1,887 @@
+{
+ "schemaVersion": 1,
+ "skill": "liongard-environment",
+ "recipes": [
+  {
+   "name": "cmmc-readiness",
+   "source": "recipes/compliance/cmmc/cmmc-readiness.md",
+   "sourceSha256": "caa95fc3cdb5f591b194e3a83f618d1589459c84c0d000ebd6ac5c24937cc9c7",
+   "type": "environment-level",
+   "composes": [
+    "single-system-active-directory",
+    "single-system-windows-server",
+    "single-system-windows-workstation",
+    "system-type-all-backups",
+    "system-type-all-domains",
+    "system-type-all-edrs",
+    "system-type-all-endpoints",
+    "system-type-all-firewalls",
+    "system-type-all-identity-providers",
+    "system-type-all-network-infrastructure",
+    "system-type-windows-patching"
+   ],
+   "metricCount": 0,
+   "useWhen": "Use this skill when the user wants a CMMC (Cybersecurity Maturity Model Certification) readiness assessment, Level 1 or Level 2 evidence pack, NIST SP 800-171 gap analysis, or a DoD-contracting-prep compliance workbook for a customer. Compl"
+  },
+  {
+   "name": "cyber-insurance-aig",
+   "source": "recipes/compliance/cyber-insurance/carriers/aig.md",
+   "sourceSha256": "df8ea3284c45f902377fad55478aa3d06d56d74bfeae2c88b2171dd5a1bf900a",
+   "type": "environment-level",
+   "composes": [
+    "cyber-insurance-readiness",
+    "single-system-active-directory",
+    "single-system-dark-web-monitoring",
+    "single-system-network-ip-address",
+    "system-type-all-edrs"
+   ],
+   "metricCount": 0,
+   "useWhen": "Use this recipe when filling out the AIG CyberEdge Cyber Insurance Application (form 149053, Ed. 08/23) for applicants with annual revenues of $50M or less. Trigger phrases: \"fill out AIG cyber application\", \"AIG CyberEdge renewal\", \"AIG cy"
+  },
+  {
+   "name": "cyber-insurance-readiness",
+   "source": "recipes/compliance/cyber-insurance/cyber-insurance-readiness.md",
+   "sourceSha256": "d2354f6bafad0f223133c00a242718c29dfce762aa14279d8c7d3aaa46d3ec0d",
+   "type": "environment-level",
+   "composes": [
+    "cyber-insurance-auth",
+    "cyber-insurance-backup",
+    "cyber-insurance-endpoint",
+    "cyber-insurance-governance",
+    "cyber-insurance-network",
+    "cyber-insurance-regulatory",
+    "cyber-insurance-vendor"
+   ],
+   "metricCount": 0,
+   "useWhen": "Use this skill when the goal is to answer a cyber insurance questionnaire, underwriting assessment, or cyber readiness checklist using live Liongard data. Trigger phrases: \"fill out the cyber insurance questionnaire\", \"gather evidence for i"
+  },
+  {
+   "name": "cyber-insurance-auth",
+   "source": "recipes/compliance/cyber-insurance/domains/auth.md",
+   "sourceSha256": "e1003e555d8fd545949c5e3c3f9415378abddd96a774a1c7d3f831c49f7f66a0",
+   "type": "environment-level",
+   "composes": [],
+   "metricCount": 31,
+   "useWhen": "Domain reference for the cyber-insurance-readiness master skill. Covers Authentication, MFA & Access Control (Q2\u2013Q4, Q6\u2013Q7 (incl. 6a\u20136f), Q14\u2013Q17, Q30\u2013Q31, Q38\u2013Q39). Used as a sub-reference when answering cyber insurance underwriting questi"
+  },
+  {
+   "name": "cyber-insurance-backup",
+   "source": "recipes/compliance/cyber-insurance/domains/backup.md",
+   "sourceSha256": "e1ca661fbc10ff3eab4fa1bee566510df48a8abfd880ef4b89b489e999690e56",
+   "type": "environment-level",
+   "composes": [],
+   "metricCount": 24,
+   "useWhen": "Domain reference for the cyber-insurance-readiness master skill. Covers Backup & Business Continuity (Q5, Q5a, Q5b, Q46). Used as a sub-reference when answering cyber insurance underwriting questions in this control area."
+  },
+  {
+   "name": "cyber-insurance-endpoint",
+   "source": "recipes/compliance/cyber-insurance/domains/endpoint.md",
+   "sourceSha256": "f2edcd3605636f5ecd2af17620539b1e890d03401474f97dac6aafca559cf0b4",
+   "type": "environment-level",
+   "composes": [],
+   "metricCount": 49,
+   "useWhen": "Domain reference for the cyber-insurance-readiness master skill. Covers Endpoint Protection, Patching & Encryption (Q1, Q8\u2013Q12, Q10-sub, Q27, Q32\u2013Q34, Q37, Q40). Used as a sub-reference when answering cyber insurance underwriting questions "
+  },
+  {
+   "name": "cyber-insurance-governance",
+   "source": "recipes/compliance/cyber-insurance/domains/governance.md",
+   "sourceSha256": "2eb12a9fad12035e4d1b831a8443aee58b86b8363c47ee65604237932430c58f",
+   "type": "environment-level",
+   "composes": [],
+   "metricCount": 3,
+   "useWhen": "Domain reference for the cyber-insurance-readiness master skill. Covers Governance, Training & Policy (Q13, Q18, Q22\u2013Q26, Q28\u2013Q29, Q44\u2013Q50). Used as a sub-reference when answering cyber insurance underwriting questions in this control area."
+  },
+  {
+   "name": "cyber-insurance-network",
+   "source": "recipes/compliance/cyber-insurance/domains/network.md",
+   "sourceSha256": "26e8bd7f92fcdb1b060b520982989e77c063181b9d60656a197b4bf1a98ffafd",
+   "type": "environment-level",
+   "composes": [],
+   "metricCount": 6,
+   "useWhen": "Domain reference for the cyber-insurance-readiness master skill. Covers Network & Cloud Infrastructure (Q19\u2013Q21, Q35\u2013Q36, Q41\u2013Q43). Used as a sub-reference when answering cyber insurance underwriting questions in this control area."
+  },
+  {
+   "name": "cyber-insurance-regulatory",
+   "source": "recipes/compliance/cyber-insurance/domains/regulatory.md",
+   "sourceSha256": "2db82ec7da82cf2a0a6b918e5d6db15a58ecb2f6e626d87d8d093b98d947cf09",
+   "type": "environment-level",
+   "composes": [],
+   "metricCount": 2,
+   "useWhen": "Domain reference for the cyber-insurance-readiness master skill. Covers Regulatory & Privacy (REG-1 through REG-8 (HIPAA, GDPR, PCI-DSS, privacy governance)). Used as a sub-reference when answering cyber insurance underwriting questions in "
+  },
+  {
+   "name": "cyber-insurance-vendor",
+   "source": "recipes/compliance/cyber-insurance/domains/vendor.md",
+   "sourceSha256": "b8d9227c612571cd552457cde2f5def52003773a94f25a6dafb44e76574537dc",
+   "type": "environment-level",
+   "composes": [],
+   "metricCount": 7,
+   "useWhen": "Domain reference for the cyber-insurance-readiness master skill. Covers Vendor & Third-Party (VND-1 through VND-8). Used as a sub-reference when answering cyber insurance underwriting questions in this control area."
+  },
+  {
+   "name": "cyber-insurance-application-universal",
+   "source": "recipes/compliance/cyber-insurance/cyber-insurance-application-universal.md",
+   "sourceSha256": "dbb4fe39436cd55ca794896852697b8ec8b657f9990b6d4cf4d566ebeb98728c",
+   "type": "environment-level",
+   "composes": [
+    "single-system-internet-domain-dns",
+    "single-system-knowbe4",
+    "single-system-network-ip-address",
+    "single-system-tls-ssl",
+    "system-type-all-edrs",
+    "system-type-all-external-attack-surface",
+    "system-type-windows-patching"
+   ],
+   "metricCount": 0,
+   "useWhen": "Use this recipe to prepare a cyber insurance application for any carrier the MSP has not yet encountered, or as a pre-work pass before using a carrier-specific recipe. Produces draft Yes/No answers with supporting evidence for every questio"
+  },
+  {
+   "name": "cyber-insurance-at-bay",
+   "source": "recipes/compliance/cyber-insurance/carriers/at-bay.md",
+   "sourceSha256": "189da55de124c7e8678e0c134a1333810e23d3e3935956a41af2f539ac101fef",
+   "type": "environment-level",
+   "composes": [
+    "cyber-insurance-readiness",
+    "single-system-active-directory",
+    "single-system-knowbe4",
+    "single-system-network-ip-address",
+    "system-type-all-edrs"
+   ],
+   "metricCount": 0,
+   "useWhen": "Use this recipe when filling out the At-Bay Cyber Insurance Application (AB-CYB-APP, Ed. 09/2023), the Cyber Insurance Renewal Application (AB-CYB-RAP), or the At-Bay Ransomware Supplemental Application (AB-CYB-RWS). Trigger phrases: \"fill "
+  },
+  {
+   "name": "cyber-insurance-beazley",
+   "source": "recipes/compliance/cyber-insurance/carriers/beazley.md",
+   "sourceSha256": "e8dcdffc5cbc58be4854c8c6d38e1f5acc04a2b965eaf838ca08122e618bf0cf",
+   "type": "environment-level",
+   "composes": [
+    "cyber-insurance-readiness",
+    "single-system-knowbe4",
+    "single-system-network-ip-address",
+    "system-type-all-edrs",
+    "system-type-windows-patching"
+   ],
+   "metricCount": 0,
+   "useWhen": "Use this recipe when filling out the Beazley Cyber Insurance Application \u2014 Below $250M Revenue (F00863 042023 ed.) or the Beazley Short-Form Questionnaire for accounts under $20M. Trigger phrases: \"fill out Beazley cyber application\", \"Beaz"
+  },
+  {
+   "name": "cyber-insurance-chubb",
+   "source": "recipes/compliance/cyber-insurance/carriers/chubb.md",
+   "sourceSha256": "01acd2f6790449152d49d3f2a507ba5d7afff35f5dbbff52ac70fa2487287a2d",
+   "type": "environment-level",
+   "composes": [
+    "cyber-insurance-readiness",
+    "system-type-windows-patching"
+   ],
+   "metricCount": 0,
+   "useWhen": "Use this recipe when filling out the Chubb Cyber Enterprise Risk Management (ERM) Policy \u2014 Cyber and Privacy Insurance New Business Application (PF-48163, Ed. 08/17 or current). Trigger phrases: \"fill out Chubb cyber application\", \"Chubb Cy"
+  },
+  {
+   "name": "cyber-insurance-coalition",
+   "source": "recipes/compliance/cyber-insurance/carriers/coalition.md",
+   "sourceSha256": "727af049f1d09441f4358627e0db4117ee75965a34a683c3b281e97f03fb24c5",
+   "type": "environment-level",
+   "composes": [
+    "cyber-insurance-readiness",
+    "single-system-dark-web-monitoring",
+    "single-system-internet-domain-dns",
+    "single-system-network-ip-address",
+    "single-system-tls-ssl",
+    "system-type-all-external-attack-surface"
+   ],
+   "metricCount": 0,
+   "useWhen": "Use this recipe when filling out the Coalition Cyber and Technology E&O Policy Application (form SP 17 717 1120 or the current Active Cyber Policy equivalent). Trigger phrases: \"fill out Coalition cyber application\", \"Coalition cyber renewa"
+  },
+  {
+   "name": "cyber-insurance-corvus",
+   "source": "recipes/compliance/cyber-insurance/carriers/corvus.md",
+   "sourceSha256": "9bda6e1816c1cdd643a3d13b8338f3ba2b97ec33d794f930e984269f0a112701",
+   "type": "environment-level",
+   "composes": [
+    "cyber-insurance-readiness",
+    "single-system-internet-domain-dns",
+    "single-system-network-ip-address",
+    "single-system-tls-ssl",
+    "system-type-all-edrs",
+    "system-type-all-external-attack-surface"
+   ],
+   "metricCount": 0,
+   "useWhen": "Use this recipe when filling out the Corvus Smart Cyber Insurance\u00ae Application (Version 3.2, September 2024 / current edition). Trigger phrases: \"fill out Corvus cyber application\", \"Corvus Smart Cyber renewal\", \"Corvus by Travelers applica"
+  },
+  {
+   "name": "cyber-insurance-cowbell",
+   "source": "recipes/compliance/cyber-insurance/carriers/cowbell.md",
+   "sourceSha256": "1b66d7589d8921fe32ba7439f4965530af138b7aac0d11e38e76e9509fd4512f",
+   "type": "environment-level",
+   "composes": [
+    "cyber-insurance-readiness",
+    "single-system-internet-domain-dns",
+    "single-system-knowbe4",
+    "single-system-tls-ssl",
+    "system-type-windows-patching"
+   ],
+   "metricCount": 0,
+   "useWhen": "Use this recipe when filling out the Cowbell Cyber Risk Insurance Prime 250 Renewal Application (PRIME 250 075 06 21) or the Prime 250 New Business Application (PRIME 250 003 07 20). Trigger phrases: \"fill out Cowbell cyber application\", \"C"
+  },
+  {
+   "name": "cyber-insurance-hartford",
+   "source": "recipes/compliance/cyber-insurance/carriers/hartford.md",
+   "sourceSha256": "c4acf830521313272a05c3bc2e2485307722f1244765992e3d8e666e86594a43",
+   "type": "environment-level",
+   "composes": [
+    "cyber-insurance-readiness",
+    "single-system-network-ip-address",
+    "system-type-all-edrs",
+    "system-type-windows-patching"
+   ],
+   "metricCount": 0,
+   "useWhen": "Use this recipe when filling out The Hartford CyberChoice Premier Application (CB 00 H027 02 0323) for lower-revenue accounts or the CyberChoice Underwriting Application (CB 00 H027 03 0824) for accounts with revenue of $10M or more. Trigge"
+  },
+  {
+   "name": "cyber-insurance-hiscox",
+   "source": "recipes/compliance/cyber-insurance/carriers/hiscox.md",
+   "sourceSha256": "71ec6d8593ff361c3c5fd3679e66993aa2c19b9716f00656c48ad51494f746b8",
+   "type": "environment-level",
+   "composes": [
+    "cyber-insurance-readiness",
+    "single-system-internet-domain-dns",
+    "single-system-tls-ssl"
+   ],
+   "metricCount": 0,
+   "useWhen": "Use this recipe when filling out the Hiscox PRO\u00ae Tech & Cyber Renewal Application (PLP_A0002) or a Hiscox CyberClear application form. Trigger phrases: \"fill out Hiscox cyber application\", \"Hiscox PRO cyber renewal\", \"Hiscox CyberClear appl"
+  },
+  {
+   "name": "cyber-insurance-tokio-marine-hcc",
+   "source": "recipes/compliance/cyber-insurance/carriers/tokio-marine-hcc.md",
+   "sourceSha256": "dd7041bcf586ca5df3c1012ca2155ccc41abf9113bd91e792f3b819d7b1c6a38",
+   "type": "environment-level",
+   "composes": [
+    "cyber-insurance-readiness",
+    "single-system-active-directory",
+    "single-system-knowbe4",
+    "single-system-network-ip-address",
+    "system-type-all-edrs"
+   ],
+   "metricCount": 0,
+   "useWhen": "Use this recipe when filling out the Tokio Marine HCC NetGuard\u00ae Plus Cyber Liability Insurance Application (NGP-NBA, Ed. 10.2020 or current). Trigger phrases: \"fill out Tokio Marine cyber application\", \"Tokio Marine HCC NetGuard renewal\", \""
+  },
+  {
+   "name": "cyber-insurance-travelers",
+   "source": "recipes/compliance/cyber-insurance/carriers/travelers.md",
+   "sourceSha256": "63ed441fe1dad4706ddcca02f8085b9c0d1f42dbd78c7a6ee408058d19b78ade",
+   "type": "environment-level",
+   "composes": [
+    "cyber-insurance-readiness"
+   ],
+   "metricCount": 0,
+   "useWhen": "Use this skill when filling out the Travelers Casualty CyberRisk Renewal Application (form CYB-14202) or the Travelers MFA Attestation (form CYB-14306). Trigger phrases: \"fill out Travelers cyber renewal\", \"Travelers CyberRisk application\","
+  },
+  {
+   "name": "domain-assessment-external-attack-surface-deep-dive",
+   "source": "recipes/domain-assessment/external-attack-surface-deep-dive.md",
+   "sourceSha256": "68432d6f1e697c9ad1d6b9432b6b9c44fe9745ad2219e615debbe8efb84da790",
+   "type": "environment-level",
+   "composes": [],
+   "metricCount": 56,
+   "useWhen": "Use this recipe when you need a forensic-depth external attack surface assessment for a single domain \u2014 covering BEC risk, phishing/spearphishing exposure, ransomware entry vectors, email authentication posture, SaaS footprint discovery, su"
+  },
+  {
+   "name": "domain-assessment-identity-mfa-gap-report",
+   "source": "recipes/domain-assessment/identity-mfa-gap-report.md",
+   "sourceSha256": "474638f03eb4e075ef60571b58af9bbf4210480da7970c7850f3613f955655ed",
+   "type": "environment-level",
+   "composes": [],
+   "metricCount": 0,
+   "useWhen": "Use this recipe when you need an MFA gap report for a customer: which enabled identities do not have multi-factor authentication, which of them are privileged, and which are stale or never used. Trigger phrases: \"MFA gap report for <custome"
+  },
+  {
+   "name": "environment-quarterly-lookback",
+   "source": "recipes/environment-quarterly-lookback/quarterly-business-review.md",
+   "sourceSha256": "b4c3a81090d7f50b776f9935eafd422b4b2443483967fc95bb782a2b99a5a389",
+   "type": "environment-level",
+   "composes": [
+    "single-system-active-directory",
+    "single-system-knowbe4",
+    "single-system-microsoft-365",
+    "system-type-all-backups",
+    "system-type-all-domains",
+    "system-type-all-edrs",
+    "system-type-all-external-attack-surface",
+    "system-type-all-firewalls",
+    "system-type-all-hypervisors",
+    "system-type-all-servers"
+   ],
+   "metricCount": 0,
+   "useWhen": "Use this skill when the user wants a Periodic Business Review (PBR / QBR / Quarterly Business Review) or environment lookback for a customer \u2014 a time-bounded narrative report of what changed, what alerted, and what the current state is over"
+  },
+  {
+   "name": "ftc-safeguards-readiness",
+   "source": "recipes/compliance/ftc-safeguards/ftc-safeguards-readiness.md",
+   "sourceSha256": "18348de05f7c30f5b54742198d1942264a03f1139c7a2534009b3b76bf2da740",
+   "type": "environment-level",
+   "composes": [
+    "single-system-active-directory",
+    "system-type-windows-patching"
+   ],
+   "metricCount": 0,
+   "useWhen": "Use this skill when the user wants an FTC Safeguards Rule (16 CFR Part 314) readiness assessment, information security program gap analysis, GLBA Safeguards Rule compliance evidence, or a Written Information Security Program (WISP) technica"
+  },
+  {
+   "name": "hipaa-readiness",
+   "source": "recipes/compliance/hipaa/hipaa-readiness.md",
+   "sourceSha256": "6e72a30f813a9497ef562a8e59ff738cc1a99525f2540d574079918876f6e647",
+   "type": "environment-level",
+   "composes": [
+    "single-system-knowbe4",
+    "single-system-tls-ssl",
+    "single-system-windows-server",
+    "single-system-windows-workstation",
+    "system-type-all-backups",
+    "system-type-all-edrs",
+    "system-type-all-firewalls",
+    "system-type-windows-patching"
+   ],
+   "metricCount": 0,
+   "useWhen": "Use this skill when the user wants a HIPAA Security Rule readiness assessment, Security Rule gap analysis, HIPAA technical-safeguard evidence pack, or pre-audit compliance workbook for a healthcare or covered-entity customer. Compliance var"
+  },
+  {
+   "name": "new-customer-onboarding",
+   "source": "recipes/onboarding-assessment/new-customer-onboarding.md",
+   "sourceSha256": "fe11a0dc917a08fa5f3a0d1ea2fc7122b92ecda5f82b26c7f55ee0bc23d84547",
+   "type": "environment-level",
+   "composes": [
+    "single-system-active-directory",
+    "single-system-windows-server",
+    "single-system-windows-workstation",
+    "single-system-dark-web-monitoring",
+    "single-system-network-ip-address",
+    "single-system-internet-domain-dns",
+    "single-system-knowbe4",
+    "single-system-tls-ssl",
+    "single-system-microsoft-365",
+    "single-system-acronis-cyber-protect-cloud",
+    "single-system-addigy-mdm",
+    "single-system-autotask",
+    "single-system-auvik",
+    "single-system-aws",
+    "single-system-axcient-x360-recover",
+    "single-system-azure",
+    "single-system-barracuda-firewall",
+    "single-system-bitdefender-gravityzone",
+    "single-system-box",
+    "single-system-cisco-asa",
+    "single-system-cisco-ios",
+    "single-system-cisco-meraki",
+    "single-system-cisco-sbs-switch",
+    "single-system-cisco-umbrella",
+    "single-system-cloudflare",
+    "single-system-connectwise-asio",
+    "single-system-connectwise-automate",
+    "single-system-connectwise-manage",
+    "single-system-continuum-rmm",
+    "single-system-cove-data-protection",
+    "single-system-crowdstrike",
+    "single-system-datto-bcdr",
+    "single-system-datto-networking",
+    "single-system-datto-rmm",
+    "single-system-domotz-network-monitoring",
+    "single-system-dropbox",
+    "single-system-duo-security",
+    "single-system-eset-licensing",
+    "single-system-fortinet-fortigate",
+    "single-system-godaddy",
+    "single-system-google-drive",
+    "single-system-google-workspace",
+    "single-system-halopsa",
+    "single-system-hp-procurve",
+    "single-system-huntress",
+    "single-system-itglue",
+    "single-system-jumpcloud",
+    "single-system-junos",
+    "single-system-kaseya-bms",
+    "single-system-kaseya-vsa",
+    "single-system-linux",
+    "single-system-macos",
+    "single-system-managed-printer",
+    "single-system-n-able-n-central",
+    "single-system-nable-rmm",
+    "single-system-network-discovery",
+    "single-system-ninjaone",
+    "single-system-onelogin",
+    "single-system-palo-alto-panos",
+    "single-system-pfsense",
+    "single-system-sentinelone",
+    "single-system-slack",
+    "single-system-sonicwall",
+    "single-system-sonicwall-capture-client",
+    "single-system-sophos-central",
+    "single-system-sophos-firewall",
+    "single-system-sophos-sg",
+    "single-system-storagecraft-spx",
+    "single-system-syncro",
+    "single-system-synology-nas",
+    "single-system-ubiquiti-unifi",
+    "single-system-veeam-availability-console",
+    "single-system-veeam-service-provider-console",
+    "single-system-watchguard",
+    "single-system-watchman-monitoring",
+    "single-system-webroot"
+   ],
+   "metricCount": 0,
+   "useWhen": "Use this skill when the user wants to onboard a new customer to the MSP, perform an intake / first-90-days assessment, run a Technical Alignment intake, or build a remediation plan to bring a new customer to the MSP's documentation + securi"
+  },
+  {
+   "name": "pre-sales-discovery",
+   "source": "recipes/sales-assessment/pre-sales-discovery.md",
+   "sourceSha256": "c875c02a68f8f9675c10f10af89bb96c3009735db9a515d512a37656b9261c40",
+   "type": "environment-level",
+   "composes": [
+    "domain-assessment-external-attack-surface-deep-dive",
+    "new-customer-onboarding",
+    "single-system-active-directory",
+    "single-system-knowbe4",
+    "single-system-microsoft-365",
+    "system-type-all-backups",
+    "system-type-all-domains",
+    "system-type-all-edrs",
+    "system-type-all-external-attack-surface",
+    "system-type-all-firewalls",
+    "system-type-all-hypervisors",
+    "system-type-all-servers"
+   ],
+   "metricCount": 0,
+   "useWhen": "Use this skill when the user wants a pre-sales discovery assessment for a prospect \u2014 turning a Liongard read-only inspection (or trial-tenant installation) into a compelling MSP proposal. Discovery variant of the cross-cutting recipe patter"
+  },
+  {
+   "name": "refresh-and-lifecycle-roadmap",
+   "source": "recipes/roadmap-planning/refresh-and-lifecycle-roadmap.md",
+   "sourceSha256": "5fa0c9d77d53659364903d58d230ad61fe6d42f8db9ab4b1911ee35dd6c10501",
+   "type": "environment-level",
+   "composes": [
+    "environment-quarterly-lookback",
+    "system-type-all-external-attack-surface"
+   ],
+   "metricCount": 0,
+   "useWhen": "Use this skill when the user wants a forward-looking refresh, lifecycle, end-of-life, end-of-support, warranty-expiration, or renewal roadmap for a customer. Forward-looking variant of the cross-cutting recipe pattern \u2014 answers \"what hardwa"
+  }
+ ],
+ "files": [
+  {
+   "path": "recipes/cmmc-readiness.md",
+   "role": "recipe",
+   "bytes": 34514,
+   "sha256": "5aff83be30f13a5f6b8a7816834fdf797f26d1f1356d2a99e19497dfaca6ab6e",
+   "sources": [
+    "recipes/compliance/cmmc/cmmc-readiness.md"
+   ]
+  },
+  {
+   "path": "recipes/cyber-insurance-aig.md",
+   "role": "recipe",
+   "bytes": 12795,
+   "sha256": "bdc8f85f4b50b41f6c9b74fc0fa354da3f1031a06d90b37cc1907f3f70ea563e",
+   "sources": [
+    "recipes/compliance/cyber-insurance/carriers/aig.md"
+   ]
+  },
+  {
+   "path": "recipes/cyber-insurance-readiness.md",
+   "role": "recipe",
+   "bytes": 23441,
+   "sha256": "0f0a757f1f589add14a963737224afb92d0df085bff5fc0104373619ab4b6445",
+   "sources": [
+    "recipes/compliance/cyber-insurance/cyber-insurance-readiness.md"
+   ]
+  },
+  {
+   "path": "plans/cyber-insurance-auth.json",
+   "role": "plan",
+   "bytes": 10935,
+   "sha256": "5227f6451084c0a5fce5e3a078733d6be326083a54d3179af8c7e97c17098edf",
+   "sources": [
+    "recipes/compliance/cyber-insurance/domains/auth.md"
+   ]
+  },
+  {
+   "path": "recipes/cyber-insurance-auth.md",
+   "role": "recipe",
+   "bytes": 46259,
+   "sha256": "fe4a3b1785cf1acad7425726ef2f5e7ac55846b49e13186d6d9fdcde1f05c505",
+   "sources": [
+    "recipes/compliance/cyber-insurance/domains/auth.md"
+   ]
+  },
+  {
+   "path": "plans/cyber-insurance-backup.json",
+   "role": "plan",
+   "bytes": 9852,
+   "sha256": "a5c32dc42eac0ee98b4df072194614d9d27db0e2f69a5065511e880d25e7f323",
+   "sources": [
+    "recipes/compliance/cyber-insurance/domains/backup.md"
+   ]
+  },
+  {
+   "path": "recipes/cyber-insurance-backup.md",
+   "role": "recipe",
+   "bytes": 8294,
+   "sha256": "648b220ca4a7226a310a5599324496fc69e61d5dd32afa34526fdc48aad6b0e1",
+   "sources": [
+    "recipes/compliance/cyber-insurance/domains/backup.md"
+   ]
+  },
+  {
+   "path": "plans/cyber-insurance-endpoint.json",
+   "role": "plan",
+   "bytes": 17444,
+   "sha256": "442e83d679271a9f6877610e99f22bbcc354f47b6dce219a66cc2d6161fe87ca",
+   "sources": [
+    "recipes/compliance/cyber-insurance/domains/endpoint.md"
+   ]
+  },
+  {
+   "path": "recipes/cyber-insurance-endpoint.md",
+   "role": "recipe",
+   "bytes": 35989,
+   "sha256": "b9121a29bc926d670a3699e5356fd78b6afb371fd4aceff3ebdd43130786fc1b",
+   "sources": [
+    "recipes/compliance/cyber-insurance/domains/endpoint.md"
+   ]
+  },
+  {
+   "path": "plans/cyber-insurance-governance.json",
+   "role": "plan",
+   "bytes": 1150,
+   "sha256": "d33a42ef15e997ed10de05d0495527bd1528e1667cf29932adb704779125cf41",
+   "sources": [
+    "recipes/compliance/cyber-insurance/domains/governance.md"
+   ]
+  },
+  {
+   "path": "recipes/cyber-insurance-governance.md",
+   "role": "recipe",
+   "bytes": 10995,
+   "sha256": "84368cf0454ab2873eafc06884d47b8487982c0c629941883a19dd02ef628263",
+   "sources": [
+    "recipes/compliance/cyber-insurance/domains/governance.md"
+   ]
+  },
+  {
+   "path": "plans/cyber-insurance-network.json",
+   "role": "plan",
+   "bytes": 2701,
+   "sha256": "523a2c1986177d72e95204f064f4ab7091277be29d092e7d93d72d0fbdc3668d",
+   "sources": [
+    "recipes/compliance/cyber-insurance/domains/network.md"
+   ]
+  },
+  {
+   "path": "recipes/cyber-insurance-network.md",
+   "role": "recipe",
+   "bytes": 15488,
+   "sha256": "f1fc9a3660e5a2d4f69ccc1e05d3799be149f43234a6e0f655a01e66d8541911",
+   "sources": [
+    "recipes/compliance/cyber-insurance/domains/network.md"
+   ]
+  },
+  {
+   "path": "plans/cyber-insurance-regulatory.json",
+   "role": "plan",
+   "bytes": 828,
+   "sha256": "314f8e34f94db54b8964e1003e32874f6f22f9d718ed8a0ca23ee2453df2a9b4",
+   "sources": [
+    "recipes/compliance/cyber-insurance/domains/regulatory.md"
+   ]
+  },
+  {
+   "path": "recipes/cyber-insurance-regulatory.md",
+   "role": "recipe",
+   "bytes": 10609,
+   "sha256": "1cf1e09d1f19a3d745f7aa67b1a3cc9df2f2d42384abc4578eea30ef9ca09ae5",
+   "sources": [
+    "recipes/compliance/cyber-insurance/domains/regulatory.md"
+   ]
+  },
+  {
+   "path": "plans/cyber-insurance-vendor.json",
+   "role": "plan",
+   "bytes": 2443,
+   "sha256": "1071a2f8b1b34e5e8cbdaf39ed1730d09610f59f40f1ddb2ddd38f54c74f2456",
+   "sources": [
+    "recipes/compliance/cyber-insurance/domains/vendor.md"
+   ]
+  },
+  {
+   "path": "recipes/cyber-insurance-vendor.md",
+   "role": "recipe",
+   "bytes": 13018,
+   "sha256": "c62962bfe31aaa3c6367983f9987d9ed934229f79a96bad29918868d06a14cfa",
+   "sources": [
+    "recipes/compliance/cyber-insurance/domains/vendor.md"
+   ]
+  },
+  {
+   "path": "recipes/cyber-insurance-application-universal.md",
+   "role": "recipe",
+   "bytes": 33431,
+   "sha256": "7c7ea6e4ea73b2ac185af27fd99e6a1d524d8eca4ea59635f633bb7f51703d01",
+   "sources": [
+    "recipes/compliance/cyber-insurance/cyber-insurance-application-universal.md"
+   ]
+  },
+  {
+   "path": "recipes/cyber-insurance-at-bay.md",
+   "role": "recipe",
+   "bytes": 13576,
+   "sha256": "ad01bcaa35fa37d2110f9315a97043809e100cf1d7810f88fc6baa4ba2785ddd",
+   "sources": [
+    "recipes/compliance/cyber-insurance/carriers/at-bay.md"
+   ]
+  },
+  {
+   "path": "recipes/cyber-insurance-beazley.md",
+   "role": "recipe",
+   "bytes": 10146,
+   "sha256": "089805a65f80fd604f9d2f125ccbd94b36f5f3344c14965a848776841b133f17",
+   "sources": [
+    "recipes/compliance/cyber-insurance/carriers/beazley.md"
+   ]
+  },
+  {
+   "path": "recipes/cyber-insurance-chubb.md",
+   "role": "recipe",
+   "bytes": 7396,
+   "sha256": "a51e0baea1afbb4dffe497731ece360dcb61348b4311eddf20983f7ae0e6eeac",
+   "sources": [
+    "recipes/compliance/cyber-insurance/carriers/chubb.md"
+   ]
+  },
+  {
+   "path": "recipes/cyber-insurance-coalition.md",
+   "role": "recipe",
+   "bytes": 13198,
+   "sha256": "eba7b1896c47832127dc8d1c72b06f6f037a2ae2a0c78c8f6b6921728dbc2359",
+   "sources": [
+    "recipes/compliance/cyber-insurance/carriers/coalition.md"
+   ]
+  },
+  {
+   "path": "recipes/cyber-insurance-corvus.md",
+   "role": "recipe",
+   "bytes": 11355,
+   "sha256": "49f7454c0e1aabaaa0e6ffc599166f98c938e2ee6787d7cb5bb7182e02ad8bf2",
+   "sources": [
+    "recipes/compliance/cyber-insurance/carriers/corvus.md"
+   ]
+  },
+  {
+   "path": "recipes/cyber-insurance-cowbell.md",
+   "role": "recipe",
+   "bytes": 9078,
+   "sha256": "3290c23b2ecd1363914f0146aac3689ca7ffc5c8f87c73b1dcd005f2439c77ec",
+   "sources": [
+    "recipes/compliance/cyber-insurance/carriers/cowbell.md"
+   ]
+  },
+  {
+   "path": "recipes/cyber-insurance-hartford.md",
+   "role": "recipe",
+   "bytes": 9198,
+   "sha256": "caedd33bb645a28ee903bda8ca53ba0989d02b7552d17a25d8bca6ae84750803",
+   "sources": [
+    "recipes/compliance/cyber-insurance/carriers/hartford.md"
+   ]
+  },
+  {
+   "path": "recipes/cyber-insurance-hiscox.md",
+   "role": "recipe",
+   "bytes": 7747,
+   "sha256": "55746adcaed7d50fa51a86d0070563849aedb6e5d01df54e24f465db0e0a9a2e",
+   "sources": [
+    "recipes/compliance/cyber-insurance/carriers/hiscox.md"
+   ]
+  },
+  {
+   "path": "recipes/cyber-insurance-tokio-marine-hcc.md",
+   "role": "recipe",
+   "bytes": 11521,
+   "sha256": "7922e0673bb12b70b3613297fec3590817e3fe0a21e5167484e03492bad2c058",
+   "sources": [
+    "recipes/compliance/cyber-insurance/carriers/tokio-marine-hcc.md"
+   ]
+  },
+  {
+   "path": "recipes/cyber-insurance-travelers.md",
+   "role": "recipe",
+   "bytes": 40913,
+   "sha256": "370df4b2aa72047bf8b535b1da06cfdd14b291e888b9a005b47eaa64462d0f8f",
+   "sources": [
+    "recipes/compliance/cyber-insurance/carriers/travelers.md"
+   ]
+  },
+  {
+   "path": "plans/domain-assessment-external-attack-surface-deep-dive.json",
+   "role": "plan",
+   "bytes": 13826,
+   "sha256": "5427df95df0e51565aca45946d9c300e5f2cecd36348af0562a80916e07b4886",
+   "sources": [
+    "recipes/domain-assessment/external-attack-surface-deep-dive.md"
+   ]
+  },
+  {
+   "path": "recipes/domain-assessment-external-attack-surface-deep-dive.md",
+   "role": "recipe",
+   "bytes": 47916,
+   "sha256": "3ba37810815e44e601d3aa98a4ee2aa3211b56b985779f8355de840090889ee6",
+   "sources": [
+    "recipes/domain-assessment/external-attack-surface-deep-dive.md"
+   ]
+  },
+  {
+   "path": "recipes/domain-assessment-identity-mfa-gap-report.md",
+   "role": "recipe",
+   "bytes": 14192,
+   "sha256": "bba18cf72f767ebdd784c1fbea98132cb074a7e433fb0f70393e296cbd5818c6",
+   "sources": [
+    "recipes/domain-assessment/identity-mfa-gap-report.md"
+   ]
+  },
+  {
+   "path": "recipes/environment-quarterly-lookback.md",
+   "role": "recipe",
+   "bytes": 24517,
+   "sha256": "206b201992913eb8001037600d1eb4c2bc873ff4c911177f5c8c191928e00912",
+   "sources": [
+    "recipes/environment-quarterly-lookback/quarterly-business-review.md"
+   ]
+  },
+  {
+   "path": "recipes/ftc-safeguards-readiness.md",
+   "role": "recipe",
+   "bytes": 27852,
+   "sha256": "2ed199e10d86edef60666b4a50a6844d04941ba6c27b4ea65d73ddc1acbac920",
+   "sources": [
+    "recipes/compliance/ftc-safeguards/ftc-safeguards-readiness.md"
+   ]
+  },
+  {
+   "path": "recipes/hipaa-readiness.md",
+   "role": "recipe",
+   "bytes": 23342,
+   "sha256": "11ca200c2e16edcc6f97da1f92b3a4bc96b6ee96130d59f440834d8b73bfc03e",
+   "sources": [
+    "recipes/compliance/hipaa/hipaa-readiness.md"
+   ]
+  },
+  {
+   "path": "recipes/new-customer-onboarding.md",
+   "role": "recipe",
+   "bytes": 38627,
+   "sha256": "587910c75289132c6fec61365f4633605c25120f7349a166e6bf5f2cf3712693",
+   "sources": [
+    "recipes/onboarding-assessment/new-customer-onboarding.md"
+   ]
+  },
+  {
+   "path": "recipes/pre-sales-discovery.md",
+   "role": "recipe",
+   "bytes": 36611,
+   "sha256": "c07b9391951008a11db3cd21020e702176e06c3b4df788bf6fbf77587af54bfb",
+   "sources": [
+    "recipes/sales-assessment/pre-sales-discovery.md"
+   ]
+  },
+  {
+   "path": "recipes/refresh-and-lifecycle-roadmap.md",
+   "role": "recipe",
+   "bytes": 31344,
+   "sha256": "654e108399f59b0889f3bcef90007cea4aac9a516d3caf806b3b7af19f47d672",
+   "sources": [
+    "recipes/roadmap-planning/refresh-and-lifecycle-roadmap.md"
+   ]
+  },
+  {
+   "path": "references/inspector-aliases.md",
+   "role": "reference",
+   "bytes": 19874,
+   "sha256": "2b0f961fdfd32deaf532da7bd162a3ac96667f5d30863e1e660daf31f4b3d557",
+   "sources": [
+    "reference/inspector-aliases.md"
+   ]
+  },
+  {
+   "path": "references/asset-fields.md",
+   "role": "reference",
+   "bytes": 21313,
+   "sha256": "c3b0802b014d361f74ccfa215a74260a1c90de3aeba5d0de8de10febf615f125",
+   "sources": [
+    "reference/asset-fields.md"
+   ]
+  },
+  {
+   "path": "references/qa-retry-pattern.md",
+   "role": "reference",
+   "bytes": 10542,
+   "sha256": "6f9ae526519b6891a393cf68fa589578aa3bd4300733473f2a73cd8bc39e4aa2",
+   "sources": [
+    "reference/qa-retry-pattern.md"
+   ]
+  },
+  {
+   "path": "references/msp-config.yaml",
+   "role": "reference",
+   "bytes": 11815,
+   "sha256": "416d1913eec2a4e035308be5a406b540bb8a963986f5045634714ac7089fe445",
+   "sources": [
+    "config/msp-config.yaml"
+   ]
+  },
+  {
+   "path": "recipes/index.md",
+   "role": "catalog",
+   "bytes": 14408,
+   "sha256": "77bfac51a6a99487325910787f9e1150ce34c76de8783e3267279f3b3b25e8f8",
+   "sources": [
+    "recipes/compliance/cmmc/cmmc-readiness.md",
+    "recipes/compliance/cyber-insurance/carriers/aig.md",
+    "recipes/compliance/cyber-insurance/cyber-insurance-readiness.md",
+    "recipes/compliance/cyber-insurance/domains/auth.md",
+    "recipes/compliance/cyber-insurance/domains/backup.md",
+    "recipes/compliance/cyber-insurance/domains/endpoint.md",
+    "recipes/compliance/cyber-insurance/domains/governance.md",
+    "recipes/compliance/cyber-insurance/domains/network.md",
+    "recipes/compliance/cyber-insurance/domains/regulatory.md",
+    "recipes/compliance/cyber-insurance/domains/vendor.md",
+    "recipes/compliance/cyber-insurance/cyber-insurance-application-universal.md",
+    "recipes/compliance/cyber-insurance/carriers/at-bay.md",
+    "recipes/compliance/cyber-insurance/carriers/beazley.md",
+    "recipes/compliance/cyber-insurance/carriers/chubb.md",
+    "recipes/compliance/cyber-insurance/carriers/coalition.md",
+    "recipes/compliance/cyber-insurance/carriers/corvus.md",
+    "recipes/compliance/cyber-insurance/carriers/cowbell.md",
+    "recipes/compliance/cyber-insurance/carriers/hartford.md",
+    "recipes/compliance/cyber-insurance/carriers/hiscox.md",
+    "recipes/compliance/cyber-insurance/carriers/tokio-marine-hcc.md",
+    "recipes/compliance/cyber-insurance/carriers/travelers.md",
+    "recipes/domain-assessment/external-attack-surface-deep-dive.md",
+    "recipes/domain-assessment/identity-mfa-gap-report.md",
+    "recipes/environment-quarterly-lookback/quarterly-business-review.md",
+    "recipes/compliance/ftc-safeguards/ftc-safeguards-readiness.md",
+    "recipes/compliance/hipaa/hipaa-readiness.md",
+    "recipes/onboarding-assessment/new-customer-onboarding.md",
+    "recipes/sales-assessment/pre-sales-discovery.md",
+    "recipes/roadmap-planning/refresh-and-lifecycle-roadmap.md"
+   ]
+  },
+  {
+   "path": "SKILL.md",
+   "role": "skill",
+   "bytes": 5589,
+   "sha256": "d2b7771121d7e34a89c2eada1d70e57e5d07547bae0480be6b14f958bb7ab2ca",
+   "sources": [
+    "copilot/templates/skill-instructions.md"
+   ]
+  }
+ ],
+ "warnings": []
+}

@@ -13,7 +13,7 @@ compatibility: "Requires Liongard MCP: liongard_environment, liongard_launchpoin
 personas: [soc, technical-alignment-manager, vcio-account-manager]
 output_formats: [markdown, word, xlsx]
 primitives:
-  # Reconciled 2026-05-29: pruned dangling refs not present in the live dataprint (see internal/proposed-metrics-backlog.md).
+  # Reconciled 2026-05-29: pruned dangling refs not present in the live dataprint.
   - metrics:slack:active-admin-count
   - metrics:slack:active-users-count
   - metrics:slack:active-users-without-2fa-count

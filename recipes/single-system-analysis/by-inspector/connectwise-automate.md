@@ -12,7 +12,7 @@ compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, li
 personas: [noc, technical-alignment-manager, vcio-account-manager, accounting-finance]
 output_formats: [markdown, word, pptx, xlsx]
 primitives:
-  # Reconciled 2026-05-29: pruned dangling refs not present in the live dataprint (see internal/proposed-metrics-backlog.md).
+  # Reconciled 2026-05-29: pruned dangling refs not present in the live dataprint.
   - metrics:connectwise-automate:computers-total-count
 ---
 

@@ -1,0 +1,2163 @@
+{
+ "schemaVersion": 1,
+ "skill": "liongard-single-system",
+ "recipes": [
+  {
+   "name": "single-system-active-directory",
+   "source": "recipes/single-system-analysis/by-inspector/active-directory.md",
+   "sourceSha256": "381eb2c25297b132775ae25a2999f8ce56f29d45204d9ed1b076fc3236fc7c76",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 16,
+   "useWhen": "Use this skill when the user wants a single-domain analysis of an on-premises Active Directory \u2014 Periodic Business Review, password policy + account lockout audit, privileged user inventory + group membership, stale / disabled account revie"
+  },
+  {
+   "name": "single-system-windows-server",
+   "source": "recipes/single-system-analysis/by-inspector/windows-server.md",
+   "sourceSha256": "516c4f19e66331da0906c48d7ccf0feb2065510d7363523441dfe60dbce726be",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 23,
+   "useWhen": "Use this skill when the user wants a single-system analysis of a Windows Server \u2014 onboarding QA, hardware inventory + lifecycle, role/purpose audit, patch posture, local privileged user list, AV/firewall presence. Trigger phrases: \"Windows "
+  },
+  {
+   "name": "single-system-windows-workstation",
+   "source": "recipes/single-system-analysis/by-inspector/windows-workstation.md",
+   "sourceSha256": "936c24ccdf4d465f9e7e15edbb04c488879f4c86805587c559f411c03d62d01e",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 25,
+   "useWhen": "Use this skill when the user wants a single-system analysis of a Windows workstation / laptop \u2014 onboarding QA, hardware inventory + lifecycle, patch posture, AV/firewall/BitLocker presence, RDP exposure, Win11 readiness. Trigger phrases: \"W"
+  },
+  {
+   "name": "single-system-dark-web-monitoring",
+   "source": "recipes/single-system-analysis/by-inspector/dark-web-monitoring.md",
+   "sourceSha256": "3a573bef75d7e10b89eeec9c8af60df5475c0774a155c888410dad22da6ddd21",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 5,
+   "useWhen": "Use this skill when the user wants a Dark Web Monitoring assessment for a single domain \u2014 exposed-credentials inventory, breach-corpus match counts, breach source identification, identity-exposure risk surfacing. Trigger phrases: \"dark web "
+  },
+  {
+   "name": "single-system-network-ip-address",
+   "source": "recipes/single-system-analysis/by-inspector/network-ip-address.md",
+   "sourceSha256": "997f8727fe2bcfb68ea0289162f911f9d92ea55b6ad4b8ff17d53ac7832b9ce4",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 5,
+   "useWhen": "Use this skill when the user wants a single-IP external posture analysis \u2014 public IP reputation, blocklist (RBL / DNSBL) status, hosting / ASN footprint, geolocation, reverse DNS, observed open ports, or known-CVE exposure on services detec"
+  },
+  {
+   "name": "single-system-internet-domain-dns",
+   "source": "recipes/single-system-analysis/by-inspector/internet-domain-dns.md",
+   "sourceSha256": "1c93865305b512593a98c81dba4e7da9cfd97e4c7427f8f025085d6ddf5eed93",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 28,
+   "useWhen": "Use this skill when the user wants a single-domain deep-dive analysis of registration, WHOIS, DNS configuration, mail-trust posture (SPF / DKIM / DMARC), nameserver health, or domain-expiration risk. Trigger phrases: \"domain review for <dom"
+  },
+  {
+   "name": "single-system-knowbe4",
+   "source": "recipes/single-system-analysis/by-inspector/knowbe4.md",
+   "sourceSha256": "d2b49209806f4ff2c844d8f7c202f93859ee5e5f810ca590b0dd4bbf368c927d",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 0,
+   "useWhen": "Use this skill when the user wants a single-system analysis of a KnowBe4 account \u2014 Periodic Business Review (PBR), phishing test review, security awareness training (SAT) completion audit, organization risk score trend, or top phish-prone-u"
+  },
+  {
+   "name": "single-system-tls-ssl",
+   "source": "recipes/single-system-analysis/by-inspector/tls-ssl.md",
+   "sourceSha256": "08005bd8c25ca5b681a2dd997afc096e1290b0cd4943b7ea1219fc13e825e48e",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 18,
+   "useWhen": "Use this skill when the user wants a single-host TLS/SSL certificate analysis \u2014 certificate expiration risk, issuer trust, key strength, protocol versions supported (TLS 1.0 / 1.1 / 1.2 / 1.3), cipher weakness, chain validity, or encryption"
+  },
+  {
+   "name": "single-system-microsoft-365",
+   "source": "recipes/single-system-analysis/by-inspector/microsoft-365.md",
+   "sourceSha256": "2e90756cada9cbf44edc3dddaedd92fdbd652c45a5eb75f1409c40017f315b7c",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 20,
+   "useWhen": "Use this skill when the user wants a single-system analysis of a Microsoft 365 tenant \u2014 Periodic Business Review (PBR), license utilization audit, user/group inventory, SharePoint site review, Entra ID identity report, or backup-coverage ve"
+  },
+  {
+   "name": "single-system-acronis-cyber-protect-cloud",
+   "source": "recipes/single-system-analysis/by-inspector/acronis-cyber-protect-cloud.md",
+   "sourceSha256": "08cc8a7612a72525b6fa381e899e1f24993b9463c1f7e9d18d02774390deded4",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 10,
+   "useWhen": "Use this skill when the user wants a single-tenant analysis of an Acronis Cyber Protect Cloud account \u2014 per-resource backup state, backup plan compliance, last-run status per resource, child-tenant inventory. Acronis Cyber Protect Cloud com"
+  },
+  {
+   "name": "single-system-addigy-mdm",
+   "source": "recipes/single-system-analysis/by-inspector/addigy.md",
+   "sourceSha256": "06dd6e7829cc42f0979093c84ebf35bcbdeb80b43455a44a28179a84ccd3f564",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 11,
+   "useWhen": "Use this recipe when the user wants a single-system analysis of an Addigy macOS MDM account \u2014 policy inventory and structure, user role audit, API permissions review, and child-system discovery map. Trigger phrases: \"Addigy MDM report for <"
+  },
+  {
+   "name": "single-system-autotask",
+   "source": "recipes/single-system-analysis/by-inspector/autotask.md",
+   "sourceSha256": "4859ca7bac3cb3b34564befab86e0cc662a61e99f53edbc19ce7970d460ca274",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 7,
+   "useWhen": "Use this skill when the user wants a single-system analysis of an Autotask PSA tenant. The Dev MCP dataprint currently supports tenant-level company/account and contact inventory; ticket volume, SLA, resource utilization, time-entry, billin"
+  },
+  {
+   "name": "single-system-auvik",
+   "source": "recipes/single-system-analysis/by-inspector/auvik.md",
+   "sourceSha256": "571056088795ba0b208137b4afe120a6bccffea75c2b849e46c027550cbd6aab",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 20,
+   "useWhen": "Use this skill when the user wants an Auvik Network Management assessment \u2014 tenant roster audit (parent), or per-tenant network topology, VLAN inventory, scan permission validation, and device/alert inventory (child). Trigger phrases: \"Auvi"
+  },
+  {
+   "name": "single-system-aws",
+   "source": "recipes/single-system-analysis/by-inspector/aws.md",
+   "sourceSha256": "a89da0804008ba0f407eccc3ed1c6a27a9bf089742fa62bbc4c0ec19b4298d70",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 17,
+   "useWhen": "Use this skill when the user wants a single-account analysis of an AWS account \u2014 IAM posture (users, roles, MFA, access keys), VPC / security-group configuration, S3 bucket public-access audit, KMS key inventory, CloudTrail / GuardDuty / Se"
+  },
+  {
+   "name": "single-system-axcient-x360-recover",
+   "source": "recipes/single-system-analysis/by-inspector/axcient-x360-recover.md",
+   "sourceSha256": "26dcb0e3549a7176efe6a3b8c45dcd95172b41584f1386c456d5abd7aa10e9a6",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 33,
+   "useWhen": "Use this skill when the user wants a single-tenant analysis of an Axcient x360 Recover account \u2014 appliance health, per-device backup job status, vault inventory, client coverage. Axcient is an appliance-based backup product (formerly Replib"
+  },
+  {
+   "name": "single-system-azure",
+   "source": "recipes/single-system-analysis/by-inspector/azure.md",
+   "sourceSha256": "6ad1514ee810c90955804baba6f1db65f850ef9f819bdc26073baa1edca64595",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 6,
+   "useWhen": "Use this skill when the user wants a single-subscription analysis of a Microsoft Azure subscription \u2014 RBAC posture, NSG / firewall rules, storage-account public-access audit, Key Vault inventory, Activity Log / Microsoft Defender for Cloud "
+  },
+  {
+   "name": "single-system-barracuda-firewall",
+   "source": "recipes/single-system-analysis/by-inspector/barracuda-firewall.md",
+   "sourceSha256": "95f14121458fcf4d2cc966378fd0a7e4ad8d02a0fc472f75e03913e0f8fc5c01",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 9,
+   "useWhen": "Use this skill when the user wants a single-firewall analysis of a Barracuda CloudGen Firewall appliance \u2014 PBR, configuration audit, license expiration, firmware audit, security-services posture, access-rule audit, VPN posture. Trigger phra"
+  },
+  {
+   "name": "single-system-bitdefender-gravityzone",
+   "source": "recipes/single-system-analysis/by-inspector/bitdefender-gravityzone.md",
+   "sourceSha256": "df9873f691e8cf8086edc3a9bd964449c902f32adb313e2d18abf744cc28af2d",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 3,
+   "useWhen": "Use this skill when the user wants a single-system analysis of a Bitdefender GravityZone tenant \u2014 Periodic Business Review (PBR), endpoint deployment review, threat posture, license utilization. Trigger phrases: \"Bitdefender PBR\", \"GravityZ"
+  },
+  {
+   "name": "single-system-box",
+   "source": "recipes/single-system-analysis/by-inspector/box.md",
+   "sourceSha256": "cd49b80fab43ae20bcc8a8ae64d71b81aff1df8d0cdd96e4719d05a5eaad6288",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 9,
+   "useWhen": "Use this skill when the user wants a single-system analysis of a Box tenant \u2014 storage utilization, external-sharing audit (security), stale-content detection, license utilization, user inventory + MFA posture, retention compliance. Trigger "
+  },
+  {
+   "name": "single-system-cisco-asa",
+   "source": "recipes/single-system-analysis/by-inspector/cisco-asa.md",
+   "sourceSha256": "fa5b9cc23848de393f44aba47df58c68f3ef7cbd2b9e9d013d27f19abd7b000b",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 9,
+   "useWhen": "Use this skill when the user wants a single-firewall analysis of a Cisco ASA \u2014 Periodic Business Review, ASA software version audit, license expiration check, running-vs-startup config drift detection, interface inventory, ACL audit, site-t"
+  },
+  {
+   "name": "single-system-cisco-ios",
+   "source": "recipes/single-system-analysis/by-inspector/cisco-ios.md",
+   "sourceSha256": "40872627fe72279090794c4aee6cbdf5ffc95a4e5bb14370b6c1a17af79aeb8d",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 5,
+   "useWhen": "Use this skill when the user wants a single-device analysis of a Cisco IOS / IOS-XE router or switch \u2014 PBR, configuration audit, IOS version + EOL audit, interface inventory, VLAN audit, ACL audit, routing protocol posture, local-user / AAA"
+  },
+  {
+   "name": "single-system-cisco-meraki",
+   "source": "recipes/single-system-analysis/by-inspector/cisco-meraki.md",
+   "sourceSha256": "e561ceb28af8bb01757d92267d49eea33ef061196325d19ebd9dedbb1e287592",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 15,
+   "useWhen": "Use this skill when the user wants a single-network analysis of a Cisco Meraki organization \u2014 Periodic Business Review (PBR), firewall config review, switch / AP / SSID inventory, license expiration, firmware audit, VPN policy review. Trigg"
+  },
+  {
+   "name": "single-system-cisco-sbs-switch",
+   "source": "recipes/single-system-analysis/by-inspector/cisco-sbs-switch.md",
+   "sourceSha256": "786e953de11dd69f3d51ff955ec49e950276cc69aae4d0fac7e6da4a4802098d",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 9,
+   "useWhen": "Use this skill when the user wants a single-device analysis of a Cisco Small Business Switch (CBS / SG series) \u2014 PBR, configuration audit, firmware audit, port + VLAN configuration, link aggregation, PoE budget, local-user audit, management"
+  },
+  {
+   "name": "single-system-cisco-umbrella",
+   "source": "recipes/single-system-analysis/by-inspector/cisco-umbrella.md",
+   "sourceSha256": "5fa1ec3c110572b2c0aa2208b41ae1efedc80437639163842d0d6598d70ae7a7",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 11,
+   "useWhen": "Use this skill when the user wants a single-system analysis of a Cisco Umbrella sub-organization \u2014 DNS-security deployment review, Periodic Business Review (PBR), roaming-client coverage audit, or virtual-appliance health check. Trigger phr"
+  },
+  {
+   "name": "single-system-cloudflare",
+   "source": "recipes/single-system-analysis/by-inspector/cloudflare.md",
+   "sourceSha256": "cbeb3efaedf07e674c9228fb3b1b13326d971662c2f6bae7b385a022a7871574",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 17,
+   "useWhen": "Use this skill when the user wants a single-tenant analysis of a Cloudflare account \u2014 zone / domain inventory, DNS posture, SSL/TLS edge configuration, WAF & firewall-rule posture, DDoS / rate-limit rules, Zero Trust (Access / Gateway / Tun"
+  },
+  {
+   "name": "single-system-connectwise-asio",
+   "source": "recipes/single-system-analysis/by-inspector/connectwise-asio.md",
+   "sourceSha256": "e1dfce6fb6694e03baf62401485118c9394cdc7d1291417f3acd397303653752",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 6,
+   "useWhen": "Use this recipe when the user wants a single-system analysis of a ConnectWise Asio RMM account \u2014 managed company inventory, site and device counts, child-system discovery, and activity-status audit. Trigger phrases: \"ConnectWise Asio report"
+  },
+  {
+   "name": "single-system-connectwise-automate",
+   "source": "recipes/single-system-analysis/by-inspector/connectwise-automate.md",
+   "sourceSha256": "b33ec97bc591d503c6e872fda238db5815860d60a50a26724d2a262f75091b7f",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 1,
+   "useWhen": "Use this skill when the user wants a single-system analysis of a ConnectWise Automate tenant \u2014 agent coverage, patch posture, AV posture, monitor / internal-monitor audit, ticket-script integration, technician usage, license utilization. Tr"
+  },
+  {
+   "name": "single-system-connectwise-manage",
+   "source": "recipes/single-system-analysis/by-inspector/connectwise-manage.md",
+   "sourceSha256": "8871d5e165808dfcb5f2b47a28e749670d983a55d28779bfc7307614b8e0a137",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 2,
+   "useWhen": "Use this skill when the user wants a single-system analysis of a ConnectWise Manage (PSA) tenant \u2014 ticket volume + aging, SLA compliance, technician utilization, time-tracking accuracy, contract / agreement audit, customer ticket profile. T"
+  },
+  {
+   "name": "single-system-continuum-rmm",
+   "source": "recipes/single-system-analysis/by-inspector/continuum-rmm.md",
+   "sourceSha256": "2ee5c056a0e587cad8707b4b1fd90d2163c6e782ac5fe39a356d7bdf09acdbf5",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 11,
+   "useWhen": "Use this recipe when the user wants a single-system analysis of a legacy Continuum RMM account \u2014 device inventory, antivirus posture summary, patch-state summary, health-score review, warranty summary, and site statistics. Trigger phrases: "
+  },
+  {
+   "name": "single-system-cove-data-protection",
+   "source": "recipes/single-system-analysis/by-inspector/cove-data-protection.md",
+   "sourceSha256": "22e978dc92546c865baa419da70c60a0945982420c6877f93811aacd97d6b611",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 23,
+   "useWhen": "Use this skill when the user wants a single-tenant analysis of a Cove Data Protection account \u2014 backup-coverage review, failed-backup audit, 24-hour completion compliance, Exchange / OneDrive / file-server protection state, device-level bac"
+  },
+  {
+   "name": "single-system-crowdstrike",
+   "source": "recipes/single-system-analysis/by-inspector/crowdstrike.md",
+   "sourceSha256": "c1788f091c6b0c98a66f37bd972e0fb1cdcbf0d96d85dd0808763d7a35406f53",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 8,
+   "useWhen": "Use this skill when the user wants a single-system analysis of a CrowdStrike Falcon tenant \u2014 Periodic Business Review (PBR), endpoint deployment review, detection / threat trend, sensor health. Trigger phrases: \"CrowdStrike PBR\", \"Falcon re"
+  },
+  {
+   "name": "single-system-datto-bcdr",
+   "source": "recipes/single-system-analysis/by-inspector/datto-bcdr.md",
+   "sourceSha256": "371fc768ee9ae925dbf9d15d96ee754ed95e830cadd96dde8529adcf7ff2a71a",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 12,
+   "useWhen": "Use this skill when the user wants a single-appliance analysis of a Datto BCDR (SIRIS or ALTO appliance) \u2014 protected-device coverage, last-valid-backup state per device, failed-backup detection, cloud sync status, screenshot-verification po"
+  },
+  {
+   "name": "single-system-datto-networking",
+   "source": "recipes/single-system-analysis/by-inspector/datto-networking.md",
+   "sourceSha256": "1b8a7529c36ea34f3744159e61553b314930e9a2532b17f9c166c4b0a45d54fd",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 8,
+   "useWhen": "Use this skill when the user wants a Datto Networking assessment for a single account \u2014 network/site inventory, node health, firmware currency, and user access audit. Trigger phrases: \"Datto Networking health check\", \"how many nodes are dow"
+  },
+  {
+   "name": "single-system-datto-rmm",
+   "source": "recipes/single-system-analysis/by-inspector/datto-rmm.md",
+   "sourceSha256": "02992c032a18fe6f14671b6fd690cab8a241849e7e5f6fab61ffc4e9fe8160f1",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 2,
+   "useWhen": "Use this skill when the user wants a single-system analysis of a Datto RMM tenant \u2014 agent / device coverage, patch posture, antivirus posture (Datto AV / third-party), software inventory, monitor / alert posture, technician usage, license u"
+  },
+  {
+   "name": "single-system-domotz-network-monitoring",
+   "source": "recipes/single-system-analysis/by-inspector/domotz.md",
+   "sourceSha256": "8426f21bb7f5feb3406069b7a40d6b9c8d273f806bef36e9cfbf57b6bd27ccb4",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 6,
+   "useWhen": "Use this recipe when the user wants a Domotz Network Monitoring assessment for a single Domotz agent (probe) \u2014 device inventory audit, availability and packet-loss analysis, agent health check, WAN IP review, and licence expiration tracking"
+  },
+  {
+   "name": "single-system-dropbox",
+   "source": "recipes/single-system-analysis/by-inspector/dropbox.md",
+   "sourceSha256": "9827396eb72636ac0fdfbde6b000d7b6ba0ae69d16fe90cc93a1421ee9a7e6cd",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 7,
+   "useWhen": "Use this skill when the user wants a single-system analysis of a Dropbox Business tenant \u2014 storage utilization, external-sharing audit (security), stale-content detection, license utilization, user inventory + MFA posture, team-folder permi"
+  },
+  {
+   "name": "single-system-duo-security",
+   "source": "recipes/single-system-analysis/by-inspector/duo-security.md",
+   "sourceSha256": "d057456a22b5f8f454beb9f9788768e1ca3a82384459e43197436e8fb926c506",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 10,
+   "useWhen": "Use this skill when the user wants a single-system analysis of a Duo Security tenant \u2014 MFA enrollment coverage, policy posture (allowed authentication methods, device-trust posture), bypass-user audit, unenrolled user surfacing, application"
+  },
+  {
+   "name": "single-system-eset-licensing",
+   "source": "recipes/single-system-analysis/by-inspector/eset-licensing.md",
+   "sourceSha256": "2ce0ac491f3e1a7d0649c987a59860c2e8e8882188fa6d63a1ff196a0bcc0d33",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 15,
+   "useWhen": "Use this skill when the user wants a single-system analysis of an ESET Licensing tenant \u2014 license utilization audit, seat consumption review, product mix snapshot. Trigger phrases: \"ESET license report\", \"ESET PBR\", \"pull ESET licensing for"
+  },
+  {
+   "name": "single-system-fortinet-fortigate",
+   "source": "recipes/single-system-analysis/by-inspector/fortinet-fortigate.md",
+   "sourceSha256": "180b73ca1b91381f5bbd381f33878df48c994c1d5666036019e2f28ca8d9a703",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 13,
+   "useWhen": "Use this skill when the user wants a single-firewall analysis of a Fortinet FortiGate \u2014 Periodic Business Review, firmware audit, license / security-services expiration, firewall policy summary, LAN-interface inventory, IPSec VPN tunnel rev"
+  },
+  {
+   "name": "single-system-godaddy",
+   "source": "recipes/single-system-analysis/by-inspector/godaddy.md",
+   "sourceSha256": "6000c093fc34109eccbf31e68f08c8fcd81ac4113e13a4c5a70cc69a60f94587",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 8,
+   "useWhen": "Use this skill when the user wants a single-system assessment of a GoDaddy account. Trigger phrases: \"GoDaddy domain audit for <customer>\", \"GoDaddy domain expiration\", \"domain registrar report\", \"GoDaddy subscription review\", \"GoDaddy cert"
+  },
+  {
+   "name": "single-system-google-drive",
+   "source": "recipes/single-system-analysis/by-inspector/google-drive.md",
+   "sourceSha256": "424260179b693c65e2e981b67b7a9cc52aff1e8fcec1f2f5b6fa90fa91e6b68f",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 11,
+   "useWhen": "Use this skill when the user wants a single-system analysis of a Google Drive (Workspace Drive) deployment \u2014 storage utilization, external-sharing audit (security), stale-content detection, shared- drive permissions audit, license utilizati"
+  },
+  {
+   "name": "single-system-google-workspace",
+   "source": "recipes/single-system-analysis/by-inspector/google-workspace.md",
+   "sourceSha256": "dcb65dc88c41ab4786735fd82d8c32fb8d38d68eb6c734e72602116c6808e5ba",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 7,
+   "useWhen": "Use this skill when the user wants a single-tenant analysis of a Google Workspace (GWS) tenant \u2014 identity inventory, 2-Step Verification posture, super-admin audit, OU structure, group hygiene, app-access settings, third-party-app authoriza"
+  },
+  {
+   "name": "single-system-halopsa",
+   "source": "recipes/single-system-analysis/by-inspector/halopsa.md",
+   "sourceSha256": "97498dee3878704d97d4b731997367ac460033fd77b3f93f8201e6978ac22736",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 10,
+   "useWhen": "Use this skill when the user wants a single-system analysis of a HaloPSA tenant \u2014 ticket volume + aging, SLA compliance, agent utilization, time-tracking + billing, contract audit, per-customer ticket profile. Trigger phrases: \"HaloPSA revi"
+  },
+  {
+   "name": "single-system-hp-procurve",
+   "source": "recipes/single-system-analysis/by-inspector/hp-procurve.md",
+   "sourceSha256": "f0cdf4cdce7a6f83292d1c53ff079a76c1cf31fc89bf50210ebeb43c1a6829a0",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 17,
+   "useWhen": "Use this skill when the user wants a single-device analysis of an HP ProCurve / HPE Aruba CX (legacy ProCurve / Aruba-OS Switch) switch \u2014 PBR, configuration audit, firmware audit, port + VLAN configuration, LACP / trunk audit, PoE budget, l"
+  },
+  {
+   "name": "single-system-huntress",
+   "source": "recipes/single-system-analysis/by-inspector/huntress.md",
+   "sourceSha256": "1b360b696d982eda1afb4b668ab45c739ad729b2701d4d4a3c3f935e67b8edb9",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 8,
+   "useWhen": "Use this skill when the user wants a single-system analysis of a Huntress customer organization \u2014 Periodic Business Review (PBR / QBR), monthly health check, agent deployment audit, or incident trend review. Trigger phrases: \"Huntress PBR\","
+  },
+  {
+   "name": "single-system-itglue",
+   "source": "recipes/single-system-analysis/by-inspector/itglue.md",
+   "sourceSha256": "d80f7890158db8b41a34d5c78166c77215cd0fc3bfad8ab721c76d4eb66573f3",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 7,
+   "useWhen": "Use this skill when the user wants a single-system analysis of an IT Glue tenant \u2014 documentation completeness audit, stale-document detection, password-vault audit, per-customer documentation coverage, permissions audit, expiration tracking"
+  },
+  {
+   "name": "single-system-jumpcloud",
+   "source": "recipes/single-system-analysis/by-inspector/jumpcloud.md",
+   "sourceSha256": "cfb7cf212ce17f00ff1be0a6841b6177742ade7f0e0ff744a179b38d8721041f",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 15,
+   "useWhen": "Use this skill when the user wants a single-system analysis of a JumpCloud directory \u2014 identity inventory, MFA enrollment + posture, privileged-admin audit, device-enrollment coverage, SSO application inventory, policy posture, user-group /"
+  },
+  {
+   "name": "single-system-junos",
+   "source": "recipes/single-system-analysis/by-inspector/junos.md",
+   "sourceSha256": "55f6fcde54c791cdcf963141447ad18da8ce8091cdc42fb94376061c9f0c8979",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 1,
+   "useWhen": "Use this skill when the user wants a single-device analysis of a Juniper Junos device (SRX firewall, EX switch, MX router, QFX data-center switch) \u2014 PBR, configuration audit, Junos version audit, interface inventory, VLAN / zone audit, fire"
+  },
+  {
+   "name": "single-system-kaseya-bms",
+   "source": "recipes/single-system-analysis/by-inspector/kaseya-bms.md",
+   "sourceSha256": "a64a01de823d45c2844fc13594bd331b8123dcfcc9c58ca6b3bad2c2ac9278da",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 6,
+   "useWhen": "Use this skill when the user wants a single-system analysis of a Kaseya BMS (PSA) tenant \u2014 ticket volume + aging, SLA compliance, technician utilization, time-tracking + billing, contract audit, per-customer ticket profile. Trigger phrases:"
+  },
+  {
+   "name": "single-system-kaseya-vsa",
+   "source": "recipes/single-system-analysis/by-inspector/kaseya-vsa.md",
+   "sourceSha256": "7a5d2f814a1b3b973050c9a1ce713745259ce04585ba29f5a504a4c0014dd7f8",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 7,
+   "useWhen": "Use this skill when the user wants a single-system analysis of a Kaseya VSA tenant \u2014 agent coverage, patch posture, AV posture, software inventory, monitor / agent-procedure audit, alarm posture, technician usage, license utilization. Trigg"
+  },
+  {
+   "name": "single-system-linux",
+   "source": "recipes/single-system-analysis/by-inspector/linux.md",
+   "sourceSha256": "21998a962d15641cb4519d72cbd352649a0a066c5b96236dd8f0ae1d6b3ac23f",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 0,
+   "useWhen": "Use this skill when the user wants a single-system analysis of a Linux server / workstation \u2014 onboarding QA, hostname/IP/domain, sudo / privileged users, installed software / package version, AV / RMM agent presence. Trigger phrases: \"Linux"
+  },
+  {
+   "name": "single-system-macos",
+   "source": "recipes/single-system-analysis/by-inspector/macos.md",
+   "sourceSha256": "b87ca1ae18ace0122571adc92137a9805acf4880ded9ebf687c6f26a6201875a",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 0,
+   "useWhen": "Use this skill when the user wants a single-system analysis of a macOS device \u2014 onboarding QA, hardware inventory, OS version, FileVault encryption status, installed applications, antivirus presence. Trigger phrases: \"macOS review for <HOST"
+  },
+  {
+   "name": "single-system-managed-printer",
+   "source": "recipes/single-system-analysis/by-inspector/managed-printer.md",
+   "sourceSha256": "3bb5ffa873dd7e631d4fd68022d5725a3aff0dedadf2b4c51dd263740bb92fde",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 7,
+   "useWhen": "Use this skill when the user wants a single-device analysis of a managed network printer \u2014 consumable levels, paper tray status, lifetime page count, active alerts, network interface health, and firmware/identity details. Trigger phrases: \""
+  },
+  {
+   "name": "single-system-n-able-n-central",
+   "source": "recipes/single-system-analysis/by-inspector/n-able-n-central.md",
+   "sourceSha256": "ec073f9c4b3506aba42a0701733a74a9c2719ca31bd6a5d2b1dd489ecab27a31",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 27,
+   "useWhen": "Use this skill when the user wants a single-system analysis of an N-able N-central tenant \u2014 agent coverage, patch posture, AV posture (N-able EDR / third-party), monitor / service posture, alert activity, technician usage, license utilizati"
+  },
+  {
+   "name": "single-system-nable-rmm",
+   "source": "recipes/single-system-analysis/by-inspector/nable-rmm.md",
+   "sourceSha256": "2d02106a278050f616fe6eca41c525848faee558558411b0bc34d9fb6940037c",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 8,
+   "useWhen": "Use this recipe when the user wants a single-system analysis of an N-able RMM account \u2014 site connectivity audit, server and workstation agent coverage, OS inventory, agent-version drift, online/offline status, patch posture, and agentless-d"
+  },
+  {
+   "name": "single-system-network-discovery",
+   "source": "recipes/single-system-analysis/by-inspector/network-discovery.md",
+   "sourceSha256": "a8ab3d66b4d1e0241db104ba8ac82f68740303b0ae29c2c6b58bb716985b2570",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 12,
+   "useWhen": "Use this skill when the user wants a Network Discovery assessment for a single subnet \u2014 internal host inventory, open-port audit, gateway/ISP identification, DNS server mapping, DHCP server detection, or new-device detection. Trigger phrase"
+  },
+  {
+   "name": "single-system-ninjaone",
+   "source": "recipes/single-system-analysis/by-inspector/ninjaone.md",
+   "sourceSha256": "884bfa81ae23dc5cdb7e826f8ad04d613f2dc299204efc32749987679b80280e",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 31,
+   "useWhen": "Use this skill when the user wants a single-system analysis of a NinjaOne RMM tenant \u2014 agent coverage, device health, patch posture, antivirus and encryption posture, installed software and Windows services, hardware and activity, alert vol"
+  },
+  {
+   "name": "single-system-onelogin",
+   "source": "recipes/single-system-analysis/by-inspector/onelogin.md",
+   "sourceSha256": "ff0fd5852fea0243811d7fb14834e7d3ad982ad31f4eb6d325a29649ce2d798d",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 16,
+   "useWhen": "Use this skill when the user wants a single-system analysis of a OneLogin tenant \u2014 identity inventory, MFA enrollment + factor mix, privileged-admin audit, SSO application coverage, policy posture, brute-force / suspicious login posture. Tr"
+  },
+  {
+   "name": "single-system-palo-alto-panos",
+   "source": "recipes/single-system-analysis/by-inspector/palo-alto-panos.md",
+   "sourceSha256": "09c868f8f354d9ac5274b1d656389346957cef7ddd728d3d38f6ac2ba92ebf4a",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 11,
+   "useWhen": "Use this skill when the user wants a single-firewall analysis of a Palo Alto Networks firewall (PAN-OS) or Panorama-managed appliance \u2014 PBR, configuration audit, license / subscription expiration, PAN-OS version audit, security-services pos"
+  },
+  {
+   "name": "single-system-pfsense",
+   "source": "recipes/single-system-analysis/by-inspector/pfsense.md",
+   "sourceSha256": "75b7360cf34267cf49046a451faf8da0839f152f673b30e0a347f4c55e8c30ac",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 18,
+   "useWhen": "Use this skill when the user wants a single-firewall analysis of a pfSense / Netgate firewall \u2014 PBR, configuration audit, package inventory, firmware audit, NAT / outbound-rule audit, VPN posture. Trigger phrases: \"pfSense PBR\", \"pfSense fi"
+  },
+  {
+   "name": "single-system-sentinelone",
+   "source": "recipes/single-system-analysis/by-inspector/sentinelone.md",
+   "sourceSha256": "17dcd73f63c90f9ba6816bb58f63fc7ac35c21c11c1510c3d17661f52f3bbb04",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 16,
+   "useWhen": "Use this skill when the user wants a single-system analysis of a SentinelOne tenant \u2014 Periodic Business Review (PBR / QBR), monthly health check, threat posture review, or license utilization audit. Trigger phrases: \"S1 PBR\", \"SentinelOne r"
+  },
+  {
+   "name": "single-system-slack",
+   "source": "recipes/single-system-analysis/by-inspector/slack.md",
+   "sourceSha256": "0929429a8fe206714c6a2b3699ceecd31f92d38f5064d1b4a91934884961ceb2",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 17,
+   "useWhen": "Use this skill when the user wants a single-tenant analysis of a Slack workspace \u2014 user inventory, admin audit, 2FA posture, guest/restricted user count, channel hygiene (public/private/archived/externally-shared), user group inventory. Tri"
+  },
+  {
+   "name": "single-system-sonicwall",
+   "source": "recipes/single-system-analysis/by-inspector/sonicwall.md",
+   "sourceSha256": "fd76900d4468bcaa008860e505c7930ffd5829c12eaee7a00d64959f44d892e8",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 26,
+   "useWhen": "Use this skill when the user wants a single-firewall analysis of a SonicWall (SonicOS 6 or SonicOS 7 / Gen7) \u2014 Periodic Business Review, firewall configuration audit, license expiration, firmware audit, security-services posture, DHCP scope"
+  },
+  {
+   "name": "single-system-sonicwall-capture-client",
+   "source": "recipes/single-system-analysis/by-inspector/sonicwall-capture-client.md",
+   "sourceSha256": "6194596c55ff7429560a82c87dd141962363dde9b87c530d8c40c351a07ecb52",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 9,
+   "useWhen": "Use this skill when the user wants a single-system analysis of SonicWall Capture Client \u2014 endpoint deployment review, infection counts, license utilization. Trigger phrases: \"Capture Client report\", \"SCC PBR\", \"SonicWall EDR review\", \"pull "
+  },
+  {
+   "name": "single-system-sophos-central",
+   "source": "recipes/single-system-analysis/by-inspector/sophos-central.md",
+   "sourceSha256": "2da2ffa9832caba187f7341e48b5fb0620f7497473c42c9029add4c29a3759cf",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 17,
+   "useWhen": "Use this skill when the user wants a single-system analysis of a Sophos Central tenant \u2014 Periodic Business Review (PBR), endpoint deployment review, threat health audit, server vs. workstation breakdown. Trigger phrases: \"Sophos PBR\", \"Soph"
+  },
+  {
+   "name": "single-system-sophos-firewall",
+   "source": "recipes/single-system-analysis/by-inspector/sophos-firewall.md",
+   "sourceSha256": "2fe16e2fce4bfb832100768745aa9abe56b496bc6e6fa11ac608098d9dc6a14d",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 7,
+   "useWhen": "Use this skill when the user wants a single-firewall analysis of a Sophos XG / XGS firewall (NOT Sophos Central, NOT Sophos SG legacy) \u2014 Periodic Business Review, firmware audit, security-services posture (IPS, Gateway AV), firewall rule su"
+  },
+  {
+   "name": "single-system-sophos-sg",
+   "source": "recipes/single-system-analysis/by-inspector/sophos-sg.md",
+   "sourceSha256": "2df754490e32b1413e549a0dfb615a5d7d983ca7da18e4d33d7775af9d7bda7f",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 15,
+   "useWhen": "Use this skill when the user wants a single-firewall analysis of a Sophos SG (legacy UTM) appliance \u2014 PBR, configuration audit, license / subscription expiration, firmware audit, security-services posture, migration-to-XGS planning. Trigger"
+  },
+  {
+   "name": "single-system-storagecraft-spx",
+   "source": "recipes/single-system-analysis/by-inspector/storagecraft-spx.md",
+   "sourceSha256": "b8f1e79091da08496b4bb8ef2b166156a986a024a8550ac0ddc9d313c30f040a",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 5,
+   "useWhen": "Use this skill when the user wants a single-server analysis of a StorageCraft SPX installation \u2014 per-job backup status, retention policy, last-valid-backup time, license / product key audit. Unlike other backup inspectors, SPX inspects one "
+  },
+  {
+   "name": "single-system-syncro",
+   "source": "recipes/single-system-analysis/by-inspector/syncro.md",
+   "sourceSha256": "4569ad013b10acb170fc4d7055961de332f79ad745b10ced1e246866fc91dc72",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 6,
+   "useWhen": "Use this skill when the user wants a single-system analysis of a Syncro tenant \u2014 ticket volume + aging, SLA compliance, technician utilization, time-tracking + billing, RMM agent coverage (Syncro bundles RMM + PSA), contract / recurring-inv"
+  },
+  {
+   "name": "single-system-synology-nas",
+   "source": "recipes/single-system-analysis/by-inspector/synology-nas.md",
+   "sourceSha256": "d4eb46bc2c1141771ca61b98220dfe631e08f5f08acb29934cec4c9d68d9daba",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 24,
+   "useWhen": "Use this skill when the user wants a single-system assessment of a Synology NAS appliance. Trigger phrases: \"Synology NAS assessment for <customer>\", \"NAS storage health\", \"Synology disk health\", \"storage capacity report\", \"Synology user au"
+  },
+  {
+   "name": "single-system-ubiquiti-unifi",
+   "source": "recipes/single-system-analysis/by-inspector/ubiquiti-unifi.md",
+   "sourceSha256": "a609e069132e9324141e443ccd25874590cf2e3fb59f4d0b48a286d8b7941508",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 6,
+   "useWhen": "Use this skill when the user wants a single-controller analysis of a Ubiquiti UniFi deployment \u2014 PBR, controller version audit, AP / switch / gateway inventory, firmware audit, SSID + wireless security posture, guest-network audit, VLAN con"
+  },
+  {
+   "name": "single-system-veeam-availability-console",
+   "source": "recipes/single-system-analysis/by-inspector/veeam-availability-console.md",
+   "sourceSha256": "f1d404340738307dd268aa93463d8f405a90595a1615d3ad815e9e31d85231f3",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 5,
+   "useWhen": "Use this skill when the user wants a single-tenant analysis of a Veeam Availability Console \u2014 per-tenant backup job inventory, last-run status, repository capacity, agent inventory. VAC is Veeam's MSP-oriented orchestration product for mana"
+  },
+  {
+   "name": "single-system-veeam-service-provider-console",
+   "source": "recipes/single-system-analysis/by-inspector/veeam-service-provider-console.md",
+   "sourceSha256": "06195944b7ca3302c166501f39d6ecd2b26a5f2af0bbd539f9cbd771d3e0eb33",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 15,
+   "useWhen": "Use this skill when the user wants a single-tenant analysis of a Veeam Service Provider Console \u2014 per-tenant backup job inventory, last-run status, agent + cloud-tenant inventory. VSPC is Veeam's service-provider orchestration product (succ"
+  },
+  {
+   "name": "single-system-watchguard",
+   "source": "recipes/single-system-analysis/by-inspector/watchguard.md",
+   "sourceSha256": "64138be53312d0d6efd08ae5301fd23199f3945585aec3bfbdc7cd4b28c94dc3",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 29,
+   "useWhen": "Use this skill when the user wants a single-firewall analysis of a WatchGuard appliance \u2014 Periodic Business Review, configuration audit, license / subscription expiration, firmware audit, security-services posture, branch-office VPN posture"
+  },
+  {
+   "name": "single-system-watchman-monitoring",
+   "source": "recipes/single-system-analysis/by-inspector/watchman-monitoring.md",
+   "sourceSha256": "c64406e21ae4295790642f5a79b3122b12aea909a0bd35be85bc052d224c86f1",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 7,
+   "useWhen": "Use this recipe when the user wants a single-system analysis of a Watchman Monitoring account \u2014 macOS (and Windows) device inventory, missing/unreporting machine audit, agent-version drift, software expiration tracking, user 2FA posture, gr"
+  },
+  {
+   "name": "single-system-webroot",
+   "source": "recipes/single-system-analysis/by-inspector/webroot.md",
+   "sourceSha256": "745057d5c408015f4e17cf227d4743a656ac3be10c4e578cf72d182441b0ed80",
+   "type": "single-system",
+   "composes": [],
+   "metricCount": 4,
+   "useWhen": "Use this skill when the user wants a single-system analysis of a Webroot SecureAnywhere site \u2014 Periodic Business Review (PBR), endpoint deployment review, infection counts, deactivated-endpoint audit. Trigger phrases: \"Webroot PBR\", \"WSA re"
+  }
+ ],
+ "files": [
+  {
+   "path": "plans/single-system-active-directory.json",
+   "role": "plan",
+   "bytes": 4980,
+   "sha256": "b0257ba348503bdb3471c49ae347077a60985144ba07de8451b370bf9a425f2b",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/active-directory.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-active-directory.md",
+   "role": "recipe",
+   "bytes": 26539,
+   "sha256": "40697add88d60490387371b64376b6ff9c78ed6952cfc9a5bc9f2a2ab8888f95",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/active-directory.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-windows-server.json",
+   "role": "plan",
+   "bytes": 6765,
+   "sha256": "7eddc65d0175b9115d2a0e9c9fbe0837bdc80196c906e212f4b4b01e851707d8",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/windows-server.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-windows-server.md",
+   "role": "recipe",
+   "bytes": 12932,
+   "sha256": "6a6eda080cdd5dd5a32d202d55787b958132c6f8161d613a23d78e72311edb0f",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/windows-server.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-windows-workstation.json",
+   "role": "plan",
+   "bytes": 8172,
+   "sha256": "aaed63cd9b7896be1bd5a022e3a981af681a05584fa844aab192879e54f78fd1",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/windows-workstation.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-windows-workstation.md",
+   "role": "recipe",
+   "bytes": 11426,
+   "sha256": "e6d685eae0eab6b1894781c818698282bcecd16b995385961fc4dd43867379e0",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/windows-workstation.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-dark-web-monitoring.json",
+   "role": "plan",
+   "bytes": 1655,
+   "sha256": "1fec310de8f112a9e3c11750ed08c298bd38f5a3384149721b56837fab096757",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/dark-web-monitoring.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-dark-web-monitoring.md",
+   "role": "recipe",
+   "bytes": 18834,
+   "sha256": "26103320f00654103a730f9346144448a99ef9707d458cc66c90e8e3b4113d66",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/dark-web-monitoring.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-network-ip-address.json",
+   "role": "plan",
+   "bytes": 1487,
+   "sha256": "0c084191b435434e56a1dd2e7829b17629be2d5f3692517c9dde5356b39e2698",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/network-ip-address.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-network-ip-address.md",
+   "role": "recipe",
+   "bytes": 17555,
+   "sha256": "3aa37c365533c45df66335aea979900357286e7a60c7e68cd2d238aecb6fefd2",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/network-ip-address.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-internet-domain-dns.json",
+   "role": "plan",
+   "bytes": 6935,
+   "sha256": "7e003be49b765d29605730724318e6b3a32ae5916d0d83978359d0ca841adf60",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/internet-domain-dns.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-internet-domain-dns.md",
+   "role": "recipe",
+   "bytes": 29327,
+   "sha256": "3609ed4432fd01d28d63ecf9838f7442ee41063b304996f85b329d1a4c402a5e",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/internet-domain-dns.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-knowbe4.md",
+   "role": "recipe",
+   "bytes": 11694,
+   "sha256": "caf53eb5d1b44530d0fc7e23c8f31e12e87e71cf7bc8ff53832c3d6ea7f43bbb",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/knowbe4.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-tls-ssl.json",
+   "role": "plan",
+   "bytes": 4199,
+   "sha256": "cb04b57457357c06a3535e8a82903242b5e1a5326c37b6f5325e31bd492c49e4",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/tls-ssl.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-tls-ssl.md",
+   "role": "recipe",
+   "bytes": 20763,
+   "sha256": "e90c0bed5f1547733e38c6f7077aa67328bdde453fe3f2242e855a69a778119a",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/tls-ssl.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-microsoft-365.json",
+   "role": "plan",
+   "bytes": 6105,
+   "sha256": "1a932e1bcb7374788c921866f8f38eedd6b8dc88a0a4ab831abacd80589f18b9",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/microsoft-365.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-microsoft-365.md",
+   "role": "recipe",
+   "bytes": 15997,
+   "sha256": "c114758b5be09485c68f5fd2babf1f78495a5c9213118d068363014532b4966a",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/microsoft-365.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-acronis-cyber-protect-cloud.json",
+   "role": "plan",
+   "bytes": 4656,
+   "sha256": "08002bca996209ced8f2fc23ad2ade249853d210c2bbf4f5de2f93191cb70f96",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/acronis-cyber-protect-cloud.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-acronis-cyber-protect-cloud.md",
+   "role": "recipe",
+   "bytes": 14425,
+   "sha256": "901103420ced31e51581cd2991c9f202a370ec82e09ea8691b4c2f7f7f3938cd",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/acronis-cyber-protect-cloud.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-addigy-mdm.json",
+   "role": "plan",
+   "bytes": 2833,
+   "sha256": "4e9069481d87283ae34184d2e960fcbbad5db83a3f866e1d028ebf495a12d8ff",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/addigy.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-addigy-mdm.md",
+   "role": "recipe",
+   "bytes": 21793,
+   "sha256": "7aeff956d3594fcc74497f26d9a7757360758756557aa18bc5439e083202f76f",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/addigy.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-autotask.json",
+   "role": "plan",
+   "bytes": 1869,
+   "sha256": "a4071af32ca54ccc7f5924cb30ed4dabc9269a3a8856bb0951216bec6355d3c1",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/autotask.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-autotask.md",
+   "role": "recipe",
+   "bytes": 12175,
+   "sha256": "daf766c20762b423835a7e58c280eb8bdc6e505439fdf72cdef9400e37b74fa9",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/autotask.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-auvik.json",
+   "role": "plan",
+   "bytes": 6627,
+   "sha256": "f0f8798b820dee7f02ed57fbfa7f9de82248a0a2b1b5e037ee7a517cb64969a6",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/auvik.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-auvik.md",
+   "role": "recipe",
+   "bytes": 28215,
+   "sha256": "a8263bc84275fb4445ab067a217999a92b9ed73e99044c80c1d73281cbd92c07",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/auvik.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-aws.json",
+   "role": "plan",
+   "bytes": 4724,
+   "sha256": "b0d2306e725580273d85727fc72db7fec4d538a66bfac38bab7b16f7d4f2a15a",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/aws.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-aws.md",
+   "role": "recipe",
+   "bytes": 17377,
+   "sha256": "226756137d58bee161e8b8485f46d421e937d260ed002143ab9e00883c3efa18",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/aws.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-axcient-x360-recover.json",
+   "role": "plan",
+   "bytes": 9509,
+   "sha256": "a932da47b6d6725d99d1b576ded280618db25b8d48f7c55fed0cbc194b62bd81",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/axcient-x360-recover.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-axcient-x360-recover.md",
+   "role": "recipe",
+   "bytes": 15517,
+   "sha256": "3330736ee8ffa17077a4a0203a6f4c5f3471c9d770e1c0b851e12ee325d8fc61",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/axcient-x360-recover.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-azure.json",
+   "role": "plan",
+   "bytes": 2061,
+   "sha256": "2020f800ab15b1f9fe218d0446cb771da352e52b6173dbeffa6628715960dbb8",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/azure.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-azure.md",
+   "role": "recipe",
+   "bytes": 15907,
+   "sha256": "1e609467a0b0585e4a1c01a01a13782139f9f6983fa3eb618d25ae708da94a47",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/azure.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-barracuda-firewall.json",
+   "role": "plan",
+   "bytes": 3117,
+   "sha256": "7769f6cd48831437906d905d0326a9591b23e09dd1e2ceb0cbeb3d796ad58454",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/barracuda-firewall.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-barracuda-firewall.md",
+   "role": "recipe",
+   "bytes": 7754,
+   "sha256": "839e9b105203815c9f5191d3f416adb8c4a61288b0a9fec13011e72e878303b6",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/barracuda-firewall.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-bitdefender-gravityzone.json",
+   "role": "plan",
+   "bytes": 1145,
+   "sha256": "62a6455ca340351d89a46212067e4b4780565bfb1a3a61e1aea133e40a4d521f",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/bitdefender-gravityzone.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-bitdefender-gravityzone.md",
+   "role": "recipe",
+   "bytes": 7351,
+   "sha256": "c0b8ac17c7314cde725f431b408b3f39e4e3e7d37d10f36bedad59171566af57",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/bitdefender-gravityzone.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-box.json",
+   "role": "plan",
+   "bytes": 3603,
+   "sha256": "516808d15046ba8b9df9d8a66e15e2e06e544e5c773cc8994ebed4138a5b610f",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/box.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-box.md",
+   "role": "recipe",
+   "bytes": 10203,
+   "sha256": "2972f251a1ca7e2abcacd196b1d6c3606681ffda3524a5c30e160228fe59a968",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/box.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-cisco-asa.json",
+   "role": "plan",
+   "bytes": 2466,
+   "sha256": "63087c0d8396e644d5142778e60f784b30dadb352e3c2486cdf146e30b8476ce",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/cisco-asa.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-cisco-asa.md",
+   "role": "recipe",
+   "bytes": 10494,
+   "sha256": "655dc8e90cde1265fef548b46e6cd94280c7ab502215f265a24057516c81efe3",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/cisco-asa.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-cisco-ios.json",
+   "role": "plan",
+   "bytes": 1486,
+   "sha256": "4dd9a5bd9486587b7f8fd86bcc36750cc1f19215ce6299ec1670fe0d5ec0cc07",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/cisco-ios.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-cisco-ios.md",
+   "role": "recipe",
+   "bytes": 11791,
+   "sha256": "a3d41d91ec2ebdde80b0753198f159b62df15feb2aeb7d99945b55bc13ab5509",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/cisco-ios.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-cisco-meraki.json",
+   "role": "plan",
+   "bytes": 5023,
+   "sha256": "255a3d2d6777de09fbec1926e9d7c56aab047571b6119e2f9a89e3365468429e",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/cisco-meraki.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-cisco-meraki.md",
+   "role": "recipe",
+   "bytes": 18361,
+   "sha256": "69c318b62994623082ccd2af432a3240f5ce23434b18b51368c2ec4dff4c32de",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/cisco-meraki.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-cisco-sbs-switch.json",
+   "role": "plan",
+   "bytes": 3388,
+   "sha256": "512018c44f0bac00d821391c9229b1b8581590303affc3cd8cef5353fce92d27",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/cisco-sbs-switch.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-cisco-sbs-switch.md",
+   "role": "recipe",
+   "bytes": 9180,
+   "sha256": "ebcca00f8b27fd1ba092bdc11ec0072d61605010250dd860cb3f3669969eae3e",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/cisco-sbs-switch.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-cisco-umbrella.json",
+   "role": "plan",
+   "bytes": 3854,
+   "sha256": "02a0e3d0e9abdbb52c224698f19418f5ab78f01b7bbc7fff48a0a0eceee90a87",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/cisco-umbrella.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-cisco-umbrella.md",
+   "role": "recipe",
+   "bytes": 10509,
+   "sha256": "bba042c73585480bf844de5216fbf7e62cfa04e52866c431e96f3a1fdb720488",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/cisco-umbrella.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-cloudflare.json",
+   "role": "plan",
+   "bytes": 5804,
+   "sha256": "ff7bf8d0c7ae81a20b32895c356d25a57901842209e9b281de59a3e46eedf3fb",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/cloudflare.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-cloudflare.md",
+   "role": "recipe",
+   "bytes": 16372,
+   "sha256": "57d516b49ba64de7af7f5dc7a7820deeab81b2e1a8d606213f7f505d881c5630",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/cloudflare.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-connectwise-asio.json",
+   "role": "plan",
+   "bytes": 3082,
+   "sha256": "41501727f154d2030887335785dabd4c31d65d1d8b5c1b758eeb141d0e207af5",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/connectwise-asio.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-connectwise-asio.md",
+   "role": "recipe",
+   "bytes": 14952,
+   "sha256": "12cb4d8257d232c86ac881db9e891f48d67450c56942d24cbc45d02f0dac93e2",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/connectwise-asio.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-connectwise-automate.json",
+   "role": "plan",
+   "bytes": 814,
+   "sha256": "457bc1e0c4118ef7b331fc13c02befa3ce2c77b2dfa4e7c7554c6ff18d007bd6",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/connectwise-automate.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-connectwise-automate.md",
+   "role": "recipe",
+   "bytes": 8039,
+   "sha256": "584c39c46d37b125f7c3ddd43758b4fa8d57a2d1b57e6e3f3ba9a11436a832d5",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/connectwise-automate.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-connectwise-manage.json",
+   "role": "plan",
+   "bytes": 772,
+   "sha256": "f1d600308f728a2e105d19f48e229d67548740f33ed572b96b34744f55989bd0",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/connectwise-manage.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-connectwise-manage.md",
+   "role": "recipe",
+   "bytes": 9425,
+   "sha256": "fc9d4c9978874e1624bf5d42f2f5b3b91a25f46285f9414ea9d7420522a2484f",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/connectwise-manage.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-continuum-rmm.json",
+   "role": "plan",
+   "bytes": 5143,
+   "sha256": "42f160c206005ab888b6024b9153f19766fa578dc524b003ee48f2e6ca1cfe5d",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/continuum-rmm.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-continuum-rmm.md",
+   "role": "recipe",
+   "bytes": 23566,
+   "sha256": "df90ede02c2330e647fdca195172d6d2cce1f6088406319a271f8415fb5b8039",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/continuum-rmm.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-cove-data-protection.json",
+   "role": "plan",
+   "bytes": 7555,
+   "sha256": "742a870765729987c472817de499e6a2493f641a950ff661e740035073162675",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/cove-data-protection.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-cove-data-protection.md",
+   "role": "recipe",
+   "bytes": 12757,
+   "sha256": "07a513d129b8239a93807b420e088b68971dc0212667231fb7cfb9f26ec24386",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/cove-data-protection.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-crowdstrike.json",
+   "role": "plan",
+   "bytes": 3495,
+   "sha256": "91ad3e54e2430603766f353ebc815d6ee447b39b86fb363edf7c839068669217",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/crowdstrike.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-crowdstrike.md",
+   "role": "recipe",
+   "bytes": 9437,
+   "sha256": "21462d56fd25cd63d8388cce03c16ce5263cf87f2abec73ad439e83d38ab9b68",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/crowdstrike.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-datto-bcdr.json",
+   "role": "plan",
+   "bytes": 4590,
+   "sha256": "01b35abf8fb0bb11217d0b05295bbb63be2fba7fd08e4bf4bd088d18fde81342",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/datto-bcdr.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-datto-bcdr.md",
+   "role": "recipe",
+   "bytes": 13275,
+   "sha256": "f43fb7c3357eba53c42fb4999a97793723e1b2d962cc86d723c522e7c48c7e05",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/datto-bcdr.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-datto-networking.json",
+   "role": "plan",
+   "bytes": 3946,
+   "sha256": "028ac2da8b8f22749b1724958541b81f732d89a7e22299cd486e9f4719ead08b",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/datto-networking.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-datto-networking.md",
+   "role": "recipe",
+   "bytes": 19485,
+   "sha256": "be48b4f2057b17652d8fe023cc8b6b544e219e4c51f62284dcd6d053174ac5b6",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/datto-networking.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-datto-rmm.json",
+   "role": "plan",
+   "bytes": 782,
+   "sha256": "d435bd565c6d01a8c5a992ac982a4a79dffe225031e780e16d5373493ca1ee96",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/datto-rmm.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-datto-rmm.md",
+   "role": "recipe",
+   "bytes": 8272,
+   "sha256": "ef1f30fed2dac5adcfe7ed54a6bea5e97a93fb8db35fa07da4a22a5c6ae2726b",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/datto-rmm.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-domotz-network-monitoring.json",
+   "role": "plan",
+   "bytes": 2931,
+   "sha256": "e4fcdc94f3035f983104fcfc05cd2e6ba31ddc948f521440cefa1178051115b0",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/domotz.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-domotz-network-monitoring.md",
+   "role": "recipe",
+   "bytes": 23708,
+   "sha256": "2138ebb4a8cbd3644cb7d37bdd706444e709019d99be3a1678edc89193857e5b",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/domotz.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-dropbox.json",
+   "role": "plan",
+   "bytes": 1984,
+   "sha256": "79593786c1bfd5f80d9579e05c4f8ab62f74f103bcd7e060df48bdbd32c6dc90",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/dropbox.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-dropbox.md",
+   "role": "recipe",
+   "bytes": 8213,
+   "sha256": "0a9722ddfd66b7b8a7262300bc3e1f7424c3a421834fc1445d8d4064d8b2089f",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/dropbox.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-duo-security.json",
+   "role": "plan",
+   "bytes": 2834,
+   "sha256": "badc19fc7bce11c6bb4dc6e8a35b16c7b479cdefe9a078ca5663af129c6cc3e2",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/duo-security.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-duo-security.md",
+   "role": "recipe",
+   "bytes": 18846,
+   "sha256": "56a67664d1b6490cc15cdbb4069fedb4f259d9d4e89bc63a789d9a50d44ae3e6",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/duo-security.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-eset-licensing.json",
+   "role": "plan",
+   "bytes": 4402,
+   "sha256": "11ba4c98db6b8d4866f1185a76303191e13de3cce89f30f6001a004614ed3821",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/eset-licensing.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-eset-licensing.md",
+   "role": "recipe",
+   "bytes": 7033,
+   "sha256": "1e32a949398b97aa8f78111a28b093c992a38ae0158d6e6b8cf42aca06fb80b2",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/eset-licensing.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-fortinet-fortigate.json",
+   "role": "plan",
+   "bytes": 5938,
+   "sha256": "78b749204c9b2d9b7546fbe78ebe54af88f7308fed6a072fb443d3db5a55d151",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/fortinet-fortigate.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-fortinet-fortigate.md",
+   "role": "recipe",
+   "bytes": 11600,
+   "sha256": "88bb5c9da4cfebb1b48ce58c4f470150af54276ea9e570f0de74d38c877c0961",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/fortinet-fortigate.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-godaddy.json",
+   "role": "plan",
+   "bytes": 3530,
+   "sha256": "0424b8d1ed9fa17b5b6ed3ceb58a0b9aeac2e58fe750287d4353606c6e2f9f01",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/godaddy.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-godaddy.md",
+   "role": "recipe",
+   "bytes": 10394,
+   "sha256": "285ea1bbf8815a11f3fed8fc14e71c2132989cbeb1fecbef811c7ca100c65af7",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/godaddy.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-google-drive.json",
+   "role": "plan",
+   "bytes": 4183,
+   "sha256": "78b0214f619779379fab3827faaf707d4276d7db4cbc0d1bccf4cac638378b70",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/google-drive.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-google-drive.md",
+   "role": "recipe",
+   "bytes": 9669,
+   "sha256": "519961b8f1b984bf83e9c28606ed8008678f4fba9ba02a1afd928ab9f4215c83",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/google-drive.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-google-workspace.json",
+   "role": "plan",
+   "bytes": 2396,
+   "sha256": "e9b0dd1d93fb22fefe6507a660822b2ae5a5e5068396248909a962d8dceab941",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/google-workspace.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-google-workspace.md",
+   "role": "recipe",
+   "bytes": 15602,
+   "sha256": "9a4bc420bfcce3421ac886ebb3f9aec61300c26e76ef997332b3988121a92a84",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/google-workspace.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-halopsa.json",
+   "role": "plan",
+   "bytes": 4057,
+   "sha256": "d2c840d53c6a8fc327f3accbe655e27882db6007b519a42057e6b752f5ec0871",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/halopsa.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-halopsa.md",
+   "role": "recipe",
+   "bytes": 7356,
+   "sha256": "9a5ea960c3e384afc945f7f266189169c2577a121fbc0c26a9a4edebf5c52f5e",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/halopsa.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-hp-procurve.json",
+   "role": "plan",
+   "bytes": 6055,
+   "sha256": "1dc25412b474fdf06b5fd974ef0de2a5704f5adf83ab6dfad6ff73988f1ae383",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/hp-procurve.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-hp-procurve.md",
+   "role": "recipe",
+   "bytes": 8585,
+   "sha256": "f7066d6c75156119a149587ff089b6e891afc723335a3c81c71a9a5a16497227",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/hp-procurve.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-huntress.json",
+   "role": "plan",
+   "bytes": 3214,
+   "sha256": "04c31cca411ebaca9faaeb8396420a8da8e55a1cd9af119a92e4367967dae13c",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/huntress.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-huntress.md",
+   "role": "recipe",
+   "bytes": 10693,
+   "sha256": "e12a10942f0d19625da44e2bdfe7d8704c304ed072b8be1ac9a83d6dd14be712",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/huntress.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-itglue.json",
+   "role": "plan",
+   "bytes": 3245,
+   "sha256": "e976ced4547ae23c3a0ec539091982ff0a35bf0b18542494f54b82ebd114f73a",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/itglue.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-itglue.md",
+   "role": "recipe",
+   "bytes": 12754,
+   "sha256": "f40f15c17a2feb6624ddd3873cf96dd11998726fe4e273218f5c8f70a31d6787",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/itglue.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-jumpcloud.json",
+   "role": "plan",
+   "bytes": 4222,
+   "sha256": "7c645faf434f2d50ede7dc244e1b5ea1e9443249659cd45182a8c87b63ea15cf",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/jumpcloud.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-jumpcloud.md",
+   "role": "recipe",
+   "bytes": 16635,
+   "sha256": "8175d964b35b297e47a3ca843b80881123cdcd5f2fc11f82f572a779ca024250",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/jumpcloud.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-junos.json",
+   "role": "plan",
+   "bytes": 416,
+   "sha256": "36ead2e40c86193d2728fb404bec04625849af30c8d64075d9233f7f70d4cd55",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/junos.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-junos.md",
+   "role": "recipe",
+   "bytes": 9823,
+   "sha256": "62792c3dcf56ffb0414f3f44033b75ef9d5ecbb71e28e99ce24a9673ca278863",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/junos.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-kaseya-bms.json",
+   "role": "plan",
+   "bytes": 2241,
+   "sha256": "d12a5f2158821dd6670d854339c9d8a8574f50bc6a3d42fa38bc65fee2505c18",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/kaseya-bms.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-kaseya-bms.md",
+   "role": "recipe",
+   "bytes": 7016,
+   "sha256": "beab96bec28f1d6971653cd3e237ae0a8ebc69778ccde6ab92235a35d9c55a88",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/kaseya-bms.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-kaseya-vsa.json",
+   "role": "plan",
+   "bytes": 1945,
+   "sha256": "62ac8417ecaf3ef12281a38c22b183387fd43507f8eed0dce7e8132614b1044c",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/kaseya-vsa.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-kaseya-vsa.md",
+   "role": "recipe",
+   "bytes": 8852,
+   "sha256": "5bd5bcc47e660f7788279421e82dcc683faa15b0fd375333ee94590243ba2b5c",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/kaseya-vsa.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-linux.md",
+   "role": "recipe",
+   "bytes": 7278,
+   "sha256": "276303db2e78b0df2845467b62f51c3adc2526d6231571bd54b065ac7b31cfa1",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/linux.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-macos.md",
+   "role": "recipe",
+   "bytes": 7702,
+   "sha256": "134186be5f73caca50edc9eb59a09ddb5d9e147bc6cf9a69bb0b44de5b3b5fe7",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/macos.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-managed-printer.json",
+   "role": "plan",
+   "bytes": 3436,
+   "sha256": "3b0033eaa1297e9711e57544a0252d57fbe117f241cb96fd7da9282a1c5c2724",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/managed-printer.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-managed-printer.md",
+   "role": "recipe",
+   "bytes": 16994,
+   "sha256": "681c522b9af8254ce7af2b283c5fc188ca9b3769e454dd78e8014226ca434894",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/managed-printer.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-n-able-n-central.json",
+   "role": "plan",
+   "bytes": 7380,
+   "sha256": "9b4ababe8cc6c41b52dc6cd87aec355bafc972b28c8bded8e79ba00c6dee63ef",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/n-able-n-central.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-n-able-n-central.md",
+   "role": "recipe",
+   "bytes": 8605,
+   "sha256": "a0dcb38567a7415f252ecde320e047e717ed0d8ca8491ac4fe5ee75f06383756",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/n-able-n-central.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-nable-rmm.json",
+   "role": "plan",
+   "bytes": 2126,
+   "sha256": "edbb55136087d942f6b7b29cc70440b34ad8636483a2004da08f31a5566f29c9",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/nable-rmm.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-nable-rmm.md",
+   "role": "recipe",
+   "bytes": 17564,
+   "sha256": "5a92ba7677d73110ee758e3fbad5062e8d3a24daa917bd5ef906193281372f0d",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/nable-rmm.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-network-discovery.json",
+   "role": "plan",
+   "bytes": 3297,
+   "sha256": "61c1689c9c739ea99043f70d38da3eb31842bdcc561bd225870332e097eb4c0a",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/network-discovery.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-network-discovery.md",
+   "role": "recipe",
+   "bytes": 22192,
+   "sha256": "8640eb29fbea5961a21343b78fb4befbc48acbf4bb881b97ed6b880fc1ef3021",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/network-discovery.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-ninjaone.json",
+   "role": "plan",
+   "bytes": 13478,
+   "sha256": "7a036bb5b1b960029bd3de5c56059f91ebd3d11ffb447a6982c8ef319efcabf4",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/ninjaone.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-ninjaone.md",
+   "role": "recipe",
+   "bytes": 35453,
+   "sha256": "ead413558b6077a1589b7197ef2d472c97cbf03c86eaa98aafae9d9c98006ad3",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/ninjaone.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-onelogin.json",
+   "role": "plan",
+   "bytes": 4789,
+   "sha256": "ee93f52821f27fa51ca748254dad8c1166a6517455586af4f2458636af76dbcf",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/onelogin.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-onelogin.md",
+   "role": "recipe",
+   "bytes": 9560,
+   "sha256": "a75ef9e4af10bf222c774ef1f4ca2f027973cd325cb43a21fa3033cdc814f1aa",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/onelogin.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-palo-alto-panos.json",
+   "role": "plan",
+   "bytes": 3928,
+   "sha256": "e8dba122948ad0b80783215e8351aeac43a453d68580058f422aa0ec70166188",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/palo-alto-panos.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-palo-alto-panos.md",
+   "role": "recipe",
+   "bytes": 10104,
+   "sha256": "df602f158f777040ddd93153b6f8fcfc0e191b8bb3c29a08cc1e8bec19c531d3",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/palo-alto-panos.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-pfsense.json",
+   "role": "plan",
+   "bytes": 7014,
+   "sha256": "13966b30de17823133e64253cc770fc7c0cc79b238716af807fc9320b821e461",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/pfsense.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-pfsense.md",
+   "role": "recipe",
+   "bytes": 9253,
+   "sha256": "a63819ab27064b907b06bee3526b8f2831cbac7df99bf28e215b9d5933f533f2",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/pfsense.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-sentinelone.json",
+   "role": "plan",
+   "bytes": 4980,
+   "sha256": "2469463b20e06284ed9ba0d79885ee967b719ce7af931aa2b16d13b66d030c4a",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/sentinelone.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-sentinelone.md",
+   "role": "recipe",
+   "bytes": 14213,
+   "sha256": "7491d34d127a47423dfb30153e099042fdd542863dd6dcf343df66292332e474",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/sentinelone.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-slack.json",
+   "role": "plan",
+   "bytes": 5009,
+   "sha256": "0c61bdf67a8d2211d83f45d602694b749a6bbe92b54f4570b19310193b227f78",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/slack.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-slack.md",
+   "role": "recipe",
+   "bytes": 18234,
+   "sha256": "3db9796ab1f96c0fe88778835b2b6b0d461cf94a30b94f98f78835e0275e13c6",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/slack.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-sonicwall.json",
+   "role": "plan",
+   "bytes": 8218,
+   "sha256": "29ae2326d36679b777fb4666369a9b73d0d53a5534636a4d8fecd25200b628cb",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/sonicwall.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-sonicwall.md",
+   "role": "recipe",
+   "bytes": 17668,
+   "sha256": "e2e2047d5e1a49bef6a768df35442c16fbc203f14b191868ec0cae4fc6079247",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/sonicwall.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-sonicwall-capture-client.json",
+   "role": "plan",
+   "bytes": 2490,
+   "sha256": "0689518a52b43f956e4305fa59d7ae729d71efe06c9e8d68cd63350628a7bbde",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/sonicwall-capture-client.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-sonicwall-capture-client.md",
+   "role": "recipe",
+   "bytes": 5939,
+   "sha256": "7191aa6b65d47c8226594f48bca3175206d42cc20789befa80db26538511a734",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/sonicwall-capture-client.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-sophos-central.json",
+   "role": "plan",
+   "bytes": 6031,
+   "sha256": "1617957305da6c70f9aa6233d6d3fa699e242220d2971cc19d6e38c4b313bcf8",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/sophos-central.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-sophos-central.md",
+   "role": "recipe",
+   "bytes": 8025,
+   "sha256": "b1e5405155409e096d68402e1b41bfb7ee12fa8af4842a21e3d696ed926f891e",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/sophos-central.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-sophos-firewall.json",
+   "role": "plan",
+   "bytes": 2200,
+   "sha256": "1fbd52333a14ee55a7bd34031eeabe319a20e5c178b1ce35bc3f8b933c1f6d26",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/sophos-firewall.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-sophos-firewall.md",
+   "role": "recipe",
+   "bytes": 9583,
+   "sha256": "7d855814c7eae0e193d6e5e0e76ebaf5ba84ce85fc957e4bd4c3a77ce24312f0",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/sophos-firewall.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-sophos-sg.json",
+   "role": "plan",
+   "bytes": 4204,
+   "sha256": "6195b559c6f133e9bf573a0b6976e12ec3d5a92ac669394a31272fd42ab12765",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/sophos-sg.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-sophos-sg.md",
+   "role": "recipe",
+   "bytes": 9264,
+   "sha256": "799f4498545097923d5d036ecd8742ad57084a34cd9389bf77f5f80de16a749f",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/sophos-sg.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-storagecraft-spx.json",
+   "role": "plan",
+   "bytes": 1688,
+   "sha256": "85777620edd31f49ce1045f9201af61196bedad097ea8c70c810c2e80a38a8a7",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/storagecraft-spx.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-storagecraft-spx.md",
+   "role": "recipe",
+   "bytes": 9703,
+   "sha256": "75e767e7aaa4d307efbd4ed2978b7f82309e02814116615dfaa7acf7a0da8472",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/storagecraft-spx.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-syncro.json",
+   "role": "plan",
+   "bytes": 2458,
+   "sha256": "ba0db8a6f6677fc82794a0392365ab5c1ac6f494ccdc34d6c3f74549d60e49af",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/syncro.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-syncro.md",
+   "role": "recipe",
+   "bytes": 7833,
+   "sha256": "d4e3a3e4eaa95546de5813856aaa895a2399f2ea011da8e10bab358b58449d25",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/syncro.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-synology-nas.json",
+   "role": "plan",
+   "bytes": 9050,
+   "sha256": "64bb5f7f2200c029dd728ed094de200d646f6ec8cd5753133c92feeef0e32207",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/synology-nas.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-synology-nas.md",
+   "role": "recipe",
+   "bytes": 18908,
+   "sha256": "51cb1e1b0ccf5b42fad1808836fc99ce0ef04b09d35eb9d36f4d68f915b6551f",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/synology-nas.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-ubiquiti-unifi.json",
+   "role": "plan",
+   "bytes": 1669,
+   "sha256": "b08ee41be3bf52b0ccc13d9d73463f37dce168dbe27339340572765726a99211",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/ubiquiti-unifi.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-ubiquiti-unifi.md",
+   "role": "recipe",
+   "bytes": 10784,
+   "sha256": "5135538c759295d735feedeabb0ed7d4b564fee8e0a2f9ad63d33fe75e634188",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/ubiquiti-unifi.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-veeam-availability-console.json",
+   "role": "plan",
+   "bytes": 1751,
+   "sha256": "547a2a87907a5dc766476efa74575877cadd9f7301435b5d74f00e1acc1a50b0",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/veeam-availability-console.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-veeam-availability-console.md",
+   "role": "recipe",
+   "bytes": 10196,
+   "sha256": "675fc7d588303584af4aec91045365400d3bb7d020359fc95d23a2e62b4a6723",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/veeam-availability-console.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-veeam-service-provider-console.json",
+   "role": "plan",
+   "bytes": 5629,
+   "sha256": "fa6aa6b92bd76ed463d44fdcf10250f87b0f7d9e3ccc2c4098a9bfa57dc463c5",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/veeam-service-provider-console.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-veeam-service-provider-console.md",
+   "role": "recipe",
+   "bytes": 8516,
+   "sha256": "3a119dcc447af3a33a95bb334f163feb8f8d8bf5ae25a1f052a8adf0ae5558c7",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/veeam-service-provider-console.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-watchguard.json",
+   "role": "plan",
+   "bytes": 10957,
+   "sha256": "bd2994d1d02a42bc143d629cfbc519e06e753c66438fdd4f81aa6d0eb6719948",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/watchguard.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-watchguard.md",
+   "role": "recipe",
+   "bytes": 9744,
+   "sha256": "0cde475d8043944ecbb8b3a37cd946a3a84924e2463b0cabf2deafdd14564427",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/watchguard.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-watchman-monitoring.json",
+   "role": "plan",
+   "bytes": 4190,
+   "sha256": "df19cad768695d6e72a25a8c2b43faacdd1344678afa6e6c9cbd30ba9cca93bb",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/watchman-monitoring.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-watchman-monitoring.md",
+   "role": "recipe",
+   "bytes": 22915,
+   "sha256": "79f40c2f000df211cf933646d9c8a2e78332bc471a2f2083876883e36bc330b9",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/watchman-monitoring.md"
+   ]
+  },
+  {
+   "path": "plans/single-system-webroot.json",
+   "role": "plan",
+   "bytes": 1369,
+   "sha256": "729ebd74f8eea71aef94523d55ee40f991676ea5f38feac2bc626fbcd0590be0",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/webroot.md"
+   ]
+  },
+  {
+   "path": "recipes/single-system-webroot.md",
+   "role": "recipe",
+   "bytes": 6051,
+   "sha256": "32ec37feb96235565cb8f5c04caf7a7657e4a011118bbfa1b19c04e0a48b1eb0",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/webroot.md"
+   ]
+  },
+  {
+   "path": "references/inspector-aliases.md",
+   "role": "reference",
+   "bytes": 19874,
+   "sha256": "2b0f961fdfd32deaf532da7bd162a3ac96667f5d30863e1e660daf31f4b3d557",
+   "sources": [
+    "reference/inspector-aliases.md"
+   ]
+  },
+  {
+   "path": "references/asset-fields.md",
+   "role": "reference",
+   "bytes": 21313,
+   "sha256": "c3b0802b014d361f74ccfa215a74260a1c90de3aeba5d0de8de10febf615f125",
+   "sources": [
+    "reference/asset-fields.md"
+   ]
+  },
+  {
+   "path": "references/qa-retry-pattern.md",
+   "role": "reference",
+   "bytes": 10542,
+   "sha256": "6f9ae526519b6891a393cf68fa589578aa3bd4300733473f2a73cd8bc39e4aa2",
+   "sources": [
+    "reference/qa-retry-pattern.md"
+   ]
+  },
+  {
+   "path": "references/msp-config.yaml",
+   "role": "reference",
+   "bytes": 11815,
+   "sha256": "416d1913eec2a4e035308be5a406b540bb8a963986f5045634714ac7089fe445",
+   "sources": [
+    "config/msp-config.yaml"
+   ]
+  },
+  {
+   "path": "recipes/index.md",
+   "role": "catalog",
+   "bytes": 26439,
+   "sha256": "daf9ae0f8803d54accceb9e585cf28e6e523d53d54417ea004de05491e0aded0",
+   "sources": [
+    "recipes/single-system-analysis/by-inspector/active-directory.md",
+    "recipes/single-system-analysis/by-inspector/windows-server.md",
+    "recipes/single-system-analysis/by-inspector/windows-workstation.md",
+    "recipes/single-system-analysis/by-inspector/dark-web-monitoring.md",
+    "recipes/single-system-analysis/by-inspector/network-ip-address.md",
+    "recipes/single-system-analysis/by-inspector/internet-domain-dns.md",
+    "recipes/single-system-analysis/by-inspector/knowbe4.md",
+    "recipes/single-system-analysis/by-inspector/tls-ssl.md",
+    "recipes/single-system-analysis/by-inspector/microsoft-365.md",
+    "recipes/single-system-analysis/by-inspector/acronis-cyber-protect-cloud.md",
+    "recipes/single-system-analysis/by-inspector/addigy.md",
+    "recipes/single-system-analysis/by-inspector/autotask.md",
+    "recipes/single-system-analysis/by-inspector/auvik.md",
+    "recipes/single-system-analysis/by-inspector/aws.md",
+    "recipes/single-system-analysis/by-inspector/axcient-x360-recover.md",
+    "recipes/single-system-analysis/by-inspector/azure.md",
+    "recipes/single-system-analysis/by-inspector/barracuda-firewall.md",
+    "recipes/single-system-analysis/by-inspector/bitdefender-gravityzone.md",
+    "recipes/single-system-analysis/by-inspector/box.md",
+    "recipes/single-system-analysis/by-inspector/cisco-asa.md",
+    "recipes/single-system-analysis/by-inspector/cisco-ios.md",
+    "recipes/single-system-analysis/by-inspector/cisco-meraki.md",
+    "recipes/single-system-analysis/by-inspector/cisco-sbs-switch.md",
+    "recipes/single-system-analysis/by-inspector/cisco-umbrella.md",
+    "recipes/single-system-analysis/by-inspector/cloudflare.md",
+    "recipes/single-system-analysis/by-inspector/connectwise-asio.md",
+    "recipes/single-system-analysis/by-inspector/connectwise-automate.md",
+    "recipes/single-system-analysis/by-inspector/connectwise-manage.md",
+    "recipes/single-system-analysis/by-inspector/continuum-rmm.md",
+    "recipes/single-system-analysis/by-inspector/cove-data-protection.md",
+    "recipes/single-system-analysis/by-inspector/crowdstrike.md",
+    "recipes/single-system-analysis/by-inspector/datto-bcdr.md",
+    "recipes/single-system-analysis/by-inspector/datto-networking.md",
+    "recipes/single-system-analysis/by-inspector/datto-rmm.md",
+    "recipes/single-system-analysis/by-inspector/domotz.md",
+    "recipes/single-system-analysis/by-inspector/dropbox.md",
+    "recipes/single-system-analysis/by-inspector/duo-security.md",
+    "recipes/single-system-analysis/by-inspector/eset-licensing.md",
+    "recipes/single-system-analysis/by-inspector/fortinet-fortigate.md",
+    "recipes/single-system-analysis/by-inspector/godaddy.md",
+    "recipes/single-system-analysis/by-inspector/google-drive.md",
+    "recipes/single-system-analysis/by-inspector/google-workspace.md",
+    "recipes/single-system-analysis/by-inspector/halopsa.md",
+    "recipes/single-system-analysis/by-inspector/hp-procurve.md",
+    "recipes/single-system-analysis/by-inspector/huntress.md",
+    "recipes/single-system-analysis/by-inspector/itglue.md",
+    "recipes/single-system-analysis/by-inspector/jumpcloud.md",
+    "recipes/single-system-analysis/by-inspector/junos.md",
+    "recipes/single-system-analysis/by-inspector/kaseya-bms.md",
+    "recipes/single-system-analysis/by-inspector/kaseya-vsa.md",
+    "recipes/single-system-analysis/by-inspector/linux.md",
+    "recipes/single-system-analysis/by-inspector/macos.md",
+    "recipes/single-system-analysis/by-inspector/managed-printer.md",
+    "recipes/single-system-analysis/by-inspector/n-able-n-central.md",
+    "recipes/single-system-analysis/by-inspector/nable-rmm.md",
+    "recipes/single-system-analysis/by-inspector/network-discovery.md",
+    "recipes/single-system-analysis/by-inspector/ninjaone.md",
+    "recipes/single-system-analysis/by-inspector/onelogin.md",
+    "recipes/single-system-analysis/by-inspector/palo-alto-panos.md",
+    "recipes/single-system-analysis/by-inspector/pfsense.md",
+    "recipes/single-system-analysis/by-inspector/sentinelone.md",
+    "recipes/single-system-analysis/by-inspector/slack.md",
+    "recipes/single-system-analysis/by-inspector/sonicwall.md",
+    "recipes/single-system-analysis/by-inspector/sonicwall-capture-client.md",
+    "recipes/single-system-analysis/by-inspector/sophos-central.md",
+    "recipes/single-system-analysis/by-inspector/sophos-firewall.md",
+    "recipes/single-system-analysis/by-inspector/sophos-sg.md",
+    "recipes/single-system-analysis/by-inspector/storagecraft-spx.md",
+    "recipes/single-system-analysis/by-inspector/syncro.md",
+    "recipes/single-system-analysis/by-inspector/synology-nas.md",
+    "recipes/single-system-analysis/by-inspector/ubiquiti-unifi.md",
+    "recipes/single-system-analysis/by-inspector/veeam-availability-console.md",
+    "recipes/single-system-analysis/by-inspector/veeam-service-provider-console.md",
+    "recipes/single-system-analysis/by-inspector/watchguard.md",
+    "recipes/single-system-analysis/by-inspector/watchman-monitoring.md",
+    "recipes/single-system-analysis/by-inspector/webroot.md"
+   ]
+  },
+  {
+   "path": "SKILL.md",
+   "role": "skill",
+   "bytes": 5532,
+   "sha256": "c60f43793be3bdcb2d0f0cea68d3f9de40a414ebe39a573dcc4b33f42dc01de8",
+   "sources": [
+    "copilot/templates/skill-instructions.md"
+   ]
+  }
+ ],
+ "warnings": []
+}

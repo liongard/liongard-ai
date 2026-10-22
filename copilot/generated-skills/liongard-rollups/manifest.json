@@ -1,0 +1,529 @@
+{
+ "schemaVersion": 1,
+ "skill": "liongard-rollups",
+ "recipes": [
+  {
+   "name": "all-cloud-infrastructure",
+   "source": "recipes/system-type-assessment/all-cloud-infrastructure.md",
+   "sourceSha256": "f3435cb9c82097e16b66ed76e69737304adbee1382cdefbefc805afb0595cc29",
+   "type": "same-type rollup",
+   "composes": [],
+   "metricCount": 30,
+   "useWhen": "Use this skill when the user wants a cross-cloud infrastructure assessment spanning AWS accounts, Azure subscriptions, and Google Workspace tenants \u2014 multi-account IAM posture, encryption and logging status, public-access exposure, security"
+  },
+  {
+   "name": "system-type-all-backups",
+   "source": "recipes/system-type-assessment/all-backups.md",
+   "sourceSha256": "a60c48070e5fafbf1cd5fa9bab8d2ede0aa91ef2a3671dca036a42bb4305ad91",
+   "type": "same-type rollup",
+   "composes": [],
+   "metricCount": 126,
+   "useWhen": "Use this skill when the user wants a unified backup-coverage assessment across an environment \u2014 which servers / endpoints / VMs are protected, which aren't, last-valid-backup date per protected asset, failed-backup trend, and backup-vendor "
+  },
+  {
+   "name": "system-type-all-domains",
+   "source": "recipes/system-type-assessment/all-domains.md",
+   "sourceSha256": "a13e9c2841349db85641494abd83ab7e74c21e208792fc258342caebecb282ac",
+   "type": "same-type rollup",
+   "composes": [],
+   "metricCount": 46,
+   "useWhen": "Use this skill when the user wants a Domain & DNS inventory across an environment \u2014 domain expiration roadmap, registrar consolidation, DMARC health audit, email-vs-website detection, IP / ASN / hosting footprint. Trigger phrases: \"domain i"
+  },
+  {
+   "name": "system-type-all-edrs",
+   "source": "recipes/system-type-assessment/all-edrs.md",
+   "sourceSha256": "69f6b5f725ebb6c04005f7450a832be8d3cd013b0a30d2a73ea34e2cfc61b2a3",
+   "type": "same-type rollup",
+   "composes": [],
+   "metricCount": 80,
+   "useWhen": "Use this skill when the user wants a unified EDR posture across every EDR deployed in an environment \u2014 fleet view of agent counts, coverage gaps, active threats, and per-vendor health. Trigger phrases: \"EDR fleet review\", \"all-EDR coverage "
+  },
+  {
+   "name": "system-type-all-endpoints",
+   "source": "recipes/system-type-assessment/all-endpoints.md",
+   "sourceSha256": "0dcbdf41e2d405079240da854e54d481aa5eb68c8fd245876f567f0f34b451b8",
+   "type": "same-type rollup",
+   "composes": [],
+   "metricCount": 48,
+   "useWhen": "Use this skill when the user wants a unified endpoint inventory across every OS \u2014 Windows Server, Windows Workstation, macOS, Linux. Trigger phrases: \"endpoint inventory for <CUSTOMER>\", \"all endpoints report\", \"fleet OS breakdown\", \"device"
+  },
+  {
+   "name": "system-type-all-firewalls",
+   "source": "recipes/system-type-assessment/all-firewalls.md",
+   "sourceSha256": "57247cc7349c4d0ed62301b514862159e425541291ea04007dd9883847d86288",
+   "type": "same-type rollup",
+   "composes": [],
+   "metricCount": 152,
+   "useWhen": "Use this skill when the user wants a unified firewall posture across every firewall vendor deployed in an environment \u2014 fleet view of firmware status, license expirations, default-credential audits, WAN-management exposure, site-to-site VPN"
+  },
+  {
+   "name": "system-type-all-identity-providers",
+   "source": "recipes/system-type-assessment/all-identity-providers.md",
+   "sourceSha256": "da277cfe0e3945a2aaa626c6d3e2972752a6e0a1ef95383b5a0ac92b1c85807d",
+   "type": "same-type rollup",
+   "composes": [],
+   "metricCount": 90,
+   "useWhen": "Use this skill when the user wants a unified identity posture assessment across all identity providers in an environment \u2014 Microsoft 365 (Entra ID), Active Directory, JumpCloud, OneLogin, and Duo Security. Trigger phrases: \"identity posture"
+  },
+  {
+   "name": "system-type-all-network-infrastructure",
+   "source": "recipes/system-type-assessment/all-network-infrastructure.md",
+   "sourceSha256": "2fcd650aee6afd0d9935b562103eee53a8cfa55bc4f6ca7553f5f9e91cd5aaae",
+   "type": "same-type rollup",
+   "composes": [],
+   "metricCount": 49,
+   "useWhen": "Use this skill when the user wants a unified network-infrastructure posture assessment across switches, routers, and wireless controllers in an environment \u2014 Cisco IOS / IOS-XE, Cisco SBS, HP ProCurve / Aruba, Junos (EX / MX / QFX), Ubiquit"
+  },
+  {
+   "name": "system-type-windows-patching",
+   "source": "recipes/system-type-assessment/all-windows-patching.md",
+   "sourceSha256": "d590c47678f0a4c95b17d5568407f8996dc87d58094a4186a25213b196bb8666",
+   "type": "same-type rollup",
+   "composes": [],
+   "metricCount": 91,
+   "useWhen": "Use this skill when the user wants a cross-system patching summary for an environment \u2014 Windows patching compliance across all servers and workstations, per-class breakdown (server / laptop / workstation), top unpatched devices, Windows 11 "
+  },
+  {
+   "name": "system-type-all-external-attack-surface",
+   "source": "recipes/system-type-assessment/all-external-attack-surface.md",
+   "sourceSha256": "e46352e70bdfc8b661d2f30048faa83b66416fd837eb96e3d738636d77548889",
+   "type": "same-type rollup",
+   "composes": [],
+   "metricCount": 59,
+   "useWhen": "Use this skill when the user wants a whole-environment external attack surface posture assessment \u2014 the combined story across Internet Domain / DNS, TLS/SSL Certificates, Network IP Address, and Dark Web Monitoring inspectors. Trigger phras"
+  },
+  {
+   "name": "system-type-all-hypervisors",
+   "source": "recipes/system-type-assessment/all-hypervisors.md",
+   "sourceSha256": "6f3c2a209c2c974f26ac053493e4f8a99dbc2c62bc94ff26b122932fd9f7a2e4",
+   "type": "same-type rollup",
+   "composes": [],
+   "metricCount": 0,
+   "useWhen": "Use this skill when the user wants a unified hypervisor stack assessment \u2014 VMware ESXi, VMware vCenter, and Hyper-V hosts together with their VM-to-host topology, datastore / storage health, capacity, license expiry, snapshot hygiene, HA / "
+  },
+  {
+   "name": "system-type-all-servers",
+   "source": "recipes/system-type-assessment/all-servers.md",
+   "sourceSha256": "2b9aa4ded69bf617b0ee1f469c57446ebf3ceeda3f00b3d2240360d0eebf5453",
+   "type": "same-type rollup",
+   "composes": [],
+   "metricCount": 23,
+   "useWhen": "Use this skill when the user wants a server-class assessment across an environment \u2014 Windows Servers + Linux servers (and server-class macOS where applicable). Scope is server-tier concerns: role inventory, role consolidation (blast-radius)"
+  },
+  {
+   "name": "system-type-all-cloud-storage",
+   "source": "recipes/system-type-assessment/all-cloud-storage.md",
+   "sourceSha256": "565dfcc29e29a1c4522b979cb4fb9572c7d0cf9b270c22afa9b1d2caad61518a",
+   "type": "same-type rollup",
+   "composes": [],
+   "metricCount": 43,
+   "useWhen": "Use this skill when the user wants a unified cloud-storage assessment across all platforms in an environment \u2014 Box, Dropbox, Google Drive, and OneDrive (via the Microsoft 365 inspector). Trigger phrases: \"cloud storage posture for <customer"
+  },
+  {
+   "name": "system-type-all-firewalls-firmware-currency",
+   "source": "recipes/system-type-assessment/all-firewalls-firmware-currency.md",
+   "sourceSha256": "0acab99628611a43fbd63baeb7788dc7db4b80f4d76f7a85482f0704941c27a5",
+   "type": "same-type rollup",
+   "composes": [],
+   "metricCount": 11,
+   "useWhen": "Use this skill when the user wants to inventory every firewall in an environment, read each device's model and installed firmware/OS version from Liongard, compare those against the most current firmware available online, and produce a prio"
+  },
+  {
+   "name": "system-type-all-network-monitoring",
+   "source": "recipes/system-type-assessment/all-network-monitoring.md",
+   "sourceSha256": "21b0a2aabd6a8cd0a0600e2506b4a1b9d52949ef5ad44132985f44fce2477363",
+   "type": "same-type rollup",
+   "composes": [],
+   "metricCount": 46,
+   "useWhen": "Use this skill when the user wants a unified network-monitoring and device-discovery posture across all network monitoring tools deployed at the customer \u2014 Auvik, Domotz, Datto Networking, and Liongard's built-in Network Discovery agent. Tr"
+  },
+  {
+   "name": "system-type-all-psa-platforms",
+   "source": "recipes/system-type-assessment/all-psa-platforms.md",
+   "sourceSha256": "03eb28aa85088303894159f9c54d3c7b5f8704389f27d44023d416044fac5bee",
+   "type": "same-type rollup",
+   "composes": [],
+   "metricCount": 14,
+   "useWhen": "Use this skill when the user wants a unified PSA-platform assessment across all PSA tenants in an environment \u2014 ConnectWise Manage, Autotask, HaloPSA, Kaseya BMS, Syncro. Trigger phrases: \"PSA posture for <customer>\", \"all PSA platforms\", \""
+  },
+  {
+   "name": "system-type-all-rmm-platforms",
+   "source": "recipes/system-type-assessment/all-rmm-platforms.md",
+   "sourceSha256": "48715e522508d0c0344df22edd95473dec89dce405cfefd0d1a128de19b1071a",
+   "type": "same-type rollup",
+   "composes": [],
+   "metricCount": 68,
+   "useWhen": "Use this skill when the user wants a unified RMM-platform assessment across all RMM tenants in an environment \u2014 NinjaOne, Datto RMM, Kaseya VSA, N-able N-Central, ConnectWise Automate, N-able RMM, ConnectWise Asio, Continuum RMM (legacy). T"
+  }
+ ],
+ "files": [
+  {
+   "path": "plans/all-cloud-infrastructure.json",
+   "role": "plan",
+   "bytes": 8885,
+   "sha256": "7f325bd4e2fe0260a4d11cad16986e9eafdbf9a3d2b5c1595a9b9294ca574a9f",
+   "sources": [
+    "recipes/system-type-assessment/all-cloud-infrastructure.md"
+   ]
+  },
+  {
+   "path": "recipes/all-cloud-infrastructure.md",
+   "role": "recipe",
+   "bytes": 19301,
+   "sha256": "81c16b81001ae2f4c64160accfb75d006d44d47f205637025d98ff2233f08bb2",
+   "sources": [
+    "recipes/system-type-assessment/all-cloud-infrastructure.md"
+   ]
+  },
+  {
+   "path": "plans/system-type-all-backups.json",
+   "role": "plan",
+   "bytes": 40998,
+   "sha256": "c69bbf9978fa64dc1b8a8ee3a1e9ac8b09023c211076d768b24721dd07651da2",
+   "sources": [
+    "recipes/system-type-assessment/all-backups.md"
+   ]
+  },
+  {
+   "path": "recipes/system-type-all-backups.md",
+   "role": "recipe",
+   "bytes": 31434,
+   "sha256": "32121ac8486802009917e0e5c96e4542f92069a07ba99b8c3a5bd84583293c25",
+   "sources": [
+    "recipes/system-type-assessment/all-backups.md"
+   ]
+  },
+  {
+   "path": "plans/system-type-all-domains.json",
+   "role": "plan",
+   "bytes": 10975,
+   "sha256": "17b8f8a1ad7d0a4ecacc991eca3f5af0f2a2b62893ec3e8b70f995cbbacfeef3",
+   "sources": [
+    "recipes/system-type-assessment/all-domains.md"
+   ]
+  },
+  {
+   "path": "recipes/system-type-all-domains.md",
+   "role": "recipe",
+   "bytes": 15288,
+   "sha256": "1a4716492f729d1675d6407866eb95d753069cb66e31d54b51afee84cfcded14",
+   "sources": [
+    "recipes/system-type-assessment/all-domains.md"
+   ]
+  },
+  {
+   "path": "plans/system-type-all-edrs.json",
+   "role": "plan",
+   "bytes": 26031,
+   "sha256": "ccc5ed61ca420ae91d1641e06967d9f245fbf8959c54bfb7006da9da0cf43ca8",
+   "sources": [
+    "recipes/system-type-assessment/all-edrs.md"
+   ]
+  },
+  {
+   "path": "recipes/system-type-all-edrs.md",
+   "role": "recipe",
+   "bytes": 12688,
+   "sha256": "9c22a7caf5f785bceb3f68d9c23be455384e950ec3a0d0a1574e83a76ff37117",
+   "sources": [
+    "recipes/system-type-assessment/all-edrs.md"
+   ]
+  },
+  {
+   "path": "plans/system-type-all-endpoints.json",
+   "role": "plan",
+   "bytes": 14773,
+   "sha256": "c66ff6b9d458ce2c7e1c6877824fb8c4ad3bdf7cb3f415711bb8cd3f3b60227f",
+   "sources": [
+    "recipes/system-type-assessment/all-endpoints.md"
+   ]
+  },
+  {
+   "path": "recipes/system-type-all-endpoints.md",
+   "role": "recipe",
+   "bytes": 16438,
+   "sha256": "baad017aac97d914c68f319d8a297157108b443082856316d6c1f69ad1d0ba22",
+   "sources": [
+    "recipes/system-type-assessment/all-endpoints.md"
+   ]
+  },
+  {
+   "path": "plans/system-type-all-firewalls.json",
+   "role": "plan",
+   "bytes": 51680,
+   "sha256": "73fa81ac22edeea828ba5e4dc3f054966a2d0a281422863e3e92fe0943922e60",
+   "sources": [
+    "recipes/system-type-assessment/all-firewalls.md"
+   ]
+  },
+  {
+   "path": "recipes/system-type-all-firewalls.md",
+   "role": "recipe",
+   "bytes": 24007,
+   "sha256": "1a8e818129113a50f3bae22df69eb5a1ffb80b22c96aa41c9845ff37de905e98",
+   "sources": [
+    "recipes/system-type-assessment/all-firewalls.md"
+   ]
+  },
+  {
+   "path": "plans/system-type-all-identity-providers.json",
+   "role": "plan",
+   "bytes": 26478,
+   "sha256": "c5ec4efb31b867cb948ba534c579a0d113d09e73605159fc8191248f4cbe0827",
+   "sources": [
+    "recipes/system-type-assessment/all-identity-providers.md"
+   ]
+  },
+  {
+   "path": "recipes/system-type-all-identity-providers.md",
+   "role": "recipe",
+   "bytes": 24770,
+   "sha256": "b502546cdd2b39b26a8a823f6556dfc0270b3ce6117c130d8ec19bfaa7fcb726",
+   "sources": [
+    "recipes/system-type-assessment/all-identity-providers.md"
+   ]
+  },
+  {
+   "path": "plans/system-type-all-network-infrastructure.json",
+   "role": "plan",
+   "bytes": 16266,
+   "sha256": "c3e84cd8601fc15ef08d1ccf84afdb987310595fd624ec7c0dc4effeeea27bc3",
+   "sources": [
+    "recipes/system-type-assessment/all-network-infrastructure.md"
+   ]
+  },
+  {
+   "path": "recipes/system-type-all-network-infrastructure.md",
+   "role": "recipe",
+   "bytes": 18350,
+   "sha256": "e497b2bdcb7bb3ae2f36d9cf4ceea4da1d0847453d6cb768f828b87e16a5174b",
+   "sources": [
+    "recipes/system-type-assessment/all-network-infrastructure.md"
+   ]
+  },
+  {
+   "path": "plans/system-type-windows-patching.json",
+   "role": "plan",
+   "bytes": 27475,
+   "sha256": "15c1aad97b0a1c8cdbf899ce743d94f98e4fa56840d668481a9a6ddd876ac6e0",
+   "sources": [
+    "recipes/system-type-assessment/all-windows-patching.md"
+   ]
+  },
+  {
+   "path": "recipes/system-type-windows-patching.md",
+   "role": "recipe",
+   "bytes": 18989,
+   "sha256": "3ab789ccd68ad6e8d36a76c82da7f71973d7181ae4d4d2e8c1b3326543a8c013",
+   "sources": [
+    "recipes/system-type-assessment/all-windows-patching.md"
+   ]
+  },
+  {
+   "path": "plans/system-type-all-external-attack-surface.json",
+   "role": "plan",
+   "bytes": 15361,
+   "sha256": "b50129e0cbff8af68cafa612e464fcc8195f6c3dffc4e057769d13cc4ee701ac",
+   "sources": [
+    "recipes/system-type-assessment/all-external-attack-surface.md"
+   ]
+  },
+  {
+   "path": "recipes/system-type-all-external-attack-surface.md",
+   "role": "recipe",
+   "bytes": 26588,
+   "sha256": "c1c1d09a7cf1a42dd6be7d87dda0c5cf2d577f5582d22dee6e36c65a05b421fd",
+   "sources": [
+    "recipes/system-type-assessment/all-external-attack-surface.md"
+   ]
+  },
+  {
+   "path": "recipes/system-type-all-hypervisors.md",
+   "role": "recipe",
+   "bytes": 12039,
+   "sha256": "d8e1bce0f240d7632800ba36d265ec9a5a3420cff730581d0d5f23c3f39aac4d",
+   "sources": [
+    "recipes/system-type-assessment/all-hypervisors.md"
+   ]
+  },
+  {
+   "path": "plans/system-type-all-servers.json",
+   "role": "plan",
+   "bytes": 6760,
+   "sha256": "85e35f2911bb37a7f1ebd7b06a851b85380234a8f9aed6bf46415de1eea232ef",
+   "sources": [
+    "recipes/system-type-assessment/all-servers.md"
+   ]
+  },
+  {
+   "path": "recipes/system-type-all-servers.md",
+   "role": "recipe",
+   "bytes": 14328,
+   "sha256": "2441586c8f1e184b4ed7bf262895ef5960dd6406d34f94ba828b32f119f9fa6a",
+   "sources": [
+    "recipes/system-type-assessment/all-servers.md"
+   ]
+  },
+  {
+   "path": "plans/system-type-all-cloud-storage.json",
+   "role": "plan",
+   "bytes": 14121,
+   "sha256": "86a705aca025a954e9393dd6ec554baca7f2a735890028960341e063943cc246",
+   "sources": [
+    "recipes/system-type-assessment/all-cloud-storage.md"
+   ]
+  },
+  {
+   "path": "recipes/system-type-all-cloud-storage.md",
+   "role": "recipe",
+   "bytes": 14528,
+   "sha256": "94e3f8276733872f318c273f4eba023de6b286a86d878d1b8a66d32a5860f172",
+   "sources": [
+    "recipes/system-type-assessment/all-cloud-storage.md"
+   ]
+  },
+  {
+   "path": "plans/system-type-all-firewalls-firmware-currency.json",
+   "role": "plan",
+   "bytes": 4052,
+   "sha256": "b14b43b3f189376b7a9b5fb2badcb53545021b15a8e95a43154ac9359fcc99f1",
+   "sources": [
+    "recipes/system-type-assessment/all-firewalls-firmware-currency.md"
+   ]
+  },
+  {
+   "path": "recipes/system-type-all-firewalls-firmware-currency.md",
+   "role": "recipe",
+   "bytes": 21298,
+   "sha256": "e6e41218c2c944c43ba24a19dc3aeca3b8d1ad83a85b8f7ac9ce14aa8330f8cc",
+   "sources": [
+    "recipes/system-type-assessment/all-firewalls-firmware-currency.md"
+   ]
+  },
+  {
+   "path": "plans/system-type-all-network-monitoring.json",
+   "role": "plan",
+   "bytes": 16334,
+   "sha256": "d6dea896d3d96c6fd2c434d9380f6bdcc53d72013efa0400a66e8013145df245",
+   "sources": [
+    "recipes/system-type-assessment/all-network-monitoring.md"
+   ]
+  },
+  {
+   "path": "recipes/system-type-all-network-monitoring.md",
+   "role": "recipe",
+   "bytes": 23871,
+   "sha256": "1b122a9bd9d66b67169fe1b618934d0396349b437aa33a09d9917e81415d1bf4",
+   "sources": [
+    "recipes/system-type-assessment/all-network-monitoring.md"
+   ]
+  },
+  {
+   "path": "plans/system-type-all-psa-platforms.json",
+   "role": "plan",
+   "bytes": 4514,
+   "sha256": "4f66f71ad183a2f221ffbbd15769015853aa94929c4039a9a0bfc62dfdff5120",
+   "sources": [
+    "recipes/system-type-assessment/all-psa-platforms.md"
+   ]
+  },
+  {
+   "path": "recipes/system-type-all-psa-platforms.md",
+   "role": "recipe",
+   "bytes": 11594,
+   "sha256": "b1a1a1274f33f0ba44fe966dc2f99697168b8739e0eb4afe18e18eb68c38ecaa",
+   "sources": [
+    "recipes/system-type-assessment/all-psa-platforms.md"
+   ]
+  },
+  {
+   "path": "plans/system-type-all-rmm-platforms.json",
+   "role": "plan",
+   "bytes": 22745,
+   "sha256": "f7ba936545a169309a35d9a57343d58e85f7f9ea16a8e35798112112b995c11e",
+   "sources": [
+    "recipes/system-type-assessment/all-rmm-platforms.md"
+   ]
+  },
+  {
+   "path": "recipes/system-type-all-rmm-platforms.md",
+   "role": "recipe",
+   "bytes": 17186,
+   "sha256": "9fe9bfdc2ed3d1b3a1424c7c5760594e7087f8de00561baea81338f6524fc3b4",
+   "sources": [
+    "recipes/system-type-assessment/all-rmm-platforms.md"
+   ]
+  },
+  {
+   "path": "references/inspector-aliases.md",
+   "role": "reference",
+   "bytes": 19874,
+   "sha256": "2b0f961fdfd32deaf532da7bd162a3ac96667f5d30863e1e660daf31f4b3d557",
+   "sources": [
+    "reference/inspector-aliases.md"
+   ]
+  },
+  {
+   "path": "references/asset-fields.md",
+   "role": "reference",
+   "bytes": 21313,
+   "sha256": "c3b0802b014d361f74ccfa215a74260a1c90de3aeba5d0de8de10febf615f125",
+   "sources": [
+    "reference/asset-fields.md"
+   ]
+  },
+  {
+   "path": "references/qa-retry-pattern.md",
+   "role": "reference",
+   "bytes": 10542,
+   "sha256": "6f9ae526519b6891a393cf68fa589578aa3bd4300733473f2a73cd8bc39e4aa2",
+   "sources": [
+    "reference/qa-retry-pattern.md"
+   ]
+  },
+  {
+   "path": "references/msp-config.yaml",
+   "role": "reference",
+   "bytes": 11815,
+   "sha256": "416d1913eec2a4e035308be5a406b540bb8a963986f5045634714ac7089fe445",
+   "sources": [
+    "config/msp-config.yaml"
+   ]
+  },
+  {
+   "path": "recipes/index.md",
+   "role": "catalog",
+   "bytes": 6221,
+   "sha256": "8af416ed9ecccb7a271e480d293259285f1713ca1de94786cd79bd72ff0efc8a",
+   "sources": [
+    "recipes/system-type-assessment/all-cloud-infrastructure.md",
+    "recipes/system-type-assessment/all-backups.md",
+    "recipes/system-type-assessment/all-domains.md",
+    "recipes/system-type-assessment/all-edrs.md",
+    "recipes/system-type-assessment/all-endpoints.md",
+    "recipes/system-type-assessment/all-firewalls.md",
+    "recipes/system-type-assessment/all-identity-providers.md",
+    "recipes/system-type-assessment/all-network-infrastructure.md",
+    "recipes/system-type-assessment/all-windows-patching.md",
+    "recipes/system-type-assessment/all-external-attack-surface.md",
+    "recipes/system-type-assessment/all-hypervisors.md",
+    "recipes/system-type-assessment/all-servers.md",
+    "recipes/system-type-assessment/all-cloud-storage.md",
+    "recipes/system-type-assessment/all-firewalls-firmware-currency.md",
+    "recipes/system-type-assessment/all-network-monitoring.md",
+    "recipes/system-type-assessment/all-psa-platforms.md",
+    "recipes/system-type-assessment/all-rmm-platforms.md"
+   ]
+  },
+  {
+   "path": "SKILL.md",
+   "role": "skill",
+   "bytes": 5518,
+   "sha256": "8e693a45153f501eae566ff6dc17454a2b3d78c3e3053934ae4190beb622dbcd",
+   "sources": [
+    "copilot/templates/skill-instructions.md"
+   ]
+  }
+ ],
+ "warnings": []
+}

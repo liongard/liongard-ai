@@ -477,7 +477,7 @@ Before rendering output, run the QA pass per `reference/qa-retry-pattern.md`:
    proposed_metric_gaps:
      - field: <field name>
        fallback: <what we did instead>
-       remediation: "Confirm in <vendor> console; tracking <CORE-XXXX>"
+       remediation: "Confirm in <vendor> console; request a Liongard metric for this field"
    ```
 
 5. **Single-source visibility flags.** Surface devices / identities seen by

@@ -1,0 +1,32 @@
+{
+  "primitiveCount": 2,
+  "recipe": "single-system-datto-rmm",
+  "source": "recipes/single-system-analysis/by-inspector/datto-rmm.md",
+  "sourceSha256": "02992c032a18fe6f14671b6fd690cab8a241849e7e5f6fab61ffc4e9fe8160f1",
+  "vendors": [
+    {
+      "inspectorId": 73,
+      "inspectorSlug": "datto-rmm-inspector",
+      "primitives": [
+        {
+          "compliantWhen": "result == 0",
+          "fieldGotcha": null,
+          "id": "metrics:datto-rmm:devices-pending-patches-count",
+          "metricUuid": "e842ef15-426a-4d1b-a921-6787d6c11574",
+          "query": "Devices[?patchManagement.patchesApprovedPending > `0`] | length(@)",
+          "resultType": "integer",
+          "seq": "P001"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:datto-rmm:devices-snmp-enabled-count",
+          "metricUuid": "c111227e-586e-46d9-b62d-6e5e8e2d006f",
+          "query": "Devices[?snmpEnabled == `true`] | length(@)",
+          "resultType": "integer",
+          "seq": "P002"
+        }
+      ]
+    }
+  ]
+}

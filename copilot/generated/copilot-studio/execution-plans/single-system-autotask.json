@@ -1,0 +1,77 @@
+{
+  "primitiveCount": 7,
+  "recipe": "single-system-autotask",
+  "source": "recipes/single-system-analysis/by-inspector/autotask.md",
+  "sourceSha256": "4859ca7bac3cb3b34564befab86e0cc662a61e99f53edbc19ce7970d460ca274",
+  "vendors": [
+    {
+      "inspectorId": 45,
+      "inspectorSlug": "autotask-inspector",
+      "primitives": [
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:autotask-inspector:accounts-active-count",
+          "metricUuid": null,
+          "query": "length(Accounts[?Active == `true`])",
+          "resultType": "integer",
+          "seq": "P001"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:autotask-inspector:accounts-inactive-count",
+          "metricUuid": null,
+          "query": "length(Accounts[?Active == `false`])",
+          "resultType": "integer",
+          "seq": "P002"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:autotask-inspector:accounts-total-count",
+          "metricUuid": null,
+          "query": "length(Accounts)",
+          "resultType": "integer",
+          "seq": "P003"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:autotask-inspector:contacts-active-count",
+          "metricUuid": null,
+          "query": "length(Contacts[?Active == `1`])",
+          "resultType": "integer",
+          "seq": "P004"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:autotask-inspector:contacts-primary-count",
+          "metricUuid": null,
+          "query": "length(Contacts[?PrimaryContact == `true`])",
+          "resultType": "integer",
+          "seq": "P005"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:autotask-inspector:contacts-total-count",
+          "metricUuid": null,
+          "query": "length(Contacts)",
+          "resultType": "integer",
+          "seq": "P006"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:autotask-inspector:unique-composite-key",
+          "metricUuid": null,
+          "query": "UniqueCompositeKey",
+          "resultType": "string",
+          "seq": "P007"
+        }
+      ]
+    }
+  ]
+}

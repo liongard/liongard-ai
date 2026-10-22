@@ -13,7 +13,7 @@ compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, li
 personas: [noc, vcio-account-manager, technical-alignment-manager]
 output_formats: [markdown, word, xlsx]
 primitives:
-  # Reconciled 2026-05-29: pruned dangling refs not present in the live dataprint (see internal/proposed-metrics-backlog.md).
+  # Reconciled 2026-05-29: pruned dangling refs not present in the live dataprint.
   - metrics:storagecraft-spx-inspector:days-until-license-expiration
   - metrics:storagecraft-spx-inspector:last-backup-attempt-failed-count
   - metrics:storagecraft-spx-inspector:last-backup-attempt-failed-list

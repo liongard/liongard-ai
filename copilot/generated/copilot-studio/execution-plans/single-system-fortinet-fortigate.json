@@ -1,0 +1,131 @@
+{
+  "primitiveCount": 13,
+  "recipe": "single-system-fortinet-fortigate",
+  "source": "recipes/single-system-analysis/by-inspector/fortinet-fortigate.md",
+  "sourceSha256": "180b73ca1b91381f5bbd381f33878df48c994c1d5666036019e2f28ca8d9a703",
+  "vendors": [
+    {
+      "inspectorId": 33,
+      "inspectorSlug": "fortinet-fortigate-inspector",
+      "primitives": [
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:fortinet-fortigate:access-profiles-summary",
+          "metricUuid": "d162fb94-c3f5-4088-b994-6c156c6042fa",
+          "query": "UserProfiles[].join( `, `, [join(`: `, [`Name`, to_string(name)]), join(`: `, [`Scope`,to_string(scope)]) , join(`: `, [`Network Config`,to_string(netgrp)]) , join(`: `, [`System Config`,to_string(sysgrp)]) , join(`: `, [`Security Profiles`,to_string(utmgrp)]), join(`: `, [`IPsec,SSL,PPTP,L2TP VPN`,to_string(vpngrp)])])",
+          "resultType": "array",
+          "seq": "P001"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:fortinet-fortigate:dns-servers",
+          "metricUuid": "5c01ef92-3ad6-4882-9cfb-9a30d967c67e",
+          "query": "DNS.[\"primary\",\"secondary\"] | join(`, `, @)",
+          "resultType": "string",
+          "seq": "P002"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:fortinet-fortigate:firewall-policy-structured",
+          "metricUuid": "e934e601-0ec8-4097-bf74-777b3de6af8b",
+          "query": "FirewallPolicy[].[name, srcintf[].name, dstintf[].name, srcaddr[].name, dstaddr[].name, service[].name, comments]",
+          "resultType": "array",
+          "seq": "P003"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:fortinet-fortigate:firewall-policy-summary",
+          "metricUuid": "1a5ed175-9f47-48d9-9e27-58de12270e38",
+          "query": "FirewallPolicy[].join( `, `, [join(`: `, [`Name`, to_string(name)]) , join(`: `, [`NAT`,to_string(nat)]), join(`: `, [`Action`,to_string(action)]), join(`: `, [`Status`,to_string(status)]), join(`: `, [`Source Address`,to_string(sort(srcaddr[].name))]), join(`: `, [`Source Interface`,to_string(sort(srcintf[].name))]), join(`: `, [`Service`,to_string(sort(service[].name))])])",
+          "resultType": "array",
+          "seq": "P004"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:fortinet-fortigate:firewall-vip-summary",
+          "metricUuid": "8e848221-0806-4b96-a239-0d8c14fb3552",
+          "query": "FirewallVIP[].join( `, `, [join(`: `, [`Name`, to_string(name)]), join(`: `, [`Type`, to_string(type)]), join(`: `, [`External IP`, to_string(extip)]), join(`: `, [`External Interface`, to_string(extintf)]), join(`: `, [`External Port`, to_string(extport)]), join(`: `, [`Mapped IP Range`, to_string(sort(mappedip[].range))]) , join(`: `, [`Mapped Port`, to_string(mappedport)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P005"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": "Quoted key required in JMESPath because 'version' is a reserved word in some JMESPath implementations. Use Firmware.current.\"version\" not Firmware.current.version. The id=521 metric provides an alternate path SystemInfo.Firmware.Version which may differ on some firmware versions.",
+          "id": "metrics:fortinet-fortigate:firmware-version",
+          "metricUuid": "e6ed971a-3d67-4b27-86ac-fe0316b4dbee",
+          "query": "Firmware.current.\"version\"",
+          "resultType": "string",
+          "seq": "P006"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:fortinet-fortigate:fortiem-status",
+          "metricUuid": "a23f4675-6f5f-4d99-899b-6c3033f48f6b",
+          "query": "{Name: Name, Status: Licensing.fortiems_cloud.status}",
+          "resultType": "object",
+          "seq": "P007"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:fortinet-fortigate:group-summary",
+          "metricUuid": "51b85ff4-30ed-4233-908b-1c230191f1e3",
+          "query": "Groups[].join( `, `, [join(`: `, [`Name`,to_string(name)]), join(`: `, [`Email`,to_string(email)]), join(`: `, [`Member`,to_string(sort(member[].name))]), join(`: `, [`Group Type`,to_string(\"group-type\")])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P008"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:fortinet-fortigate:hostname",
+          "metricUuid": "5565b215-7118-4447-a9b5-f9610413a2f4",
+          "query": "SystemGlobal.hostname",
+          "resultType": "string",
+          "seq": "P009"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:fortinet-fortigate:interface-summary",
+          "metricUuid": "5a516d96-f724-4a3e-b846-b7b988b85310",
+          "query": "Interfaces[].join( `, `, [join(`: `, [`Name`, to_string(name)]), join(`: `, [`Vdom`,to_string(vdom)]), join(`: `, [`Type`,to_string(type)]), join(`: `, [`IP & Subnet`,to_string(ip)]), join(`: `, [`Role`,to_string(role)]), join(`: `, [`VLAN ID`,to_string(vlanid)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P010"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": "Two paths exist for model/version info. id=223 uses Firmware.current.\"platform-id\" (the Fortinet API path). id=521 uses SystemInfo.Firmware.Version for the firmware string. These are complementary \u2014 use 223 for model, 224/521 for firmware version.",
+          "id": "metrics:fortinet-fortigate:model",
+          "metricUuid": "8fe5641e-6c32-4ce9-8b11-bcc09001f5e8",
+          "query": "Firmware.current.\"platform-id\"",
+          "resultType": "string",
+          "seq": "P011"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:fortinet-fortigate:routing-policy-summary",
+          "metricUuid": "ec3885dc-0050-4a9b-8e14-40f7f167e018",
+          "query": "IPV4Routing[].join( `, `, [join(`: `, [`Type`, to_string(type)]), join(`: `, [`Gateway`, to_string(gateway)]), join(`: `, [`IP Mask`, to_string(ip_mask)]), join(`: `, [`Interface`, to_string(interface)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P012"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": "Users[] contains local VPN/firewall auth accounts only \u2014 NOT admin accounts. FortiGate admin accounts (System > Administrators) are NOT present in the dataprint. AdminUsers key returns null on all validated systems. Admin account audit requires manual FortiGate GUI review.",
+          "id": "metrics:fortinet-fortigate:user-summary",
+          "metricUuid": "8755d8a6-4e9a-4c7a-9ec0-86902fb8c0e2",
+          "query": "Users[].join( `, `, [join(`: `, [`Name`, to_string(name)]), join(`: `, [`Vdom Name`,to_string(sort(vdom[].name))]), join(`: `, [`Type`,to_string(type_r)]), join(`: `, [`Profile`,to_string(accprofile)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P013"
+        }
+      ]
+    }
+  ]
+}

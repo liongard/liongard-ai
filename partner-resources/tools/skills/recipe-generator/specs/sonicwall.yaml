@@ -158,22 +158,22 @@ cross_check:
 proposed_metric_gaps:
   - field: "Per-service license + expiration (Gateway AV, IPS, Anti-Spyware, Botnet)"
     fallback: "Use existing 'Security Services Licenses w/ Statuses' aggregate metric"
-    jira_ticket:
+    tracking_ref:
   - field: "Secondary / Tertiary DNS"
     fallback: "Manual confirm in firewall UI"
-    jira_ticket:
+    tracking_ref:
   - field: "DHCP scope detail"
     fallback: "Manual confirm in firewall UI"
-    jira_ticket:
+    tracking_ref:
   - field: "Per-zone security service posture (Gateway AV, IPS, Anti-Spyware)"
     fallback: "Existing aggregate license metric — confirms purchase but not per-zone enablement"
-    jira_ticket:
+    tracking_ref:
   - field: "Cloud backup enabled (Gen7)"
     fallback: "Manual confirm in firewall UI"
-    jira_ticket:
+    tracking_ref:
   - field: "Wide-open WAN→LAN allow-any rules"
     fallback: "Manual review of access rules"
-    jira_ticket:
+    tracking_ref:
 
 trigger_keyword: sonicwall
 

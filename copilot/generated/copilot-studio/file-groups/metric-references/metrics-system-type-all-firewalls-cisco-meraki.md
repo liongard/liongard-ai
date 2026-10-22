@@ -1,0 +1,61 @@
+# metrics-system-type-all-firewalls-cisco-meraki - Metric reference (cisco-meraki-inspector)
+
+> Operator words in queries: before sending any `jmesPathQuery`, replace each EQ_OP with two equals characters in a row each AND_OP with two ampersand characters in a row and each OR_OP with two vertical-bar characters in a row; change nothing else. (Knowledge storage corrupts those symbols.)
+
+Required metric primitives for the recipe `system-type-all-firewalls` (System-Type Assessment — All Firewalls), inspector `cisco-meraki-inspector` (ID 3). 15 primitives, sequence ids P019-P033. For every system of this inspector, evaluate EVERY primitive below with `liongard_metric EVALUATE` (`jmesPathQuery`, `systemId`, `environmentId`), retry a null or error once, and log one row per primitive per system. Respect each gotcha.
+
+- **`metrics:cisco-meraki:days-until-license-expiry`** [P019] - Cisco Meraki — Days Until License Expiration. Days until the Cisco Meraki license expires from LicensingOverview.DaysTillExpiration.
+  - metricId: 10 | query: `LicensingOverview.DaysTillExpiration` | result: integer (days)
+  - compliant when: result > slas.license_expiration_warn_days (default 30)
+  - gotcha: Recipe verification logs may reference LicenseStatus.expirationInDays — this path does NOT exist. The correct field is LicensingOverview.DaysTillExpiration, confirmed by Global metric id=10.
+  - status: VALIDATED
+- **`metrics:cisco-meraki:device-firmware-summary`** [P020] - Cisco Meraki — Device Firmware Summary. Sorted list of DeviceName + firmware version strings from Networks[].Devices[].
+  - metricId: 636 | query: `` Networks[].Devices[].join(', ', [join(': ', [`Device Name`, to_string(DeviceName)]), join(': ', [`Firmware`, to_string(firmware)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:cisco-meraki:device-serial-list`** [P021] - Cisco Meraki — Device Serial Number List. Sorted list of hardware serial numbers from Inventory[].serial.
+  - metricId: 525 | query: `Inventory[].serial | sort(@)` | result: array
+  - status: VALIDATED
+- **`metrics:cisco-meraki:hardware-list`** [P022] - Cisco Meraki — Hardware Device List. Array of device objects (Model, DeviceName, NetworkName) from Networks[].Devices[?networkId].
+  - metricId: 104678 | query: `Networks[].Devices[?networkId].{Model: model, DeviceName: DeviceName, NetworkName: NetworkName}` | result: array
+  - gotcha: The top-level key for Meraki devices is Networks[].Devices[] — NOT NetworkDevices (which does not exist). Always traverse via Networks[]. Confirmed by Global metric id=104678 and recipe verification on System B (2026-05-22).
+  - status: VALIDATED
+- **`metrics:cisco-meraki:license-status`** [P023] - Cisco Meraki — License Status. License status string from LicensingOverview.status (e.g. 'OK', 'License Required').
+  - metricId: 706 | query: `LicensingOverview.status` | result: string
+  - compliant when: result EQ_OP 'OK'
+  - status: VALIDATED
+- **`metrics:cisco-meraki:open-ssid-count`** [P024] - Cisco Meraki — Open (No Auth) SSID Count. Count of enabled wireless SSIDs with authMode EQ_OP 'open' (no PSK or 802.1x). Should be 0.
+  - metricId: 705 | query: `` length(Networks[?Type EQ_OP `wireless`].SSIDs[] | [?enabled EQ_OP `true`] | [?authMode EQ_OP `open`]) `` | result: integer (count)
+  - compliant when: result EQ_OP 0
+  - gotcha: SSIDs are nested under Networks[].SSIDs — not top-level Ssids[]. The recipe pattern Ssids[?authMode EQ_OP 'open'] will return null. Always traverse via Networks[?Type EQ_OP 'wireless'].SSIDs[].
+  - status: VALIDATED
+- **`metrics:cisco-meraki:open-ssid-list`** [P025] - Cisco Meraki — Open (No Auth) SSID List. Names of enabled wireless SSIDs with authMode EQ_OP 'open'. Should be empty.
+  - metricId: 704 | query: `` Networks[?Type EQ_OP `wireless`].SSIDs[] | [?enabled EQ_OP `true`] | [?authMode EQ_OP `open`][].name OR_OP to_array(`-`) | join(`, `, @) `` | result: string
+  - compliant when: result EQ_OP '-'
+  - status: VALIDATED
+- **`metrics:cisco-meraki:privileged-user-count`** [P026] - Cisco Meraki — Privileged User Count. Count of dashboard users with Privileged EQ_OP 'Yes' from Users[].
+  - metricId: 237 | query: `` Users[?Privileged EQ_OP `Yes`].name | length(@) `` | result: integer (count)
+  - gotcha: Privileged is the string 'Yes' not boolean true. Filter: Privileged EQ_OP `Yes` (backtick-quoted string in JMESPath).
+  - status: VALIDATED
+- **`metrics:cisco-meraki:privileged-user-list`** [P027] - Cisco Meraki — Privileged User List. Comma-joined names of dashboard users with Privileged EQ_OP 'Yes'.
+  - metricId: 238 | query: `` Users[?Privileged EQ_OP `Yes`].name | join(`, `, @) `` | result: string
+  - status: VALIDATED
+- **`metrics:cisco-meraki:ssid-list`** [P028] - Cisco Meraki — SSID List. Comma-joined list of all SSID names across all networks from Networks[].SSIDs[].name.
+  - metricId: 16 | query: `` Networks[].SSIDs[].name | join(`, `,@) `` | result: string
+  - status: VALIDATED
+- **`metrics:cisco-meraki:total-device-count`** [P029] - Cisco Meraki — Total Device Count. Count of all network devices across all networks. Traverse via Networks[].Devices[] — NOT a top-level key.
+  - metricId: none (use query) | query: `length(Networks[].Devices[])` | result: integer (count)
+  - status: VALIDATED
+- **`metrics:cisco-meraki:vlan-count`** [P030] - Cisco Meraki — VLAN Count. Total VLAN count summed across all networks via sum(Networks[].length(VLANs)).
+  - metricId: 707 | query: `sum(Networks[].length(VLANs))` | result: integer (count)
+  - status: VALIDATED
+- **`metrics:cisco-meraki:vpn-enabled-subnets`** [P031] - Cisco Meraki — VPN Enabled Subnets. Array of [networkName, subnet list] pairs for networks with enabled VPN subnets.
+  - metricId: 637 | query: `` Networks[].[name, join(`, `, [to_string(VPNs.EnabledSubnets[])])][] `` | result: array
+  - status: VALIDATED
+- **`metrics:cisco-meraki:weak-encryption-ssid-count`** [P032] - Cisco Meraki — Weak Encryption SSID Count. Count of enabled wireless SSIDs where wpaEncryptionMode != 'WPA2 only'. Should be 0.
+  - metricId: 709 | query: `` length(Networks[?Type EQ_OP `wireless`].SSIDs[] | [?enabled EQ_OP `true`] | [?wpaEncryptionMode!=`WPA2 only`]) `` | result: integer (count)
+  - compliant when: result EQ_OP 0
+  - status: VALIDATED
+- **`metrics:cisco-meraki:weak-encryption-ssid-list`** [P033] - Cisco Meraki — Weak Encryption SSID List. Names of enabled wireless SSIDs not using WPA2-only encryption.
+  - metricId: 708 | query: `` Networks[?Type EQ_OP `wireless`].SSIDs[] | [?enabled EQ_OP `true`] | [?wpaEncryptionMode!=`WPA2 only`][].name OR_OP to_array(`-`) | join(`, `, @) `` | result: string
+  - compliant when: result EQ_OP '-'
+  - status: VALIDATED

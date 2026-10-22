@@ -109,13 +109,13 @@ cross_check:
 proposed_metric_gaps:
   - field: "Per-device backup detail composite metric"
     fallback: "Client-side parse of Devices[*]"
-    jira_ticket:
+    tracking_ref:
   - field: "SharePoint / Teams protection state"
     fallback: "Manual confirm in Cove dashboard"
-    jira_ticket:
+    tracking_ref:
   - field: "Per-device storage used"
     fallback: "Manual confirm in Cove dashboard"
-    jira_ticket:
+    tracking_ref:
 
 trigger_keyword: cove
 

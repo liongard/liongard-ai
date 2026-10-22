@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Set up Liongard Recipes in Microsoft Copilot Studio</title>
+  <style>
+    :root {
+      --ink: #172033;
+      --muted: #5f6b7a;
+      --line: #d9e0e8;
+      --panel: #f6f8fb;
+      --blue: #155eef;
+      --blue-dark: #0b3ea8;
+      --green: #157f3b;
+      --amber-bg: #fff7e6;
+      --amber-line: #e6a700;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #eef2f6;
+      color: var(--ink);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+    main {
+      width: min(920px, calc(100% - 32px));
+      margin: 32px auto;
+      padding: 44px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: 0 12px 36px rgba(23, 32, 51, .08);
+    }
+    h1 { margin: 0 0 8px; font-size: 2rem; line-height: 1.15; }
+    h2 { margin: 34px 0 12px; font-size: 1.25rem; }
+    h3 { margin: 0 0 6px; font-size: 1.05rem; }
+    p { margin: 8px 0; }
+    a { color: var(--blue-dark); }
+    code {
+      padding: 2px 5px;
+      border-radius: 4px;
+      background: #edf1f5;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: .92em;
+    }
+    pre {
+      overflow-x: auto;
+      margin: 12px 0;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #111827;
+      color: #f8fafc;
+      font-size: .88rem;
+      line-height: 1.45;
+    }
+    .eyebrow {
+      margin-bottom: 12px;
+      color: var(--blue);
+      font-size: .78rem;
+      font-weight: 750;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+    .lede { max-width: 760px; color: var(--muted); font-size: 1.08rem; }
+    .callout {
+      margin: 22px 0;
+      padding: 15px 18px;
+      border-left: 4px solid var(--blue);
+      border-radius: 6px;
+      background: #edf4ff;
+    }
+    .warning { border-left-color: var(--amber-line); background: var(--amber-bg); }
+    .success { border-left-color: var(--green); background: #ebf8ef; }
+    .steps { margin: 0; padding: 0; list-style: none; counter-reset: step; }
+    .steps > li {
+      position: relative;
+      margin: 0 0 16px;
+      padding: 18px 18px 18px 64px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      counter-increment: step;
+    }
+    .steps > li::before {
+      content: counter(step);
+      position: absolute;
+      top: 17px;
+      left: 18px;
+      display: grid;
+      width: 30px;
+      height: 30px;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--blue);
+      color: #fff;
+      font-weight: 750;
+    }
+    .path {
+      display: inline-block;
+      margin: 5px 0;
+      padding: 5px 8px;
+      border-radius: 6px;
+      background: var(--panel);
+      color: #29364a;
+      font-weight: 650;
+    }
+    .checklist { padding-left: 1.25rem; }
+    .checklist li { margin: 6px 0; }
+    table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    th, td { padding: 10px 12px; border: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { background: var(--panel); }
+    tbody tr:nth-child(even) { background: #fbfcfd; }
+    .small { color: var(--muted); font-size: .9rem; }
+    footer { margin-top: 36px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); font-size: .85rem; }
+    @media (max-width: 680px) {
+      main { width: 100%; margin: 0; padding: 26px 18px; border: 0; border-radius: 0; }
+      .steps > li { padding-left: 58px; }
+    }
+    @media print {
+      body { background: #fff; }
+      main { width: 100%; margin: 0; padding: 0; border: 0; box-shadow: none; }
+      .steps > li { break-inside: avoid; }
+      a { color: inherit; text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <div class="eyebrow">Partner setup guide · Microsoft Copilot Studio</div>
+  <h1>Set up the Liongard MSP Assistant</h1>
+  <p class="lede">Upload the three Liongard recipe skills, connect your Liongard tenant, test the agent, and publish it to Microsoft Teams or Microsoft 365 Copilot.</p>
+
+  <div class="callout">
+    <strong>No GitHub account or GitHub Copilot license is required.</strong>
+    “GitHub Copilot harness” is Microsoft’s name for the newer agent runtime inside Copilot Studio. All setup below happens in Microsoft Copilot Studio.
+  </div>
+
+  <h2>What Liongard sends you</h2>
+  <p>Download and unzip the outer release package. It should contain:</p>
+  <pre>Liongard-Copilot-Studio/
+├── START-HERE.html                   Open this first (this guide)
+├── skills/
+│   ├── liongard-single-system.zip    Upload as a Skill (one vendor at a time)
+│   ├── liongard-rollups.zip          Upload as a Skill (all systems of one type)
+│   └── liongard-environment.zip      Upload as a Skill (onboarding, QBR, MFA audit, compliance)
+├── agent-instructions.txt            Customize the MSP profile, then paste into the agent
+└── manifest.json                     Release version and checksums</pre>
+  <p class="small">The library ships as three skills because Copilot Studio rejects very large skills. Upload all three; a report in one skill can use recipes from another (for example, onboarding runs the single-system recipe for each vendor you have).</p>
+  <div class="callout warning">
+    <strong>Keep credentials separate.</strong> The release package must never contain your Liongard access key, customer data, reports, or Microsoft credentials.
+  </div>
+
+  <h2>Before you begin</h2>
+  <ul class="checklist">
+    <li>A Copilot Studio standalone license and permission to create agents.</li>
+    <li>Copilot Credits allocated to the Power Platform environment, or pay-as-you-go enabled.</li>
+    <li>Your Liongard MCP endpoint and a Liongard access key supplied through an approved secure channel.</li>
+    <li>Microsoft administrator approval for MCP tools, the selected model, and publishing to Teams or Microsoft 365.</li>
+  </ul>
+
+  <h2>Set up the agent</h2>
+  <ol class="steps">
+    <li>
+      <h3>Create the agent</h3>
+      <p>Open <a href="https://copilotstudio.microsoft.com/">Microsoft Copilot Studio</a>, select the correct Power Platform environment, and create a new <strong>Agent</strong>.</p>
+      <p>Name it <strong>Liongard MSP Assistant</strong>. Use the current agent experience that displays a <strong>Build</strong> tab with <strong>Skills</strong> and <strong>Tools</strong>. Do not choose a classic or “other ways to build” agent.</p>
+      <p><strong>Keep the agent free of knowledge sources.</strong> Under <strong>Knowledge</strong>, remove everything, including <em>Search all websites</em> if it was added by default. Skills cannot be combined with uploaded knowledge files in the current preview, and web results must never mix with customer data. Do not add connected agents.</p>
+    </li>
+
+    <li>
+      <h3>Set the model and instructions</h3>
+      <p>Select a model that follows long, multi-step instructions. Tested for this release:</p>
+      <table>
+        <thead><tr><th>Model</th><th>Result</th></tr></thead>
+        <tbody>
+          <tr><td>GPT 6 Sol</td><td>Recommended where Anthropic models are not permitted (for example CMMC environments). Completed single-system, MFA audit and onboarding tests.</td></tr>
+          <tr><td>Claude Opus 5.5</td><td>Recommended where permitted; Liongard’s reference model for recipe testing.</td></tr>
+          <tr><td>GPT 5.6 Reasoning</td><td>Not supported: stalled without calling tools.</td></tr>
+          <tr><td>GPT 5.6 Terra</td><td>Not supported: skipped recipe steps.</td></tr>
+        </tbody>
+      </table>
+      <p>Open <code>agent-instructions.txt</code>, fill in the MSP profile block at the top, then paste the complete file into the agent’s <strong>Instructions</strong> field. Values you set there override Liongard’s default profile bundled in the skills.</p>
+      <p class="small">Profile values: MSP display name, primary color, default audience, default output format, preferred technology stack, and reporting thresholds.</p>
+    </li>
+
+    <li>
+      <h3>Upload the three Liongard skills</h3>
+      <p class="path">Build → Skills → Add skill → Upload a skill</p>
+      <p>Upload each file in <code>skills/</code> one at a time: <code>liongard-single-system.zip</code>, <code>liongard-rollups.zip</code> and <code>liongard-environment.zip</code>. Do not upload the outer release ZIP and do not unpack the skill ZIPs.</p>
+      <p><strong>After each upload, check the Skills list.</strong> Copilot Studio can show “saved” even when it has dropped a skill. All three must appear: <code>liongard-single-system</code>, <code>liongard-rollups</code>, <code>liongard-environment</code>. If one is missing, upload it again.</p>
+    </li>
+
+    <li>
+      <h3>Connect the Liongard MCP server</h3>
+      <p class="path">Build → Tools → Add → Model Context Protocol</p>
+      <table>
+        <thead><tr><th>Field</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Name</td><td><code>Liongard</code></td></tr>
+          <tr><td>Description</td><td>Read-only access to live Liongard environments, inspectors, inventory, metrics, alerts, detections, and timelines.</td></tr>
+          <tr><td>Server URL</td><td><code>https://&lt;your-instance&gt;.app.liongard.com/api/mcp</code></td></tr>
+          <tr><td>Header</td><td><code>Authorization</code></td></tr>
+          <tr><td>Value</td><td><code>Bearer &lt;accessKeyId&gt;:&lt;accessKeySecret&gt;</code></td></tr>
+        </tbody>
+      </table>
+      <p>Authorize the connection and save it. Enable the required <code>liongard_*</code> tools. Do not enter a Liongard UI password and do not paste the access key into agent instructions, knowledge, or the Skill.</p>
+    </li>
+
+    <li>
+      <h3>Verify the connection</h3>
+      <p>Open <strong>Preview</strong>, start a fresh conversation, and enter:</p>
+      <pre>Using Liongard, count the environments I can access.</pre>
+      <p>Open the activity trace. Confirm that the agent called <code>liongard_environment</code> with the <code>COUNT</code> operation and returned a result without an authentication error.</p>
+    </li>
+
+    <li>
+      <h3>Try a report</h3>
+      <p>In a fresh conversation, ask for an assessment of a vendor deployed in one of your environments, for example:</p>
+      <pre>Run the &lt;vendor&gt; assessment for &lt;environment&gt;. Markdown, internal audience.</pre>
+      <p>The activity trace should show a Liongard skill being used, and the report should end with a coverage table and “Manual Verification Needed”. Every metric in the coverage table has a value, “No data” or an error—none silently missing.</p>
+      <div class="callout">
+        <strong>Large reports may ask you to continue.</strong> An onboarding assessment can need several hundred Liongard calls. Copilot Studio limits how much one reply can do, so the agent may stop with “Reply continue to run the remaining steps.” Reply <code>continue</code> until the final report appears. Single-system reports normally finish in one reply.
+      </div>
+    </li>
+
+    <li>
+      <h3>Publish and share</h3>
+      <p>Select <strong>Publish</strong>. Add the <strong>Microsoft Teams</strong> or <strong>Microsoft 365 Copilot</strong> channel, then follow your organization’s administrator-approval process before making the agent broadly available.</p>
+    </li>
+  </ol>
+
+  <div class="callout success">
+    <strong>Setup is complete when:</strong> all three skills are loaded, the Liongard MCP connection succeeds, a test report completes with full coverage, and the published agent is limited to authorized users.
+  </div>
+
+  <h2>Updating the Liongard recipes</h2>
+  <ol>
+    <li>Download the new Liongard release and verify its version in <code>manifest.json</code>.</li>
+    <li>In the agent’s Skills list, remove each Liongard skill, then upload the new <code>liongard-single-system.zip</code>, <code>liongard-rollups.zip</code> and <code>liongard-environment.zip</code>.</li>
+    <li>Confirm all three appear in the Skills list.</li>
+    <li>Keep the existing MCP connection and MSP profile unless the release notes say otherwise.</li>
+    <li>Republish, then repeat the connection check and a test report in fresh conversations.</li>
+  </ol>
+
+  <h2>Quick troubleshooting</h2>
+  <table>
+    <thead><tr><th>Problem</th><th>What to check</th></tr></thead>
+    <tbody>
+      <tr><td>No Skills option</td><td>The agent was likely created with the older standard harness, or Skills are not enabled for this environment. Create an agent in the current experience or contact the Microsoft administrator.</td></tr>
+      <tr><td>Skill missing after upload</td><td>Copilot Studio sometimes drops an upload without an error. Upload that skill ZIP again. Upload the inner files from <code>skills/</code>, not the outer release, and confirm the checksum in <code>manifest.json</code>.</td></tr>
+      <tr><td>Agent searches knowledge or the web</td><td>Remove every knowledge source, including <em>Search all websites</em>; the skills hold the recipes.</td></tr>
+      <tr><td>Report stops before the end</td><td>Reply <code>continue</code>. If it stops again without progress, start a fresh conversation and run the report again.</td></tr>
+      <tr><td>401 / unauthorized</td><td>Confirm the endpoint ends in <code>/api/mcp</code> and the authorization value contains both access-key parts separated by one colon.</td></tr>
+      <tr><td>Tools do not appear</td><td>Edit or refresh the MCP connection so Copilot Studio repeats the MCP handshake and tool discovery.</td></tr>
+      <tr><td>Metrics were skipped</td><td>Start a fresh conversation, inspect the activity trace and coverage table, and record the model and missing sequence IDs before contacting support.</td></tr>
+    </tbody>
+  </table>
+
+  <footer>
+    This guide is for the Liongard Copilot Studio Skill edition. Microsoft interface labels can change. For current Microsoft instructions, see
+    <a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/agents-experience/skills-add-existing">Upload a skill</a>,
+    <a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/agents-experience/tools-add-mcp-server">Add an MCP server</a>, and
+    <a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/agents-experience/publication-channels-overview">Publish to a channel</a>.
+  </footer>
+</main>
+</body>
+</html>

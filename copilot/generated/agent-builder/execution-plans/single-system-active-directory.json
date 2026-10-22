@@ -1,0 +1,158 @@
+{
+  "primitiveCount": 16,
+  "recipe": "single-system-active-directory",
+  "source": "recipes/single-system-analysis/by-inspector/active-directory.md",
+  "sourceSha256": "381eb2c25297b132775ae25a2999f8ce56f29d45204d9ed1b076fc3236fc7c76",
+  "vendors": [
+    {
+      "inspectorId": 13,
+      "inspectorSlug": "active-directory-inspector",
+      "primitives": [
+        {
+          "compliantWhen": null,
+          "fieldGotcha": "Returns null when DC does not host the DHCP role. Check for null before attempting array operations. DHCP.Serverv4Scopes[0] confirmed null on 4 test systems \u2014 field exists in schema but requires DHCP role on DC.\n",
+          "id": "metrics:active-directory:dhcp-scopes",
+          "metricUuid": null,
+          "query": "DHCP.Serverv4Scopes",
+          "resultType": "array",
+          "seq": "P001"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:active-directory:guest-account-enabled",
+          "metricUuid": "4fa30dbd-6b99-46c9-802b-14f8b49864cb",
+          "query": "DefaultGuestAccountEnabled",
+          "resultType": "boolean",
+          "seq": "P002"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": "Recipe uses length(GuestMembers) \u2014 equivalent to GuestMembers | length(@). Global metric id=781 uses the pipe form; both evaluate identically.\n",
+          "id": "metrics:active-directory:guest-members-count",
+          "metricUuid": "e5856aa1-7b4d-412b-b3ab-06056896d1c7",
+          "query": "GuestMembers | length(@)",
+          "resultType": "integer",
+          "seq": "P003"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": "Unit is hours as a float. 0.25 = 15 min, 0.5 = 30 min. Do NOT interpret as minutes.",
+          "id": "metrics:active-directory:lockout-duration-hours",
+          "metricUuid": "ff9913f8-df23-4f06-935f-c1c79e52be55",
+          "query": "AccountPolicy.AccountLockoutDuration",
+          "resultType": "integer",
+          "seq": "P004"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": "Unit is hours as a float, same as AccountLockoutDuration.",
+          "id": "metrics:active-directory:lockout-observation-window-hours",
+          "metricUuid": "664f1bfd-e5b2-4ec1-a68c-e69e4bd42199",
+          "query": "AccountPolicy.AccountLockoutObservationWindow",
+          "resultType": "integer",
+          "seq": "P005"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": "0 = no lockout enforced. Validated: System A returned 0 (lockout disabled).",
+          "id": "metrics:active-directory:lockout-threshold",
+          "metricUuid": "c013da01-bcd1-46b1-9eb4-13012ede188c",
+          "query": "AccountPolicy.lockoutThreshold",
+          "resultType": "integer",
+          "seq": "P006"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": "Distinct from AccountPolicy.lockoutThreshold (integer). This is a display string. When lockoutThreshold = 0 this returns 'Infinite Bad Logins Allowed'.\n",
+          "id": "metrics:active-directory:lockout-threshold-string",
+          "metricUuid": null,
+          "query": "AccountPolicy.AccountLockoutThreshold",
+          "resultType": "string",
+          "seq": "P007"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:active-directory:max-password-age-days",
+          "metricUuid": "02a64ef0-090e-48a9-b582-1aba3d423e5b",
+          "query": "AccountPolicy.MaxPasswordAge",
+          "resultType": "integer",
+          "seq": "P008"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:active-directory:min-password-length",
+          "metricUuid": "7e3d321c-7c72-4f1d-9262-03572d65ee40",
+          "query": "AccountPolicy.MinPasswordLength",
+          "resultType": "integer",
+          "seq": "P009"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:active-directory:never-used-users-count",
+          "metricUuid": "833aba1d-da72-4921-86bb-c705338edff5",
+          "query": "Users[?LastLogonDate == `null` && DefaultSystemUser == `false` && Enabled == `true`] | length(@)",
+          "resultType": "integer",
+          "seq": "P010"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:active-directory:password-complexity-enabled",
+          "metricUuid": "ded38e56-cb10-404a-944b-65cb73dd3299",
+          "query": "AccountPolicy.PasswordComplexity",
+          "resultType": "boolean",
+          "seq": "P011"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:active-directory:password-history-length",
+          "metricUuid": "01e71458-4e0b-4aeb-9267-431e4758eda4",
+          "query": "AccountPolicy.pwdHistoryLength",
+          "resultType": "integer",
+          "seq": "P012"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:active-directory:password-reversible-encryption",
+          "metricUuid": null,
+          "query": "AccountPolicy.PasswordReversible",
+          "resultType": "boolean",
+          "seq": "P013"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:active-directory:privileged-users-count",
+          "metricUuid": "815d1d8e-b13f-4210-ba9a-f670718a3efe",
+          "query": "SystemInfo.NumPrivilegedUsers",
+          "resultType": "integer",
+          "seq": "P014"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:active-directory:privileged-users-list",
+          "metricUuid": "3353c2ad-1bd5-45c3-91a6-61b645244d3b",
+          "query": "SystemInfo.PrivilegedUsersStr",
+          "resultType": "string",
+          "seq": "P015"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:active-directory:stale-users-count",
+          "metricUuid": "06e99537-6d00-4470-aedc-3d36b30e29de",
+          "query": "Users[?UserActivity==`Stale` && DefaultSystemUser==`false` && Enabled == `true`] | length(@)",
+          "resultType": "integer",
+          "seq": "P016"
+        }
+      ]
+    }
+  ]
+}

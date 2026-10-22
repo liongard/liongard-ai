@@ -34,6 +34,11 @@
 
 ### Added
 
+- Microsoft Copilot package (proof of concept): `copilot/` with a
+  deterministic compiler (`scripts/copilot/build_copilot_package.py`), design
+  doc, setup guides, acceptance tests, and generated Copilot Studio and
+  Microsoft 365 Agent Builder editions for 4 representative recipes. CI runs
+  `--check` so stale or invalid generated output fails the build.
 - `scripts/sync-plugin-to-claude.sh` now mirrors `plugins/liongard/agents`
   into `.claude/agents` alongside skills and commands.
 - `docs/capability-status.md` release checklist covers publishing to the

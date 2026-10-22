@@ -1,0 +1,59 @@
+# metrics-system-type-all-firewalls-pfsense - Metric reference (pfsense-inspector)
+
+Required metric primitives for the recipe `system-type-all-firewalls` (System-Type Assessment — All Firewalls), inspector `pfsense-inspector` (ID 37). 18 primitives, sequence ids P058-P075. For every system of this inspector, evaluate EVERY primitive below with `liongard_metric EVALUATE` (`jmesPathQuery`, `systemId`, `environmentId`), retry a null or error once, and log one row per primitive per system. Respect each gotcha.
+
+- **`metrics:pfsense:alias-summary`** [P058] - pfSense — Alias Summary. Formatted summary of firewall aliases including name, type, description, detail, and address.
+  - metricId: 663 | query: `` aliases[].join( `, `, [join(`: `, [`Name`,to_string(name)]), join(`: `, [`type`,to_string(type)]), join(`: `, [`Description`,to_string(descr)]), join(`: `, [`Detail`,to_string(detail)]), join(`: `, [`Address`,to_string(address)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:pfsense:ca-certificate-summary`** [P059] - pfSense — CA Certificate Summary. Formatted summary of Certificate Authority entries including serial and description. Used to audit PKI configuration.
+  - metricId: 656 | query: `` ca[].join( `, `, [join(`: `, [`Serial`, to_string(serial)]), join(`: `, [`Description`, to_string(descr)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:pfsense:certificate-revocation-list-summary`** [P060] - pfSense — Certificate Revocation List Summary. Formatted summary of Certificate Revocation Lists including description, method, serial, and lifetime.
+  - metricId: 657 | query: `` crl[].join( `, `, [join(`: `, [`Description`, to_string(descr)]), join(`: `, [`Method`,to_string(method)]) , join(`: `, [`Serial`,to_string(serial)]), join(`: `, [`Lifetime`,to_string(lifetime)])]) `` | result: array
+  - status: VALIDATED
+- **`metrics:pfsense:cron-job-summary`** [P061] - pfSense — Cron Job Summary. Formatted summary of scheduled cron jobs including who, hour, day of month, day of week, month, minute, and command. Use to detect unauthorized scheduled tasks.
+  - metricId: 658 | query: `` cron[].join( `, `, [join(`: `, [`Who`, to_string(who)]), join(`: `, [`Hour`,to_string(hour)]), join(`: `, [`Day of the Month`, to_string(mday)]), join(`: `, [`Day of the week`, to_string(wday)]), join(`: `, [`Month`, to_string(month)]), join(`: `, [`Minute`, to_string(minute)]) , join(`: `, [`Command`, to_string(command)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:pfsense:firewall-rule-summary`** [P062] - pfSense — Firewall Rule Summary. Formatted summary of all firewall rules including description, type, source, interface, and destination.
+  - metricId: 660 | query: `` filter[?type != `null`].join( `, `, [join(`: `, [`Description`, to_string(descr)]), join(`: `, [`Type`,to_string(type)]), join(`: `, [`Source`, to_string(source)]) , join(`: `, [`Interface`,to_string(interface)]), join(`: `, [`Destination`,to_string(destination)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:pfsense:groups-summary`** [P063] - pfSense — Groups Summary. Formatted summary of all groups including name, description, privileges, and scope.
+  - metricId: 662 | query: `` groups[].join( `, `, [join(`: `, [`Name`, to_string(name)]), join(`: `, [`Description`,to_string(description)]) join(`: `, [`Privileges`,to_string(priv)]), join(`: `, [`Scope`,to_string(scope)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:pfsense:interface-summary`** [P064] - pfSense — Interface Summary. Formatted summary of all network interfaces including physical interface, description, IP address, subnet, and gateway.
+  - metricId: 666 | query: `` interfaces[].join( `, `, [join(`: `, [`Interface`, to_string(if)]), join(`: `, [`Description`,to_string(descr)]), join(`: `, [`IP Address`,to_string(ipaddr)]), join(`: `, [`Subnet`,to_string(subnet)]), join(`: `, [`Gateway`,to_string(gateway)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:pfsense:nat-1to1-rule-summary`** [P065] - pfSense — NAT 1:1 Rule Summary. Formatted summary of 1:1 NAT rules including description, source address, external address, interface, and destination.
+  - metricId: 654 | query: `` nat.onetoone[].join( `, `, [join(`: `, [`Description`, descr]), join(`: `, [`Source Address`, source.address]), join(`: `, [`External Address`, to_string(external)]), join(`: `, [`Interface`, to_string(interface)]), join(`: `, [`Destination`, to_string(destination)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:pfsense:outbound-nat-list`** [P066] - pfSense — Outbound NAT Configuration. Outbound NAT configuration object from nat.outbound. Use to confirm outbound NAT mode (automatic/hybrid/manual).
+  - metricId: 653 | query: `nat.outbound` | result: object
+  - status: VALIDATED
+- **`metrics:pfsense:port-forwarding-rule-summary`** [P067] - pfSense — Port Forwarding Rule Summary. Formatted summary of port forwarding (inbound NAT) rules including description, target, protocol, interface, local port, and destination.
+  - metricId: 652 | query: `` nat.rule[].join( `, `, [join(`: `, [`Description`, to_string(descr)]), join(`: `, [`Target`, to_string(target) ]) , join(`: `, [`Protocol`, to_string(protocol) ]), join(`: `, [`Interface`, to_string(interface) ]) , join(`: `, [`Local-Port`, to_string("local-port") ]) , join(`: `, [`Destination[Port,Network]`, to_string(destination)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:pfsense:software-version`** [P068] - pfSense — Software Version. Running pfSense version number from SystemInfo.version (float, e.g. 19.1). Distinguishes Community Edition from pfSense Plus and tracks firmware currency.
+  - metricId: 231 | query: `SystemInfo.version` | result: float
+  - gotcha: SystemInfo.version is a FLOAT (e.g., 19.1), not a string. Prior resultType 'string' was incorrect. Do not use string comparison on this field.
+  - status: VALIDATED
+- **`metrics:pfsense:switchport-summary`** [P069] - pfSense — Switchport Summary. Formatted summary of managed switch ports including port number and state (applies to hardware with embedded switch, e.g., SG-3100).
+  - metricId: 665 | query: `` switches.switch.swports.swport[].join( `, `, [join(`: `, [`Port`, to_string(port)]), join(`: `, [`State`,to_string(state)]) ]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:pfsense:time-servers`** [P070] - pfSense — Configured Time Servers (NTP). NTP time server addresses configured on the appliance from SystemInfo.timeservers. Accurate time is required for VPN, certificates, and log correlation.
+  - metricId: 230 | query: `SystemInfo.timeservers` | result: string
+  - status: VALIDATED
+- **`metrics:pfsense:user-list-with-scope`** [P071] - pfSense — User List with Scope. Array of [username, scope] pairs for all local users. Scope distinguishes local from remote/LDAP accounts.
+  - metricId: 229 | query: `users[].[name, scope]` | result: array
+  - status: VALIDATED
+- **`metrics:pfsense:user-server-certificate-summary`** [P072] - pfSense — User and Server Certificate Summary. Formatted summary of user and server certificates including type and description.
+  - metricId: 655 | query: `` certificate_keys[].join( `, `, [join(`: `, [`Type`, to_string(type)]), join(`: `, [`Description`, to_string(descr)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:pfsense:users-added-summary`** [P073] - pfSense — Users Added Summary. Formatted summary of all user accounts including name and scope.
+  - metricId: 661 | query: `` users[].join( `, `, [join(`: `, [`Name`, to_string(name)]), join(`: `, [`Scope`, to_string(scope)])]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:pfsense:virtual-ip-summary`** [P074] - pfSense — Virtual IP Summary. Formatted summary of virtual IPs (CARP, IP Alias, etc.) including mode, type, description, subnet, subnet bits, and interface.
+  - metricId: 664 | query: `` virtualip.vip[].join( `, `, [join(`: `, [`Mode`, to_string(mode)]), join(`: `, [`Type`,to_string(type)]), join(`: `, [`Description`,to_string(descr)]) , join(`: `, [`Subnet`,to_string(subnet)]) , join(`: `, [`Subnet Bits`,to_string(subnet_bits)]), join(`: `, [`Interface`,to_string(interface)]) ]) | sort(@) `` | result: array
+  - status: VALIDATED
+- **`metrics:pfsense:vlan-summary`** [P075] - pfSense — VLAN Summary. Formatted summary of configured VLANs including description, tag, and virtual interface.
+  - metricId: 659 | query: `` vlans[].join( `, `, [join(`: `, [`Description`, to_string(descr)]), join(`: `, [`Tag`,to_string(tag)]), join(`: `, [`Interface`, to_string(vlanif)])]) | sort(@) `` | result: array
+  - status: VALIDATED

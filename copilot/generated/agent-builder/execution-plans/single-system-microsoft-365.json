@@ -1,0 +1,194 @@
+{
+  "primitiveCount": 20,
+  "recipe": "single-system-microsoft-365",
+  "source": "recipes/single-system-analysis/by-inspector/microsoft-365.md",
+  "sourceSha256": "2e90756cada9cbf44edc3dddaedd92fdbd652c45a5eb75f1409c40017f315b7c",
+  "vendors": [
+    {
+      "inspectorId": 8,
+      "inspectorSlug": "microsoft-365-inspector",
+      "primitives": [
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:microsoft-365:active-users-count",
+          "metricUuid": "29ecfd36-6b42-41c0-8377-a14247d09542",
+          "query": "length(Users[?accountEnabled == `true`])",
+          "resultType": "integer",
+          "seq": "P001"
+        },
+        {
+          "compliantWhen": "result == 0",
+          "fieldGotcha": null,
+          "id": "metrics:microsoft-365:admin-users-mfa-disabled-count",
+          "metricUuid": "2ff8cf28-d363-401d-b5d8-bc5c38aac4cb",
+          "query": "subtract(length(Users[?Privileged == `Yes`]), length(Users[?Privileged == `Yes` && mfaDetails.enforced == `true`]))",
+          "resultType": "integer",
+          "seq": "P002"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:microsoft-365:associated-domains",
+          "metricUuid": "b63da025-218e-43b1-9b9c-871ef445eabf",
+          "query": "Domains[*].id | join(`, `, @)",
+          "resultType": "string",
+          "seq": "P003"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:microsoft-365:conditional-access-policies-list",
+          "metricUuid": "36d8e11a-7f6c-469d-8599-60efe1317aa7",
+          "query": "Policies.ConditionalAccess[?state == `enabled`].displayName",
+          "resultType": "array",
+          "seq": "P004"
+        },
+        {
+          "compliantWhen": "result == true when hybrid environment expected; result == false for cloud-only tenants",
+          "fieldGotcha": null,
+          "id": "metrics:microsoft-365:directory-sync-enabled",
+          "metricUuid": "914da63e-07b7-47f2-878c-6ab4c0027a12",
+          "query": "SystemInfo.DirectorySync[].DirectorySyncEnabled | [0]",
+          "resultType": "boolean",
+          "seq": "P005"
+        },
+        {
+          "compliantWhen": "result == 0",
+          "fieldGotcha": null,
+          "id": "metrics:microsoft-365:directory-sync-stale-hours-count",
+          "metricUuid": "9dd1e31c-4513-4aa3-8bec-f1d1ce79bce3",
+          "query": "SystemInfo.DirectorySync[?DirectorySyncEnabled == `true` && HoursSinceLastSync_r >= `24`] | length(@)",
+          "resultType": "integer",
+          "seq": "P006"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:microsoft-365:disabled-users-count",
+          "metricUuid": "0fc59884-6f3d-4a1e-a181-7a2a7d932531",
+          "query": "Users[?accountEnabled == `false`]|length(@)",
+          "resultType": "integer",
+          "seq": "P007"
+        },
+        {
+          "compliantWhen": "result == 0",
+          "fieldGotcha": null,
+          "id": "metrics:microsoft-365:disabled-users-with-licenses-count",
+          "metricUuid": "40800f5f-5b94-47cc-9ff4-b0e460ea35ab",
+          "query": "Users[?accountEnabled == `false` && assignedLicenses.length(@) > `0`] | length(@)",
+          "resultType": "integer",
+          "seq": "P008"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:microsoft-365:enterprise-e3-licenses-consumed",
+          "metricUuid": "d3912451-5409-4d0b-936c-f9f3e28c346a",
+          "query": "Licensing[?skuPartNumber == `ENTERPRISEPACK`].consumedUnits | [0]",
+          "resultType": "integer",
+          "seq": "P009"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:microsoft-365:enterprise-e5-licenses-consumed",
+          "metricUuid": "5c31424a-feef-4882-bc19-beeeddd6cddb",
+          "query": "Licensing[?skuPartNumber == `ENTERPRISEPREMIUM`].consumedUnits | [0]",
+          "resultType": "integer",
+          "seq": "P010"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:microsoft-365:licensed-users-count",
+          "metricUuid": "5e544b81-36c4-497e-af78-2c245160ac6f",
+          "query": "Users[?Assigned_Products != ``] | length(@)",
+          "resultType": "integer",
+          "seq": "P011"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:microsoft-365:licenses-total-assigned-count",
+          "metricUuid": "921b72a4-9cb5-484a-87e0-f70dc1d6acd9",
+          "query": "Licensing[].consumedUnits | sum(@)",
+          "resultType": "integer",
+          "seq": "P012"
+        },
+        {
+          "compliantWhen": "result == 0",
+          "fieldGotcha": null,
+          "id": "metrics:microsoft-365:non-admin-users-mfa-disabled-count",
+          "metricUuid": "61316daa-1146-4eb4-bb90-36f360a01a54",
+          "query": "subtract(length(Users[?Privileged != `Yes`]), length(Users[?Privileged != `Yes` && mfaDetails.enforced == `true`]))",
+          "resultType": "integer",
+          "seq": "P013"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:microsoft-365:privileged-users-count",
+          "metricUuid": "a2d664f3-7c88-44af-97c2-afbda125296e",
+          "query": "Users[?Privileged == `Yes`] | length(@)",
+          "resultType": "integer",
+          "seq": "P014"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:microsoft-365:privileged-users-list",
+          "metricUuid": "d1869d23-f02b-4b69-a161-deade46b6352",
+          "query": "Users[?Privileged==`Yes`] | sort_by(@,&id)[].[displayName || userPrincipalName] | []",
+          "resultType": "array",
+          "seq": "P015"
+        },
+        {
+          "compliantWhen": "result == true when Conditional Access is not in use (Basic or Business tenants)",
+          "fieldGotcha": null,
+          "id": "metrics:microsoft-365:security-defaults-enabled",
+          "metricUuid": "62496d5d-f1ad-487f-8ae9-2b87e577943e",
+          "query": "SystemInfo.Overview.securityDefaults.isEnabled",
+          "resultType": "boolean",
+          "seq": "P016"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": "SharePoint sites key is lowercase 'sites' \u2014 JMESPath is case-sensitive. 'Sites' (capital S) returns null. VALIDATED: System B (2026-05-22, inspectorID=8) returned 18 sites.",
+          "id": "metrics:microsoft-365:sharepoint-sites-count",
+          "metricUuid": "9a4b9a00-d026-4906-9c9d-21c1e4696aeb",
+          "query": "sites[] | length(@)",
+          "resultType": "integer",
+          "seq": "P017"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:microsoft-365:stale-licensed-users-count",
+          "metricUuid": "caf567e8-0705-4b0c-9746-74bd84fce054",
+          "query": "length(Users[?activeLast30Days==`false` && accountEnabled == `true` ])",
+          "resultType": "integer",
+          "seq": "P018"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:microsoft-365:unlicensed-users-count",
+          "metricUuid": "6725435b-1569-4265-8269-da11ce20bc78",
+          "query": "Users[?Assigned_Products == ``] | length(@)",
+          "resultType": "integer",
+          "seq": "P019"
+        },
+        {
+          "compliantWhen": "result == 0",
+          "fieldGotcha": null,
+          "id": "metrics:microsoft-365:users-not-mfa-registered-count",
+          "metricUuid": "629282ed-8dc0-4448-9c71-a2a31acc05e2",
+          "query": "Users[?isMfaRegistered_r != `Enabled` && accountEnabled == `true`] | length(@)",
+          "resultType": "integer",
+          "seq": "P020"
+        }
+      ]
+    }
+  ]
+}

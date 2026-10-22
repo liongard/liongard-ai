@@ -246,8 +246,8 @@ the client is relying on sync services as backup — flag if so.
 
 | Item | Source | Notes |
 |---|---|---|
-| Below-$250M form | `internal/cyber-insurance-forms/beazley/beazley-cyber-insurance-below-250m-2023.txt` | F00863 042023 ed. |
-| Short sub-$20M form | `internal/cyber-insurance-forms/beazley/beazley-cyber-insurance-short-sub-20m.txt` | UK/ROW short form |
+| Below-$250M form | Carrier application (from carrier or broker) | F00863 042023 ed. |
+| Short sub-$20M form | Carrier application (from carrier or broker) | UK/ROW short form |
 | Evidence mapping | `domains/auth.md`, `domains/endpoint.md`, `domains/backup.md`, `domains/network.md`, `domains/governance.md` | Domain files are metric source of truth |
 
 ---

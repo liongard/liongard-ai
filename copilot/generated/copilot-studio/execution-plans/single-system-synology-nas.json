@@ -1,0 +1,230 @@
+{
+  "primitiveCount": 24,
+  "recipe": "single-system-synology-nas",
+  "source": "recipes/single-system-analysis/by-inspector/synology-nas.md",
+  "sourceSha256": "d4eb46bc2c1141771ca61b98220dfe631e08f5f08acb29934cec4c9d68d9daba",
+  "vendors": [
+    {
+      "inspectorId": 64,
+      "inspectorSlug": "synology-nas-inspector",
+      "primitives": [
+        {
+          "compliantWhen": null,
+          "fieldGotcha": "Users[].expired is a STRING \u2014 \"normal\" means active, \"now\" means currently expired. Filter with == `normal` (backtick literal). Don't compare against true/false.",
+          "id": "metrics:synology-nas:active-users-count",
+          "metricUuid": "84b85e91-c810-4d82-8a8c-f0d167bde3fc",
+          "query": "Users[?expired == `normal`] | length(@)",
+          "resultType": "integer",
+          "seq": "P001"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": "See admin-users-list. Liongard catalog metric 398 still uses the old name-only query (counts every user): do not use it until it is corrected.",
+          "id": "metrics:synology-nas:admin-users-count",
+          "metricUuid": null,
+          "query": "Users[?GroupMembership[?name == 'administrators' && is_member] || GroupMembership.groups[?name == 'administrators' && is_member]] | length(@)",
+          "resultType": "integer",
+          "seq": "P002"
+        },
+        {
+          "compliantWhen": "result contains only expected admin accounts",
+          "fieldGotcha": "GroupMembership is an array of {name, is_member} on DSM 6 and an object {groups: [...]} on DSM 7. Every user lists the administrators group with is_member true/false, so filter on is_member; matching the group name alone returns every user. Liongard catalog metric 397 still uses the old name-only query: do not use it until it is corrected.",
+          "id": "metrics:synology-nas:admin-users-list",
+          "metricUuid": null,
+          "query": "Users[?GroupMembership[?name == 'administrators' && is_member] || GroupMembership.groups[?name == 'administrators' && is_member]].name",
+          "resultType": "array",
+          "seq": "P003"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:synology-nas:disks-normal-count",
+          "metricUuid": null,
+          "query": "length(Disks[?status == 'normal'])",
+          "resultType": "integer",
+          "seq": "P004"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": "Disks[].isSsd is a BOOLEAN (true/false), not a string. Filter with == `true` (backtick literal). remain_life is an OBJECT {trustable: bool, value: int}, not a scalar \u2014 use remain_life.value for the percentage integer.",
+          "id": "metrics:synology-nas:disks-ssd-count",
+          "metricUuid": null,
+          "query": "length(Disks[?isSsd == `true`])",
+          "resultType": "integer",
+          "seq": "P005"
+        },
+        {
+          "compliantWhen": "result == 0",
+          "fieldGotcha": "drive_status_category / drive_status_key do not exist in current dataprints (DSM 6.2 and 7.1); filters on them always return 0 (a silent false pass). Use status. Liongard catalog metric 915 still uses the old fields: do not use it until it is corrected.",
+          "id": "metrics:synology-nas:drives-not-normal-count",
+          "metricUuid": null,
+          "query": "Disks[?status != 'normal'] | length(@)",
+          "resultType": "integer",
+          "seq": "P006"
+        },
+        {
+          "compliantWhen": "result == []",
+          "fieldGotcha": "drive_status_category / drive_status_key do not exist in current dataprints (DSM 6.2 and 7.1); filters on them always return 0 (a silent false pass). Use status. Liongard catalog metric 914 still uses the old fields: do not use it until it is corrected.",
+          "id": "metrics:synology-nas:drives-not-normal-list",
+          "metricUuid": null,
+          "query": "Disks[?status != 'normal'].name",
+          "resultType": "array",
+          "seq": "P007"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:synology-nas:firmware-version",
+          "metricUuid": "5b2b65ab-aefc-43ff-a1a7-93b26e86b606",
+          "query": "SystemInfo.firmware_ver",
+          "resultType": "string",
+          "seq": "P008"
+        },
+        {
+          "compliantWhen": "result == 0",
+          "fieldGotcha": null,
+          "id": "metrics:synology-nas:iscsi-offline-count",
+          "metricUuid": "29e58d0b-5de8-4096-bddf-27a849095f91",
+          "query": "ISCSITargets[?enabled == `true` && status != `online`] | [?status != `connected`] | length(@)",
+          "resultType": "integer",
+          "seq": "P009"
+        },
+        {
+          "compliantWhen": "result == []",
+          "fieldGotcha": null,
+          "id": "metrics:synology-nas:iscsi-offline-list",
+          "metricUuid": "ff3f4b72-bf56-4b15-a5f1-ddcf737449b8",
+          "query": "ISCSITargets[?enabled == `true` && status != `online`] | [?status != `connected`].join(`: `, [name, iqn])",
+          "resultType": "array",
+          "seq": "P010"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:synology-nas:model",
+          "metricUuid": "364e5b2c-3fee-4dcc-9daa-f49a1a358ef1",
+          "query": "SystemInfo.model",
+          "resultType": "string",
+          "seq": "P011"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": "Service state field varies: DSM 7 enable_status \"enabled\"/\"disabled\"/\"static\"; older DSM 6 enable_status \"enable\"/\"disable\"; newer DSM 6 boolean enable. Use the combined filter. If enabled + disabled is 0 while length(Services) > 0, report Not evaluated, never \"no services enabled\".",
+          "id": "metrics:synology-nas:risky-services-enabled",
+          "metricUuid": null,
+          "query": "Services[?enable_status == 'enabled' || enable_status == 'enable' || type(enable) == 'boolean' && enable].display_name",
+          "resultType": "array",
+          "seq": "P012"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:synology-nas:serial",
+          "metricUuid": "0a9a4482-e0f6-4672-918d-99d5c1f9a2d1",
+          "query": "SystemInfo.serial",
+          "resultType": "string",
+          "seq": "P013"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": "Service state field varies: DSM 7 enable_status \"enabled\"/\"disabled\"/\"static\"; older DSM 6 enable_status \"enable\"/\"disable\"; newer DSM 6 boolean enable. Use the combined filter. If enabled + disabled is 0 while length(Services) > 0, report Not evaluated, never \"no services enabled\".",
+          "id": "metrics:synology-nas:services-disabled-count",
+          "metricUuid": null,
+          "query": "length(Services[?enable_status == 'disabled' || enable_status == 'disable' || type(enable) == 'boolean' && !enable])",
+          "resultType": "integer",
+          "seq": "P014"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": "Service state field varies: DSM 7 enable_status \"enabled\"/\"disabled\"/\"static\"; older DSM 6 enable_status \"enable\"/\"disable\"; newer DSM 6 boolean enable. Use the combined filter. If enabled + disabled is 0 while length(Services) > 0, report Not evaluated, never \"no services enabled\".",
+          "id": "metrics:synology-nas:services-enabled-count",
+          "metricUuid": null,
+          "query": "length(Services[?enable_status == 'enabled' || enable_status == 'enable' || type(enable) == 'boolean' && enable])",
+          "resultType": "integer",
+          "seq": "P015"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:synology-nas:services-total-count",
+          "metricUuid": null,
+          "query": "length(Services)",
+          "resultType": "integer",
+          "seq": "P016"
+        },
+        {
+          "compliantWhen": "result == 0",
+          "fieldGotcha": "Shares[].encryption is an INTEGER (0 = not encrypted, 1 = encrypted), NOT a boolean. Don't compare against `false`.",
+          "id": "metrics:synology-nas:shares-unencrypted-count",
+          "metricUuid": null,
+          "query": "length(Shares[?encryption == `0`])",
+          "resultType": "integer",
+          "seq": "P017"
+        },
+        {
+          "compliantWhen": "result == 0",
+          "fieldGotcha": null,
+          "id": "metrics:synology-nas:storage-pools-not-normal-count",
+          "metricUuid": "935b7781-ec5a-498e-8e55-67f7f9ce118d",
+          "query": "StoragePools[?status !=`normal`] | length(@)",
+          "resultType": "integer",
+          "seq": "P018"
+        },
+        {
+          "compliantWhen": "result == []",
+          "fieldGotcha": null,
+          "id": "metrics:synology-nas:storage-pools-not-normal-list",
+          "metricUuid": "9989f3fa-2477-4671-92a3-4e1f8a9e45d7",
+          "query": "StoragePools[?status !=`normal`].id",
+          "resultType": "array",
+          "seq": "P019"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:synology-nas:system-temperature-celsius",
+          "metricUuid": "e2a7b34e-f3e6-44ee-bffe-8eac955b2fe5",
+          "query": "SystemInfo.sys_temp",
+          "resultType": "integer",
+          "seq": "P020"
+        },
+        {
+          "compliantWhen": "result == 0",
+          "fieldGotcha": null,
+          "id": "metrics:synology-nas:volumes-below-20pct-free-count",
+          "metricUuid": "1fd5e1f2-713e-4ca7-a694-081e2ea1c1e5",
+          "query": "Volumes[?volume_percentage_free_r < `20`] | length(@)",
+          "resultType": "integer",
+          "seq": "P021"
+        },
+        {
+          "compliantWhen": "result == []",
+          "fieldGotcha": null,
+          "id": "metrics:synology-nas:volumes-below-20pct-free-list",
+          "metricUuid": "9f8619c4-6d49-4e69-a44d-1ca6c2e06f69",
+          "query": "Volumes[?volume_percentage_free_r < `20`].id",
+          "resultType": "array",
+          "seq": "P022"
+        },
+        {
+          "compliantWhen": "result == 0",
+          "fieldGotcha": null,
+          "id": "metrics:synology-nas:volumes-not-normal-count",
+          "metricUuid": "2c7104c0-19c5-425c-9fe1-21be677d2441",
+          "query": "Volumes[?!contains(status,`normal`)] | length(@)",
+          "resultType": "integer",
+          "seq": "P023"
+        },
+        {
+          "compliantWhen": "result == []",
+          "fieldGotcha": null,
+          "id": "metrics:synology-nas:volumes-not-normal-list",
+          "metricUuid": "9cffb58d-30d5-420e-80ff-d39b7e67c390",
+          "query": "Volumes[?!contains(status,`normal`)].id",
+          "resultType": "array",
+          "seq": "P024"
+        }
+      ]
+    }
+  ]
+}

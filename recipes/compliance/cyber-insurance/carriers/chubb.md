@@ -163,8 +163,8 @@ Customer, partner, and third-party record volumes require client attestation.
 
 | Item | Source | Notes |
 |---|---|---|
-| PF-48163 Ed. 08/17 | `internal/cyber-insurance-forms/chubb/chubb-cyber-privacy-new-business-application-2017.txt` | Full extraction |
-| Small business edition Ed. 10/16 | `internal/cyber-insurance-forms/chubb/chubb-cyber-erm-small-business-application-2016.txt` | Similar controls, adds Cyber Crime section |
+| PF-48163 Ed. 08/17 | Carrier application (from carrier or broker) | Full extraction |
+| Small business edition Ed. 10/16 | Carrier application (from carrier or broker) | Similar controls, adds Cyber Crime section |
 | Evidence mapping | `domains/endpoint.md`, `domains/network.md`, `domains/backup.md` | Domain files are metric source of truth |
 
 ---

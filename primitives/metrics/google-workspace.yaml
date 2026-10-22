@@ -38,17 +38,15 @@ primitives:
       '@type': liongard:Inspector
       inspectorId: 61
       inspectorSlug: google-workspace-inspector
-    jmesPath: N/A
-    name: Google Workspace — 2-Step Verification Coverage Percent
-    notes: 'DATA GAP: JMESPath cannot compute percentages natively. Use length(Users[?isEnforcedIn2Sv
-      == `true`]) for raw count and compute pct in agent logic. No _r coverage-pct field
-      exists in the dataprint.'
-    resultType: integer
+    name: "Google Workspace — 2-Step Verification Enrollment (enrolled / total)"
     sourceRecipe: recipes/single-system-analysis/by-inspector/google-workspace.md
-    status: PROPOSED
-    validatedOn: '2026-05-28'
-    validatedSystemReference: 'System A (env: WidgetCo, inspected 2026-04-30) — no computed
       pct field; enforced count = 5 of 8'
+    jmesPath: "{enrolled: length(Users[?isEnrolledIn2Sv && !suspended && !archived]), total: length(Users[?!suspended && !archived])}"
+    resultType: "object"
+    fieldGotcha: "Returns enrolled and total; compute the percentage as enrolled / total. isEnrolledIn2Sv_m holds strings; do not filter on it."
+    status: "VALIDATED"
+    validatedOn: "2026-10-07"
+    validatedSystemReference: "Systems A, B (dev environment), live EVALUATE 2026-10-07"
 
   - '@id': metrics:google-workspace:super-admin-count
     '@type': liongard:MetricPrimitive
@@ -131,63 +129,8 @@ primitives:
     validatedSystemReference: 'System A (env: WidgetCo, inspected 2026-04-30) — returned
       0 (PASS)'
 
-  - '@id': metrics:google-workspace:third-party-apps-unverified-count
-    '@type': liongard:MetricPrimitive
-    dateAdded: '2026-05-26'
-    description: Number of unverified third-party apps authorized in the GWS tenant.
-    evaluates:
-      '@type': liongard:Inspector
-      inspectorId: 61
-      inspectorSlug: google-workspace-inspector
-    jmesPath: N/A
-    name: Google Workspace — Unverified Third-Party App Count
-    notes: 'DATA GAP: GWS dataprint does not include OAuth app authorizations or third-party
-      app inventory.'
-    resultType: integer
-    sourceRecipe: recipes/single-system-analysis/by-inspector/google-workspace.md
-    status: PROPOSED
-    validatedOn: '2026-05-28'
-    validatedSystemReference: 'System A (env: WidgetCo, inspected 2026-04-30) — no third-party
-      OAuth app data in dataprint'
 
-  - '@id': metrics:google-workspace:less-secure-app-access-enabled
-    '@type': liongard:MetricPrimitive
-    dateAdded: '2026-05-26'
-    description: Whether the deprecated Less Secure App Access setting is enabled in
-      the GWS tenant.
-    evaluates:
-      '@type': liongard:Inspector
-      inspectorId: 61
-      inspectorSlug: google-workspace-inspector
-    jmesPath: N/A
-    name: Google Workspace — Less Secure App Access Enabled
-    notes: 'DATA GAP: GWS dataprint does not expose the Less Secure App Access tenant
-      setting.'
-    resultType: boolean
-    sourceRecipe: recipes/single-system-analysis/by-inspector/google-workspace.md
-    status: PROPOSED
-    validatedOn: '2026-05-28'
-    validatedSystemReference: 'System A (env: WidgetCo, inspected 2026-04-30) — no security
-      settings object in dataprint'
 
-  - '@id': metrics:google-workspace:groups-open-membership-count
-    '@type': liongard:MetricPrimitive
-    dateAdded: '2026-05-26'
-    description: Number of groups with open membership (anyone in domain can join).
-    evaluates:
-      '@type': liongard:Inspector
-      inspectorId: 61
-      inspectorSlug: google-workspace-inspector
-    jmesPath: N/A
-    name: Google Workspace — Open-Membership Group Count
-    notes: 'DATA GAP: Groups[] has adminCreated, directMembersCount, email, name, id,
-      kind but NOT whoCanJoin or access-control settings.'
-    resultType: integer
-    sourceRecipe: recipes/single-system-analysis/by-inspector/google-workspace.md
-    status: PROPOSED
-    validatedOn: '2026-05-28'
-    validatedSystemReference: 'System A (env: WidgetCo, inspected 2026-04-30) — Groups[]
-      does not include whoCanJoin field'
 
   - '@id': metrics:google-workspace:licensing-utilization-pct
     '@type': liongard:MetricPrimitive
@@ -197,16 +140,13 @@ primitives:
       '@type': liongard:Inspector
       inspectorId: 61
       inspectorSlug: google-workspace-inspector
-    jmesPath: N/A
-    name: Google Workspace — License Utilization Percent
-    notes: 'DATA GAP: Subscriptions[].seats.licensedNumberOfSeats and seats.numberOfSeats
-      are available but JMESPath cannot compute a percentage. Use Subscriptions[*].{sku:
-      skuName, licensed: seats.licensedNumberOfSeats, total: seats.numberOfSeats, status:
-      status} for a licensing inventory table.'
-    resultType: integer
+    name: "Google Workspace — Subscription Seat Summary"
     sourceRecipe: recipes/single-system-analysis/by-inspector/google-workspace.md
-    status: PROPOSED
-    validatedOn: '2026-05-28'
-    validatedSystemReference: 'System A (env: WidgetCo, inspected 2026-04-30) — Subscriptions[]
       exists but no direct utilization pct field'
+    jmesPath: "Subscriptions[].{sku: skuName, status: status, purchased: seats.numberOfSeats, max: seats.maximumNumberOfSeats, assigned: seats.licensedNumberOfSeats}"
+    resultType: "array"
+    fieldGotcha: "Subscriptions present on one of three systems; on flexible plans assigned can exceed purchased, so report the fields rather than a single percentage."
+    status: "VALIDATED"
+    validatedOn: "2026-10-07"
+    validatedSystemReference: "Systems A, B (dev environment), live EVALUATE 2026-10-07"
 

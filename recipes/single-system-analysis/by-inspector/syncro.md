@@ -14,8 +14,7 @@ output_formats: [markdown, word, pptx, xlsx]
 primitives:
   # Reconciled 2026-05-29 vs live dataprint (live production environment, inspected 2026-05-29).
   # This dataprint exposes Companies/Users/Contracts/Products only — no devices,
-  # tickets, invoices, patches, SLA, or per-user MFA. Those refs were pruned to
-  # internal/proposed-metrics-backlog.md.
+  # tickets, invoices, patches, SLA, or per-user MFA. Those refs were removed.
   - metrics:syncro-inspector:companies-total-count
   - metrics:syncro-inspector:companies-active-count
   - metrics:syncro-inspector:users-total-count

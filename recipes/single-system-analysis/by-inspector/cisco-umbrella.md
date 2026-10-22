@@ -11,7 +11,7 @@ compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, li
 personas: [noc, soc, vcio-account-manager, technical-alignment-manager]
 output_formats: [markdown, word, pptx]
 primitives:
-  # Reconciled 2026-05-29: pruned dangling refs not present in the live dataprint (see internal/proposed-metrics-backlog.md).
+  # Reconciled 2026-05-29: pruned dangling refs not present in the live dataprint.
   - metrics:cisco-umbrella-inspector:console-user-count
   - metrics:cisco-umbrella-inspector:destination-list-count
   - metrics:cisco-umbrella-inspector:encrypted-roaming-client-count

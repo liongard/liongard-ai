@@ -1,0 +1,83 @@
+name: Repo Validation
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  validate:
+    name: Validate repo, recipes, primitives, schemas
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Run public repo validator
+        run: node scripts/validate-repo.js
+
+      - name: Verify .claude/ mirror matches plugins/liongard/ (canonical)
+        run: bash scripts/sync-plugin-to-claude.sh --check
+
+      - name: Check YAML / JSON syntax
+        run: |
+          pip install pyyaml
+          python3 - <<'EOF'
+          import json, pathlib, sys, yaml
+
+          errors = []
+          for pattern in ("**/*.yaml", "**/*.yml"):
+              for path in pathlib.Path(".").glob(pattern):
+                  if any(part in {".git", "node_modules", "outputs"} for part in path.parts):
+                      continue
+                  try:
+                      with open(path, encoding="utf-8") as handle:
+                          list(yaml.safe_load_all(handle))
+                  except Exception as exc:
+                      errors.append(f"{path}: {exc}")
+          for path in pathlib.Path(".").glob("**/*.json"):
+              if any(part in {".git", "node_modules", "outputs"} for part in path.parts):
+                  continue
+              try:
+                  json.loads(path.read_text(encoding="utf-8"))
+              except Exception as exc:
+                  errors.append(f"{path}: {exc}")
+          if errors:
+              print("\n".join(errors))
+              sys.exit(1)
+          print("YAML/JSON syntax OK")
+          EOF
+
+      - name: Verify generated Copilot package is current
+        run: |
+          pip install pyyaml
+          python3 scripts/copilot/build_copilot_package.py --check
+          python3 scripts/copilot/build_skill_package.py --check
+
+      - name: No internal references (ticket ids, internal hosts, internal-only files)
+        run: |
+          if git grep -nIiE 'ROAR-[0-9]+|atlassian\.net|nemean|appdev\.liongard|jira_ticket|CORE-[0-9X]{3,}|internal/(proposed-metrics-backlog|cyber-insurance-forms|inspector-name-system-id-mapping|Liongard-Metrics|learnings)|learnings\.md' -- . ':!.github/workflows/validate.yml'; then
+            echo "Internal references found (see above)"; exit 1; fi
+
+      # The recipe-library governance validator and partner-name scrub gate are
+      # Liongard-internal tooling (internal/scripts/) and are not distributed in
+      # this repo. These steps run only when that directory is present (i.e. on
+      # Liongard's internal mirror), and are skipped on the public repo.
+      - uses: actions/setup-python@v5
+        if: hashFiles('internal/scripts/validate-recipes.py') != ''
+        with:
+          python-version: '3.11'
+
+      - name: Run recipe-library validator (internal only)
+        if: hashFiles('internal/scripts/validate-recipes.py') != ''
+        run: |
+          pip install pyyaml jsonschema
+          python3 internal/scripts/validate-recipes.py
+
+      - name: Run partner-name scrub gate (internal only)
+        if: hashFiles('internal/scripts/verify-promotion.sh') != ''
+        run: bash internal/scripts/verify-promotion.sh

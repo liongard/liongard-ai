@@ -75,3 +75,7 @@ Thumbs.db
 
 # Tool-generated agent skill mirror (regenerated locally; not source of truth)
 .agents/
+
+# Copilot skill zips and partner release package (build outputs for distribution, not source)
+copilot/generated-skills/*.zip
+copilot/generated-skills/release/

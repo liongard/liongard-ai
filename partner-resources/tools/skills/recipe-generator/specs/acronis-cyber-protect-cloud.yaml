@@ -132,10 +132,10 @@ cross_check:
 proposed_metric_gaps:
   - field: "Child tenant enumeration (parent)"
     fallback: "Client-side parse of ChildTenants[*]"
-    jira_ticket:
+    tracking_ref:
   - field: "Backup plan inventory + retention"
     fallback: "Manual confirm in Acronis Management Portal; BackupPlans[*] was not present in sampled MCP dataprints"
-    jira_ticket:
+    tracking_ref:
 
 trigger_keyword: acronis
 

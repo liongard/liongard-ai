@@ -253,7 +253,7 @@ surfaces campaign completion rates and simulation results. Otherwise `MANUAL`.
 
 | Item | Source | Notes |
 |---|---|---|
-| NGP-NBA (10.2020) | `internal/cyber-insurance-forms/tokio-marine-hcc/netguard-plus-cyber-application-2020.txt` | Full extraction |
+| NGP-NBA (10.2020) | Carrier application (from carrier or broker) | Full extraction |
 | Evidence mapping | `domains/auth.md`, `domains/endpoint.md`, `domains/backup.md`, `domains/network.md` | Domain files are metric source of truth |
 
 ---

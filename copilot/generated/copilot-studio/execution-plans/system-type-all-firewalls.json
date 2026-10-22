@@ -1,0 +1,1436 @@
+{
+  "primitiveCount": 152,
+  "recipe": "system-type-all-firewalls",
+  "source": "recipes/system-type-assessment/all-firewalls.md",
+  "sourceSha256": "57247cc7349c4d0ed62301b514862159e425541291ea04007dd9883847d86288",
+  "vendors": [
+    {
+      "inspectorId": 52,
+      "inspectorSlug": "barracuda-firewall-inspector",
+      "primitives": [
+        {
+          "compliantWhen": "result == true",
+          "fieldGotcha": "Licence status, not an on/off flag; application control is applied per firewall rule.",
+          "id": "metrics:barracuda-firewall:application-control-enabled",
+          "metricUuid": null,
+          "query": "SecuritySubscriptions[?name=='AppID'].status | [0]",
+          "resultType": "string",
+          "seq": "P001"
+        },
+        {
+          "compliantWhen": "result == true",
+          "fieldGotcha": "Licence status (e.g. \"Licensed\"), not an on/off flag; ATP is applied per firewall rule.",
+          "id": "metrics:barracuda-firewall:atp-enabled",
+          "metricUuid": null,
+          "query": "SecuritySubscriptions[?name=='ATD'].status | [0]",
+          "resultType": "string",
+          "seq": "P002"
+        },
+        {
+          "compliantWhen": "result > 60",
+          "fieldGotcha": null,
+          "id": "metrics:barracuda-firewall:energize-updates-days-until-expiration",
+          "metricUuid": null,
+          "query": "Licenses[?module=='Energize-Updates'].daysTillExpiration | [0]",
+          "resultType": "integer",
+          "seq": "P003"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:barracuda-firewall:firmware-version",
+          "metricUuid": null,
+          "query": "SystemInfo.release",
+          "resultType": "string",
+          "seq": "P004"
+        },
+        {
+          "compliantWhen": "result == true",
+          "fieldGotcha": "Also check IPS.reportOnly: true means detect-only (a finding).",
+          "id": "metrics:barracuda-firewall:ips-enabled",
+          "metricUuid": null,
+          "query": "IPS.enable",
+          "resultType": "boolean",
+          "seq": "P005"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": "Only administrator accounts are in the dataprint.",
+          "id": "metrics:barracuda-firewall:local-users-total-count",
+          "metricUuid": null,
+          "query": "length(Admins)",
+          "resultType": "integer",
+          "seq": "P006"
+        },
+        {
+          "compliantWhen": "result == 0",
+          "fieldGotcha": "Action values observed: block, pass. Filter confirmed; no positive case observed yet.",
+          "id": "metrics:barracuda-firewall:rules-open-any-to-any-count",
+          "metricUuid": null,
+          "query": "length(FirewallRules[?source.references=='Any' && destination.references=='Any' && action.type!='block' && action.type!='deny' && !deactivated])",
+          "resultType": "integer",
+          "seq": "P007"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": "SystemInfo.model gives the lowercase form.",
+          "id": "metrics:barracuda-firewall:system-model",
+          "metricUuid": null,
+          "query": "SystemInfo.appliance",
+          "resultType": "string",
+          "seq": "P008"
+        },
+        {
+          "compliantWhen": "result == false",
+          "fieldGotcha": "No WAN-management flag exists; counts admin accounts allowed to log in from any source IP.",
+          "id": "metrics:barracuda-firewall:wan-management-allowed",
+          "metricUuid": null,
+          "query": "length(Admins[?contains(peerIpRestriction, '0.0.0.0/0')])",
+          "resultType": "integer",
+          "seq": "P009"
+        }
+      ]
+    },
+    {
+      "inspectorId": 22,
+      "inspectorSlug": "cisco-asa-inspector",
+      "primitives": [
+        {
+          "compliantWhen": "result == true",
+          "fieldGotcha": null,
+          "id": "metrics:cisco-asa:configs-match",
+          "metricUuid": "7f047528-594e-4e1b-b11f-6ff0fa9e51d3",
+          "query": "SystemInfo.MatchingConfigurations",
+          "resultType": "boolean",
+          "seq": "P010"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:cisco-asa:last-config-modified",
+          "metricUuid": "53d9ca67-aa20-4cbb-bae5-0f0ffaec3148",
+          "query": "SystemInfo.LastModifiedAt",
+          "resultType": "string",
+          "seq": "P011"
+        },
+        {
+          "compliantWhen": "result == 0",
+          "fieldGotcha": null,
+          "id": "metrics:cisco-asa:licenses-expiring-30d-count",
+          "metricUuid": "ba4abdd3-e964-4d8a-99c9-92aeeccf768f",
+          "query": "length(SystemInfo.Licenses[?DaysTillExpiration<=`30` && Active==`true`])",
+          "resultType": "integer",
+          "seq": "P012"
+        },
+        {
+          "compliantWhen": "result == 0",
+          "fieldGotcha": null,
+          "id": "metrics:cisco-asa:licenses-expiring-5d-count",
+          "metricUuid": "74c22cb5-ca65-4a0f-80db-f8c00cdb4351",
+          "query": "length(SystemInfo.Licenses[?DaysTillExpiration<=`5` && Active==`true`])",
+          "resultType": "integer",
+          "seq": "P013"
+        },
+        {
+          "compliantWhen": "result == '-'",
+          "fieldGotcha": null,
+          "id": "metrics:cisco-asa:licenses-expiring-5d-list",
+          "metricUuid": "182d65f5-af8b-4d02-b1ca-8fcbfea3c54d",
+          "query": "to_string(SystemInfo.Licenses[?DaysTillExpiration<=`5` && Active==`true`] || `-`)",
+          "resultType": "string",
+          "seq": "P014"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:cisco-asa:model",
+          "metricUuid": "4dd6b51f-f899-455a-a104-da376683023e",
+          "query": "SystemInfo.Model",
+          "resultType": "string",
+          "seq": "P015"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:cisco-asa:running-config",
+          "metricUuid": "1f9bea10-9f81-4018-b3e2-b4ed980b005c",
+          "query": "RunningConfig",
+          "resultType": "object",
+          "seq": "P016"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:cisco-asa:serial-number",
+          "metricUuid": "c9ff5e73-c870-4875-80c8-db9a484977ec",
+          "query": "SystemInfo.SerialNumber",
+          "resultType": "string",
+          "seq": "P017"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:cisco-asa:software-version",
+          "metricUuid": "a64239c6-a0f1-4f4b-85ab-3537e1a4cd12",
+          "query": "SystemInfo.CiscoAdaptiveSecurityApplianceSoftwareVersion",
+          "resultType": "string",
+          "seq": "P018"
+        }
+      ]
+    },
+    {
+      "inspectorId": 3,
+      "inspectorSlug": "cisco-meraki-inspector",
+      "primitives": [
+        {
+          "compliantWhen": "result > slas.license_expiration_warn_days (default 30)",
+          "fieldGotcha": "Recipe verification logs may reference LicenseStatus.expirationInDays \u2014 this path does NOT exist. The correct field is LicensingOverview.DaysTillExpiration, confirmed by Global metric id=10.",
+          "id": "metrics:cisco-meraki:days-until-license-expiry",
+          "metricUuid": "4f03320f-0cce-4fde-93d7-58ba1ff84de4",
+          "query": "LicensingOverview.DaysTillExpiration",
+          "resultType": "integer",
+          "seq": "P019"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:cisco-meraki:device-firmware-summary",
+          "metricUuid": "b1440eef-8146-419d-9ea8-c4e5b6eec998",
+          "query": "Networks[].Devices[].join(', ', [join(': ', [`Device Name`, to_string(DeviceName)]), join(': ', [`Firmware`, to_string(firmware)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P020"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:cisco-meraki:device-serial-list",
+          "metricUuid": "383e5d24-5eb9-470a-9096-cdde9cb89d38",
+          "query": "Inventory[].serial | sort(@)",
+          "resultType": "array",
+          "seq": "P021"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": "The top-level key for Meraki devices is Networks[].Devices[] \u2014 NOT NetworkDevices (which does not exist). Always traverse via Networks[]. Confirmed by Global metric id=104678 and recipe verification on System B (2026-05-22).",
+          "id": "metrics:cisco-meraki:hardware-list",
+          "metricUuid": "9ae6582f-5688-418a-b906-d5aafda28a25",
+          "query": "Networks[].Devices[?networkId].{Model: model, DeviceName: DeviceName, NetworkName: NetworkName}",
+          "resultType": "array",
+          "seq": "P022"
+        },
+        {
+          "compliantWhen": "result == 'OK'",
+          "fieldGotcha": null,
+          "id": "metrics:cisco-meraki:license-status",
+          "metricUuid": "0a18db60-c281-4842-8b38-c173c1f774a6",
+          "query": "LicensingOverview.status",
+          "resultType": "string",
+          "seq": "P023"
+        },
+        {
+          "compliantWhen": "result == 0",
+          "fieldGotcha": "SSIDs are nested under Networks[].SSIDs \u2014 not top-level Ssids[]. The recipe pattern Ssids[?authMode == 'open'] will return null. Always traverse via Networks[?Type=='wireless'].SSIDs[].",
+          "id": "metrics:cisco-meraki:open-ssid-count",
+          "metricUuid": "aef0299e-bd94-4523-9b3a-77f4ef25404d",
+          "query": "length(Networks[?Type==`wireless`].SSIDs[] | [?enabled==`true`] | [?authMode==`open`])",
+          "resultType": "integer",
+          "seq": "P024"
+        },
+        {
+          "compliantWhen": "result == '-'",
+          "fieldGotcha": null,
+          "id": "metrics:cisco-meraki:open-ssid-list",
+          "metricUuid": "c54e72e8-2438-448b-a95c-ec67dfb9d0a0",
+          "query": "Networks[?Type==`wireless`].SSIDs[] | [?enabled==`true`] | [?authMode==`open`][].name || to_array(`-`) | join(`, `, @)",
+          "resultType": "string",
+          "seq": "P025"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": "Privileged is the string 'Yes' not boolean true. Filter: Privileged == `Yes` (backtick-quoted string in JMESPath).",
+          "id": "metrics:cisco-meraki:privileged-user-count",
+          "metricUuid": "e2ca034c-ec60-4074-bbfb-7d2c54dd2869",
+          "query": "Users[?Privileged == `Yes`].name | length(@)",
+          "resultType": "integer",
+          "seq": "P026"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:cisco-meraki:privileged-user-list",
+          "metricUuid": "208ff64b-9d6b-4f03-8998-477b8bb8c32c",
+          "query": "Users[?Privileged == `Yes`].name | join(`, `, @)",
+          "resultType": "string",
+          "seq": "P027"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:cisco-meraki:ssid-list",
+          "metricUuid": "e67522cf-372b-41e5-8948-f502bdeae256",
+          "query": "Networks[].SSIDs[].name | join(`, `,@)",
+          "resultType": "string",
+          "seq": "P028"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:cisco-meraki:total-device-count",
+          "metricUuid": null,
+          "query": "length(Networks[].Devices[])",
+          "resultType": "integer",
+          "seq": "P029"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:cisco-meraki:vlan-count",
+          "metricUuid": "87147db8-f0c3-48c2-91d1-3d97db41f176",
+          "query": "sum(Networks[].length(VLANs))",
+          "resultType": "integer",
+          "seq": "P030"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:cisco-meraki:vpn-enabled-subnets",
+          "metricUuid": "dea200f7-174e-4110-8650-0121eef7c72f",
+          "query": "Networks[].[name, join(`, `, [to_string(VPNs.EnabledSubnets[])])][]",
+          "resultType": "array",
+          "seq": "P031"
+        },
+        {
+          "compliantWhen": "result == 0",
+          "fieldGotcha": null,
+          "id": "metrics:cisco-meraki:weak-encryption-ssid-count",
+          "metricUuid": "164876b1-055f-4bf0-a293-bd0f2a634f69",
+          "query": "length(Networks[?Type==`wireless`].SSIDs[] | [?enabled==`true`] | [?wpaEncryptionMode!=`WPA2 only`])",
+          "resultType": "integer",
+          "seq": "P032"
+        },
+        {
+          "compliantWhen": "result == '-'",
+          "fieldGotcha": null,
+          "id": "metrics:cisco-meraki:weak-encryption-ssid-list",
+          "metricUuid": "7fb49887-01b6-44b6-b818-e6101a4c5637",
+          "query": "Networks[?Type==`wireless`].SSIDs[] | [?enabled==`true`] | [?wpaEncryptionMode!=`WPA2 only`][].name || to_array(`-`) | join(`, `, @)",
+          "resultType": "string",
+          "seq": "P033"
+        }
+      ]
+    },
+    {
+      "inspectorId": 33,
+      "inspectorSlug": "fortinet-fortigate-inspector",
+      "primitives": [
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:fortinet-fortigate:access-profiles-summary",
+          "metricUuid": "d162fb94-c3f5-4088-b994-6c156c6042fa",
+          "query": "UserProfiles[].join( `, `, [join(`: `, [`Name`, to_string(name)]), join(`: `, [`Scope`,to_string(scope)]) , join(`: `, [`Network Config`,to_string(netgrp)]) , join(`: `, [`System Config`,to_string(sysgrp)]) , join(`: `, [`Security Profiles`,to_string(utmgrp)]), join(`: `, [`IPsec,SSL,PPTP,L2TP VPN`,to_string(vpngrp)])])",
+          "resultType": "array",
+          "seq": "P034"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:fortinet-fortigate:dns-servers",
+          "metricUuid": "5c01ef92-3ad6-4882-9cfb-9a30d967c67e",
+          "query": "DNS.[\"primary\",\"secondary\"] | join(`, `, @)",
+          "resultType": "string",
+          "seq": "P035"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:fortinet-fortigate:firewall-policy-structured",
+          "metricUuid": "e934e601-0ec8-4097-bf74-777b3de6af8b",
+          "query": "FirewallPolicy[].[name, srcintf[].name, dstintf[].name, srcaddr[].name, dstaddr[].name, service[].name, comments]",
+          "resultType": "array",
+          "seq": "P036"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:fortinet-fortigate:firewall-policy-summary",
+          "metricUuid": "1a5ed175-9f47-48d9-9e27-58de12270e38",
+          "query": "FirewallPolicy[].join( `, `, [join(`: `, [`Name`, to_string(name)]) , join(`: `, [`NAT`,to_string(nat)]), join(`: `, [`Action`,to_string(action)]), join(`: `, [`Status`,to_string(status)]), join(`: `, [`Source Address`,to_string(sort(srcaddr[].name))]), join(`: `, [`Source Interface`,to_string(sort(srcintf[].name))]), join(`: `, [`Service`,to_string(sort(service[].name))])])",
+          "resultType": "array",
+          "seq": "P037"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:fortinet-fortigate:firewall-vip-summary",
+          "metricUuid": "8e848221-0806-4b96-a239-0d8c14fb3552",
+          "query": "FirewallVIP[].join( `, `, [join(`: `, [`Name`, to_string(name)]), join(`: `, [`Type`, to_string(type)]), join(`: `, [`External IP`, to_string(extip)]), join(`: `, [`External Interface`, to_string(extintf)]), join(`: `, [`External Port`, to_string(extport)]), join(`: `, [`Mapped IP Range`, to_string(sort(mappedip[].range))]) , join(`: `, [`Mapped Port`, to_string(mappedport)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P038"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": "Quoted key required in JMESPath because 'version' is a reserved word in some JMESPath implementations. Use Firmware.current.\"version\" not Firmware.current.version. The id=521 metric provides an alternate path SystemInfo.Firmware.Version which may differ on some firmware versions.",
+          "id": "metrics:fortinet-fortigate:firmware-version",
+          "metricUuid": "e6ed971a-3d67-4b27-86ac-fe0316b4dbee",
+          "query": "Firmware.current.\"version\"",
+          "resultType": "string",
+          "seq": "P039"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:fortinet-fortigate:fortiem-status",
+          "metricUuid": "a23f4675-6f5f-4d99-899b-6c3033f48f6b",
+          "query": "{Name: Name, Status: Licensing.fortiems_cloud.status}",
+          "resultType": "object",
+          "seq": "P040"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:fortinet-fortigate:group-summary",
+          "metricUuid": "51b85ff4-30ed-4233-908b-1c230191f1e3",
+          "query": "Groups[].join( `, `, [join(`: `, [`Name`,to_string(name)]), join(`: `, [`Email`,to_string(email)]), join(`: `, [`Member`,to_string(sort(member[].name))]), join(`: `, [`Group Type`,to_string(\"group-type\")])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P041"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:fortinet-fortigate:hostname",
+          "metricUuid": "5565b215-7118-4447-a9b5-f9610413a2f4",
+          "query": "SystemGlobal.hostname",
+          "resultType": "string",
+          "seq": "P042"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:fortinet-fortigate:interface-summary",
+          "metricUuid": "5a516d96-f724-4a3e-b846-b7b988b85310",
+          "query": "Interfaces[].join( `, `, [join(`: `, [`Name`, to_string(name)]), join(`: `, [`Vdom`,to_string(vdom)]), join(`: `, [`Type`,to_string(type)]), join(`: `, [`IP & Subnet`,to_string(ip)]), join(`: `, [`Role`,to_string(role)]), join(`: `, [`VLAN ID`,to_string(vlanid)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P043"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": "Two paths exist for model/version info. id=223 uses Firmware.current.\"platform-id\" (the Fortinet API path). id=521 uses SystemInfo.Firmware.Version for the firmware string. These are complementary \u2014 use 223 for model, 224/521 for firmware version.",
+          "id": "metrics:fortinet-fortigate:model",
+          "metricUuid": "8fe5641e-6c32-4ce9-8b11-bcc09001f5e8",
+          "query": "Firmware.current.\"platform-id\"",
+          "resultType": "string",
+          "seq": "P044"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:fortinet-fortigate:routing-policy-summary",
+          "metricUuid": "ec3885dc-0050-4a9b-8e14-40f7f167e018",
+          "query": "IPV4Routing[].join( `, `, [join(`: `, [`Type`, to_string(type)]), join(`: `, [`Gateway`, to_string(gateway)]), join(`: `, [`IP Mask`, to_string(ip_mask)]), join(`: `, [`Interface`, to_string(interface)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P045"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": "Users[] contains local VPN/firewall auth accounts only \u2014 NOT admin accounts. FortiGate admin accounts (System > Administrators) are NOT present in the dataprint. AdminUsers key returns null on all validated systems. Admin account audit requires manual FortiGate GUI review.",
+          "id": "metrics:fortinet-fortigate:user-summary",
+          "metricUuid": "8755d8a6-4e9a-4c7a-9ec0-86902fb8c0e2",
+          "query": "Users[].join( `, `, [join(`: `, [`Name`, to_string(name)]), join(`: `, [`Vdom Name`,to_string(sort(vdom[].name))]), join(`: `, [`Type`,to_string(type_r)]), join(`: `, [`Profile`,to_string(accprofile)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P046"
+        }
+      ]
+    },
+    {
+      "inspectorId": 49,
+      "inspectorSlug": "palo-alto-panos-inspector",
+      "primitives": [
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:palo-alto-panos:certificate-expiration",
+          "metricUuid": "0b36d5e3-9fbf-4599-afd0-f0816cfee138",
+          "query": "Configuration.shared.certificate[].join(`, `, [join(`: `, ['Name', \"common-name\"]), join(`: `, ['Expiration Date', \"not-valid-after\"])])",
+          "resultType": "array",
+          "seq": "P047"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:palo-alto-panos:check-device-resources",
+          "metricUuid": "3650eb60-55ed-4892-9daa-0161f85b591e",
+          "query": "SystemResources.join(`, `, [join(`: `, ['CPU Utilization', to_string(CPU.UsagePercentage)]), join(`: `, ['Memory Utilization', to_string(Memory.UsagePercentage)])])",
+          "resultType": "object",
+          "seq": "P048"
+        },
+        {
+          "compliantWhen": "result == false",
+          "fieldGotcha": "Key is hyphenated \u2014 JMESPath requires quoting: Configuration.\"pending-changes-exist\".",
+          "id": "metrics:palo-alto-panos:config-changes-pending",
+          "metricUuid": "e237568e-0eb8-4450-a16d-b29967e809b5",
+          "query": "Configuration.\"pending-changes-exist\"",
+          "resultType": "boolean",
+          "seq": "P049"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:palo-alto-panos:device-admins",
+          "metricUuid": "6f12a212-9ff2-4571-b0fd-b85a1af355cb",
+          "query": "AdminUsers[].admin",
+          "resultType": "array",
+          "seq": "P050"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:palo-alto-panos:dhcp-expiration",
+          "metricUuid": "1fad9a28-b4e2-4d62-a755-0fb310e72f36",
+          "query": "Interfaces[].dhcp.lease.leases[?\"lease-end\"].join(`, `, [join(`: `, ['IP', \"ip\"]), join(`: `, ['Lease End', \"lease-end\"])])[]",
+          "resultType": "array",
+          "seq": "P051"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:palo-alto-panos:dhcp-lease-monitoring",
+          "metricUuid": "5ef50711-dcaf-4766-bc5f-87fc53a441e3",
+          "query": "length(Interfaces[].dhcp.lease.leases[])",
+          "resultType": "integer",
+          "seq": "P052"
+        },
+        {
+          "compliantWhen": "result == false",
+          "fieldGotcha": null,
+          "id": "metrics:palo-alto-panos:expired-device-certificates",
+          "metricUuid": "33f53598-1fcc-45f7-bdee-f5b379999a60",
+          "query": "SystemInfo.certificates.info[?time_until(expirationDate, 'days') < '0'] | length(@) > '0'",
+          "resultType": "boolean",
+          "seq": "P053"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:palo-alto-panos:interface-packets-received",
+          "metricUuid": "2ced9178-3525-41b4-93fd-a8acc8bb9283",
+          "query": "Interfaces[].join(`, `, [join(`: `, ['Interface', name]), join(`: `, ['Received Packets', to_string(status.\"received-packets\")])])",
+          "resultType": "array",
+          "seq": "P054"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:palo-alto-panos:interface-packets-transmitted",
+          "metricUuid": "4b146990-6dce-4d45-ba07-d25d115deb72",
+          "query": "Interfaces[].join(`, `, [join(`: `, ['Interface', name]), join(`: `, ['Transmitted Packets', to_string(status.\"transmitted-packets\")])])",
+          "resultType": "array",
+          "seq": "P055"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:palo-alto-panos:policy-based-forwarding-ips",
+          "metricUuid": "72fa864e-64e7-495a-8d03-c3d7b365245f",
+          "query": "Interfaces[?pbfRules[].nexthop].pbfRules[].join(`, `, [join(`: `, ['Rule', \"name\"]), join(`: `, ['Forwarding IP', nexthop])])",
+          "resultType": "array",
+          "seq": "P056"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": "The key is hyphenated \u2014 JMESPath requires quoting: SystemInfo.\"sw-version\". Without quotes the hyphen is interpreted as subtraction and the query returns null.",
+          "id": "metrics:palo-alto-panos:software-version",
+          "metricUuid": "3a6ab4bd-cbeb-46ef-a96a-d24b349f2c28",
+          "query": "SystemInfo.\"sw-version\"",
+          "resultType": "string",
+          "seq": "P057"
+        }
+      ]
+    },
+    {
+      "inspectorId": 37,
+      "inspectorSlug": "pfsense-inspector",
+      "primitives": [
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:pfsense:alias-summary",
+          "metricUuid": "fd990290-f726-4a62-9cec-a9e41a644758",
+          "query": "aliases[].join( `, `, [join(`: `, [`Name`,to_string(name)]), join(`: `, [`type`,to_string(type)]), join(`: `, [`Description`,to_string(descr)]), join(`: `, [`Detail`,to_string(detail)]), join(`: `, [`Address`,to_string(address)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P058"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:pfsense:ca-certificate-summary",
+          "metricUuid": "92748301-9199-4a2b-b734-2419339da0c4",
+          "query": "ca[].join( `, `, [join(`: `, [`Serial`, to_string(serial)]), join(`: `, [`Description`, to_string(descr)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P059"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:pfsense:certificate-revocation-list-summary",
+          "metricUuid": "5acd8624-6c8a-4dcb-a209-5bac582116ab",
+          "query": "crl[].join( `, `, [join(`: `, [`Description`, to_string(descr)]), join(`: `, [`Method`,to_string(method)]) , join(`: `, [`Serial`,to_string(serial)]), join(`: `, [`Lifetime`,to_string(lifetime)])])",
+          "resultType": "array",
+          "seq": "P060"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:pfsense:cron-job-summary",
+          "metricUuid": "386fc830-4ca2-4c19-901c-33fc79a58c6f",
+          "query": "cron[].join( `, `, [join(`: `, [`Who`, to_string(who)]), join(`: `, [`Hour`,to_string(hour)]), join(`: `, [`Day of the Month`, to_string(mday)]), join(`: `, [`Day of the week`, to_string(wday)]), join(`: `, [`Month`, to_string(month)]), join(`: `, [`Minute`, to_string(minute)]) , join(`: `, [`Command`, to_string(command)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P061"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:pfsense:firewall-rule-summary",
+          "metricUuid": "0c46975d-155d-4eae-890a-e812b0d2902e",
+          "query": "filter[?type != `null`].join( `, `, [join(`: `, [`Description`, to_string(descr)]), join(`: `, [`Type`,to_string(type)]), join(`: `, [`Source`, to_string(source)]) , join(`: `, [`Interface`,to_string(interface)]), join(`: `, [`Destination`,to_string(destination)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P062"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:pfsense:groups-summary",
+          "metricUuid": "ff7e29a6-af20-46e2-9090-b5abfbaf80b2",
+          "query": "groups[].join( `, `, [join(`: `, [`Name`, to_string(name)]), join(`: `, [`Description`,to_string(description)]) join(`: `, [`Privileges`,to_string(priv)]), join(`: `, [`Scope`,to_string(scope)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P063"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:pfsense:interface-summary",
+          "metricUuid": "3d5d74b2-41b5-4511-85a8-6f862ebbbb47",
+          "query": "interfaces[].join( `, `, [join(`: `, [`Interface`, to_string(if)]), join(`: `, [`Description`,to_string(descr)]), join(`: `, [`IP Address`,to_string(ipaddr)]), join(`: `, [`Subnet`,to_string(subnet)]), join(`: `, [`Gateway`,to_string(gateway)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P064"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:pfsense:nat-1to1-rule-summary",
+          "metricUuid": "22e02137-2496-41ba-ae60-808042d88218",
+          "query": "nat.onetoone[].join( `, `, [join(`: `, [`Description`, descr]), join(`: `, [`Source Address`, source.address]), join(`: `, [`External Address`, to_string(external)]), join(`: `, [`Interface`, to_string(interface)]), join(`: `, [`Destination`, to_string(destination)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P065"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:pfsense:outbound-nat-list",
+          "metricUuid": "d61d16c1-faa3-4945-9deb-34676b974349",
+          "query": "nat.outbound",
+          "resultType": "object",
+          "seq": "P066"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:pfsense:port-forwarding-rule-summary",
+          "metricUuid": "c31e4995-3838-42d4-9004-889d97075000",
+          "query": "nat.rule[].join( `, `, [join(`: `, [`Description`, to_string(descr)]), join(`: `, [`Target`, to_string(target) ]) , join(`: `, [`Protocol`, to_string(protocol) ]), join(`: `, [`Interface`, to_string(interface) ]) , join(`: `, [`Local-Port`, to_string(\"local-port\") ]) , join(`: `, [`Destination[Port,Network]`, to_string(destination)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P067"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": "SystemInfo.version is a FLOAT (e.g., 19.1), not a string. Prior resultType 'string' was incorrect. Do not use string comparison on this field.",
+          "id": "metrics:pfsense:software-version",
+          "metricUuid": "cd99511b-94c3-4f8e-83dd-eb04fd0644ea",
+          "query": "SystemInfo.version",
+          "resultType": "float",
+          "seq": "P068"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:pfsense:switchport-summary",
+          "metricUuid": "73301f7f-0368-430f-a97f-69d4c24e737a",
+          "query": "switches.switch.swports.swport[].join( `, `, [join(`: `, [`Port`, to_string(port)]), join(`: `, [`State`,to_string(state)]) ]) | sort(@)",
+          "resultType": "array",
+          "seq": "P069"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:pfsense:time-servers",
+          "metricUuid": "7f057ad5-ea64-438f-8f75-1d5a53ea928e",
+          "query": "SystemInfo.timeservers",
+          "resultType": "string",
+          "seq": "P070"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:pfsense:user-list-with-scope",
+          "metricUuid": "f25e9332-2098-4239-bb43-b879a5289806",
+          "query": "users[].[name, scope]",
+          "resultType": "array",
+          "seq": "P071"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:pfsense:user-server-certificate-summary",
+          "metricUuid": "7d75be1a-f631-458f-88be-6be51bd964e8",
+          "query": "certificate_keys[].join( `, `, [join(`: `, [`Type`, to_string(type)]), join(`: `, [`Description`, to_string(descr)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P072"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:pfsense:users-added-summary",
+          "metricUuid": "bdca410f-f67a-4d41-bcd9-e9afcf451728",
+          "query": "users[].join( `, `, [join(`: `, [`Name`, to_string(name)]), join(`: `, [`Scope`, to_string(scope)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P073"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:pfsense:virtual-ip-summary",
+          "metricUuid": "b6673cf4-bc9d-4078-9501-18ab07574f5c",
+          "query": "virtualip.vip[].join( `, `, [join(`: `, [`Mode`, to_string(mode)]), join(`: `, [`Type`,to_string(type)]), join(`: `, [`Description`,to_string(descr)]) , join(`: `, [`Subnet`,to_string(subnet)]) , join(`: `, [`Subnet Bits`,to_string(subnet_bits)]), join(`: `, [`Interface`,to_string(interface)]) ]) | sort(@)",
+          "resultType": "array",
+          "seq": "P074"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:pfsense:vlan-summary",
+          "metricUuid": "48fd9bb3-f8c9-415e-a9d7-f12154ea9301",
+          "query": "vlans[].join( `, `, [join(`: `, [`Description`, to_string(descr)]), join(`: `, [`Tag`,to_string(tag)]), join(`: `, [`Interface`, to_string(vlanif)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P075"
+        }
+      ]
+    },
+    {
+      "inspectorId": 7,
+      "inspectorSlug": "sonicwall-inspector",
+      "primitives": [
+        {
+          "compliantWhen": "result <= 10",
+          "fieldGotcha": null,
+          "id": "metrics:sonicwall:admin-session-idle-timeout",
+          "metricUuid": "32dd1068-2323-41ff-b0fc-142735cd7a6d",
+          "query": "System.Administration.IdleLogoutTime",
+          "resultType": "integer",
+          "seq": "P076"
+        },
+        {
+          "compliantWhen": "result != 'admin'",
+          "fieldGotcha": null,
+          "id": "metrics:sonicwall:admin-username",
+          "metricUuid": "b72b3659-e911-4e45-a4b9-82b1282d3aa4",
+          "query": "System.Administration.AdminName",
+          "resultType": "string",
+          "seq": "P077"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:sonicwall:agss-license-expiry",
+          "metricUuid": "1bfc5ce3-7a62-4e4f-bb7b-fb38d4b46ed4",
+          "query": "Licenses[?Name=='AGSS'].ExpiryDate",
+          "resultType": "array",
+          "seq": "P078"
+        },
+        {
+          "compliantWhen": "result == 0",
+          "fieldGotcha": null,
+          "id": "metrics:sonicwall:any-to-any-allow-rules-count",
+          "metricUuid": "59156452-4fe4-410d-be59-0694f7b48648",
+          "query": "Firewall.AccessRulesIPv4[?SourceAddressAny==true && DestinationAddressAny==true && ServiceAny==true && Action=='allow'] | length(@)",
+          "resultType": "integer",
+          "seq": "P079"
+        },
+        {
+          "compliantWhen": "result == true",
+          "fieldGotcha": null,
+          "id": "metrics:sonicwall:audit-logging-enabled",
+          "metricUuid": "30693eda-59ce-4778-8567-d88dfe7d9828",
+          "query": "System.Administration.EnhancedAuditLogging",
+          "resultType": "boolean",
+          "seq": "P080"
+        },
+        {
+          "compliantWhen": "result == true",
+          "fieldGotcha": null,
+          "id": "metrics:sonicwall:capture-atp-enabled",
+          "metricUuid": "bd776e8f-f169-479f-a846-b42a09d6aed2",
+          "query": "CurrentConfig.capture_atp.enable",
+          "resultType": "boolean",
+          "seq": "P081"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:sonicwall:firmware-version",
+          "metricUuid": "56ac617f-e627-424c-9f3b-165a021ca3ce",
+          "query": "System.FirmwareVersion",
+          "resultType": "string",
+          "seq": "P082"
+        },
+        {
+          "compliantWhen": "result == true",
+          "fieldGotcha": null,
+          "id": "metrics:sonicwall:geo-ip-block-all-enabled",
+          "metricUuid": "6ca3f4a6-d868-4d17-8341-fc4b7eab9736",
+          "query": "CurrentConfig.geo_ip.block.connections.all",
+          "resultType": "boolean",
+          "seq": "P083"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": "SonicOS 7 path is Administration.FirewallName. SonicOS 6 uses System.Administration.FirewallName. The id=1998 Global metric uses the shorter path \u2014 confirmed correct for inspectorId=7.",
+          "id": "metrics:sonicwall:hostname",
+          "metricUuid": "38af37ee-30a9-11ee-be56-0242ac120002",
+          "query": "Administration.FirewallName",
+          "resultType": "string",
+          "seq": "P084"
+        },
+        {
+          "compliantWhen": "result == false",
+          "fieldGotcha": null,
+          "id": "metrics:sonicwall:http-management-enabled",
+          "metricUuid": "b682a22a-125d-4c62-9774-84222f6e3cfd",
+          "query": "System.Administration.WebManagementAllowHttp",
+          "resultType": "boolean",
+          "seq": "P085"
+        },
+        {
+          "compliantWhen": "result == 0",
+          "fieldGotcha": null,
+          "id": "metrics:sonicwall:licenses-expiring-30d-count",
+          "metricUuid": "aaf840d6-7c9a-467f-b0e1-df9d8a8e575c",
+          "query": "length(Licenses.[?Expiration && time_until(Expiration, `days`) < `30`])",
+          "resultType": "integer",
+          "seq": "P086"
+        },
+        {
+          "compliantWhen": "result == null || result == ''",
+          "fieldGotcha": null,
+          "id": "metrics:sonicwall:licenses-expiring-30d-list",
+          "metricUuid": "f6e8e9e7-0bde-40c3-8c7b-0b8d878caec1",
+          "query": "join(' | ' ,Licenses[?Expiration && time_until(Expiration, `days`) < `30`].SecurityService)",
+          "resultType": "string",
+          "seq": "P087"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:sonicwall:local-users-count",
+          "metricUuid": "7ae197d7-6cad-48a4-ab55-8983ab660b19",
+          "query": "Users.LocalUsers | length(@)",
+          "resultType": "integer",
+          "seq": "P088"
+        },
+        {
+          "compliantWhen": "result >= 12",
+          "fieldGotcha": null,
+          "id": "metrics:sonicwall:min-password-length",
+          "metricUuid": "b94ece20-60e6-4110-b07a-90c87052f5ed",
+          "query": "System.Administration.PasswordMinimumLength",
+          "resultType": "integer",
+          "seq": "P089"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:sonicwall:model",
+          "metricUuid": "67713200-dc91-41d0-81f9-39fcd508008f",
+          "query": "System.Model",
+          "resultType": "string",
+          "seq": "P090"
+        },
+        {
+          "compliantWhen": "result > 0",
+          "fieldGotcha": "CurrentConfig uses camelCase path (.administration.admin) vs the System.Administration path used elsewhere. Both paths exist in the dataprint \u2014 CurrentConfig contains the full SonicOS running config JSON, System contains the parsed top-level fields.",
+          "id": "metrics:sonicwall:otp-config-count",
+          "metricUuid": "8e610686-081d-4e51-a416-c6cef7851292",
+          "query": "CurrentConfig.administration.admin.one_time_password | length(@)",
+          "resultType": "integer",
+          "seq": "P091"
+        },
+        {
+          "compliantWhen": "result == false",
+          "fieldGotcha": null,
+          "id": "metrics:sonicwall:restart-required",
+          "metricUuid": "fab84409-f1cd-4e60-bc6b-fa4c96956d43",
+          "query": "System.RestartRequired",
+          "resultType": "boolean",
+          "seq": "P092"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:sonicwall:serial-number",
+          "metricUuid": "70b56f9e-f41e-457f-b29f-7fd376a82b81",
+          "query": "System.SerialNumber",
+          "resultType": "string",
+          "seq": "P093"
+        },
+        {
+          "compliantWhen": "result == true",
+          "fieldGotcha": null,
+          "id": "metrics:sonicwall:stealth-mode-enabled",
+          "metricUuid": "771b0d02-df6e-48d2-adef-67ce2f8244fb",
+          "query": "Firewall.Settings.StealthMode",
+          "resultType": "boolean",
+          "seq": "P094"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:sonicwall:syslog-configured",
+          "metricUuid": "9d65a0ae-617b-4e8c-91d6-f6e952c9a076",
+          "query": "CurrentConfig.log.syslog",
+          "resultType": "object",
+          "seq": "P095"
+        },
+        {
+          "compliantWhen": "result == true",
+          "fieldGotcha": null,
+          "id": "metrics:sonicwall:user-lockout-enabled",
+          "metricUuid": "967bbb1a-af06-4e9a-a5dd-f3dd41a535cc",
+          "query": "System.Administration.UserLockoutEnable",
+          "resultType": "boolean",
+          "seq": "P096"
+        },
+        {
+          "compliantWhen": "result == 0",
+          "fieldGotcha": null,
+          "id": "metrics:sonicwall:wan-allow-rules-for-management-count",
+          "metricUuid": "0dc56fc8-343c-4b0e-83a6-850f7c0048f8",
+          "query": "Firewall.AccessRulesIPv4[?From=='WAN' && Action=='allow' && ((ServiceName != null && contains(ServiceName, 'Management')) || ServiceAny==True)] | length(@)",
+          "resultType": "integer",
+          "seq": "P097"
+        },
+        {
+          "compliantWhen": "result == []",
+          "fieldGotcha": null,
+          "id": "metrics:sonicwall:wan-to-lan-explicit-allow-any-list",
+          "metricUuid": "5a7da1f5-f15d-463f-8da3-cc362ae1ac0c",
+          "query": "[Firewall.AccessRulesIPv4[?From == `WAN` && To == `LAN` && Action == `allow` && SourceAddressAny && DestinationAddressAny && Enable], Firewall.AccessRulesIPv6[?From == `WAN` && To == `LAN` && Action == `allow` && SourceAddressAny && DestinationAddressAny && Enable]][].Name",
+          "resultType": "array",
+          "seq": "P098"
+        },
+        {
+          "compliantWhen": "result == 0",
+          "fieldGotcha": null,
+          "id": "metrics:sonicwall:zones-without-gav-count",
+          "metricUuid": "46eff5cf-f5c9-4378-a7e9-e29386c5de01",
+          "query": "Network.Zones[?GatewayAntiVirus==False] | length(@)",
+          "resultType": "integer",
+          "seq": "P099"
+        },
+        {
+          "compliantWhen": "result == 0",
+          "fieldGotcha": "IntrusionPrevention is boolean False (not string 'false') \u2014 the Global metric uses backtick `false` which is JSON false in JMESPath. The id=106916 variant uses `Network.Zones[?IntrusionPrevention==False]` (Python-style) and also returns a valid result. Use backtick-quoted boolean for strict JMESPath compliance.",
+          "id": "metrics:sonicwall:zones-without-ips-count",
+          "metricUuid": "0b9a5a9f-466e-4d6b-9b6f-8e6794046045",
+          "query": "length(Network.Zones[?IntrusionPrevention ==`false`])",
+          "resultType": "integer",
+          "seq": "P100"
+        },
+        {
+          "compliantWhen": "result == '-'",
+          "fieldGotcha": null,
+          "id": "metrics:sonicwall:zones-without-ips-list",
+          "metricUuid": "a6b1e49a-9f13-4c5d-8e37-03a310455281",
+          "query": "Network.Zones[?IntrusionPrevention  == `false`].Name || to_array(`-`) | join(`, `, @)",
+          "resultType": "string",
+          "seq": "P101"
+        }
+      ]
+    },
+    {
+      "inspectorId": 28,
+      "inspectorSlug": "sophos-firewall-inspector",
+      "primitives": [
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:sophos-firewall:active-user-list",
+          "metricUuid": "502c1159-472f-492c-90ec-67daa8d3f61d",
+          "query": "User[?Status == `Active`].Name | join(`, `, @)",
+          "resultType": "string",
+          "seq": "P102"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:sophos-firewall:device-dns-summary",
+          "metricUuid": "c45e7494-a6ae-478b-be57-2d566081097f",
+          "query": "SystemInfo.DNS_IPv4_Summary",
+          "resultType": "string",
+          "seq": "P103"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:sophos-firewall:interfaces-count",
+          "metricUuid": "bb45a089-bfde-4b0e-b673-7b31bc6a4ae0",
+          "query": "SystemInfo.InterfacesCount",
+          "resultType": "integer",
+          "seq": "P104"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:sophos-firewall:security-policy-summary",
+          "metricUuid": "17ef3d5d-e78c-4f38-9f5d-915d970f411c",
+          "query": "SecurityPolicy[].join( ` ', ' `, [join(`: `, [`Name`,to_string(Name)]), join(`: `, [`After`, to_string(After.Name)])])",
+          "resultType": "array",
+          "seq": "P105"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:sophos-firewall:user-group-summary",
+          "metricUuid": "8de0e68d-cd57-4f48-a6ab-df632af05a92",
+          "query": "UserGroup.GroupDetail[].join( ` ', ' `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`Type`, to_string(GroupType)])])",
+          "resultType": "array",
+          "seq": "P106"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:sophos-firewall:user-summary",
+          "metricUuid": "ff180dfa-102d-4ebc-9348-13a31373cb3b",
+          "query": "User[?Status == `Active`].join( ` ', ' `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`Status`, to_string(Status)])])",
+          "resultType": "array",
+          "seq": "P107"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:sophos-firewall:zone-summary",
+          "metricUuid": "657903cb-7ae2-4ce4-965c-d9a6f471e2fe",
+          "query": "Zone[].join( `, `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`Type`, to_string(Type)]), join(`: `, [`SSH`, to_string(SSH)])])",
+          "resultType": "array",
+          "seq": "P108"
+        }
+      ]
+    },
+    {
+      "inspectorId": 43,
+      "inspectorSlug": "sophos-sg-inspector",
+      "primitives": [
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:sophos-sg:count-of-active-users",
+          "metricUuid": "37d6324e-4096-44d0-81b8-61eb472ef6eb",
+          "query": "Users[?enabled == `true`] | length(@)",
+          "resultType": "integer",
+          "seq": "P109"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:sophos-sg:count-of-groups",
+          "metricUuid": "436faa14-73f5-468f-a784-4fb411885949",
+          "query": "Groups[] | length(@)",
+          "resultType": "integer",
+          "seq": "P110"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:sophos-sg:interface-summary",
+          "metricUuid": "5a3fec04-6aaa-4374-be80-6ee30449aa95",
+          "query": "Interfaces[].[`Name:` name , `| Type:` InterfaceType_r ,`| Address:`primary_address `| Link:` link, `| MTU:` mtu]",
+          "resultType": "array",
+          "seq": "P111"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:sophos-sg:licenses-expiring-30-days-count",
+          "metricUuid": "f911e323-b675-44d6-b4ed-35de669314c0",
+          "query": "SystemInfo.Licensing[?DaysUntilExpiration_r < `30`] | length(@)",
+          "resultType": "integer",
+          "seq": "P112"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:sophos-sg:licenses-expiring-30-days-list",
+          "metricUuid": "a0b8538f-95cc-4dab-b478-6694dd9ef763",
+          "query": "SystemInfo.Licensing[?DaysUntilExpiration_r < `30`].name",
+          "resultType": "array",
+          "seq": "P113"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:sophos-sg:list-of-active-users",
+          "metricUuid": "385b9952-d2fd-4e38-8c28-17f11da4bba3",
+          "query": "Users[?enabled == `true`].name",
+          "resultType": "array",
+          "seq": "P114"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:sophos-sg:list-of-groups",
+          "metricUuid": "64457688-a9da-4c51-88ec-7585c05fb145",
+          "query": "Groups[].[`Name:`,name,`| Dynamic:` dynamic, `| Network:` network]",
+          "resultType": "array",
+          "seq": "P115"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:sophos-sg:list-of-network-definitions",
+          "metricUuid": "7b0845b6-aacf-4613-9de7-6233e01c372c",
+          "query": "NetworkDefinitions[].[`Name:`name, `| Address:`address]",
+          "resultType": "array",
+          "seq": "P116"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:sophos-sg:nat-rules",
+          "metricUuid": "a2fba755-5863-494c-ba9c-e7d3c25b8d14",
+          "query": "NAT[?status == `true`].[name, `| Src: `, source.name, `| Svc: `, service.name, `| Dest: `, destination.name]",
+          "resultType": "array",
+          "seq": "P117"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:sophos-sg:packet-filter-rules-summary",
+          "metricUuid": "8119fbad-0f7c-4cc1-a772-cab2fac5b5a1",
+          "query": "PacketFilter[].[`Name:`name,`| Action:`action,`| Direction:`direction, `| Status:` status]",
+          "resultType": "array",
+          "seq": "P118"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:sophos-sg:remote-access-profiles-summary",
+          "metricUuid": "bb9d16f6-b752-424f-b015-fc109ddff87a",
+          "query": "SSLRemoteAccessProfile[].[`Name:`name, `| Status:`status, `| Networks:` to_string(networks_r)]",
+          "resultType": "array",
+          "seq": "P119"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:sophos-sg:remote-gateways-summary",
+          "metricUuid": "9b3e13ac-075d-409b-80e2-eea7e0cbecad",
+          "query": "IpsecRemoteGateway[].[`Name:`name, `| Auth:`authentication, `| Host:` host, `| Xauth:`xauth]",
+          "resultType": "array",
+          "seq": "P120"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:sophos-sg:site-to-site-vpn-summary",
+          "metricUuid": "102957c8-bd0b-432c-9331-055225dc73f9",
+          "query": "SiteToSiteVPN[].[`Name:`name, `| Status:`status, `| Interface:`interface, `| Remote Gateway:`remote_gateway]",
+          "resultType": "array",
+          "seq": "P121"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:sophos-sg:ssh-enabled",
+          "metricUuid": "3840cd8a-08f1-4761-9b3f-90c1dc63109c",
+          "query": "SystemInfo.SSHAccessEnabled",
+          "resultType": "boolean",
+          "seq": "P122"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:sophos-sg:utm-version",
+          "metricUuid": "870c1856-4019-4f4a-bf67-766c16da22f5",
+          "query": "SystemInfo.UTMVersion",
+          "resultType": "string",
+          "seq": "P123"
+        }
+      ]
+    },
+    {
+      "inspectorId": 29,
+      "inspectorSlug": "watchguard-inspector",
+      "primitives": [
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:access-rule-summary",
+          "metricUuid": "c838e319-444b-438f-b3d6-1d6dba36f54b",
+          "query": "AccessRules[].join( `, `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`Enabled`, to_string(Enabled)]), join(`: `, [`Action`, to_string(ConnectionsAre)]), join(`: `, [`Service`, to_string(Service)]), join(`: `, [`From`, to_string(FromAliasList)]), join(`: `, [`To`, to_string(ToAliasList)]), join(`: `, [`Static NAT`, to_string(StaticNat)]), join(`: `, [`Global NAT`, to_string(GlobalDnat)]) , join(`: `, [`Global 1:1 Nat`, to_string(Global_1to1Nat)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P124"
+        },
+        {
+          "compliantWhen": "result == 0",
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:account-lockout-disabled-count",
+          "metricUuid": "465e834e-7cd2-43de-9c7d-f44f1a7ecfae",
+          "query": "SystemInfo.AccountLockoutSettings[?Status != 'Enabled'] |length(@)",
+          "resultType": "integer",
+          "seq": "P125"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:account-lockout-enabled-list",
+          "metricUuid": "b3254b6b-3e79-42ed-a935-b601b67307f6",
+          "query": "SystemInfo.AccountLockoutSettings[?Status == 'Enabled'].[Status][]",
+          "resultType": "array",
+          "seq": "P126"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:alias-summary",
+          "metricUuid": "c4c036c6-ee18-47d8-bd34-d21596380fb7",
+          "query": "Aliases[].join( `, `, [join(`: `, [`Name`, to_string(\"Alias Name\")]), join(`: `, [`Description`, to_string(Description)]), join(`: `, [`Members`, to_string(AliasMembersList_r)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P127"
+        },
+        {
+          "compliantWhen": "result == 0",
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:down-interfaces-count",
+          "metricUuid": "f287894a-7d50-4f96-9bdb-c7fca5b409b8",
+          "query": "Interfaces[?Enabled == 'yes' && Status != 'Up'] | length(@)",
+          "resultType": "integer",
+          "seq": "P128"
+        },
+        {
+          "compliantWhen": "result == []",
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:down-interfaces-list",
+          "metricUuid": "5f401c27-7b62-4389-972c-78771f7fc254",
+          "query": "Interfaces[?Enabled == 'yes' && Status != 'Up'].[Name, Status]",
+          "resultType": "array",
+          "seq": "P129"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:dynamic-nat-summary",
+          "metricUuid": "bd76eb82-9bf2-4f35-a9dc-7bec5d489936",
+          "query": "NAT.dynamicNAT[].join( `, `, [join(`: `, [`To`, to_string(To)]), join(`: `, [`From`, to_string(From)]), join(`: `, [`Source IP`, to_string(SourceIP)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P130"
+        },
+        {
+          "compliantWhen": "result == 0",
+          "fieldGotcha": "DaysUntilExpiration_r is a resolved/computed string field \u2014 filter uses string comparison '<= 30' not numeric. Confirm behavior when value is exactly 30.",
+          "id": "metrics:watchguard:features-expiring-30d-count",
+          "metricUuid": "8cb8c636-d56c-4d8a-90a7-4702057b3eb3",
+          "query": "Features[?DaysUntilExpiration_r <= '30'] | length(@)",
+          "resultType": "integer",
+          "seq": "P131"
+        },
+        {
+          "compliantWhen": "result == []",
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:features-expiring-30d-list",
+          "metricUuid": "941ffaf6-dda2-4770-a712-a4a091fbbc3f",
+          "query": "Features[?DaysUntilExpiration_r <= '30'].[Feature,Expiration]",
+          "resultType": "array",
+          "seq": "P132"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:firmware-version",
+          "metricUuid": "1282de1c-bfc8-4687-8c2c-ad884f8d52ec",
+          "query": "SystemInfo.Version",
+          "resultType": "string",
+          "seq": "P133"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:group-summary",
+          "metricUuid": "88c8b3ba-a0fc-4673-8e93-5d43e1ce53eb",
+          "query": "Users[?Type == 'Group'].join( `, `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`AuthServer`, to_string(AuthServer)]), join(`: `, [`Description`, to_string(Description)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P134"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:hostname",
+          "metricUuid": "ab839c00-30aa-11ee-be56-0242ac120002",
+          "query": "SystemInfo.SystemName",
+          "resultType": "string",
+          "seq": "P135"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:interface-summary",
+          "metricUuid": "9afaca99-3520-4876-b2cf-e7c3e0e462e8",
+          "query": "Interfaces[].join( `, `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`Enabled`, to_string(Enabled)]), join(`: `, [`Type`, to_string(Type)]), join(`: `, [`Address`, to_string(Address)]), join(`: `, [`IP Type`, to_string(IPNodeType)]), join(`: `, [`IP Assignment`, to_string(IPAssignment)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P136"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:licensed-interface-count",
+          "metricUuid": "55787acd-063a-4a7f-8da9-7037a762bae1",
+          "query": "SystemInfo.LicensedInterface",
+          "resultType": "integer",
+          "seq": "P137"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:management-ip",
+          "metricUuid": "e422f773-48bc-4707-8dad-21b97f487c2f",
+          "query": "SystemInfo.ManagementIP",
+          "resultType": "string",
+          "seq": "P138"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:mgmt-user-summary",
+          "metricUuid": "4d23f503-43ff-4a47-bfb8-245eb2ac5764",
+          "query": "DeviceMgmtUsers[].join( `, `, [join(`: `, [`Username`, to_string(Username)]), join(`: `, [`Role`, to_string(Role)]), join(`: `, [`AuthServer`, to_string(AuthServer)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P139"
+        },
+        {
+          "compliantWhen": "result == 0",
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:mgmt-users-locked-out-count",
+          "metricUuid": "d137f23e-b10e-4bb9-ad46-5df0a35eb4e6",
+          "query": "DeviceMgmtUsers[?LockedOutStatus !='No lockout'] | length(@)",
+          "resultType": "integer",
+          "seq": "P140"
+        },
+        {
+          "compliantWhen": "result == []",
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:mgmt-users-locked-out-list",
+          "metricUuid": "c1278754-ffdf-4c1e-8d98-0ee6efc6aaa2",
+          "query": "DeviceMgmtUsers[?LockedOutStatus !='No lockout'].[Username]",
+          "resultType": "array",
+          "seq": "P141"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:mobile-ipsec-policies",
+          "metricUuid": "412c590a-b5e6-4f5b-9e5f-e6ec6cb2b85e",
+          "query": "VPN.ClientVPN.MobileIPSec[].join( `, `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`AuthServer`, to_string(AuthServer)]), join(`: `, [`Allowed Access`, to_string(AllowedAccessStr_r)]), join(`: `, [`Virtual IP Address Pool`, to_string(VirtualIPAddressPool)]), join(`: `, [`Settings`, to_string(IPSecSettings)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P142"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:mobile-ssl-vpn-summary",
+          "metricUuid": "62ab6830-a05d-4d6e-9512-041bb6eb83a3",
+          "query": "VPN.ClientVPN.MobileSSL.join( `, `, [join(`: `, [`SSL Server`, to_string(SslServer)]), join(`: `, [`DNS Servers`, to_string(DnsServers)]), join(`: `, [`Domain Name`, to_string(DomainName)]), join(`: `, [`Encryption`, to_string(Encryption)]), join(`: `, [`VPN Traffic`, to_string(VpnTraffic)]), join(`: `, [`DataChannel`, to_string(DataChannel)]), join(`: `, [`IP Address Pool`, to_string(IpAddressPool)]), join(`: `, [`Authentication`, to_string(Authentication)]), join(`: `, [`Allowed Resources`, to_string(AllowedResources)]), join(`: `, [`Auth Users`, to_string(AuthenticationUsers)])])",
+          "resultType": "object",
+          "seq": "P143"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:model",
+          "metricUuid": "ab839e80-30aa-11ee-be56-0242ac120002",
+          "query": "SystemInfo.Model",
+          "resultType": "string",
+          "seq": "P144"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:one-to-one-nat-summary",
+          "metricUuid": "694c4a94-4809-4399-a37f-ca03faa77284",
+          "query": "NAT.oneToOneNAT[].join( `, `, [join(`: `, [`Interface`, to_string(Interface)]), join(`: `, [`NAT Address`, to_string(NATAddress)]), join(`: `, [`Real Address`, to_string(RealAddress)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P145"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:physical-interface-count",
+          "metricUuid": "aee8de4d-a0de-4042-9e62-bd99e0e86379",
+          "query": "SystemInfo.PhysicalInterface",
+          "resultType": "integer",
+          "seq": "P146"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:quota-action-summary",
+          "metricUuid": "c1eec04c-8907-4a71-9d4d-a6cce8d44794",
+          "query": "QuotaAction[].join( `, `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`Time(Min/Day)`, to_string(TimeInMinPerDay)]), join(`: `, [`Bandwidth(MB/Day)`, to_string(BandwidthInMBPerDay)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P147"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:quota-rule-summary",
+          "metricUuid": "9d5549f8-be54-4753-8b67-192ce4dde403",
+          "query": "QuotaRules[].join( `, `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`Action`, to_string(Action)]), join(`: `, [`Status`, to_string(Status)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P148"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:serial-number",
+          "metricUuid": "ab839fd4-30aa-11ee-be56-0242ac120002",
+          "query": "SystemInfo.SerialNumber",
+          "resultType": "string",
+          "seq": "P149"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:site-to-site-phase1-summary",
+          "metricUuid": "1bbd241b-0fc5-4560-886f-b1c5453c13b4",
+          "query": "SiteToSiteVPN.Phase1[].join( `, `, [join(`: `, [`Policy Name`, to_string(PolicyName)]), join(`: `, [`Status`, to_string(Status)]), join(`: `, [`Version`, to_string(Version)]), join(`: `, [`Peer Name`, to_string(PeerName)]), join(`: `, [`Action Name`, to_string(ActionName)]), join(`: `, [`Xchng Mode`, to_string(XchngMode)]), join(`: `, [`Local Interface`, to_string(LocalInterface)]), join(`: `, [`VIF`, to_string(VIF)]), join(`: `, [`VIF Protocol`, to_string(VIFProto)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P150"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:site-to-site-phase2-summary",
+          "metricUuid": "89263756-8579-45b3-99b2-3de75c4df04a",
+          "query": "SiteToSiteVPN.Phase2[].join( `, `, [join(`: `, [`Policy Name`, to_string(PolicyName)]), join(`: `, [`Status`, to_string(Status)]), join(`: `, [`IKE Version`, to_string(IKEVersion)]), join(`: `, [`Mode`, to_string(Mode)]), join(`: `, [`Key Mode`, to_string(KeyMode)]), join(`: `, [`VPN Type`, to_string(VPNType)]), join(`: `, [`IKE Policy`, to_string(IKEPolicyName)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P151"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:watchguard:user-summary",
+          "metricUuid": "19f93f81-40f6-4e7c-936b-d58e43031be6",
+          "query": "Users[?Type == 'Single-User'].join( `, `, [join(`: `, [`Name`, to_string(Name)]), join(`: `, [`AuthServer`, to_string(AuthServer)]), join(`: `, [`Description`, to_string(Description)])]) | sort(@)",
+          "resultType": "array",
+          "seq": "P152"
+        }
+      ]
+    }
+  ]
+}

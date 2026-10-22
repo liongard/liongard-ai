@@ -189,7 +189,7 @@ for training completion rate. Otherwise `MANUAL` — confirm with HR or IT manag
 
 | Item | Source | Notes |
 |---|---|---|
-| Renewal question set (PRIME 250 075 06 21) | `internal/cyber-insurance-forms/cowbell/cowbell-prime250-renewal-application.txt` | Extracted |
+| Renewal question set (PRIME 250 075 06 21) | Carrier application (from carrier or broker) | Extracted |
 | New business question set (PRIME 250 003 07 20) | Same file | Included in the same PDF |
 | Evidence mapping | `domains/auth.md`, `domains/endpoint.md`, `domains/backup.md` | Domain files are metric source of truth |
 

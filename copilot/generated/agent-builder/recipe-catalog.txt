@@ -1,0 +1,172 @@
+LIONGARD RECIPE CATALOG
+Use this catalog to choose the recipe BEFORE calling any Liongard tool. Match the user's request to the trigger phrases, then open the matching compiled recipe document by name.
+
+RECIPE: hipaa-readiness
+  id: recipe:compliance:hipaa-readiness
+  title: HIPAA Readiness — Master Recipe
+  group: Compliance and Insurance
+  personas: soc, vcio-account-manager, technical-alignment-manager, executive
+  output formats: word, xlsx, markdown
+  required tools: liongard_environment, liongard_launchpoint, liongard_timeline, liongard_cyber_risk_dashboard, liongard_identity, liongard_device, liongard_domain, liongard_metric, liongard_detection, liongard_alert
+  use when: Use this skill when the user wants a HIPAA Security Rule readiness assessment, Security Rule gap analysis, HIPAA technical-safeguard evidence pack, or pre-audit compliance workbook for a healthcare or covered-entity customer. Compliance variant of the cross-cutting recipe pattern — point- in-time evidence collection mapped to HIPAA Security Rule technical and administrative safeguards, with per-section breakouts. Trigger phrases: "HIPAA readiness", "HIPAA Security Rule assessment", "HIPAA gap analysis", "HIPAA technical safeguards audit", "HIPAA pre-audit", "HIPAA evidence pack", "what's our HIPAA posture", "ePHI security review", "covered entity security assessment", "business associate HIPAA assessment". Auto-discovers deployed inspectors, chains per-class recipes, and maps findings to the HIPAA Security Rule (45 CFR Part 164, Subpart C). Produces a Word readiness narrative and an Excel evidence workbook.
+  document: hipaa-readiness.md (Copilot Studio) / bundle-05-compliance.txt (Agent Builder)
+
+RECIPE: domain-assessment-identity-mfa-gap-report
+  id: recipe:domain-assessment:domain-assessment-identity-mfa-gap-report
+  title: Identity MFA Gap Report
+  group: Domain Assessments
+  personas: vcio-account-manager, soc, executive, technical-alignment-manager
+  output formats: markdown, html, word
+  required tools: liongard_environment, liongard_identity, liongard_launchpoint, liongard_metric
+  use when: Use this recipe when you need an MFA gap report for a customer: which enabled identities do not have multi-factor authentication, which of them are privileged, and which are stale or never used. Trigger phrases: "MFA gap report for <customer>", "who doesn't have MFA", "MFA coverage for <customer>", "privileged accounts without MFA", "Microsoft 365 MFA report", "MFA readiness for cyber insurance". Produces a customer-ready report with coverage percentage, a prioritized remediation list, and a data-freshness disclosure, using the reconciled identity inventory via liongard_identity. Works across Microsoft 365, Entra ID, Google Workspace, Active Directory, Duo, Okta and any other inspector Liongard reconciles into identities. Best for vCIO/Account Managers, SOC and Executives, monthly or on demand.
+  document: domain-assessment-identity-mfa-gap-report.md (Copilot Studio) / bundle-03-domain.txt (Agent Builder)
+
+RECIPE: environment-quarterly-lookback
+  id: recipe:environment-quarterly-lookback:environment-quarterly-lookback
+  title: Environment Quarterly Lookback — Master Recipe (PBR / QBR)
+  group: QBR and Reviews
+  personas: vcio-account-manager, executive, noc, soc, technical-alignment-manager, accounting-finance
+  output formats: pptx, word, markdown, xlsx
+  required tools: liongard_environment, liongard_launchpoint, liongard_timeline, liongard_cyber_risk_dashboard, liongard_device, liongard_identity, liongard_domain, liongard_detection, liongard_alert, liongard_metric
+  use when: Use this skill when the user wants a Periodic Business Review (PBR / QBR / Quarterly Business Review) or environment lookback for a customer — a time-bounded narrative report of what changed, what alerted, and what the current state is over the last 90 days, last quarter, last year, or since a specific date. Trigger phrases: "PBR for the customer", "QBR for a customer", "quarterly business review", "environment lookback", "what changed in the last 90 days", "what has happened since a specific date", "quarterly report", "year-end review". Auto-discovers the customer's deployed inspector stack and chains the appropriate per-system and system-type recipes. Produces a narrative report (PowerPoint executive deck + Word written report by default) that integrates change-detection, alerts, inspection timeline, cyber-risk-dashboard KPIs, and current-state inventory.
+  document: environment-quarterly-lookback.md (Copilot Studio) / bundle-04-qbr-roadmap-onboarding-sales.txt (Agent Builder)
+
+RECIPE: new-customer-onboarding
+  id: recipe:onboarding-assessment:new-customer-onboarding
+  title: New Customer Onboarding Assessment — Master Recipe
+  group: QBR and Reviews
+  personas: technical-alignment-manager, vcio-account-manager, sales, noc, soc
+  output formats: xlsx, word, markdown, pptx
+  required tools: liongard_environment, liongard_launchpoint, liongard_timeline, liongard_cyber_risk_dashboard, liongard_device, liongard_identity, liongard_domain, liongard_metric, liongard_detection, liongard_alert
+  use when: Use this skill when the user wants to onboard a new customer to the MSP, perform an intake / first-90-days assessment, run a Technical Alignment intake, or build a remediation plan to bring a new customer to the MSP's documentation + security standard. Point-in-time (current-state) variant of the cross-cutting recipe pattern — discovers the customer's full inspector stack and grades each system class against the MSP's onboarding baseline. Trigger phrases: "onboarding assessment for a customer", "intake for a new customer", "TAM onboarding", "first-90-days plan", "technical alignment intake", "what does this new customer need fixed", "bring this customer to standard", "gap analysis for a new customer". Auto-discovers deployed inspectors and chains the appropriate per-system and system-type recipes against the onboarding standard. Produces an Excel intake workbook (per-class scorecard + remediation tracker) and a Word narrative gap analysis (TAM's first conversation document).
+  document: new-customer-onboarding.md (Copilot Studio) / bundle-04-qbr-roadmap-onboarding-sales.txt (Agent Builder)
+
+RECIPE: single-system-active-directory
+  id: recipe:single-system-analysis:single-system-active-directory
+  title: Single-System Analysis — Active Directory
+  group: Single-System Assessments
+  personas: noc, soc, vcio-account-manager, technical-alignment-manager
+  output formats: markdown, word, pptx, xlsx
+  required tools: liongard_environment, liongard_launchpoint, liongard_metric, liongard_identity, liongard_device
+  use when: Use this skill when the user wants a single-domain analysis of an on-premises Active Directory — Periodic Business Review, password policy + account lockout audit, privileged user inventory + group membership, stale / disabled account review, default accounts posture, EOL workstation roster, DHCP scope inventory. Trigger phrases: "AD PBR", "AD review", "pull AD data", "AD password policy audit", "AD privileged users", "stale AD accounts", "AD DHCP scopes", "Active Directory review for the customer". Distinct from the cyber-insurance auth domain file — that one is question-driven for insurance evidence; this is operational AD assessment.
+  document: single-system-active-directory.md (Copilot Studio) / bundle-01-single-system.txt (Agent Builder)
+
+RECIPE: single-system-autotask
+  id: recipe:single-system-analysis:single-system-autotask
+  title: Single-System Analysis — Autotask
+  group: Single-System Assessments
+  personas: vcio-account-manager, accounting-finance, noc, technical-alignment-manager
+  output formats: markdown, word, pptx, xlsx
+  required tools: liongard_environment, liongard_launchpoint, liongard_metric, liongard_timeline
+  use when: Use this skill when the user wants a single-system analysis of an Autotask PSA tenant. The Dev MCP dataprint currently supports tenant-level company/account and contact inventory; ticket volume, SLA, resource utilization, time-entry, billing, contract, and project analysis must be marked as manual gaps unless those collections appear in the tenant dataprint. Trigger phrases: "Autotask review", "AT posture for <customer>", "Autotask company inventory", "Autotask contact inventory", "Datto Autotask PBR".
+  document: single-system-autotask.md (Copilot Studio) / bundle-01-single-system.txt (Agent Builder)
+
+RECIPE: single-system-datto-bcdr
+  id: recipe:single-system-analysis:single-system-datto-bcdr
+  title: Single-System Analysis — Datto BCDR
+  group: Single-System Assessments
+  personas: noc, vcio-account-manager, technical-alignment-manager
+  output formats: markdown, word, xlsx
+  required tools: liongard_environment, liongard_launchpoint, liongard_metric, liongard_device
+  use when: Use this skill when the user wants a single-appliance analysis of a Datto BCDR (SIRIS or ALTO appliance) — protected-device coverage, last-valid-backup state per device, failed-backup detection, cloud sync status, screenshot-verification posture. Datto BCDR is appliance-based image-level backup with cloud replication. Trigger phrases: "Datto BCDR review", "SIRIS PBR", "ALTO appliance status", "pull Datto backup data", "Datto failed backups", "Datto cloud sync status". Produces an artifact in the format set in the customization block.
+  document: single-system-datto-bcdr.md (Copilot Studio) / bundle-01-single-system.txt (Agent Builder)
+
+RECIPE: single-system-datto-rmm
+  id: recipe:single-system-analysis:single-system-datto-rmm
+  title: Single-System Analysis — Datto RMM
+  group: Single-System Assessments
+  personas: noc, technical-alignment-manager, vcio-account-manager, accounting-finance
+  output formats: markdown, word, pptx, xlsx
+  required tools: liongard_environment, liongard_launchpoint, liongard_metric, liongard_device
+  use when: Use this skill when the user wants a single-system analysis of a Datto RMM tenant — agent / device coverage, patch posture, antivirus posture (Datto AV / third-party), software inventory, monitor / alert posture, technician usage, license utilization. Trigger phrases: "Datto RMM review", "Datto RMM posture for <customer>", "Centrastage report" (legacy), "Autotask Endpoint Management" (legacy), "Datto RMM agent coverage", "Datto RMM patch posture".
+  document: single-system-datto-rmm.md (Copilot Studio) / bundle-01-single-system.txt (Agent Builder)
+
+RECIPE: single-system-fortinet-fortigate
+  id: recipe:single-system-analysis:single-system-fortinet-fortigate
+  title: Single-System Analysis — Fortinet FortiGate
+  group: Single-System Assessments
+  personas: noc, soc, vcio-account-manager, technical-alignment-manager
+  output formats: markdown, word, pptx
+  required tools: liongard_environment, liongard_launchpoint, liongard_metric, liongard_device
+  use when: Use this skill when the user wants a single-firewall analysis of a Fortinet FortiGate — Periodic Business Review, firmware audit, license / security-services expiration, firewall policy summary, LAN-interface inventory, IPSec VPN tunnel review, default-credential audit. Trigger phrases: "FortiGate PBR", "pull FortiGate data", "FGT firewall review", "FortiGate license check", "Fortinet review", "FortiGate firmware audit". Produces an artifact in the format set in the customization block.
+  document: single-system-fortinet-fortigate.md (Copilot Studio) / bundle-01-single-system.txt (Agent Builder)
+
+RECIPE: single-system-google-workspace
+  id: recipe:single-system-analysis:single-system-google-workspace
+  title: Single-System Analysis — Google Workspace
+  group: Single-System Assessments
+  personas: soc, technical-alignment-manager, vcio-account-manager, accounting-finance
+  output formats: markdown, word, pptx, xlsx
+  required tools: liongard_environment, liongard_launchpoint, liongard_metric, liongard_identity
+  use when: Use this skill when the user wants a single-tenant analysis of a Google Workspace (GWS) tenant — identity inventory, 2-Step Verification posture, super-admin audit, OU structure, group hygiene, app-access settings, third-party-app authorization audit, security defaults posture, license utilization. Trigger phrases: "Google Workspace review", "GWS posture for <customer>", "Google Workspace 2SV audit", "Google admin audit", "G Suite review" (legacy), "Workspace license utilization".
+  document: single-system-google-workspace.md (Copilot Studio) / bundle-01-single-system.txt (Agent Builder)
+
+RECIPE: single-system-huntress
+  id: recipe:single-system-analysis:single-system-huntress
+  title: Single-System Analysis — Huntress
+  group: Single-System Assessments
+  personas: noc, soc, vcio-account-manager, technical-alignment-manager
+  output formats: markdown, word, pptx
+  required tools: liongard_environment, liongard_launchpoint, liongard_metric, liongard_device
+  use when: Use this skill when the user wants a single-system analysis of a Huntress customer organization — Periodic Business Review (PBR / QBR), monthly health check, agent deployment audit, or incident trend review. Trigger phrases: "Huntress PBR", "Huntress report", "pull Huntress data for <CUSTOMER>", "single system review of Huntress". Produces an artifact in the format set in the customization block (Word, PowerPoint, Markdown, Excel).
+  document: single-system-huntress.md (Copilot Studio) / bundle-01-single-system.txt (Agent Builder)
+
+RECIPE: single-system-knowbe4
+  id: recipe:single-system-analysis:single-system-knowbe4
+  title: Single-System Analysis — KnowBe4
+  group: Single-System Assessments
+  personas: vcio-account-manager, soc, technical-alignment-manager
+  output formats: markdown, word, pptx
+  required tools: liongard_environment, liongard_launchpoint, liongard_metric, liongard_identity
+  use when: Use this skill when the user wants a single-system analysis of a KnowBe4 account — Periodic Business Review (PBR), phishing test review, security awareness training (SAT) completion audit, organization risk score trend, or top phish-prone-user identification. Trigger phrases: "KnowBe4 PBR", "KB4 report", "phishing security tests review", "training completion check", "pull KnowBe4 data for <CUSTOMER>". Produces an artifact in the format set in the customization block.
+  document: single-system-knowbe4.md (Copilot Studio) / bundle-01-single-system.txt (Agent Builder)
+
+RECIPE: single-system-microsoft-365
+  id: recipe:single-system-analysis:single-system-microsoft-365
+  title: Single-System Analysis — Microsoft 365
+  group: Single-System Assessments
+  personas: vcio-account-manager, soc, technical-alignment-manager, accounting-finance
+  output formats: markdown, word, pptx, xlsx
+  required tools: liongard_environment, liongard_launchpoint, liongard_metric, liongard_identity
+  use when: Use this skill when the user wants a single-system analysis of a Microsoft 365 tenant — Periodic Business Review (PBR), license utilization audit, user/group inventory, SharePoint site review, Entra ID identity report, or backup-coverage verification (when paired with a SaaS-backup tool). Trigger phrases: "M365 PBR", "O365 report", "pull Microsoft 365 / Entra data for <CUSTOMER>", "verify M365 backup coverage", "license utilization on M365". Produces an artifact in the format set in the customization block.
+  document: single-system-microsoft-365.md (Copilot Studio) / bundle-01-single-system.txt (Agent Builder)
+
+RECIPE: single-system-synology-nas
+  id: recipe:single-system-analysis:single-system-synology-nas
+  title: Single-System Assessment — Synology NAS
+  group: Single-System Assessments
+  personas: noc, technical-alignment-manager, vcio-account-manager
+  output formats: markdown, word, xlsx
+  required tools: liongard_launchpoint, liongard_metric
+  use when: Use this skill when the user wants a single-system assessment of a Synology NAS appliance. Trigger phrases: "Synology NAS assessment for <customer>", "NAS storage health", "Synology disk health", "storage capacity report", "Synology user audit", "NAS share permissions", "Synology package status". Queries the synology-nas-inspector dataprint for system info, disk health, volume/pool status, share inventory, user accounts, network config, services, and installed packages.
+  document: single-system-synology-nas.md (Copilot Studio) / bundle-01-single-system.txt (Agent Builder)
+
+RECIPE: single-system-ubiquiti-unifi
+  id: recipe:single-system-analysis:single-system-ubiquiti-unifi
+  title: Single-System Analysis — Ubiquiti UniFi
+  group: Single-System Assessments
+  personas: noc, soc, technical-alignment-manager, vcio-account-manager
+  output formats: markdown, word, pptx
+  required tools: liongard_environment, liongard_launchpoint, liongard_metric, liongard_device
+  use when: Use this skill when the user wants a single-controller analysis of a Ubiquiti UniFi deployment — PBR, controller version audit, AP / switch / gateway inventory, firmware audit, SSID + wireless security posture, guest-network audit, VLAN configuration, local user / admin audit. Trigger phrases: "UniFi review", "Ubiquiti PBR", "UniFi controller audit", "UDM review", "pull UniFi data for <customer>", "UniFi firmware audit", "SSID security audit".
+  document: single-system-ubiquiti-unifi.md (Copilot Studio) / bundle-01-single-system.txt (Agent Builder)
+
+RECIPE: single-system-watchguard
+  id: recipe:single-system-analysis:single-system-watchguard
+  title: Single-System Analysis — WatchGuard
+  group: Single-System Assessments
+  personas: noc, soc, vcio-account-manager, technical-alignment-manager
+  output formats: markdown, word, pptx
+  required tools: liongard_environment, liongard_launchpoint, liongard_metric, liongard_device
+  use when: Use this skill when the user wants a single-firewall analysis of a WatchGuard appliance — Periodic Business Review, configuration audit, license / subscription expiration, firmware audit, security-services posture, branch-office VPN posture, BOVPN / Mobile VPN review. Trigger phrases: "WatchGuard PBR", "WG firewall review", "pull WatchGuard data for <customer>", "WatchGuard license audit", "WatchGuard firmware review", "Firebox audit", "BOVPN review".
+  document: single-system-watchguard.md (Copilot Studio) / bundle-01-single-system.txt (Agent Builder)
+
+RECIPE: system-type-all-firewalls
+  id: recipe:system-type-assessment:system-type-all-firewalls
+  title: System-Type Assessment — All Firewalls
+  group: System-Type Rollups
+  personas: vcio-account-manager, soc, technical-alignment-manager, noc
+  output formats: markdown, word, pptx, xlsx
+  required tools: liongard_environment, liongard_launchpoint, liongard_metric, liongard_device
+  use when: Use this skill when the user wants a unified firewall posture across every firewall vendor deployed in an environment — fleet view of firmware status, license expirations, default-credential audits, WAN-management exposure, site-to-site VPN topology, and per-vendor policy inventory. Trigger phrases: "firewall fleet review", "all- firewalls report", "unified firewall posture for the customer", "compare firewall coverage across vendors", "firewall license expiration roadmap", "WAN management exposure audit". Iterates each deployed firewall (SonicWall, FortiGate, Cisco ASA, Sophos XG, Cisco Meraki MX, WatchGuard, Palo Alto, Barracuda, pfSense, Sophos SG) and rolls up to one fleet-level report.
+  document: system-type-all-firewalls.md (Copilot Studio) / bundle-02-system-type.txt (Agent Builder)

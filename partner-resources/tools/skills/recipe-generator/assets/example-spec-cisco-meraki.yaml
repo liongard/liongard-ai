@@ -159,13 +159,13 @@ cross_check:
 proposed_metric_gaps:
   - field: VLAN DHCP scope detail
     fallback: client-side parse of Vlans[*] to extract DHCP fields
-    jira_ticket:                     # not yet filed
+    tracking_ref:                     # not yet filed
   - field: Per-switch management IP
     fallback: client-side filter on NetworkDevices[?starts_with(model, 'MS')]
-    jira_ticket:                     # not yet filed
+    tracking_ref:                     # not yet filed
   - field: Per-AP management IP
     fallback: client-side filter on NetworkDevices[?starts_with(model, 'MR')]
-    jira_ticket:                     # not yet filed
+    tracking_ref:                     # not yet filed
 
 trigger_keyword: meraki
 

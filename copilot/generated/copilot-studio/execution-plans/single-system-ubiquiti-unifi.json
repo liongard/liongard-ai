@@ -1,0 +1,68 @@
+{
+  "primitiveCount": 6,
+  "recipe": "single-system-ubiquiti-unifi",
+  "source": "recipes/single-system-analysis/by-inspector/ubiquiti-unifi.md",
+  "sourceSha256": "a609e069132e9324141e443ccd25874590cf2e3fb59f4d0b48a286d8b7941508",
+  "vendors": [
+    {
+      "inspectorId": 40,
+      "inspectorSlug": "ubiquiti-unifi-inspector",
+      "primitives": [
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:ubiquiti-unifi:controller-version",
+          "metricUuid": "baf80347-9248-4633-afc9-3acd90426af0",
+          "query": "SystemInfo[].version",
+          "resultType": "array",
+          "seq": "P001"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:ubiquiti-unifi:device-serial-number-list",
+          "metricUuid": "90f737fd-e240-4501-91df-bf54c10e3a40",
+          "query": "Devices[].serial | sort(@)",
+          "resultType": "array",
+          "seq": "P002"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:ubiquiti-unifi:devices-list",
+          "metricUuid": "ac1a7c13-8c39-4d05-bfd3-6e888a2d58ae",
+          "query": "Devices[?name && model].join(`:` , [name,model])",
+          "resultType": "array",
+          "seq": "P003"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:ubiquiti-unifi:hardware-type-and-version",
+          "metricUuid": "2e5e88cd-e281-4d86-bebd-34e5077b69e2",
+          "query": "Devices[].join(`: `, [name,type,model,version])",
+          "resultType": "array",
+          "seq": "P004"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:ubiquiti-unifi:subnets-list",
+          "metricUuid": "f46e28e2-374c-41e6-b294-2e0e299cdd6b",
+          "query": "NetworkConf[?ip_subnet && name].join(`:` , [name, ip_subnet])",
+          "resultType": "array",
+          "seq": "P005"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:ubiquiti-unifi:super-admin-users-list",
+          "metricUuid": "6dfe87f8-feca-4e5d-bddf-149e6674cca2",
+          "query": "Users[?is_super == `true`].name | join(`, `, @)",
+          "resultType": "string",
+          "seq": "P006"
+        }
+      ]
+    }
+  ]
+}

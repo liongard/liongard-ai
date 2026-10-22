@@ -1,0 +1,122 @@
+{
+  "primitiveCount": 12,
+  "recipe": "single-system-datto-bcdr",
+  "source": "recipes/single-system-analysis/by-inspector/datto-bcdr.md",
+  "sourceSha256": "371fc768ee9ae925dbf9d15d96ee754ed95e830cadd96dde8529adcf7ff2a71a",
+  "vendors": [
+    {
+      "inspectorId": 38,
+      "inspectorSlug": "datto-bcdr-inspector",
+      "primitives": [
+        {
+          "compliantWhen": "result == []",
+          "fieldGotcha": "!isArchived uses boolean negation here \u2014 confirming isArchived is stored as boolean on the Assets[] objects. The older metrics (ids 757, 759, 760) use string or boolean comparisons inconsistently; this id=2079 form uses boolean. Use the boolean form for any new/proposed metrics.",
+          "id": "metrics:datto-bcdr:agent-backups-without-screenshot-list",
+          "metricUuid": "02fdf39b-f67a-4341-82ec-eab26754cff9",
+          "query": "Assets[?!isArchived && type=='agent' &&!lastScreenshotAttempt].name[]",
+          "resultType": "array",
+          "seq": "P001"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:datto-bcdr:appliance-model",
+          "metricUuid": "339f34e1-546f-4354-8077-7851edcb49dd",
+          "query": "SystemInfo.model",
+          "resultType": "string",
+          "seq": "P002"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:datto-bcdr:appliance-serial",
+          "metricUuid": "b872ac05-0b4e-4629-8dd1-2eb6d50f3c3d",
+          "query": "SystemInfo.serialNumber",
+          "resultType": "string",
+          "seq": "P003"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:datto-bcdr:assets-count",
+          "metricUuid": "54f48a84-b85f-4ac6-8c23-37d19dfda035",
+          "query": "length(Assets)",
+          "resultType": "integer",
+          "seq": "P004"
+        },
+        {
+          "compliantWhen": null,
+          "fieldGotcha": null,
+          "id": "metrics:datto-bcdr:associated-device-list",
+          "metricUuid": "524dd75f-2f88-48a6-9534-6111f273cfb2",
+          "query": "Assets[].name | join(`, ` @)",
+          "resultType": "string",
+          "seq": "P005"
+        },
+        {
+          "compliantWhen": "result == []",
+          "fieldGotcha": "isArchived is tested as string 'true' in the Global metric (isArchived != `true`), not boolean. backups[0] references the most recent backup job entry. Both assumptions are baked into the Global metric query.",
+          "id": "metrics:datto-bcdr:backups-failed-recent-list",
+          "metricUuid": "3487e0a3-af92-4200-bc2e-864969a7e51a",
+          "query": "Assets[?isArchived != `true` && backups[0].backup.status=='failure'].name",
+          "resultType": "array",
+          "seq": "P006"
+        },
+        {
+          "compliantWhen": "result == []",
+          "fieldGotcha": null,
+          "id": "metrics:datto-bcdr:backups-older-than-30d-list",
+          "metricUuid": "b2fee590-9284-4bf5-90d1-6d9b56c3eace",
+          "query": "Assets[?isArchived == `false` && HoursSinceLastSuccessfulBackup_r != `99999` && HoursSinceLastSuccessfulBackup_r > `720`].name[]",
+          "resultType": "array",
+          "seq": "P007"
+        },
+        {
+          "compliantWhen": "result == 0",
+          "fieldGotcha": "HoursSinceLastSuccessfulBackup_r is a Liongard-computed (_r suffix) field, not a native Datto field. A value of 99999 means 'never backed up' or data unavailable \u2014 exclude it to avoid counting unprovisioned slots. isArchived is boolean false here (compare with id=757 which uses the string 'true').",
+          "id": "metrics:datto-bcdr:backups-overdue-24h-count",
+          "metricUuid": "208cd654-10e0-4986-8fcb-b6afd2522a22",
+          "query": "Assets[?isArchived == `false` && HoursSinceLastSuccessfulBackup_r != `99999` && HoursSinceLastSuccessfulBackup_r > `24`] | length(@)",
+          "resultType": "integer",
+          "seq": "P008"
+        },
+        {
+          "compliantWhen": "result == null || result == ''",
+          "fieldGotcha": null,
+          "id": "metrics:datto-bcdr:backups-overdue-24h-summary",
+          "metricUuid": "e25b98fb-45b7-4749-ba27-630cd2267cf8",
+          "query": "Assets[?isArchived == `false` && HoursSinceLastSuccessfulBackup_r != `99999` && HoursSinceLastSuccessfulBackup_r > `24`].[name,  join(' ',['Latest Successful Backup:' ,latestSuccessfulBackup_r])][] | join (' | ', @)",
+          "resultType": "string",
+          "seq": "P009"
+        },
+        {
+          "compliantWhen": "result > 30",
+          "fieldGotcha": "NumDaysTillServiceExpiration_r uses the _r suffix \u2014 this is a Liongard-computed derived field, not a raw Datto API field.",
+          "id": "metrics:datto-bcdr:days-until-service-expiry",
+          "metricUuid": "bbe5b712-599a-48c8-9f39-6c8cfc9da501",
+          "query": "SystemInfo.NumDaysTillServiceExpiration_r",
+          "resultType": "integer",
+          "seq": "P010"
+        },
+        {
+          "compliantWhen": "result > 30",
+          "fieldGotcha": null,
+          "id": "metrics:datto-bcdr:days-until-warranty-expiry",
+          "metricUuid": "4b6aca28-41dd-4d3f-ba1b-1153def07297",
+          "query": "SystemInfo.NumDaysTillWarrantyExpiration",
+          "resultType": "integer",
+          "seq": "P011"
+        },
+        {
+          "compliantWhen": "result >= 20",
+          "fieldGotcha": null,
+          "id": "metrics:datto-bcdr:local-storage-free-pct",
+          "metricUuid": "b7c0036a-f0d9-4e52-b60b-cc431a08f820",
+          "query": "SystemInfo.PercentLocalStorageFree",
+          "resultType": "integer",
+          "seq": "P012"
+        }
+      ]
+    }
+  ]
+}

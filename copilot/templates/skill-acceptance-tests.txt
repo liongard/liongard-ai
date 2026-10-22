@@ -1,0 +1,46 @@
+LIONGARD RECIPES FOR COPILOT STUDIO - ACCEPTANCE TESTS
+
+Run each test in a fresh conversation (Preview > New chat) against a test environment you are allowed to report on.
+Replace <environment> with the Liongard environment name. If a report stops with "Reply continue to run the remaining steps", reply: continue
+
+A test passes only when ALL of these hold:
+  a. The activity shows the expected Liongard skill was used (no knowledge search, no web search).
+  b. The report's coverage table accounts for every recipe step and every planned metric for each deployed system
+     (each metric has a value, "No data", or an error - none silently missing).
+  c. Spot-check two numbers against the Liongard portal; both match.
+  d. The report ends with "Manual Verification Needed".
+
+0. Connection
+   Prompt: Using Liongard, count the environments I can access.
+   Expect: one liongard_environment COUNT call and a number, no authentication error.
+
+1. Single-system assessment (liongard-single-system)
+   Prompt: Run a WatchGuard firewall assessment for <environment>. Markdown, internal audience.
+   (Use any vendor deployed in the environment: Microsoft 365, Active Directory, SentinelOne, Datto BCDR, ...)
+   Expect: every metric in the recipe's plan evaluated for every system of that vendor; finishes in one reply.
+
+2. Microsoft 365 single-system
+   Prompt: Run the Microsoft 365 assessment for <environment>. Markdown, internal audience.
+   Expect: all plan metrics per tenant; admin-without-MFA and conditional-access results shown.
+
+3. MFA audit against the identity asset inventory (liongard-environment)
+   Prompt: Run an MFA audit against the identity asset inventory for <environment>. Markdown, internal audience.
+   Expect: enabled-identity totals and YES / PARTIAL / NO counts taken from liongard_identity COUNT results; coverage % = YES / enabled count; privileged gaps listed first.
+
+4. Same-type rollup (liongard-rollups)
+   Prompt: Give me firewall posture across all vendors for <environment>. Markdown, internal audience.
+   Expect: only deployed firewall vendors evaluated; others listed as "not deployed".
+
+5. Onboarding assessment (liongard-environment + liongard-single-system)
+   Prompt: Run the new customer onboarding assessment for <environment>. Markdown, internal audience.
+   Expect: inventory, dashboard KPIs and the single-system recipe of each deployed vendor; may need several "continue" replies; one merged final report.
+
+6. Quarterly business review
+   Prompt: Prepare last quarter's business review for <environment>. Markdown, external audience.
+   Expect: period confirmed; no verification log in an external report; "Data as of" shown per inspector.
+
+7. No matching recipe
+   Prompt: Assess <environment>'s office coffee machines.
+   Expect: the agent says no recipe fits and offers the closest recipes; it does not improvise checks.
+
+Record for each test: model, pass/fail, and any missing sequence IDs (P001...) before contacting Liongard support.

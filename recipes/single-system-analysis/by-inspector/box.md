@@ -12,22 +12,12 @@ compatibility: "Requires Liongard MCP: liongard_environment, liongard_system, li
 personas: [soc, technical-alignment-manager, vcio-account-manager, accounting-finance]
 output_formats: [markdown, word, pptx, xlsx]
 primitives:
-  - metrics:box:content-stale-file-count
-  - metrics:box:licensing-seat-total
-  - metrics:box:licensing-seat-used
-  - metrics:box:licensing-utilization-pct
   - metrics:box:retention-policies-count
   - metrics:box:security-admin-count
-  - metrics:box:security-app-auth-count
-  - metrics:box:shares-external-count
-  - metrics:box:shares-open-upload-link-count
-  - metrics:box:shares-public-link-count
   - metrics:box:storage-total-gb
   - metrics:box:storage-used-gb
-  - metrics:box:storage-utilization-pct
   - metrics:box:system-info
   - metrics:box:users-active-count
-  - metrics:box:users-external-count
   - metrics:box:users-inactive-count
   - metrics:box:users-mfa-enabled-count
   - metrics:box:users-total-count

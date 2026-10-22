@@ -16,7 +16,7 @@ primitives:
     sourceRecipe: recipes/single-system-analysis/by-inspector/kaseya-vsa.md
     status: VALIDATED
     validatedOn: '2026-05-28'
-    validatedSystemReference: 'System A (Demo Child, env: Liongard Demo) — returned
+    validatedSystemReference: 'System A (Demo Child, dev environment) — returned
       17'
 
   - '@id': metrics:kaseya-vsa-inspector:agents-online-count
@@ -35,7 +35,7 @@ primitives:
     sourceRecipe: recipes/single-system-analysis/by-inspector/kaseya-vsa.md
     status: VALIDATED
     validatedOn: '2026-05-28'
-    validatedSystemReference: 'System A (Demo Child, env: Liongard Demo) — returned
+    validatedSystemReference: 'System A (Demo Child, dev environment) — returned
       10'
 
   - '@id': metrics:kaseya-vsa-inspector:agents-offline-count
@@ -54,47 +54,10 @@ primitives:
     sourceRecipe: recipes/single-system-analysis/by-inspector/kaseya-vsa.md
     status: VALIDATED
     validatedOn: '2026-05-28'
-    validatedSystemReference: 'System A (Demo Child, env: Liongard Demo) — returned
+    validatedSystemReference: 'System A (Demo Child, dev environment) — returned
       3'
 
-  - '@id': metrics:kaseya-vsa-inspector:patches-pending-count
-    '@type': liongard:MetricPrimitive
-    dateAdded: '2026-05-26'
-    description: Total number of patches pending installation across managed devices.
-    evaluates:
-      '@type': liongard:Inspector
-      inspectorId: 48
-      inspectorSlug: kaseya-vsa-inspector
-    jmesPath: N/A
-    name: Kaseya VSA — Pending Patch Count
-    notes: 'DATA GAP: Kaseya VSA child dataprint has only Agents[] and Assets[]. No
-      separate Patches[], Users[], MonitorSets[], Alarms[], or Licensing data. Assets[].IsPatching
-      flag (integer 0/1) indicates patching module is assigned, not pending patch count.'
-    resultType: integer
-    sourceRecipe: recipes/single-system-analysis/by-inspector/kaseya-vsa.md
-    status: PROPOSED
-    validatedOn: '2026-05-28'
-    validatedSystemReference: 'System A (Demo Child, env: Liongard Demo) — no Patches[]
-      in dataprint'
 
-  - '@id': metrics:kaseya-vsa-inspector:patches-critical-pending-count
-    '@type': liongard:MetricPrimitive
-    dateAdded: '2026-05-26'
-    description: Number of critical patches pending installation across managed devices.
-    evaluates:
-      '@type': liongard:Inspector
-      inspectorId: 48
-      inspectorSlug: kaseya-vsa-inspector
-    jmesPath: N/A
-    name: Kaseya VSA — Critical Pending Patch Count
-    notes: 'DATA GAP: Kaseya VSA child dataprint has only Agents[] and Assets[]. No
-      separate Patches[], Users[], MonitorSets[], Alarms[], or Licensing data.'
-    resultType: integer
-    sourceRecipe: recipes/single-system-analysis/by-inspector/kaseya-vsa.md
-    status: PROPOSED
-    validatedOn: '2026-05-28'
-    validatedSystemReference: 'System A (Demo Child, env: Liongard Demo) — no Patches[]
-      in dataprint'
 
   - '@id': metrics:kaseya-vsa-inspector:endpoint-security-coverage-count
     '@type': liongard:MetricPrimitive
@@ -113,7 +76,7 @@ primitives:
     sourceRecipe: recipes/single-system-analysis/by-inspector/kaseya-vsa.md
     status: VALIDATED
     validatedOn: '2026-05-28'
-    validatedSystemReference: 'System A (Demo Child, env: Liongard Demo) — returned
+    validatedSystemReference: 'System A (Demo Child, dev environment) — returned
       0 (security module not assigned on test system)'
 
   - '@id': metrics:kaseya-vsa-inspector:monitor-sets-assigned-count
@@ -133,26 +96,8 @@ primitives:
     sourceRecipe: recipes/single-system-analysis/by-inspector/kaseya-vsa.md
     status: VALIDATED
     validatedOn: '2026-05-28'
-    validatedSystemReference: 'System A (Demo Child, env: Liongard Demo) — path confirmed'
+    validatedSystemReference: 'System A (Demo Child, dev environment) — path confirmed'
 
-  - '@id': metrics:kaseya-vsa-inspector:monitor-sets-disabled-count
-    '@type': liongard:MetricPrimitive
-    dateAdded: '2026-05-26'
-    description: Number of monitor sets that are currently disabled.
-    evaluates:
-      '@type': liongard:Inspector
-      inspectorId: 48
-      inspectorSlug: kaseya-vsa-inspector
-    jmesPath: N/A
-    name: Kaseya VSA — Disabled Monitor Set Count
-    notes: 'DATA GAP: No per-monitor-set disable status in Kaseya VSA dataprint. Only
-      Assets[].IsMonitoring (0/1) is available.'
-    resultType: integer
-    sourceRecipe: recipes/single-system-analysis/by-inspector/kaseya-vsa.md
-    status: PROPOSED
-    validatedOn: '2026-05-28'
-    validatedSystemReference: 'System A (Demo Child, env: Liongard Demo) — no disabled
-      monitor set data in dataprint'
 
   - '@id': metrics:kaseya-vsa-inspector:alarms-open-count
     '@type': liongard:MetricPrimitive
@@ -171,27 +116,9 @@ primitives:
     sourceRecipe: recipes/single-system-analysis/by-inspector/kaseya-vsa.md
     status: VALIDATED
     validatedOn: '2026-05-28'
-    validatedSystemReference: 'System A (Demo Child, env: Liongard Demo) — returned
+    validatedSystemReference: 'System A (Demo Child, dev environment) — returned
       0 (no alarms on test system)'
 
-  - '@id': metrics:kaseya-vsa-inspector:alarms-critical-count
-    '@type': liongard:MetricPrimitive
-    dateAdded: '2026-05-26'
-    description: Number of critical severity alarms in the Kaseya VSA tenant.
-    evaluates:
-      '@type': liongard:Inspector
-      inspectorId: 48
-      inspectorSlug: kaseya-vsa-inspector
-    jmesPath: N/A
-    name: Kaseya VSA — Critical Alarm Count
-    notes: 'DATA GAP: Assets.AlarmCount is a total count string with no severity breakdown.
-      No critical-only alarm count in the Kaseya VSA dataprint.'
-    resultType: integer
-    sourceRecipe: recipes/single-system-analysis/by-inspector/kaseya-vsa.md
-    status: PROPOSED
-    validatedOn: '2026-05-28'
-    validatedSystemReference: 'System A (Demo Child, env: Liongard Demo) — AlarmCount
-      is total only, no severity breakdown'
 
   - '@id': metrics:kaseya-vsa-inspector:users-total-count
     '@type': liongard:MetricPrimitive
@@ -201,87 +128,17 @@ primitives:
       '@type': liongard:Inspector
       inspectorId: 48
       inspectorSlug: kaseya-vsa-inspector
-    jmesPath: N/A
     name: Kaseya VSA — Total VSA User Count
-    notes: 'DATA GAP: Kaseya VSA child dataprint has only Agents[] (managed endpoints)
-      and Assets[]. VSA technician/user accounts are not in the child dataprint.'
-    resultType: integer
     sourceRecipe: recipes/single-system-analysis/by-inspector/kaseya-vsa.md
-    status: PROPOSED
-    validatedOn: '2026-05-28'
-    validatedSystemReference: 'System A (Demo Child, env: Liongard Demo) — no Users[]
       array in Kaseya VSA child dataprint'
+    jmesPath: "length(Users)"
+    resultType: "integer"
+    fieldGotcha: "Parent system only; child systems have no Users array."
+    status: "VALIDATED"
+    validatedOn: "2026-10-07"
+    validatedSystemReference: "Systems A, B (dev environment), live EVALUATE 2026-10-07"
 
-  - '@id': metrics:kaseya-vsa-inspector:users-mfa-enabled-count
-    '@type': liongard:MetricPrimitive
-    dateAdded: '2026-05-26'
-    description: Number of VSA users with MFA enabled. MFA required on every VSA user
-      per post-2021 incident hardening.
-    evaluates:
-      '@type': liongard:Inspector
-      inspectorId: 48
-      inspectorSlug: kaseya-vsa-inspector
-    jmesPath: N/A
-    name: Kaseya VSA — VSA Users with MFA Enabled Count
-    notes: 'DATA GAP: See users-total-count note.'
-    resultType: integer
-    sourceRecipe: recipes/single-system-analysis/by-inspector/kaseya-vsa.md
-    status: PROPOSED
-    validatedOn: '2026-05-28'
-    validatedSystemReference: 'System A (Demo Child, env: Liongard Demo) — no Users[]
-      in dataprint'
 
-  - '@id': metrics:kaseya-vsa-inspector:licensing-seat-total
-    '@type': liongard:MetricPrimitive
-    dateAdded: '2026-05-26'
-    description: Total number of licensed seats in the Kaseya VSA tenant.
-    evaluates:
-      '@type': liongard:Inspector
-      inspectorId: 48
-      inspectorSlug: kaseya-vsa-inspector
-    jmesPath: N/A
-    name: Kaseya VSA — License Seat Total
-    notes: 'DATA GAP: No licensing/seat data in Kaseya VSA dataprint.'
-    resultType: integer
-    sourceRecipe: recipes/single-system-analysis/by-inspector/kaseya-vsa.md
-    status: PROPOSED
-    validatedOn: '2026-05-28'
-    validatedSystemReference: 'System A (Demo Child, env: Liongard Demo) — no Licensing
-      object in dataprint'
 
-  - '@id': metrics:kaseya-vsa-inspector:licensing-seat-used
-    '@type': liongard:MetricPrimitive
-    dateAdded: '2026-05-26'
-    description: Number of license seats currently in use in the Kaseya VSA tenant.
-    evaluates:
-      '@type': liongard:Inspector
-      inspectorId: 48
-      inspectorSlug: kaseya-vsa-inspector
-    jmesPath: N/A
-    name: Kaseya VSA — License Seats Used
-    notes: 'DATA GAP: See licensing-seat-total note.'
-    resultType: integer
-    sourceRecipe: recipes/single-system-analysis/by-inspector/kaseya-vsa.md
-    status: PROPOSED
-    validatedOn: '2026-05-28'
-    validatedSystemReference: 'System A (Demo Child, env: Liongard Demo) — no Licensing
-      object in dataprint'
 
-  - '@id': metrics:kaseya-vsa-inspector:licensing-utilization-pct
-    '@type': liongard:MetricPrimitive
-    dateAdded: '2026-05-26'
-    description: Percentage of total license seats currently in use.
-    evaluates:
-      '@type': liongard:Inspector
-      inspectorId: 48
-      inspectorSlug: kaseya-vsa-inspector
-    jmesPath: N/A
-    name: Kaseya VSA — License Utilization Percent
-    notes: 'DATA GAP: See licensing-seat-total note.'
-    resultType: integer
-    sourceRecipe: recipes/single-system-analysis/by-inspector/kaseya-vsa.md
-    status: PROPOSED
-    validatedOn: '2026-05-28'
-    validatedSystemReference: 'System A (Demo Child, env: Liongard Demo) — no Licensing
-      object in dataprint'
 

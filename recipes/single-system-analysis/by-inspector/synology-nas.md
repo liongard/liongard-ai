@@ -172,7 +172,7 @@ Disks[].{
   diskType: diskType,
   portType: portType,
   isSsd: isSsd,
-  drive_status: drive_status_key,
+  status: status,
   overview_status: overview_status,
   firmware_status: firmware_status,
   remain_life_trustable: remain_life.trustable,
@@ -184,19 +184,20 @@ Disks[].{
 - `diskType`: `"SATA"` (string)
 - `portType`: `"SATA"` (string)
 - `isSsd`: `false` (boolean — `true` for SSDs)
-- `drive_status_key`: `"normal"` | `"other"` (string)
+- `status`: `"normal"` (string) — the per-disk health field on DSM 6 and DSM 7
 - `overview_status`: `"normal"` (string)
+- ⚠️ `drive_status_key` / `drive_status_category` do **not** exist in current dataprints (absent on 3 of 3 systems, DSM 6.2 and 7.1, validated 2026-10-07). Filters on them always return 0 / `[]` — a silent false pass.
 - `firmware_status`: string (check for `"outdated"`)
 - `remain_life`: **OBJECT** `{trustable: boolean, value: integer}` — NOT a scalar.
   - `remain_life.value`: `-1` for HDDs (not applicable); positive integer percent for SSDs
   - `remain_life.trustable`: `false` when value is unavailable
-- **Flag:** `drive_status_key != "normal"` OR `overview_status != "normal"`
+- **Flag:** `status != "normal"` OR `overview_status != "normal"`
 - **Flag (SSD only):** `remain_life.trustable == true AND remain_life.value < 20`
 
 Count by status:
 ```jmespath
-length(Disks[?drive_status_key == 'normal'])
-length(Disks[?drive_status_key != 'normal'])
+length(Disks[?status == 'normal'])
+length(Disks[?status != 'normal'])
 length(Disks[?isSsd == `true`])
 ```
 
@@ -278,10 +279,15 @@ Users[].{
 
 **VALIDATED** — users on System A:
 - `expired`: `"normal"` | `"now"` (string — `"now"` = account is expired; **FLAG**)
-- `GroupMembershipStr_r`: `"administrators | users"` (pipe-separated string)
+- `GroupMembershipStr_r`: `"administrators | users"` (pipe-separated string; present on DSM 7, not on every DSM 6 dataprint)
+- `GroupMembership` shape **varies by DSM version**: DSM 6 = array of `{name, is_member}`; DSM 7 = object `{groups: [{name, is_member}], offset, total}`. Every user lists the `administrators` group with `is_member` true/false, so matching on the group name alone counts every user.
 - **Flag:** `expired == 'now'` → expired account (disable or remove)
-- **Flag:** `name == 'admin'` → default admin account still active (rename recommended)
-- Count admins: `length(Users[?contains(GroupMembershipStr_r, 'administrators')])`
+- **Flag:** `name == 'admin'` AND a member of administrators AND `expired == 'normal'` → default admin account still active (disable recommended)
+- Admin users (works on both shapes, validated on 3 systems 2026-10-07):
+
+```jmespath
+Users[?GroupMembership[?name == 'administrators' && is_member] || GroupMembership.groups[?name == 'administrators' && is_member]].name
+```
 
 ### Step 7 — Network configuration
 
@@ -324,23 +330,25 @@ Interfaces[].{
 ### Step 8 — Services
 
 ```jmespath
-Services[?enable_status == 'enabled'].{
+Services[?enable_status == 'enabled' || enable_status == 'enable' || type(enable) == 'boolean' && enable].{
   display_name: display_name,
-  service_id: service_id,
-  status: enable_status
+  service_id: service_id
 }
 ```
 
-**VALIDATED** — `enable_status` is a **STRING** `"enabled"` | `"disabled"` (NOT a boolean).
-- Correct filter: `enable_status == 'enabled'` (single quotes, string comparison)
-- ❌ Do NOT use `enable_status == 'true'` — will return empty array
+**VALIDATED 2026-10-07 on 3 systems** — the service state field **varies by DSM version / inspector version**:
+- DSM 7.x: `enable_status` string `"enabled"` | `"disabled"` | `"static"` (static = always-on system service; counts as neither)
+- DSM 6.x (older dataprints): `enable_status` string `"enable"` | `"disable"`
+- DSM 6.x (newer dataprints): no `enable_status`; boolean `enable` plus `additional.status` `"enable"` | `"disable"`
+- Use the combined filter above. A filter on one shape alone returns 0 on the others — a silent false "no services enabled".
 
 All services count:
 ```jmespath
 length(Services)
-length(Services[?enable_status == 'enabled'])
-length(Services[?enable_status == 'disabled'])
+length(Services[?enable_status == 'enabled' || enable_status == 'enable' || type(enable) == 'boolean' && enable])
+length(Services[?enable_status == 'disabled' || enable_status == 'disable' || type(enable) == 'boolean' && !enable])
 ```
+QA: if enabled + disabled is 0 while `length(Services)` > 0, the field shape is unrecognized — report "Not evaluated", never "no services enabled".
 
 Flag if any of the following appear in the enabled list:
 - `display_name == 'Telnet'` — unencrypted remote access; **Critical**
@@ -377,7 +385,7 @@ Confirmed packages in test data: Active Insight, File Station, SMB Service, SAN 
 |---|---|---|
 | Firmware outdated | `firmware_date` > 180 days old | "DSM firmware last updated <date> — check for updates." |
 | Temperature warning | `sys_tempwarn == true` OR `sys_temp > 50°C` | "NAS temperature at <N>°C — check airflow and fan health." |
-| Disk degraded | `drive_status_key != 'normal'` | "<N> disks in non-normal state — schedule replacement." |
+| Disk degraded | `status != 'normal'` | "<N> disks in non-normal state — schedule replacement." |
 | SSD life low | `remain_life.trustable == true AND remain_life.value < 20` | "SSD <name> at <N>% remaining life — plan replacement." |
 | Pool at risk | `disk_failure_number == 0` | "Storage pool cannot tolerate additional disk failure — replace degraded disk immediately." |
 | Volume high utilization | `size.used / size.total > 0.85` | "Volume at <N>% capacity — plan expansion." |
@@ -441,6 +449,9 @@ Markdown / Word for narrative assessment. **xlsx** for disk inventory and capaci
 | 7 | liongard_metric EVALUATE | Interfaces[].{...} sysId=<sysId> envId=<envId> | array(3) | VALIDATED |
 | 8 | liongard_metric EVALUATE | Services[0] sysId=<sysId> envId=<envId> | {enable_status: "disabled"} | VALIDATED — STRING not boolean |
 | 8 | liongard_metric EVALUATE | Services[?enable_status=='enabled'] sysId=<sysId> envId=<envId> | array | VALIDATED |
+| 3 | liongard_metric EVALUATE | Disks[].{status, drive_status_key, drive_status_category} on Systems A, B, C (DSM 6.2, 6.2, 7.1; 2026-10-07) | status "normal" on all disks; drive_status_* null on all | VALIDATED — drive_status_* removed from recipe |
+| 6 | liongard_metric EVALUATE | admin users, combined array/object GroupMembership filter with is_member on Systems A, B, C | 2, 2, 3 admins (name-only filter returned every user) | VALIDATED |
+| 8 | liongard_metric EVALUATE | Services combined enable_status / enable filter on Systems A, B, C | enabled 4/1/3, disabled 9/2/11 | VALIDATED — single-shape filters returned 0 on 2 of 3 systems |
 | 9 | liongard_metric EVALUATE | Packages[].{...} sysId=<sysId> envId=<envId> | array(11) | VALIDATED |
 ```
 

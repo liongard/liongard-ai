@@ -17,7 +17,7 @@ primitives:
   # Reconciled 2026-05-29 against live dataprint (live production environment, inspected 2026-03-13).
   # Only primitives that resolve to a VALIDATED/SCHEMA_CONFIRMED definition are listed here.
   # Gap metrics (DNS/SSL/WAF/page-rules/Zero Trust/API-tokens/Workers/Pages/rate-limit/per-user MFA)
-  # are tracked in internal/proposed-metrics-backlog.md pending validation on a richer dataprint.
+  # are not included pending validation on a richer dataprint.
   - metrics:cloudflare-inspector:account-id
   - metrics:cloudflare-inspector:account-name
   - metrics:cloudflare-inspector:account-type

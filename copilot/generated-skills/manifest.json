@@ -1,0 +1,35 @@
+{
+ "schemaVersion": 1,
+ "generator": {
+  "name": "build_skill_package.py",
+  "version": "0.1.0-spike"
+ },
+ "libraryVersion": "0.2.3",
+ "sourceCommit": "eb59e053bb7e8c4bcd63cff152dd7d2d443623c2",
+ "skills": [
+  {
+   "name": "liongard-single-system",
+   "zip": "liongard-single-system.zip",
+   "zipSha256": "e9196c1410035a5ce669c9d5b0ccae0c6f7d2b9b43393e9c90a96846b38fb459",
+   "recipes": 76,
+   "files": 155,
+   "uncompressedBytes": 1429850
+  },
+  {
+   "name": "liongard-rollups",
+   "zip": "liongard-rollups.zip",
+   "zipSha256": "69208ec1d5d96762e4d9afb8a0f611681250a0c3de5e3f52d87d6aa01ad84dba",
+   "recipes": 17,
+   "files": 39,
+   "uncompressedBytes": 705428
+  },
+  {
+   "name": "liongard-environment",
+   "zip": "liongard-environment.zip",
+   "zipSha256": "9ff341c7ed18ac1293665d7ac46823b762b28d2539ac6441d43a6d64ebedf981",
+   "recipes": 29,
+   "files": 43,
+   "uncompressedBytes": 766082
+  }
+ ]
+}
