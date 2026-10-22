@@ -81,7 +81,7 @@ metrics:
 
   - id: "[PROPOSED]"
     name: "Cove Data Protection: Per-Device Backup Detail"
-    jmes_path: Devices[*].{name: Name, type: Type, status: BackupStatus, hoursAgo: HoursSinceLastCompletedBackup, retention: RetentionDays}
+    jmes_path: "Devices[*].{name: Name, type: Type, status: BackupStatus, hoursAgo: HoursSinceLastCompletedBackup, retention: RetentionDays}"
     purpose: Per-device snapshot — used by the all-backups.md hostname join
 
   - id: "[PROPOSED]"
@@ -96,7 +96,7 @@ metrics:
 
   - id: "[PROPOSED]"
     name: "Cove Data Protection: Storage Used (per device + total)"
-    jmes_path: Devices[*].{name: Name, storageUsedGB: StorageUsedGB}
+    jmes_path: "Devices[*].{name: Name, storageUsedGB: StorageUsedGB}"
     purpose: Per-device storage utilization for capacity / cost planning
 
 cross_check:

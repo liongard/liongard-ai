@@ -47,7 +47,7 @@ slas:
 metrics:
   - id: "[PROPOSED]"
     name: "Veeam VAC: Per-Tenant Backup Job Inventory"
-    jmes_path: Backups[*].{name: name, status: lastResult, lastRun: lastRunTime, nextRun: nextRunTime, scheduleType: scheduleType}
+    jmes_path: "Backups[*].{name: name, status: lastResult, lastRun: lastRunTime, nextRun: nextRunTime, scheduleType: scheduleType}"
     purpose: Per-job snapshot — last run, status, schedule
 
   - id: "[PROPOSED]"
@@ -58,7 +58,7 @@ metrics:
 
   - id: "[PROPOSED]"
     name: "Veeam VAC: Repository Capacity Status"
-    jmes_path: BackupRepositories[*].{name: name, capacityGB: capacityGB, freeGB: freeGB, percentUsed: percentUsed}
+    jmes_path: "BackupRepositories[*].{name: name, capacityGB: capacityGB, freeGB: freeGB, percentUsed: percentUsed}"
     purpose: Per-repository capacity for capacity planning
 
   - id: "[PROPOSED]"
@@ -69,7 +69,7 @@ metrics:
 
   - id: "[PROPOSED]"
     name: "Veeam VAC: Per-Protected-Server Last Backup"
-    jmes_path: Backups[*].objects[*].{hostname: name, lastBackup: lastRunTime, jobName: parent_job_name}
+    jmes_path: "Backups[*].objects[*].{hostname: name, lastBackup: lastRunTime, jobName: parent_job_name}"
     purpose: Per-server last-backup snapshot for the all-backups.md join (objects[*].name is the hostname-join key)
 
   - id: "[PROPOSED]"

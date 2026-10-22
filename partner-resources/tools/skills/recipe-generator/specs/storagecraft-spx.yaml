@@ -46,7 +46,7 @@ slas:
 metrics:
   - id: "[PROPOSED]"
     name: "StorageCraft SPX: Per-Job Status"
-    jmes_path: Jobs[*].{name: name, status: lastResult, lastRun: lastRunTime, nextRun: nextRunTime, retention: retentionDays}
+    jmes_path: "Jobs[*].{name: name, status: lastResult, lastRun: lastRunTime, nextRun: nextRunTime, retention: retentionDays}"
     purpose: Per-backup-job snapshot for this server
 
   - id: "[PROPOSED]"
@@ -62,7 +62,7 @@ metrics:
 
   - id: "[PROPOSED]"
     name: "StorageCraft SPX: Backup Image Retention Compliance"
-    jmes_path: Jobs[*].{name: name, retentionDays: retentionDays, oldestImageAge: oldestImageDays}
+    jmes_path: "Jobs[*].{name: name, retentionDays: retentionDays, oldestImageAge: oldestImageDays}"
     purpose: Per-job retention vs. configured policy
 
 cross_check:

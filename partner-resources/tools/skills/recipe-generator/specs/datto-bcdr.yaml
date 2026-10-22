@@ -62,22 +62,22 @@ metrics:
 
   - id: "[PROPOSED]"
     name: "Datto BCDR: Backups Not Completed in Last 24 Hours Summary"
-    jmes_path: Agents[?HoursSinceLastSuccessfulBackup > `24`].{name: machineName, lastBackup: lastBackupTime, status: lastBackupStatus}
+    jmes_path: "Agents[?HoursSinceLastSuccessfulBackup > `24`].{name: machineName, lastBackup: lastBackupTime, status: lastBackupStatus}"
     purpose: Per-agent enumeration of overdue backups
 
   - id: "[PROPOSED]"
     name: "Datto BCDR: Agent Inventory (parent)"
-    jmes_path: SystemInfo[*].{clientCompany: clientCompanyName, applianceModel: applianceModel, applianceHostname: applianceHostname}
+    jmes_path: "SystemInfo[*].{clientCompany: clientCompanyName, applianceModel: applianceModel, applianceHostname: applianceHostname}"
     purpose: Parent system — enumerate child appliances + customer-company mapping
 
   - id: "[PROPOSED]"
     name: "Datto BCDR: Per-Agent Last Backup Time"
-    jmes_path: Agents[*].{name: machineName, lastBackup: lastBackupTime, status: lastBackupStatus, sizeGB: protectedSizeGB}
+    jmes_path: "Agents[*].{name: machineName, lastBackup: lastBackupTime, status: lastBackupStatus, sizeGB: protectedSizeGB}"
     purpose: Per-agent backup snapshot — feeds the all-backups.md hostname join (join on machineName)
 
   - id: "[PROPOSED]"
     name: "Datto BCDR: Cloud Sync Status"
-    jmes_path: Agents[*].{name: machineName, cloudSyncStatus: cloudSyncStatus, lastOffsiteTime: lastOffsiteSnapshotTime}
+    jmes_path: "Agents[*].{name: machineName, cloudSyncStatus: cloudSyncStatus, lastOffsiteTime: lastOffsiteSnapshotTime}"
     purpose: Per-agent offsite replication status (3-2-1 compliance)
 
   - id: "[PROPOSED]"
@@ -87,7 +87,7 @@ metrics:
 
   - id: "[PROPOSED]"
     name: "Datto BCDR: Screenshot Verification State (per agent)"
-    jmes_path: Agents[*].{name: machineName, screenshotStatus: lastScreenshotStatus, screenshotTime: lastScreenshotTime}
+    jmes_path: "Agents[*].{name: machineName, screenshotStatus: lastScreenshotStatus, screenshotTime: lastScreenshotTime}"
     purpose: Datto's local-restore verification — confirms recoverability without a manual test restore
 
 cross_check:
